@@ -21,47 +21,59 @@ export default function Navbar() {
 
       {/* Links */}
       <div className={style.navLinks}>
-        <NavItem label="Home" href="/" />
+        <NavItem label="Aktualności" href="/aktualnosci" />
 
-        {/* Dropdown Container */}
-        <DropdownMenu label="Services">
+        {/* O nas */}
+        <DropdownMenu label="O nas" href="/o-nas">
+          {/* Struktura */}
           <DropdownItem
-            label="Web Development"
-            desc="Modern and responsive web applications"
-            href="/web-dev"
-          />
+            label="Struktura katedry"
+            desc="Kierownictwo i zespoły pracujące w katedrze"
+            href="/o-nas/struktura"
+          >
+            <DropdownItem
+              label="Kierownik katedry"
+              href="/o-nas/struktura/kierownik"
+            />
+            <DropdownItem
+              label="Sekretariat katedry"
+              href="/o-nas/struktura/sekretariat"
+            />
+            <DropdownItem
+              label="Zespół chowu i hodowli zw. przeżuwających i oceny mleka"
+              href="/o-nas/struktura/przezuwajace"
+            />
+            <DropdownItem
+              label="Zespół chowu i hodowli drobiu i ptaków ozdobnych"
+              href="/o-nas/struktura/drob"
+            />
+            <DropdownItem
+              label="Zespół chowu i hodowli trzody chlewnej"
+              href="/o-nas/struktura/trzoda"
+            />
+            <DropdownItem
+              label="Zespół chowu i hodowli zw. futerkowych, jeleniowatych i oceny mięsa"
+              href="/o-nas/struktura/futerkowe"
+            />
+            <DropdownItem
+              label="Pracownia Weterynaryjnej Ochrony Zdrowia Publicznego"
+              href="/o-nas/struktura/weterynaryjna"
+            />
+            <DropdownItem
+              label="Zespół ds. prowadzenia ksiąg hod. świń rasy złotnickiej"
+              href="/o-nas/struktura/ksiegi-zlotnickie"
+            />
+          </DropdownItem>
+          {/* Publikacje */}
           <DropdownItem
-            label="Mobile Apps"
-            desc="iOS and Android native experiences"
-            href="/mobile-app"
-          />
-          <DropdownItem
-            label="UI/UX Design"
-            desc="Beautiful, user-centered design solutions"
-            href="/ui-ux"
+            label="Publikacje"
+            desc="Publikacje i badania pracowników katedry"
+            href="/o-nas/publikacje"
           />
         </DropdownMenu>
 
-        <DropdownMenu label="Services">
-          <DropdownItem
-            label="Web Development"
-            desc="Modern and responsive web applications"
-            href="/web-dev"
-          />
-          <DropdownItem
-            label="Mobile Apps"
-            desc="iOS and Android native experiences"
-            href="/mobile-app"
-          />
-          <DropdownItem
-            label="UI/UX Design"
-            desc="Beautiful, user-centered design solutions"
-            href="/ui-ux"
-          />
-        </DropdownMenu>
-
-        <NavItem label="About" href="/about" />
-        <NavItem label="Contact" href="/contact" />
+        <NavItem label="Dla studenta" href="/student" />
+        <NavItem label="Kontakt" href="/kontakt" />
       </div>
 
       {/* WCAG Controls */}
@@ -74,9 +86,11 @@ export default function Navbar() {
 
 function DropdownMenu({
   label,
+  href,
   children,
 }: {
   label: string;
+  href: string;
   children: React.ReactNode;
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -87,7 +101,7 @@ function DropdownMenu({
       onMouseEnter={() => setIsDropdownOpen(true)}
       onMouseLeave={() => setIsDropdownOpen(false)}
     >
-      <button className={style.navLink}>
+      <Link href={href} className={style.navLink}>
         {label}
         <svg
           className={clsx(style.dropdownIcon, { [style.open]: isDropdownOpen })}
@@ -102,7 +116,7 @@ function DropdownMenu({
         >
           <path d="m6 9 6 6 6-6" />
         </svg>
-      </button>
+      </Link>
 
       {/* Dropdown Menu */}
       <div
@@ -118,17 +132,50 @@ function DropdownItem({
   label,
   desc,
   href,
+  children,
 }: {
   label: string;
-  desc: string;
+  desc?: string;
   href: string;
+  children?: React.ReactNode;
 }) {
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  const hasChildren = Boolean(children);
+
   return (
-    <div className={style.dropdownItem}>
-      <Link href={href}>
-        <h4>{label}</h4>
-        <p>{desc}</p>
+    <div
+      className={clsx(style.dropdownItem, { [style.hasSubmenu]: hasChildren })}
+      onMouseEnter={() => setIsSubMenuOpen(true)}
+      onMouseLeave={() => setIsSubMenuOpen(false)}
+    >
+      <Link href={href} className={style.dropdownLink}>
+        <div className={style.dropdownItemContent}>
+          <h4>{label}</h4>
+          <p>{desc}</p>
+        </div>
+        {hasChildren && (
+          <svg
+            className={clsx(style.subMenuIcon, { [style.open]: isSubMenuOpen })}
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        )}
       </Link>
+
+      {/* Nested Submenu */}
+      {hasChildren && (
+        <div className={clsx(style.subMenu, { [style.show]: isSubMenuOpen })}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }

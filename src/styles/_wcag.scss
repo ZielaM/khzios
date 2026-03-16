@@ -1,0 +1,18 @@
+/* WCAG 2.1 High Contrast Mode */
+html.wcag-high-contrast {
+  --background: #000000;
+  --foreground: #ffff00;
+  filter: contrast(120%) saturate(120%);
+}
+
+html.wcag-high-contrast * {
+  border-color: #ffff00 !important;
+  outline-color: #ffff00 !important;
+}
+
+html.wcag-high-contrast a,
+html.wcag-high-contrast button {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}

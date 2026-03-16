@@ -1,0 +1,7 @@
+@use './variables' as *;
+
+/* Zmienne CSS przekazywane do przeglądarki (Custom Properties) */
+:root {
+  --background: #{$color-bg};
+  --foreground: #{$color-text};
+}

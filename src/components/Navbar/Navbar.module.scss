@@ -5,20 +5,40 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 70px;
+  height: $navbar-height;
   background-color: var(--background);
   z-index: 1000;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   transition: all 0.3s ease;
   padding: 0 1rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+.navbarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: $navbar-height;
+
+  @media (min-width: $breakpoint-tablet) {
+    flex: 1;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    width: 100%;
+  }
 }
 
 .logo {
   display: flex;
   align-items: center;
-  width: 33%;
+  width: 100%;
 
   .logoLink {
     display: flex;
@@ -34,15 +54,96 @@
   }
 }
 
+.navMenuContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (min-width: $breakpoint-tablet) {
+    flex: 2;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    position: fixed;
+    top: $navbar-height;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - #{$navbar-height});
+    background-color: var(--background);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+
+    /* Ukryte domyślnie na mobile */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+
+    &.mobileOpen {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+
+  @media (max-width: $breakpoint-tablet) {
+    display: flex;
+  }
+
+  .hamburgerLine {
+    width: 2rem;
+    height: 0.25rem;
+    background-color: var(--foreground);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+  }
+
+  &.active {
+    .hamburgerLine:nth-child(1) {
+      transform: rotate(45deg);
+    }
+    .hamburgerLine:nth-child(2) {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    .hamburgerLine:nth-child(3) {
+      transform: rotate(-45deg);
+    }
+  }
+}
+
 .navLinks {
-  width: 33%;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 2.5rem;
 
+  @media (min-width: $breakpoint-tablet) {
+    flex: 1;
+  }
+
   @media (max-width: $breakpoint-tablet) {
-    display: none;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
   }
 }
 
@@ -57,8 +158,20 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  position: relative;
   padding: 0.5rem 0;
+  text-wrap: nowrap;
+  position: relative;
+
+  @media (max-width: $breakpoint-tablet) {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    &::after {
+      display: none; // Disable underline hover animation on mobile
+    }
+  }
 
   &::after {
     content: '';
@@ -87,6 +200,14 @@
   align-items: center;
   /* Extra padding to prevent the hover loss between button and menu */
   padding: 1rem 0;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    width: 100%;
+    height: auto;
+  }
 
   .dropdownIcon {
     transition: transform 0.3s ease;
@@ -123,10 +244,33 @@
       pointer-events: auto;
     }
 
+    /* Wymuszenie wyświetlania w linii na mobile (model akordeonu) */
+    @media (max-width: $breakpoint-tablet) {
+      position: static;
+      transform: none;
+      box-shadow: none;
+      border: none;
+      background: transparent;
+      padding: 0 0.5rem 0 0;
+      min-width: 100%;
+      display: none;
+
+      &.show {
+        display: block;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
     .dropdownItem {
       border-radius: 8px;
       transition: background-color 0.2s ease;
       position: relative; // needed for absolute submenu positioning
+
+      @media (max-width: $breakpoint-tablet) {
+        width: 100%;
+      }
 
       .dropdownLink {
         display: flex;
@@ -155,10 +299,17 @@
         .subMenuIcon {
           margin-left: 0.5rem;
           opacity: 0.5;
-          transition: transform 0.3s ease, opacity 0.3s ease;
-          
+          transition:
+            transform 0.3s ease,
+            opacity 0.3s ease;
+
+          /* Mobile: start down, rotate up */
+          @media (max-width: $breakpoint-tablet) {
+            transform: rotate(90deg);
+          }
+
           &.open {
-            transform: rotate(-90deg);
+            transform: rotate(-90deg); /* Desktop: rotate up */
             opacity: 1;
           }
         }
@@ -202,6 +353,30 @@
           width: 15px;
           height: 100%;
         }
+
+        /* Wymuszenie zachowania akordeonu poniżej klikniętego elementu dla submenu */
+        @media (max-width: $breakpoint-tablet) {
+          position: static;
+          transform: none;
+          box-shadow: none;
+          border: none;
+          background: transparent;
+          padding: 0;
+          margin-left: 1rem;
+          min-width: 100%;
+          display: none;
+
+          &.show {
+            display: block;
+            transform: none;
+            opacity: 1;
+            visibility: visible;
+          }
+
+          &::before {
+            display: none;
+          }
+        }
       }
 
       &:hover {
@@ -211,13 +386,45 @@
   }
 }
 
+.mobileOverviewItem {
+  display: none;
+
+  @media (max-width: $breakpoint-tablet) {
+    display: block;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--foreground) 10%, transparent);
+
+    .overviewLink {
+      display: block;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: $accent-color;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+
+      &:hover {
+        background-color: color-mix(in srgb, var(--foreground) 5%, transparent);
+        border-radius: 6px;
+      }
+    }
+  }
+}
+
 .navActions {
-  width: 33%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  @media (min-width: $breakpoint-tablet) {
+    flex: 1;
+  }
+
   @media (max-width: $breakpoint-tablet) {
-    display: none;
+    width: 100%;
+    justify-content: center;
   }
 
   .wcagControls {
@@ -241,7 +448,7 @@
     transition: all 0.2s ease;
 
     &:hover,
-    &:focus {
+    &:focus-visible {
       background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
       outline: 2px solid $accent-color;
       outline-offset: 2px;
@@ -250,6 +457,7 @@
     &.active {
       background-color: var(--foreground);
       color: var(--background);
+      border-color: var(--foreground);
     }
 
     .wcagTextSmall {

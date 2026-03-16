@@ -1,84 +1,124 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import style from './Navbar.module.scss';
 import clsx from 'clsx';
 
 export default function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Zamyka menu po przejściu
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
   return (
     <nav className={style.navbar}>
-      {/* Logo */}
-      <div className={style.logo}>
-        <Link href="/" className={style.logoLink}>
-          <Image src="/logo.png" alt="Logo" width={40} height={40} />
-          <span className={style.logoText}>
-            Katedra Hodowli Zwierząt <br /> i Oceny Surowców
-          </span>
-        </Link>
+      <div className={style.navbarHeader}>
+        {/* Logo */}
+        <div className={style.logo}>
+          <Link href="/" className={style.logoLink} onClick={closeMobileMenu}>
+            <Image src="/logo.png" alt="Logo" width={40} height={40} />
+            <span className={style.logoText}>
+              Katedra Hodowli Zwierząt <br /> i Oceny Surowców
+            </span>
+          </Link>
+        </div>
+
+        {/* Hamburger Button */}
+        <button
+          className={clsx(style.hamburger, {
+            [style.active]: isMobileMenuOpen,
+          })}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className={style.hamburgerLine}></span>
+          <span className={style.hamburgerLine}></span>
+          <span className={style.hamburgerLine}></span>
+        </button>
       </div>
 
-      {/* Links */}
-      <div className={style.navLinks}>
-        <NavItem label="Aktualności" href="/aktualnosci" />
-
-        {/* O nas */}
-        <DropdownMenu label="O nas" href="/o-nas">
-          {/* Struktura */}
-          <DropdownItem
-            label="Struktura katedry"
-            desc="Kierownictwo i zespoły pracujące w katedrze"
-            href="/o-nas/struktura"
-          >
-            <DropdownItem
-              label="Kierownik katedry"
-              href="/o-nas/struktura/kierownik"
-            />
-            <DropdownItem
-              label="Sekretariat katedry"
-              href="/o-nas/struktura/sekretariat"
-            />
-            <DropdownItem
-              label="Zespół chowu i hodowli zw. przeżuwających i oceny mleka"
-              href="/o-nas/struktura/przezuwajace"
-            />
-            <DropdownItem
-              label="Zespół chowu i hodowli drobiu i ptaków ozdobnych"
-              href="/o-nas/struktura/drob"
-            />
-            <DropdownItem
-              label="Zespół chowu i hodowli trzody chlewnej"
-              href="/o-nas/struktura/trzoda"
-            />
-            <DropdownItem
-              label="Zespół chowu i hodowli zw. futerkowych, jeleniowatych i oceny mięsa"
-              href="/o-nas/struktura/futerkowe"
-            />
-            <DropdownItem
-              label="Pracownia Weterynaryjnej Ochrony Zdrowia Publicznego"
-              href="/o-nas/struktura/weterynaryjna"
-            />
-            <DropdownItem
-              label="Zespół ds. prowadzenia ksiąg hod. świń rasy złotnickiej"
-              href="/o-nas/struktura/ksiegi-zlotnickie"
-            />
-          </DropdownItem>
-          {/* Publikacje */}
-          <DropdownItem
-            label="Publikacje"
-            desc="Publikacje i badania pracowników katedry"
-            href="/o-nas/publikacje"
+      <div
+        className={clsx(style.navMenuContainer, {
+          [style.mobileOpen]: isMobileMenuOpen,
+        })}
+      >
+        {/* Links */}
+        <div className={style.navLinks}>
+          <NavItem
+            label="Aktualności"
+            href="/aktualnosci"
+            onClick={closeMobileMenu}
           />
-        </DropdownMenu>
 
-        <NavItem label="Dla studenta" href="/student" />
-        <NavItem label="Kontakt" href="/kontakt" />
-      </div>
+          {/* O nas */}
+          <DropdownMenu label="O nas" href="/o-nas" onClick={closeMobileMenu}>
+            {/* Struktura */}
+            <DropdownItem
+              label="Struktura katedry"
+              desc="Kierownictwo i zespoły pracujące w katedrze"
+              href="/o-nas/struktura"
+            >
+              <DropdownItem
+                label="Kierownik katedry"
+                href="/o-nas/struktura/kierownik"
+              />
+              <DropdownItem
+                label="Sekretariat katedry"
+                href="/o-nas/struktura/sekretariat"
+              />
+              <DropdownItem
+                label="Zespół chowu i hodowli zw. przeżuwających i oceny mleka"
+                href="/o-nas/struktura/przezuwajace"
+              />
+              <DropdownItem
+                label="Zespół chowu i hodowli drobiu i ptaków ozdobnych"
+                href="/o-nas/struktura/drob"
+              />
+              <DropdownItem
+                label="Zespół chowu i hodowli trzody chlewnej"
+                href="/o-nas/struktura/trzoda"
+              />
+              <DropdownItem
+                label="Zespół chowu i hodowli zw. futerkowych, jeleniowatych i oceny mięsa"
+                href="/o-nas/struktura/futerkowe"
+              />
+              <DropdownItem
+                label="Pracownia Weterynaryjnej Ochrony Zdrowia Publicznego"
+                href="/o-nas/struktura/weterynaryjna"
+              />
+              <DropdownItem
+                label="Zespół ds. prowadzenia ksiąg hod. świń rasy złotnickiej"
+                href="/o-nas/struktura/ksiegi-zlotnickie"
+              />
+            </DropdownItem>
+            {/* Publikacje */}
+            <DropdownItem
+              label="Publikacje"
+              desc="Publikacje i badania pracowników katedry"
+              href="/o-nas/publikacje"
+            />
+          </DropdownMenu>
 
-      {/* WCAG Controls */}
-      <div className={style.navActions}>
-        <WcagControls />
+          <NavItem
+            label="Dla studenta"
+            href="/student"
+            onClick={closeMobileMenu}
+          />
+          <NavItem label="Kontakt" href="/kontakt" onClick={closeMobileMenu} />
+        </div>
+
+        {/* WCAG Controls */}
+        <div className={style.navActions}>
+          <WcagControls />
+        </div>
       </div>
     </nav>
   );
@@ -88,12 +128,23 @@ function DropdownMenu({
   label,
   href,
   children,
+  onClick,
 }: {
   label: string;
   href: string;
   children: React.ReactNode;
+  onClick?: () => void;
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (window.innerWidth <= 768) {
+      e.preventDefault();
+      setIsDropdownOpen(!isDropdownOpen);
+    } else {
+      onClick?.();
+    }
+  };
 
   return (
     <div
@@ -101,7 +152,7 @@ function DropdownMenu({
       onMouseEnter={() => setIsDropdownOpen(true)}
       onMouseLeave={() => setIsDropdownOpen(false)}
     >
-      <Link href={href} className={style.navLink}>
+      <Link href={href} className={style.navLink} onClick={handleLinkClick}>
         {label}
         <svg
           className={clsx(style.dropdownIcon, { [style.open]: isDropdownOpen })}
@@ -122,6 +173,11 @@ function DropdownMenu({
       <div
         className={clsx(style.dropdownMenu, { [style.show]: isDropdownOpen })}
       >
+        <div className={style.mobileOverviewItem}>
+          <Link href={href} className={style.overviewLink} onClick={onClick}>
+            ZOBACZ: {label}
+          </Link>
+        </div>
         {children}
       </div>
     </div>
@@ -142,13 +198,24 @@ function DropdownItem({
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const hasChildren = Boolean(children);
 
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (hasChildren && window.innerWidth <= 768) {
+      e.preventDefault();
+      setIsSubMenuOpen(!isSubMenuOpen);
+    }
+  };
+
   return (
     <div
       className={clsx(style.dropdownItem, { [style.hasSubmenu]: hasChildren })}
       onMouseEnter={() => setIsSubMenuOpen(true)}
       onMouseLeave={() => setIsSubMenuOpen(false)}
     >
-      <Link href={href} className={style.dropdownLink}>
+      <Link
+        href={href}
+        className={style.dropdownLink}
+        onClick={handleLinkClick}
+      >
         <div className={style.dropdownItemContent}>
           <h4>{label}</h4>
           <p>{desc}</p>
@@ -173,6 +240,11 @@ function DropdownItem({
       {/* Nested Submenu */}
       {hasChildren && (
         <div className={clsx(style.subMenu, { [style.show]: isSubMenuOpen })}>
+          <div className={style.mobileOverviewItem}>
+            <Link href={href} className={style.overviewLink}>
+              ZOBACZ: {label}
+            </Link>
+          </div>
           {children}
         </div>
       )}
@@ -180,9 +252,17 @@ function DropdownItem({
   );
 }
 
-function NavItem({ label, href }: { label: string; href: string }) {
+function NavItem({
+  label,
+  href,
+  onClick,
+}: {
+  label: string;
+  href: string;
+  onClick?: () => void;
+}) {
   return (
-    <Link href={href} className={style.navLink}>
+    <Link href={href} className={style.navLink} onClick={onClick}>
       {label}
     </Link>
   );

@@ -12,7 +12,10 @@ export default function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => {
-    setIsMobileMenuOpen(false);
+    const timeoutId = setTimeout(() => {
+      setIsMobileMenuOpen(false);
+    }, 0);
+    return () => clearTimeout(timeoutId);
   }, [pathname]);
 
   // Zamyka menu po przejściu

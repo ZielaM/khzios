@@ -4,4 +4,9 @@
 :root {
   --background: #{$color-bg};
   --foreground: #{$color-text};
+  
+  --color-primary: #{$color-primary};
+  --color-secondary: #{$color-secondary};
+  --color-tertiary: #{$color-tertiary};
+  --color-neutral: #{$color-neutral};
 }

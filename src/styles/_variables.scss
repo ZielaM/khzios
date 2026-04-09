@@ -1,8 +1,14 @@
 /* Zmienne globalne preprocesora SASS */
 
+/* Kolory z palety */
+$color-primary: #247151;
+$color-secondary: #367c2b;
+$color-tertiary: #5d8a66;
+$color-neutral: #171717;
+
 $color-bg: #ffffff;
-$color-text: #171717;
-$accent-color: #247151;
+$color-text: $color-neutral;
+$accent-color: $color-primary;
 
 $breakpoint-tablet: 768px;
 $navbar-height: 70px;

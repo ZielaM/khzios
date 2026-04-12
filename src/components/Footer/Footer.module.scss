@@ -1,0 +1,123 @@
+@use '@/styles/variables' as *;
+
+.footer {
+  background-color: #f7f9f7;
+  padding: 4rem 2rem;
+  font-family: var(--font-inter), sans-serif;
+  border-top: 1px solid #eaeaea;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+
+  @media (min-width: $breakpoint-tablet) {
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.columnWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.brandTitle {
+  color: $color-primary;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.addressInfo {
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 2;
+  font-weight: 500;
+
+  p {
+    margin: 0;
+  }
+}
+
+.colTitle {
+  color: $color-tertiary;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.linksList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+
+  li a {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+
+    &:hover,
+    &:focus {
+      color: $color-primary;
+      text-decoration: underline;
+    }
+  }
+}
+
+.contactList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+}
+
+.icon {
+  color: $color-primary;
+  flex-shrink: 0;
+  fill: $color-primary; /* To make it look solid like the image if possible, though Lucide icons are stroke-based */
+}
+
+.copyright {
+  margin-top: 3rem;
+  color: #9ca3af;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+  font-weight: 600;
+
+  p {
+    margin: 0;
+  }
+}

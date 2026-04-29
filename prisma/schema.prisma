@@ -13,17 +13,25 @@ datasource db {
 }
 
 model News {
-  id        Int      @id @default(autoincrement())
+  id        String      @id @default(uuid(7))
   title     String
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean  @default(false)
   tags      Tag[]
+  photos    Photo[]
 }
 
 model Tag {
-  id   Int    @id @default(autoincrement())
+  id   String @id @default(uuid(7))
   name String @unique
   news News[]
+}
+
+model Photo {
+  id     String @id @default(uuid(7))
+  url    String
+  newsId String
+  news   News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
 }

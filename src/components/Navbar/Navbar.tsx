@@ -1,15 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { Link, usePathname } from '@/i18n/routing';
 import Image from 'next/image';
 import style from './Navbar.module.scss';
 import clsx from 'clsx';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useTranslations } from 'next-intl';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations('Navbar');
+  const tWcag = useTranslations('Wcag');
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -27,9 +30,9 @@ export default function Navbar() {
         {/* Logo */}
         <div className={style.logo}>
           <Link href="/" className={style.logoLink} onClick={closeMobileMenu}>
-            <Image src="/logo.png" alt="Logo" width={40} height={40} />
+            <Image src="/logo.png" alt={t('logoAlt')} width={40} height={40} />
             <span className={style.logoText}>
-              Katedra Hodowli Zwierząt <br /> i Oceny Surowców
+              {t('logoText')}
             </span>
           </Link>
         </div>
@@ -40,7 +43,7 @@ export default function Navbar() {
             [style.active]: isMobileMenuOpen,
           })}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle menu"
+          aria-label={t('toggleMenu')}
         >
           <span className={style.hamburgerLine}></span>
           <span className={style.hamburgerLine}></span>
@@ -56,71 +59,77 @@ export default function Navbar() {
         {/* Links */}
         <div className={style.navLinks}>
           <NavItem
-            label="Aktualności"
+            label={t('news')}
             href="/aktualnosci"
             onClick={closeMobileMenu}
           />
 
           {/* O nas */}
-          <DropdownMenu label="O nas" href="/o-nas" onClick={closeMobileMenu}>
+          <DropdownMenu label={t('aboutUs')} href="/o-nas" onClick={closeMobileMenu}>
             {/* Struktura */}
             <DropdownItem
-              label="Struktura katedry"
-              desc="Kierownictwo i zespoły pracujące w katedrze"
+              label={t('structure')}
+              desc={t('structureDesc')}
               href="/o-nas/struktura"
             >
               <DropdownItem
-                label="Kierownik katedry"
+                label={t('headOfDepartment')}
                 href="/o-nas/struktura/kierownik"
               />
               <DropdownItem
-                label="Sekretariat katedry"
+                label={t('secretariat')}
                 href="/o-nas/struktura/sekretariat"
               />
               <DropdownItem
-                label="Zespół chowu i hodowli zw. przeżuwających i oceny mleka"
+                label={t('ruminants')}
                 href="/o-nas/struktura/przezuwajace"
               />
               <DropdownItem
-                label="Zespół chowu i hodowli drobiu i ptaków ozdobnych"
+                label={t('poultry')}
                 href="/o-nas/struktura/drob"
               />
               <DropdownItem
-                label="Zespół chowu i hodowli trzody chlewnej"
+                label={t('swine')}
                 href="/o-nas/struktura/trzoda"
               />
               <DropdownItem
-                label="Zespół chowu i hodowli zw. futerkowych, jeleniowatych i oceny mięsa"
+                label={t('furAnimals')}
                 href="/o-nas/struktura/futerkowe"
               />
               <DropdownItem
-                label="Pracownia Weterynaryjnej Ochrony Zdrowia Publicznego"
+                label={t('vetLab')}
                 href="/o-nas/struktura/weterynaryjna"
               />
               <DropdownItem
-                label="Zespół ds. prowadzenia ksiąg hod. świń rasy złotnickiej"
+                label={t('breedingBooks')}
                 href="/o-nas/struktura/ksiegi-zlotnickie"
               />
             </DropdownItem>
             {/* Publikacje */}
             <DropdownItem
-              label="Publikacje"
-              desc="Publikacje i badania pracowników katedry"
+              label={t('publications')}
+              desc={t('publicationsDesc')}
               href="/o-nas/publikacje"
             />
           </DropdownMenu>
 
           <NavItem
-            label="Dla studenta"
+            label={t('forStudents')}
             href="/student"
             onClick={closeMobileMenu}
           />
-          <NavItem label="Kontakt" href="/kontakt" onClick={closeMobileMenu} />
+          <NavItem label={t('contact')} href="/kontakt" onClick={closeMobileMenu} />
         </div>
 
-        {/* WCAG Controls */}
+        {/* Language & WCAG Controls */}
         <div className={style.navActions}>
-          <WcagControls />
+          <LanguageSwitcher />
+          <WcagControls
+            groupLabel={tWcag('groupLabel')}
+            decreaseFont={tWcag('decreaseFont')}
+            increaseFont={tWcag('increaseFont')}
+            toggleContrast={tWcag('toggleContrast')}
+          />
         </div>
       </div>
     </nav>
@@ -139,6 +148,7 @@ function DropdownMenu({
   onClick?: () => void;
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const t = useTranslations('Navbar');
 
   const handleLinkClick = (e: React.MouseEvent) => {
     if (window.innerWidth <= 768) {
@@ -178,7 +188,7 @@ function DropdownMenu({
       >
         <div className={style.mobileOverviewItem}>
           <Link href={href} className={style.overviewLink} onClick={onClick}>
-            ZOBACZ: {label}
+            {t('seeLabel', { label })}
           </Link>
         </div>
         {children}
@@ -199,6 +209,7 @@ function DropdownItem({
   children?: React.ReactNode;
 }) {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  const t = useTranslations('Navbar');
   const hasChildren = Boolean(children);
 
   const handleLinkClick = (e: React.MouseEvent) => {
@@ -245,7 +256,7 @@ function DropdownItem({
         <div className={clsx(style.subMenu, { [style.show]: isSubMenuOpen })}>
           <div className={style.mobileOverviewItem}>
             <Link href={href} className={style.overviewLink}>
-              ZOBACZ: {label}
+              {t('seeLabel', { label })}
             </Link>
           </div>
           {children}
@@ -271,7 +282,17 @@ function NavItem({
   );
 }
 
-function WcagControls() {
+function WcagControls({
+  groupLabel,
+  decreaseFont,
+  increaseFont,
+  toggleContrast,
+}: {
+  groupLabel: string;
+  decreaseFont: string;
+  increaseFont: string;
+  toggleContrast: string;
+}) {
   const [highContrast, setHighContrast] = useState(false);
   const [fontSizeOffset, setFontSizeOffset] = useState(0);
 
@@ -298,29 +319,29 @@ function WcagControls() {
     <div
       className={style.wcagControls}
       role="group"
-      aria-label="Narzędzia dostępności WCAG"
+      aria-label={groupLabel}
     >
       <button
         onClick={() => changeFontSize(-1)}
         className={style.wcagButton}
-        aria-label="Pomniejsz tekst"
-        title="Pomniejsz tekst"
+        aria-label={decreaseFont}
+        title={decreaseFont}
       >
         <span className={style.wcagTextSmall}>A</span>-
       </button>
       <button
         onClick={() => changeFontSize(1)}
         className={style.wcagButton}
-        aria-label="Powiększ tekst"
-        title="Powiększ tekst"
+        aria-label={increaseFont}
+        title={increaseFont}
       >
         <span className={style.wcagTextLarge}>A</span>+
       </button>
       <button
         onClick={toggleHighContrast}
         className={clsx(style.wcagButton, { [style.active]: highContrast })}
-        aria-label="Przełącz wysoki kontrast"
-        title="Przełącz wysoki kontrast"
+        aria-label={toggleContrast}
+        title={toggleContrast}
       >
         <svg
           fill="currentColor"

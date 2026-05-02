@@ -417,6 +417,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 0.75rem;
 
   @media (min-width: $breakpoint-tablet) {
     flex: 1;

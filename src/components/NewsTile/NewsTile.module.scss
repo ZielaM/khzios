@@ -20,10 +20,10 @@
     .image {
       transform: scale(1.05);
     }
-    
+
     .readMore {
       color: var(--color-primary);
-      
+
       svg {
         transform: translateX(6px);
       }
@@ -95,6 +95,20 @@
   border: 1px solid rgba($color-primary, 0.15);
 }
 
+.fallbackBadge {
+  display: inline-block;
+  background: rgba(255, 170, 0, 0.1);
+  color: #b38600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-style: italic;
+  font-weight: 600;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 170, 0, 0.2);
+  width: fit-content;
+}
+
 .title {
   font-size: 1.35rem;
   font-weight: 800;
@@ -103,6 +117,7 @@
   color: var(--foreground);
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   transition: color 0.3s ease;
@@ -115,6 +130,7 @@
   margin-bottom: 24px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex-grow: 1;

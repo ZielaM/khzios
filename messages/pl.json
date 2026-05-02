@@ -7,7 +7,7 @@
   },
   "Navbar": {
     "logoAlt": "Logo",
-    "logoText": "Katedra Hodowli Zwierząt i Oceny Surowców",
+    "logoText": "Katedra Hodowli Zwierząt <br></br> i Oceny Surowców",
     "toggleMenu": "Przełącz menu",
     "news": "Aktualności",
     "aboutUs": "O nas",
@@ -34,7 +34,7 @@
     "toggleContrast": "Przełącz wysoki kontrast"
   },
   "Footer": {
-    "brandTitle": "Katedra Hodowli Zwierząt i Oceny Surowców",
+    "brandTitle": "Katedra Hodowli Zwierząt <br></br> i Oceny Surowców",
     "university": "Uniwersytet Przyrodniczy w Poznaniu",
     "faculty": "Wydział Hodowli, Bioinżynierii i Ochrony Zwierząt",
     "address": "ul. Wołyńska 33, 60-637 Poznań",

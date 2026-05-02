@@ -32,7 +32,7 @@ export default function Navbar() {
           <Link href="/" className={style.logoLink} onClick={closeMobileMenu}>
             <Image src="/logo.png" alt={t('logoAlt')} width={40} height={40} />
             <span className={style.logoText}>
-              {t('logoText')}
+              {t.rich('logoText', { br: (chunks) => <br /> })}
             </span>
           </Link>
         </div>

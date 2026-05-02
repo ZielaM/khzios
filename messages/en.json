@@ -7,7 +7,7 @@
   },
   "Navbar": {
     "logoAlt": "Logo",
-    "logoText": "Department of Animal Breeding and Product Evaluation",
+    "logoText": "Department of Animal Breeding <br></br> and Product Evaluation",
     "toggleMenu": "Toggle menu",
     "news": "News",
     "aboutUs": "About Us",
@@ -34,7 +34,7 @@
     "toggleContrast": "Toggle high contrast"
   },
   "Footer": {
-    "brandTitle": "Department of Animal Breeding and Product Evaluation",
+    "brandTitle": "Department of Animal Breeding <br></br> and Product Evaluation",
     "university": "Poznań University of Life Sciences",
     "faculty": "Faculty of Animal Breeding, Bioengineering and Conservation",
     "address": "ul. Wołyńska 33, 60-637 Poznań",

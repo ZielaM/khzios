@@ -12,7 +12,7 @@ const Footer = () => {
         {/* Column 1: Address */}
         <div className={styles.column}>
           <h3 className={styles.brandTitle}>
-            {t('brandTitle')}
+            {t.rich('brandTitle', { br: (chunks) => <br /> })}
           </h3>
           <div className={styles.addressInfo}>
             <p>{t('university')}</p>

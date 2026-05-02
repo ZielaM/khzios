@@ -1,0 +1,44 @@
+@use '@/styles/variables' as *;
+
+.switcher {
+  display: flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.localeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.65rem;
+  background: transparent;
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:not(:last-child) {
+    border-right: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  }
+
+  &:hover:not(.active) {
+    background-color: color-mix(in srgb, var(--foreground) 8%, transparent);
+    color: var(--foreground);
+  }
+
+  &.active {
+    background-color: $accent-color;
+    color: white;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent-color;
+    outline-offset: -2px;
+  }
+}

@@ -20,7 +20,7 @@ export default async function Home({ params }: { params: { locale: string } }) {
   });
 
   return (
-    <main className={styles.main}>
+    <div className={styles.main}>
       <h1>{t('title')}</h1>
       <div className={styles.container}>
         <div className={styles.grid}>
@@ -29,6 +29,6 @@ export default async function Home({ params }: { params: { locale: string } }) {
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

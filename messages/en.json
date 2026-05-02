@@ -1,0 +1,54 @@
+{
+  "HomePage": {
+    "title": "News",
+    "readMore": "Read more",
+    "noNews": "No news found.",
+    "translationUnavailable": "Shown in {language}"
+  },
+  "Navbar": {
+    "logoAlt": "Logo",
+    "logoText": "Department of Animal Breeding and Product Evaluation",
+    "toggleMenu": "Toggle menu",
+    "news": "News",
+    "aboutUs": "About Us",
+    "forStudents": "For Students",
+    "contact": "Contact",
+    "seeLabel": "SEE: {label}",
+    "structure": "Department Structure",
+    "structureDesc": "Management and research teams of the department",
+    "headOfDepartment": "Head of Department",
+    "secretariat": "Secretariat",
+    "ruminants": "Ruminant Breeding and Milk Evaluation Team",
+    "poultry": "Poultry and Ornamental Bird Breeding Team",
+    "swine": "Swine Breeding Team",
+    "furAnimals": "Fur-bearing Animals, Cervids and Meat Evaluation Team",
+    "vetLab": "Veterinary Public Health Protection Laboratory",
+    "breedingBooks": "Złotnicka Pig Breed Herdbook Team",
+    "publications": "Publications",
+    "publicationsDesc": "Staff publications and research"
+  },
+  "Wcag": {
+    "groupLabel": "WCAG Accessibility Tools",
+    "decreaseFont": "Decrease font size",
+    "increaseFont": "Increase font size",
+    "toggleContrast": "Toggle high contrast"
+  },
+  "Footer": {
+    "brandTitle": "Department of Animal Breeding and Product Evaluation",
+    "university": "Poznań University of Life Sciences",
+    "faculty": "Faculty of Animal Breeding, Bioengineering and Conservation",
+    "address": "ul. Wołyńska 33, 60-637 Poznań",
+    "quickLinks": "QUICK LINKS",
+    "upPoznan": "PULS Poznań",
+    "facultyLink": "Faculty of Animal Breeding, Bioengineering and Conservation",
+    "knowledgeBase": "Knowledge Base",
+    "contactTitle": "CONTACT",
+    "copyright": "© 2026 POZNAŃ UNIVERSITY OF LIFE SCIENCES. DEPARTMENT OF ANIMAL BREEDING AND PRODUCT EVALUATION."
+  },
+  "LocaleSwitcher": {
+    "pl": "Polski",
+    "en": "English",
+    "label": "Language selection",
+    "switchTo": "Switch language to {locale}"
+  }
+}

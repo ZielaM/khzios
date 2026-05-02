@@ -35,10 +35,19 @@
     background-color: $accent-color;
     color: white;
     cursor: default;
+
+    :global(.wcag-high-contrast) & {
+      background-color: var(--foreground);
+      color: var(--background);
+    }
   }
 
   &:focus-visible {
     outline: 2px solid $accent-color;
     outline-offset: -2px;
+
+    :global(.wcag-high-contrast) & {
+      outline-color: var(--foreground);
+    }
   }
 }

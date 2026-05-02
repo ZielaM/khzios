@@ -12,10 +12,20 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
   position: relative;
 
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+    box-shadow: none;
+  }
+
   &:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     border-color: rgba($color-primary, 0.2);
+
+    :global(.wcag-high-contrast) & {
+      border-color: var(--foreground);
+      box-shadow: 0 0 15px var(--foreground);
+    }
 
     .image {
       transform: scale(1.05);
@@ -66,6 +76,13 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   z-index: 2;
   letter-spacing: 0.5px;
+
+  :global(.wcag-high-contrast) & {
+    background: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--foreground);
+    box-shadow: none;
+  }
 }
 
 .content {
@@ -74,6 +91,10 @@
   flex-direction: column;
   flex-grow: 1;
   background: linear-gradient(to bottom, #ffffff, #fdfdfd);
+
+  :global(.wcag-high-contrast) & {
+    background: var(--background);
+  }
 }
 
 .tags {
@@ -93,6 +114,12 @@
   text-transform: uppercase;
   letter-spacing: 0.8px;
   border: 1px solid rgba($color-primary, 0.15);
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    color: var(--foreground);
+    border-color: var(--foreground);
+  }
 }
 
 .fallbackBadge {
@@ -107,6 +134,12 @@
   margin-bottom: 8px;
   border: 1px solid rgba(255, 170, 0, 0.2);
   width: fit-content;
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    color: var(--foreground);
+    border-color: var(--foreground);
+  }
 }
 
 .title {
@@ -134,6 +167,10 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex-grow: 1;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
 }
 
 .readMore {
@@ -147,6 +184,10 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
 
   svg {
     width: 18px;

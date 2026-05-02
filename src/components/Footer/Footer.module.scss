@@ -5,6 +5,11 @@
   padding: 4rem 2rem;
   font-family: var(--font-inter), sans-serif;
   border-top: 1px solid #eaeaea;
+
+  :global(.wcag-high-contrast) & {
+    background-color: var(--background);
+    border-top: 1px solid var(--foreground);
+  }
 }
 
 .container {
@@ -34,11 +39,15 @@
 }
 
 .brandTitle {
-  color: $color-primary;
+  color: var(--color-primary);
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.4;
   margin: 0;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
 }
 
 .addressInfo {
@@ -50,15 +59,23 @@
   p {
     margin: 0;
   }
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
 }
 
 .colTitle {
-  color: $color-tertiary;
+  color: var(--color-tertiary);
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin: 0;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
 }
 
 .linksList {
@@ -76,10 +93,18 @@
     font-weight: 500;
     transition: color 0.2s ease;
 
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+    }
+
     &:hover,
     &:focus {
-      color: $color-primary;
+      color: var(--color-primary);
       text-decoration: underline;
+
+      :global(.wcag-high-contrast) & {
+        color: var(--foreground);
+      }
     }
   }
 }
@@ -99,13 +124,22 @@
     color: #6b7280;
     font-size: 0.875rem;
     font-weight: 600;
+
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+    }
   }
 }
 
 .icon {
-  color: $color-primary;
+  color: var(--color-primary);
   flex-shrink: 0;
-  fill: $color-primary; /* To make it look solid like the image if possible, though Lucide icons are stroke-based */
+  fill: var(--color-primary); /* To make it look solid like the image if possible, though Lucide icons are stroke-based */
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+    fill: var(--foreground);
+  }
 }
 
 .copyright {
@@ -119,5 +153,9 @@
 
   p {
     margin: 0;
+  }
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
   }
 }

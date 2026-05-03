@@ -1,0 +1,62 @@
+name: Code Quality and Build Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify-and-build:
+    name: Verify Code and Build
+    runs-on: ubuntu-latest
+
+    # Skonfiguruj niezbędne zmienne środowiskowe, jeśli wymaga ich Next.js lub Prisma na etapie buildu
+    env:
+      DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Next.js używa specjalnego cache'u (.next/cache), aby drastycznie przyspieszyć kolejne buildy w CI.
+      # Ten krok konfiguruje odtwarzanie i zapisywanie tego cache'u.
+      - name: Restore Next.js cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+
+      - name: Generate Prisma Client
+        # Niezbędne, aby TypeScript i ESLint "widziały" typy z bazy danych
+        run: pnpm prisma generate
+
+      - name: Check formatting (Prettier)
+        run: pnpm format:check
+
+      - name: Run linter (ESLint)
+        run: pnpm lint
+
+      - name: Check types (TypeScript)
+        # Szybkie sprawdzenie poprawności typów, bez generowania plików wyjściowych
+        run: pnpm tsc --noEmit
+
+      - name: Test Production Build
+        # Finalny sprawdzian - próba zbudowania gotowej aplikacji. 
+        # Zatrzymuje merge, jeśli aplikacja np. sypie się na statycznym generowaniu.
+        run: pnpm build

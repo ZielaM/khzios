@@ -23,7 +23,8 @@
   transition: all 0.2s ease;
 
   &:not(:last-child) {
-    border-right: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+    border-right: 1px solid
+      color-mix(in srgb, var(--foreground) 15%, transparent);
   }
 
   &:hover:not(.active) {

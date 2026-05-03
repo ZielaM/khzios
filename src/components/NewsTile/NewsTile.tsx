@@ -1,7 +1,13 @@
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import style from './NewsTile.module.scss';
-import { News, Tag, Photo, NewsTranslation, TagTranslation } from '@/generated/prisma/client';
+import {
+  News,
+  Tag,
+  Photo,
+  NewsTranslation,
+  TagTranslation,
+} from '@/generated/prisma/client';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -22,7 +28,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
 
 export default function NewsTile({ news, locale }: NewsTileProps) {
   const t = useTranslations('HomePage');
-  
+
   // Wybierz pierwsze zdjęcie jako miniaturę, lub użyj placeholdera
   const thumbnail =
     news.photos.length > 0 ? news.photos[0].url : '/placeholder-news.jpg';
@@ -43,7 +49,9 @@ export default function NewsTile({ news, locale }: NewsTileProps) {
 
   // Pobierz przetłumaczoną nazwę tagu (fallback na tag.name)
   const getTagName = (tag: Tag & { translations: TagTranslation[] }) => {
-    const tagTranslation = tag.translations?.find((tr) => tr.languageCode === locale);
+    const tagTranslation = tag.translations?.find(
+      (tr) => tr.languageCode === locale
+    );
     return tagTranslation?.name ?? tag.name;
   };
 
@@ -56,7 +64,10 @@ export default function NewsTile({ news, locale }: NewsTileProps) {
 
   return (
     <article className={style.newsTile}>
-      <Link href={{ pathname: '/news/[id]', params: { id: news.id } }} className={style.linkWrapper}>
+      <Link
+        href={{ pathname: '/news/[id]', params: { id: news.id } }}
+        className={style.linkWrapper}
+      >
         <div className={style.imageContainer}>
           <Image
             src={thumbnail}
@@ -80,7 +91,9 @@ export default function NewsTile({ news, locale }: NewsTileProps) {
           {isFallback && (
             <span className={style.fallbackBadge}>
               {t('translationUnavailable', {
-                language: LANGUAGE_NAMES[translation.languageCode] ?? translation.languageCode,
+                language:
+                  LANGUAGE_NAMES[translation.languageCode] ??
+                  translation.languageCode,
               })}
             </span>
           )}

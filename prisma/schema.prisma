@@ -4,8 +4,8 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
 }
 
 datasource db {
@@ -25,7 +25,7 @@ model News {
 model NewsTranslation {
   id           String @id @default(uuid(7))
   newsId       String
-  languageCode String // e.g. "pl", "en"
+  languageCode String
   title        String
   content      String
 
@@ -44,7 +44,7 @@ model Tag {
 model TagTranslation {
   id           String @id @default(uuid(7))
   tagId        String
-  languageCode String // e.g. "pl", "en"
+  languageCode String
   name         String
 
   tag          Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)

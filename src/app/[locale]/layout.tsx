@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { routing } from '@/i18n/routing';
+import { routing, type Locale } from '@/i18n/routing';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -27,7 +27,7 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params;
 
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale as Locale)) {
     notFound();
   }
 

@@ -32,7 +32,7 @@ export default function Navbar() {
           <Link href="/" className={style.logoLink} onClick={closeMobileMenu}>
             <Image src="/logo.png" alt={t('logoAlt')} width={40} height={40} />
             <span className={style.logoText}>
-              {t.rich('logoText', { br: (chunks) => <br /> })}
+              {t.rich('logoText', { br: () => <br /> })}
             </span>
           </Link>
         </div>
@@ -58,14 +58,14 @@ export default function Navbar() {
       >
         {/* Links */}
         <div className={style.navLinks}>
-          <NavItem
-            label={t('news')}
-            href="/news"
-            onClick={closeMobileMenu}
-          />
+          <NavItem label={t('news')} href="/news" onClick={closeMobileMenu} />
 
           {/* O nas */}
-          <DropdownMenu label={t('aboutUs')} href="/about-us" onClick={closeMobileMenu}>
+          <DropdownMenu
+            label={t('aboutUs')}
+            href="/about-us"
+            onClick={closeMobileMenu}
+          >
             {/* Struktura */}
             <DropdownItem
               label={t('structure')}
@@ -118,7 +118,11 @@ export default function Navbar() {
             href="/student"
             onClick={closeMobileMenu}
           />
-          <NavItem label={t('contact')} href="/contact" onClick={closeMobileMenu} />
+          <NavItem
+            label={t('contact')}
+            href="/contact"
+            onClick={closeMobileMenu}
+          />
         </div>
 
         {/* Language & WCAG Controls */}
@@ -316,11 +320,7 @@ function WcagControls({
   };
 
   return (
-    <div
-      className={style.wcagControls}
-      role="group"
-      aria-label={groupLabel}
-    >
+    <div className={style.wcagControls} role="group" aria-label={groupLabel}>
       <button
         onClick={() => changeFontSize(-1)}
         className={style.wcagButton}

@@ -19,6 +19,8 @@ async function main() {
         create: [
           { languageCode: 'pl', name: 'Technologia' },
           { languageCode: 'en', name: 'Technology' },
+          { languageCode: 'uk', name: 'Технології' },
+          { languageCode: 'ru', name: 'Технологии' },
         ],
       },
     },
@@ -30,6 +32,8 @@ async function main() {
         create: [
           { languageCode: 'pl', name: 'Edukacja' },
           { languageCode: 'en', name: 'Education' },
+          { languageCode: 'uk', name: 'Освіта' },
+          { languageCode: 'ru', name: 'Образование' },
         ],
       },
     },
@@ -41,6 +45,8 @@ async function main() {
         create: [
           { languageCode: 'pl', name: 'Wydarzenia' },
           { languageCode: 'en', name: 'Events' },
+          { languageCode: 'uk', name: 'Події' },
+          { languageCode: 'ru', name: 'События' },
         ],
       },
     },
@@ -69,6 +75,18 @@ async function main() {
             title: 'New computer lab',
             content:
               'We are pleased to announce the opening of a new, modernly equipped computer lab. It features 30 workstations with the latest software, enabling even better learning in programming and design.',
+          },
+          {
+            languageCode: 'uk',
+            title: 'Нова комп\'ютерна лабораторія',
+            content:
+              'Ми раді повідомити про відкриття нової, сучасно обладнаної комп\'ютерної лабораторії. Вона налічує 30 робочих місць з найновішим програмним забезпеченням.',
+          },
+          {
+            languageCode: 'ru',
+            title: 'Новая компьютерная лаборатория',
+            content:
+              'Мы рады сообщить об открытии новой, современно оборудованной компьютерной лаборатории. Она насчитывает 30 рабочих мест с новейшим программным обеспечением.',
           },
         ],
       },
@@ -99,6 +117,18 @@ async function main() {
             content:
               'We now know the winners of this year\'s Hackathon! First place went to team "CodeNinjas", who created an innovative application. Congratulations to all participants for their dedication and great ideas.',
           },
+          {
+            languageCode: 'uk',
+            title: 'Результати шкільного Хакатону 2026',
+            content:
+              'Ми вже знаємо переможців цьогорічного Хакатону! Перше місце посіла команда "CodeNinjas", яка створила інноваційний додаток.',
+          },
+          {
+            languageCode: 'ru',
+            title: 'Результаты школьного Хакатона 2026',
+            content:
+              'Мы уже знаем победителей Хакатона в этом году! Первое место заняла команда "CodeNinjas", создавшая инновационное приложение.',
+          },
         ],
       },
     },
@@ -124,6 +154,18 @@ async function main() {
             title: 'Algorithmics club sign-ups',
             content:
               'Sign-ups for extra algorithmics classes have started. We invite all enthusiasts who want to prepare for the Computer Science Olympiad. Places are limited!',
+          },
+          {
+            languageCode: 'uk',
+            title: 'Реєстрація на гурток з алгоритміки',
+            content:
+              'Розпочалась реєстрація на додаткові заняття з алгоритміки. Запрошуємо всіх бажаючих.',
+          },
+          {
+            languageCode: 'ru',
+            title: 'Регистрация на кружок по алгоритмике',
+            content:
+              'Началась регистрация на дополнительные занятия по алгоритмике. Приглашаем всех желающих.',
           },
         ],
       },

@@ -48,6 +48,8 @@
   "LocaleSwitcher": {
     "pl": "Polski",
     "en": "English",
+    "uk": "Українська",
+    "ru": "Русский",
     "label": "Language selection",
     "switchTo": "Switch language to {locale}"
   }

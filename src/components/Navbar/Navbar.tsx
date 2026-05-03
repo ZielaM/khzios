@@ -60,56 +60,56 @@ export default function Navbar() {
         <div className={style.navLinks}>
           <NavItem
             label={t('news')}
-            href="/aktualnosci"
+            href="/news"
             onClick={closeMobileMenu}
           />
 
           {/* O nas */}
-          <DropdownMenu label={t('aboutUs')} href="/o-nas" onClick={closeMobileMenu}>
+          <DropdownMenu label={t('aboutUs')} href="/about-us" onClick={closeMobileMenu}>
             {/* Struktura */}
             <DropdownItem
               label={t('structure')}
               desc={t('structureDesc')}
-              href="/o-nas/struktura"
+              href="/about-us/structure"
             >
               <DropdownItem
                 label={t('headOfDepartment')}
-                href="/o-nas/struktura/kierownik"
+                href="/about-us/structure/head"
               />
               <DropdownItem
                 label={t('secretariat')}
-                href="/o-nas/struktura/sekretariat"
+                href="/about-us/structure/secretariat"
               />
               <DropdownItem
                 label={t('ruminants')}
-                href="/o-nas/struktura/przezuwajace"
+                href="/about-us/structure/ruminants"
               />
               <DropdownItem
                 label={t('poultry')}
-                href="/o-nas/struktura/drob"
+                href="/about-us/structure/poultry"
               />
               <DropdownItem
                 label={t('swine')}
-                href="/o-nas/struktura/trzoda"
+                href="/about-us/structure/swine"
               />
               <DropdownItem
                 label={t('furAnimals')}
-                href="/o-nas/struktura/futerkowe"
+                href="/about-us/structure/fur-animals"
               />
               <DropdownItem
                 label={t('vetLab')}
-                href="/o-nas/struktura/weterynaryjna"
+                href="/about-us/structure/veterinary"
               />
               <DropdownItem
                 label={t('breedingBooks')}
-                href="/o-nas/struktura/ksiegi-zlotnickie"
+                href="/about-us/structure/zlotnicka-pig-herdbooks"
               />
             </DropdownItem>
             {/* Publikacje */}
             <DropdownItem
               label={t('publications')}
               desc={t('publicationsDesc')}
-              href="/o-nas/publikacje"
+              href="/about-us/publications"
             />
           </DropdownMenu>
 
@@ -118,7 +118,7 @@ export default function Navbar() {
             href="/student"
             onClick={closeMobileMenu}
           />
-          <NavItem label={t('contact')} href="/kontakt" onClick={closeMobileMenu} />
+          <NavItem label={t('contact')} href="/contact" onClick={closeMobileMenu} />
         </div>
 
         {/* Language & WCAG Controls */}
@@ -143,7 +143,7 @@ function DropdownMenu({
   onClick,
 }: {
   label: string;
-  href: string;
+  href: React.ComponentProps<typeof Link>['href'];
   children: React.ReactNode;
   onClick?: () => void;
 }) {
@@ -205,7 +205,7 @@ function DropdownItem({
 }: {
   label: string;
   desc?: string;
-  href: string;
+  href: React.ComponentProps<typeof Link>['href'];
   children?: React.ReactNode;
 }) {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
@@ -272,7 +272,7 @@ function NavItem({
   onClick,
 }: {
   label: string;
-  href: string;
+  href: React.ComponentProps<typeof Link>['href'];
   onClick?: () => void;
 }) {
   return (

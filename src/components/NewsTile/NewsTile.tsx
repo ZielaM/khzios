@@ -56,7 +56,7 @@ export default function NewsTile({ news, locale }: NewsTileProps) {
 
   return (
     <article className={style.newsTile}>
-      <Link href={`/aktualnosci/${news.id}`} className={style.linkWrapper}>
+      <Link href={{ pathname: '/news/[id]', params: { id: news.id } }} className={style.linkWrapper}>
         <div className={style.imageContainer}>
           <Image
             src={thumbnail}

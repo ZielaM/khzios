@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { routing } from '@/i18n/routing';
+import { useParams } from 'next/navigation';
 import style from './LanguageSwitcher.module.scss';
 import clsx from 'clsx';
 
@@ -12,8 +13,13 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
   const t = useTranslations('LocaleSwitcher');
 
+  const params = useParams();
+
   const handleLocaleChange = (newLocale: string) => {
-    router.replace(pathname, { locale: newLocale });
+    router.replace(
+      { pathname, params } as any,
+      { locale: newLocale }
+    );
   };
 
   return (

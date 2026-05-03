@@ -1,4 +1,6 @@
 import { prisma } from '../src/lib/prisma';
+// Opcjonalnie możesz zaimportować Enum z wygenerowanego klienta, jeśli wolisz ścisłe typowanie:
+// import { LanguageCode } from '@prisma/client';
 
 async function main() {
   console.log('Rozpoczynam populację bazy danych...');
@@ -173,6 +175,7 @@ async function main() {
     include: { translations: true },
   });
 
+  // Zaktualizowano również sprawdzenie języka w funkcji pomocniczej
   const getTitle = (news: typeof news1) =>
     news.translations.find((t) => t.languageCode === 'pl')?.title ?? news.id;
 

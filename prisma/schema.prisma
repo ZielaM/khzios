@@ -1,15 +1,18 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider        = "prisma-client"
   output          = "../src/generated/prisma"
+  previewFeatures = ["fullTextSearchPostgres"] 
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum LanguageCode {
+  pl
+  en
+  uk
+  ru
 }
 
 model News {
@@ -17,21 +20,27 @@ model News {
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   published    Boolean           @default(false)
+  
   tags         Tag[]
   photos       Photo[]
   translations NewsTranslation[]
+
+  @@index([published, createdAt(sort: Desc)])
 }
 
 model NewsTranslation {
-  id           String @id @default(uuid(7))
   newsId       String
-  languageCode String
+  languageCode LanguageCode
   title        String
   content      String
 
   news         News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  
+  // Wirtualna kolumna do wyszukiwania
+  searchVector Unsupported("tsvector")? 
 
-  @@unique([newsId, languageCode])
+  @@id([newsId, languageCode])
+  // Brak indeksu w Prismie dla searchVector, zrobimy to w SQL
 }
 
 model Tag {
@@ -42,14 +51,13 @@ model Tag {
 }
 
 model TagTranslation {
-  id           String @id @default(uuid(7))
   tagId        String
-  languageCode String
+  languageCode LanguageCode
   name         String
 
   tag          Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
-  @@unique([tagId, languageCode])
+  @@id([tagId, languageCode])
 }
 
 model Photo {
@@ -57,4 +65,6 @@ model Photo {
   url    String
   newsId String
   news   News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  @@index([newsId])
 }

@@ -52,5 +52,16 @@
     "ru": "Русский",
     "label": "Wybór języka",
     "switchTo": "Zmień język na {locale}"
+  },
+  "NewsPage": {
+    "title": "Aktualności",
+    "searchPlaceholder": "Szukaj aktualności...",
+    "searchButton": "Szukaj",
+    "tagPlaceholder": "Tag (np. edukacja)",
+    "sortBy": "Sortuj według",
+    "sortDate": "Najnowsze",
+    "sortRelevance": "Trafność",
+    "noResults": "Nie znaleziono wyników.",
+    "rss": "Kanał RSS"
   }
 }

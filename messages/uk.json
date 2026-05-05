@@ -52,5 +52,16 @@
     "ru": "Русский",
     "label": "Вибір мови",
     "switchTo": "Змінити мову на {locale}"
+  },
+  "NewsPage": {
+    "title": "Новини",
+    "searchPlaceholder": "Пошук новин...",
+    "searchButton": "Пошук",
+    "tagPlaceholder": "Тег",
+    "sortBy": "Сортувати за",
+    "sortDate": "Найновіші",
+    "sortRelevance": "Релевантність",
+    "noResults": "Нічого не знайдено.",
+    "rss": "RSS стрічка"
   }
 }

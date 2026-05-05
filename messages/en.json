@@ -52,5 +52,16 @@
     "ru": "Русский",
     "label": "Language selection",
     "switchTo": "Switch language to {locale}"
+  },
+  "NewsPage": {
+    "title": "News",
+    "searchPlaceholder": "Search news...",
+    "searchButton": "Search",
+    "tagPlaceholder": "Tag (e.g. education)",
+    "sortBy": "Sort by",
+    "sortDate": "Newest",
+    "sortRelevance": "Relevance",
+    "noResults": "No results found.",
+    "rss": "RSS Feed"
   }
 }

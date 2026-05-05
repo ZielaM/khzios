@@ -1,11 +1,8 @@
 import { prisma } from '../src/lib/prisma';
-// Opcjonalnie możesz zaimportować Enum z wygenerowanego klienta, jeśli wolisz ścisłe typowanie:
-// import { LanguageCode } from '@prisma/client';
 
 async function main() {
   console.log('Rozpoczynam populację bazy danych...');
 
-  // Czyszczenie istniejących danych (opcjonalne, ale zapobiega duplikatom)
   console.log('Czyszczenie istniejących danych...');
   await prisma.newsTranslation.deleteMany();
   await prisma.tagTranslation.deleteMany();
@@ -54,41 +51,33 @@ async function main() {
     },
   });
 
-  console.log('Tworzenie artykułów...');
+  console.log('Tworzenie unikalnych artykułów...');
   const news1 = await prisma.news.create({
     data: {
       published: true,
-      tags: {
-        connect: [{ id: tagTechnologia.id }, { id: tagEdukacja.id }],
-      },
-      photos: {
-        create: [{ url: '/image.png' }, { url: '/image.png' }],
-      },
+      tags: { connect: [{ id: tagTechnologia.id }, { id: tagEdukacja.id }] },
+      photos: { create: [{ url: '/image.png' }, { url: '/image.png' }] },
       translations: {
         create: [
           {
             languageCode: 'pl',
             title: 'Nowa pracownia komputerowa',
-            content:
-              'Z radością informujemy o otwarciu nowej, nowocześnie wyposażonej pracowni komputerowej. Znajduje się w niej 30 stanowisk z najnowszym oprogramowaniem, co pozwoli na jeszcze lepszą naukę programowania i projektowania.',
+            content: 'Z radością informujemy...',
           },
           {
             languageCode: 'en',
             title: 'New computer lab',
-            content:
-              'We are pleased to announce the opening of a new, modernly equipped computer lab. It features 30 workstations with the latest software, enabling even better learning in programming and design.',
+            content: 'We are pleased to announce...',
           },
           {
             languageCode: 'uk',
             title: "Нова комп'ютерна лабораторія",
-            content:
-              "Ми раді повідомити про відкриття нової, сучасно обладнаної комп'ютерної лабораторії. Вона налічує 30 робочих місць з найновішим програмним забезпеченням.",
+            content: 'Ми раді повідомити...',
           },
           {
             languageCode: 'ru',
             title: 'Новая компьютерная лаборатория',
-            content:
-              'Мы рады сообщить об открытии новой, современно оборудованной компьютерной лаборатории. Она насчитывает 30 рабочих мест с новейшим программным обеспечением.',
+            content: 'Мы рады сообщить...',
           },
         ],
       },
@@ -99,37 +88,29 @@ async function main() {
   const news2 = await prisma.news.create({
     data: {
       published: true,
-      tags: {
-        connect: [{ id: tagWydarzenia.id }, { id: tagTechnologia.id }],
-      },
-      photos: {
-        create: [{ url: '/image.png' }],
-      },
+      tags: { connect: [{ id: tagWydarzenia.id }, { id: tagTechnologia.id }] },
+      photos: { create: [{ url: '/image.png' }] },
       translations: {
         create: [
           {
             languageCode: 'pl',
             title: 'Wyniki szkolnego Hackathonu 2026',
-            content:
-              'Znamy już zwycięzców tegorocznego Hackathonu! Pierwsze miejsce zajęła drużyna "CodeNinjas", która stworzyła innowacyjną aplikację. Serdecznie gratulujemy wszystkim uczestnikom zaangażowania i wspaniałych pomysłów.',
+            content: 'Znamy już zwycięzców...',
           },
           {
             languageCode: 'en',
             title: 'School Hackathon 2026 Results',
-            content:
-              'We now know the winners of this year\'s Hackathon! First place went to team "CodeNinjas", who created an innovative application. Congratulations to all participants for their dedication and great ideas.',
+            content: 'We now know the winners...',
           },
           {
             languageCode: 'uk',
             title: 'Результати шкільного Хакатону 2026',
-            content:
-              'Ми вже знаємо переможців цьогорічного Хакатону! Перше місце посіла команда "CodeNinjas", яка створила інноваційний додаток.',
+            content: 'Ми вже знаємо...',
           },
           {
             languageCode: 'ru',
             title: 'Результаты школьного Хакатона 2026',
-            content:
-              'Мы уже знаем победителей Хакатона в этом году! Первое место заняла команда "CodeNinjas", создавшая инновационное приложение.',
+            content: 'Мы уже знаем...',
           },
         ],
       },
@@ -140,34 +121,28 @@ async function main() {
   const news3 = await prisma.news.create({
     data: {
       published: false,
-      tags: {
-        connect: [{ id: tagEdukacja.id }],
-      },
+      tags: { connect: [{ id: tagEdukacja.id }] },
       translations: {
         create: [
           {
             languageCode: 'pl',
             title: 'Zapisy na kółko z algorytmiki',
-            content:
-              'Ruszyły zapisy na dodatkowe zajęcia z algorytmiki. Zapraszamy wszystkich pasjonatów, którzy chcą przygotować się do olimpiady informatycznej. Liczba miejsc jest ograniczona!',
+            content: 'Ruszyły zapisy...',
           },
           {
             languageCode: 'en',
             title: 'Algorithmics club sign-ups',
-            content:
-              'Sign-ups for extra algorithmics classes have started. We invite all enthusiasts who want to prepare for the Computer Science Olympiad. Places are limited!',
+            content: 'Sign-ups for extra...',
           },
           {
             languageCode: 'uk',
             title: 'Реєстрація на гурток з алгоритміки',
-            content:
-              'Розпочалась реєстрація на додаткові заняття з алгоритміки. Запрошуємо всіх бажаючих.',
+            content: 'Розпочалась реєстрація...',
           },
           {
             languageCode: 'ru',
             title: 'Регистрация на кружок по алгоритмике',
-            content:
-              'Началась регистрация на дополнительные занятия по алгоритмике. Приглашаем всех желающих.',
+            content: 'Началась регистрация...',
           },
         ],
       },
@@ -175,15 +150,62 @@ async function main() {
     include: { translations: true },
   });
 
-  // Zaktualizowano również sprawdzenie języka w funkcji pomocniczej
+  console.log('Masowe generowanie 50 artykułów testowych...');
+
+  await prisma.$transaction(
+    async (tx) => {
+      // Używamy bezpiecznej, sekwencyjnej pętli wewnątrz ZABLOKOWANEJ transakcji
+      for (let i = 0; i < 50; i++) {
+        await tx.news.create({
+          data: {
+            published: true,
+            tags: {
+              connect: [{ id: tagTechnologia.id }, { id: tagEdukacja.id }],
+            },
+            photos: { create: [{ url: '/image.png' }, { url: '/image.png' }] },
+            translations: {
+              create: [
+                {
+                  languageCode: 'pl',
+                  title: `Nowa pracownia komputerowa - Kopia ${i + 1}`,
+                  content:
+                    'Z radością informujemy o otwarciu nowej, nowocześnie wyposażonej pracowni komputerowej. Znajduje się w niej 30 stanowisk z najnowszym oprogramowaniem, co pozwoli na jeszcze lepszą naukę programowania i projektowania.',
+                },
+                {
+                  languageCode: 'en',
+                  title: `New computer lab - Copy ${i + 1}`,
+                  content: 'We are pleased to announce...',
+                },
+                {
+                  languageCode: 'uk',
+                  title: `Нова комп'ютерна лабораторія - Копія ${i + 1}`,
+                  content: 'Ми раді повідомити...',
+                },
+                {
+                  languageCode: 'ru',
+                  title: `Новая компьютерная лаборатория - Копия ${i + 1}`,
+                  content: 'Мы рады сообщить...',
+                },
+              ],
+            },
+          },
+        });
+      }
+    },
+    {
+      timeout: 100000, // Zapas czasu dla bazy danych
+    }
+  );
+
   const getTitle = (news: typeof news1) =>
     news.translations.find((t) => t.languageCode === 'pl')?.title ?? news.id;
 
   console.log('Populacja bazy zakończona sukcesem!');
-  console.log(`Utworzono artykuły:
+  console.log(`Utworzono ręczne artykuły:
   - ${getTitle(news1)}
   - ${getTitle(news2)}
-  - ${getTitle(news3)}`);
+  - ${getTitle(news3)}
+  Oraz wygenerowano 50 dodatkowych!`);
 }
 
 main()

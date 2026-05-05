@@ -52,5 +52,16 @@
     "ru": "Русский",
     "label": "Выбор языка",
     "switchTo": "Сменить язык на {locale}"
+  },
+  "NewsPage": {
+    "title": "Новости",
+    "searchPlaceholder": "Поиск новостей...",
+    "searchButton": "Поиск",
+    "tagPlaceholder": "Тег",
+    "sortBy": "Сортировать по",
+    "sortDate": "Новейшие",
+    "sortRelevance": "Релевантность",
+    "noResults": "Ничего не найдено.",
+    "rss": "RSS канал"
   }
 }

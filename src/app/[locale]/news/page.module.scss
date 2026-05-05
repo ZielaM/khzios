@@ -1,0 +1,75 @@
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 4rem;
+
+  @media (max-width: 768px) {
+    padding: 6rem 1rem 2rem;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.rssButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--surface);
+  color: #f26522; // RSS orange
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f26522;
+    color: white;
+    border-color: #f26522;
+  }
+}
+
+.newsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.noResults {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  background: var(--surface-alt, #f8f9fa);
+  border-radius: var(--radius-lg, 12px);
+  border: 1px dashed var(--border);
+}

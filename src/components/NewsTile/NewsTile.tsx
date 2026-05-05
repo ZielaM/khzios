@@ -100,7 +100,10 @@ export default function NewsTile({ news, locale }: NewsTileProps) {
 
           <h3 className={style.title}>{title}</h3>
 
-          <p className={style.description}>{content}</p>
+          <p
+            className={style.description}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
 
           <div className={style.readMore}>
             {t('readMore')}

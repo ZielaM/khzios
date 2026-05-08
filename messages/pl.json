@@ -63,5 +63,12 @@
     "sortRelevance": "Trafność",
     "noResults": "Nie znaleziono wyników.",
     "rss": "Kanał RSS"
+  },
+  "Pagination": {
+    "prev": "Poprzednia strona",
+    "next": "Następna strona",
+    "page": "Strona {page}",
+    "navLabel": "Paginacja",
+    "more": "Więcej stron"
   }
 }

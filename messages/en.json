@@ -63,5 +63,12 @@
     "sortRelevance": "Relevance",
     "noResults": "No results found.",
     "rss": "RSS Feed"
+  },
+  "Pagination": {
+    "prev": "Previous page",
+    "next": "Next page",
+    "page": "Page {page}",
+    "navLabel": "Pagination",
+    "more": "More pages"
   }
 }

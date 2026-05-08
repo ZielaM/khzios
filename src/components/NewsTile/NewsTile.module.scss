@@ -33,6 +33,12 @@
 
     .readMore {
       color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+
+      :global(.wcag-high-contrast) & {
+        color: var(--foreground);
+      }
 
       svg {
         transform: translateX(6px);
@@ -47,6 +53,17 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  outline: none;
+
+  &:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+    border-radius: 16px;
+
+    :global(.wcag-high-contrast) & {
+      outline-color: var(--foreground);
+    }
+  }
 }
 
 .imageContainer {

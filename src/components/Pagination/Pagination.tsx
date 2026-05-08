@@ -3,6 +3,7 @@
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import style from './Pagination.module.scss';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface PaginationProps {
   currentPage: number;
@@ -16,6 +17,7 @@ export default function Pagination({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations('Pagination');
 
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
@@ -48,13 +50,14 @@ export default function Pagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className={style.pagination}>
+    <nav aria-label={t('navLabel')} className={style.pagination}>
       <button
         className={style.navButton}
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
+        aria-label={t('prev')}
       >
-        <ChevronLeft size={20} />
+        <ChevronLeft size={20} aria-hidden="true" />
       </button>
 
       {filteredPages.map((p, i) => (
@@ -63,6 +66,8 @@ export default function Pagination({
           className={`${style.pageButton} ${p === currentPage ? style.active : ''} ${p === '...' ? style.dots : ''}`}
           onClick={() => typeof p === 'number' && handlePageChange(p)}
           disabled={p === '...'}
+          aria-label={p === '...' ? t('more') : t('page', { page: p })}
+          aria-current={p === currentPage ? 'page' : undefined}
         >
           {p}
         </button>
@@ -72,9 +77,10 @@ export default function Pagination({
         className={style.navButton}
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
+        aria-label={t('next')}
       >
-        <ChevronRight size={20} />
+        <ChevronRight size={20} aria-hidden="true" />
       </button>
-    </div>
+    </nav>
   );
 }

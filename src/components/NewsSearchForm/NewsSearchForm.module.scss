@@ -9,6 +9,19 @@
   z-index: 10;
   transition: box-shadow 0.3s ease;
 
+  --rs-bg: var(--background, #ffffff);
+  --rs-text: var(--text-primary);
+  --rs-border: var(--border-dark, #d1d5db);
+  --rs-border-focus: var(--color-primary);
+  --rs-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --rs-shadow-focus: 0 0 0 3px rgba(36, 113, 81, 0.2);
+  --rs-option-hover: rgba(36, 113, 81, 0.1);
+  --rs-option-hover-text: var(--text-primary);
+  --rs-option-selected: var(--color-primary);
+  --rs-option-selected-text: white;
+  --rs-multi-bg: rgba(36, 113, 81, 0.1);
+  --rs-multi-text: var(--color-primary);
+
   &:hover {
     box-shadow: 0 20px 40px -10px rgba(36, 113, 81, 0.18);
   }
@@ -35,6 +48,19 @@
     &::before {
       display: none;
     }
+
+    --rs-bg: var(--background);
+    --rs-text: var(--foreground);
+    --rs-border: var(--foreground);
+    --rs-border-focus: var(--foreground);
+    --rs-shadow: none;
+    --rs-shadow-focus: 0 0 0 3px var(--foreground);
+    --rs-option-hover: var(--foreground);
+    --rs-option-hover-text: var(--background);
+    --rs-option-selected: var(--foreground);
+    --rs-option-selected-text: var(--background);
+    --rs-multi-bg: var(--background);
+    --rs-multi-text: var(--foreground);
   }
 }
 
@@ -60,26 +86,29 @@
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-tertiary, #9ca3af);
+    color: var(--rs-text);
   }
 
   input {
     width: 100%;
     padding: 0.85rem 1rem 0.85rem 2.75rem;
-    border: 1px solid var(--border-dark, #d1d5db);
+    border: 1px solid var(--rs-border);
     border-radius: var(--radius-md, 8px);
-    background: var(--background, #ffffff);
-    color: var(--text-primary);
+    background: var(--rs-bg);
+    color: var(--rs-text);
     font-size: 1rem;
     outline: none;
     transition: all 0.2s ease;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--rs-shadow);
+
+    &::placeholder {
+      color: var(--rs-text);
+      opacity: 0.7;
+    }
 
     &:focus {
-      border-color: var(--color-primary);
-      box-shadow:
-        0 0 0 3px rgba(36, 113, 81, 0.2),
-        inset 0 1px 2px rgba(0, 0, 0, 0.05);
+      border-color: var(--rs-border-focus);
+      box-shadow: var(--rs-shadow-focus);
     }
   }
 }

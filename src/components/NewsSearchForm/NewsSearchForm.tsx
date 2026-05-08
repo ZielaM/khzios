@@ -21,50 +21,57 @@ const customSelectStyles: StylesConfig<OptionType, boolean> = {
     ...base,
     padding: '0.2rem 0.5rem',
     borderRadius: '8px',
-    borderColor: state.isFocused
-      ? 'var(--color-primary)'
-      : 'var(--border-dark, #d1d5db)',
-    boxShadow: state.isFocused
-      ? '0 0 0 3px rgba(36, 113, 81, 0.2)'
-      : '0 1px 2px rgba(0,0,0,0.05)',
+    borderColor: state.isFocused ? 'var(--rs-border-focus)' : 'var(--rs-border)',
+    boxShadow: state.isFocused ? 'var(--rs-shadow-focus)' : 'var(--rs-shadow)',
     '&:hover': {
-      borderColor: '#9ca3af',
+      borderColor: 'var(--rs-border-focus)',
     },
     minWidth: '200px',
-    background: 'var(--background, #ffffff)',
+    background: 'var(--rs-bg)',
     cursor: 'pointer',
     fontSize: '1rem',
   }),
   menu: (base) => ({
     ...base,
     zIndex: 50,
+    background: 'var(--rs-bg)',
+    border: '1px solid var(--rs-border)',
   }),
   option: (base, state) => ({
     ...base,
     backgroundColor: state.isSelected
-      ? 'var(--color-primary)'
+      ? 'var(--rs-option-selected)'
       : state.isFocused
-        ? 'rgba(36, 113, 81, 0.1)'
+        ? 'var(--rs-option-hover)'
         : 'transparent',
-    color: state.isSelected ? 'white' : 'var(--text-primary)',
+    color: state.isSelected 
+      ? 'var(--rs-option-selected-text)' 
+      : state.isFocused 
+        ? 'var(--rs-option-hover-text)' 
+        : 'var(--rs-text)',
     cursor: 'pointer',
+  }),
+  singleValue: (base) => ({
+    ...base,
+    color: 'var(--rs-text)',
   }),
   multiValue: (base) => ({
     ...base,
-    backgroundColor: 'rgba(36, 113, 81, 0.1)',
+    backgroundColor: 'var(--rs-multi-bg)',
     borderRadius: '4px',
+    border: '1px solid var(--rs-border)',
   }),
   multiValueLabel: (base) => ({
     ...base,
-    color: 'var(--color-primary)',
+    color: 'var(--rs-multi-text)',
     fontWeight: 500,
   }),
   multiValueRemove: (base) => ({
     ...base,
-    color: 'var(--color-primary)',
+    color: 'var(--rs-multi-text)',
     '&:hover': {
-      backgroundColor: 'var(--color-primary)',
-      color: 'white',
+      backgroundColor: 'var(--rs-option-selected)',
+      color: 'var(--rs-option-selected-text)',
     },
   }),
 };
@@ -165,10 +172,11 @@ export default function NewsSearchForm({
     <div className={style.searchForm}>
       <div className={style.inputGroup}>
         <div className={style.searchInput}>
-          <Search className={style.icon} size={20} />
+          <Search className={style.icon} size={20} aria-hidden="true" />
           <input
             type="text"
             placeholder={t('searchPlaceholder')}
+            aria-label={t('searchPlaceholder')}
             value={query}
             onChange={(e) => {
               const val = e.target.value;
@@ -186,6 +194,7 @@ export default function NewsSearchForm({
             isMulti
             isSearchable
             placeholder={t('tagPlaceholder')}
+            aria-label={t('tagPlaceholder')}
             options={availableTags}
             value={selectedTags}
             onChange={(newValue) => setSelectedTags(newValue as OptionType[])}
@@ -199,6 +208,7 @@ export default function NewsSearchForm({
             <Select
               instanceId="news-sort-select"
               isSearchable={false}
+              aria-label="Sort"
               options={sortOptions}
               value={selectedSort}
               onChange={(newValue) => setSelectedSort(newValue as OptionType)}

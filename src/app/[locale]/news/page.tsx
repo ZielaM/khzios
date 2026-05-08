@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import { SearchX } from 'lucide-react';
 import { searchPublishedNews } from '@/actions/search';
 import { prisma } from '@/lib/prisma';
 import NewsTile from '@/components/NewsTile';
@@ -72,9 +73,13 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
         availableTags={availableTags}
       />
 
+
       <div className={style.newsGrid}>
         {data.length === 0 ? (
-          <p className={style.noResults}>{t('noResults')}</p>
+          <div className={style.noResults}>
+            <SearchX className={style.noResultsIcon} size={48} aria-hidden="true" />
+            <p>{t('noResults')}</p>
+          </div>
         ) : (
           data.map((item) => (
             <NewsTile key={item.id} news={item} locale={locale} />

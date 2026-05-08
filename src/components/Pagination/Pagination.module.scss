@@ -32,6 +32,28 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  outline: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+    background: transparent;
+    color: var(--foreground);
+
+    &:hover:not(:disabled) {
+      background: var(--foreground);
+      color: var(--background);
+    }
+
+    &:focus-visible {
+      outline-color: var(--foreground);
+    }
+  }
 }
 
 .active {
@@ -48,6 +70,18 @@
     background: var(--color-secondary);
     border-color: var(--color-secondary);
   }
+
+  :global(.wcag-high-contrast) & {
+    background: var(--foreground);
+    color: var(--background);
+    border-color: var(--foreground);
+    box-shadow: none;
+
+    &:hover:not(:disabled) {
+      background: var(--foreground);
+      color: var(--background);
+    }
+  }
 }
 
 .dots {
@@ -58,5 +92,15 @@
   &:hover {
     background: transparent;
     border: none;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: none;
+    background: transparent;
+    color: var(--foreground);
+
+    &:hover {
+      background: transparent;
+    }
   }
 }

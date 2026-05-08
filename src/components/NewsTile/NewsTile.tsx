@@ -107,7 +107,7 @@ export default function NewsTile({ news, locale }: NewsTileProps) {
 
           <div className={style.readMore}>
             {t('readMore')}
-            <ArrowRight size={18} />
+            <ArrowRight size={18} aria-hidden="true" />
           </div>
         </div>
       </Link>

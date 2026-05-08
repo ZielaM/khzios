@@ -119,12 +119,12 @@ export default function NewsSearchForm({
       let changed = false;
 
       if (newQuery) {
-        if (params.get('szukaj') !== newQuery) {
-          params.set('szukaj', newQuery);
+        if (params.get('query') !== newQuery) {
+          params.set('query', newQuery);
           changed = true;
         }
-      } else if (params.has('szukaj')) {
-        params.delete('szukaj');
+      } else if (params.has('query')) {
+        params.delete('query');
         changed = true;
       }
 

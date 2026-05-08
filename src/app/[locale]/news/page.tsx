@@ -20,8 +20,8 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
 
   const resolvedSearchParams = await searchParams;
   const query =
-    typeof resolvedSearchParams.szukaj === 'string'
-      ? resolvedSearchParams.szukaj
+    typeof resolvedSearchParams.query === 'string'
+      ? resolvedSearchParams.query
       : undefined;
   const tag =
     typeof resolvedSearchParams.tag === 'string'

@@ -94,8 +94,8 @@ export default function NewsSearchForm({
 
   const sortOptions: OptionType[] = useMemo(
     () => [
-      { value: 'date', label: t('sortDate') },
       { value: 'relevance', label: t('sortRelevance') },
+      { value: 'date', label: t('sortDate') },
     ],
     [t]
   );
@@ -172,10 +172,10 @@ export default function NewsSearchForm({
             value={query}
             onChange={(e) => {
               const val = e.target.value;
-              setQuery(val);
-              if (!val && selectedSort.value === 'relevance') {
+              if (!query && val) {
                 setSelectedSort(sortOptions[0]);
               }
+              setQuery(val);
             }}
           />
         </div>

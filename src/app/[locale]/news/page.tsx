@@ -5,7 +5,6 @@ import NewsTile from '@/components/NewsTile';
 import NewsSearchForm from '@/components/NewsSearchForm';
 import Pagination from '@/components/Pagination';
 import style from './page.module.scss';
-// import { Link } from '@/i18n/routing';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -35,9 +34,9 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
     typeof resolvedSearchParams.sort === 'string' &&
     ['date', 'relevance'].includes(resolvedSearchParams.sort)
       ? (resolvedSearchParams.sort as 'date' | 'relevance')
-      : 'date';
+      : 'relevance';
 
-  const limit = 12; // Było 10, teraz 12, aby dzielić się ładnie przez 3
+  const limit = 12;
 
   // Fetch all tags for the dropdown
   const dbTags = await prisma.tag.findMany({ include: { translations: true } });

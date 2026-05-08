@@ -89,7 +89,7 @@
 .noResultsIcon {
   color: var(--color-primary);
   opacity: 0.8;
-  
+
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
     opacity: 1;

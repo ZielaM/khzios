@@ -73,11 +73,14 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
         availableTags={availableTags}
       />
 
-
       <div className={style.newsGrid}>
         {data.length === 0 ? (
           <div className={style.noResults}>
-            <SearchX className={style.noResultsIcon} size={48} aria-hidden="true" />
+            <SearchX
+              className={style.noResultsIcon}
+              size={48}
+              aria-hidden="true"
+            />
             <p>{t('noResults')}</p>
           </div>
         ) : (

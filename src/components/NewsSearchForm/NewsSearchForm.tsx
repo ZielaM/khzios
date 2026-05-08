@@ -21,7 +21,9 @@ const customSelectStyles: StylesConfig<OptionType, boolean> = {
     ...base,
     padding: '0.2rem 0.5rem',
     borderRadius: '8px',
-    borderColor: state.isFocused ? 'var(--rs-border-focus)' : 'var(--rs-border)',
+    borderColor: state.isFocused
+      ? 'var(--rs-border-focus)'
+      : 'var(--rs-border)',
     boxShadow: state.isFocused ? 'var(--rs-shadow-focus)' : 'var(--rs-shadow)',
     '&:hover': {
       borderColor: 'var(--rs-border-focus)',
@@ -44,10 +46,10 @@ const customSelectStyles: StylesConfig<OptionType, boolean> = {
       : state.isFocused
         ? 'var(--rs-option-hover)'
         : 'transparent',
-    color: state.isSelected 
-      ? 'var(--rs-option-selected-text)' 
-      : state.isFocused 
-        ? 'var(--rs-option-hover-text)' 
+    color: state.isSelected
+      ? 'var(--rs-option-selected-text)'
+      : state.isFocused
+        ? 'var(--rs-option-hover-text)'
         : 'var(--rs-text)',
     cursor: 'pointer',
   }),

@@ -353,6 +353,13 @@ function WcagControls({
     } else {
       document.documentElement.style.fontSize = `calc(100% + ${newOffset * 10}%)`;
     }
+
+    // Force full repaint to prevent Chrome compositor artifacts
+    requestAnimationFrame(() => {
+      document.body.style.display = 'none';
+      void document.body.offsetHeight;
+      document.body.style.display = '';
+    });
   };
 
   return (

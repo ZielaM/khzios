@@ -19,7 +19,7 @@ body {
 
 nav + main {
   flex: 1;
-  padding-top: $navbar-height;
+  margin-top: $navbar-height;
 }
 
 * {

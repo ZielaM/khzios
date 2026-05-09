@@ -98,7 +98,9 @@
     color: var(--rs-text);
     font-size: 1rem;
     outline: none;
-    transition: all 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
     box-shadow: var(--rs-shadow);
 
     &::placeholder {

@@ -11,8 +11,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s ease;
   padding: 0 1rem;
+  transform: translateZ(0);
 
   @media (max-width: $breakpoint-tablet) {
     flex-direction: column;

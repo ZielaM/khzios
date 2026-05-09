@@ -20,7 +20,9 @@
   font-weight: 600;
   letter-spacing: 0.5px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 
   &:not(:last-child) {
     border-right: 1px solid

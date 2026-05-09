@@ -36,6 +36,23 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.getItem('wcag-high-contrast') === 'true') {
+                  document.documentElement.classList.add('wcag-high-contrast');
+                }
+                var fontOffset = parseInt(localStorage.getItem('wcag-font-offset') || '0', 10);
+                if (!isNaN(fontOffset) && fontOffset !== 0) {
+                  document.documentElement.style.fontSize = 'calc(100% + ' + (fontOffset * 10) + '%)';
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
       <body className={inter.variable}>
         <NextIntlClientProvider messages={messages}>
           <Navbar />

@@ -300,18 +300,42 @@ function WcagControls({
   const [highContrast, setHighContrast] = useState(false);
   const [fontSizeOffset, setFontSizeOffset] = useState(0);
 
-  const toggleHighContrast = () => {
-    setHighContrast((highContrast) => !highContrast);
-    if (!highContrast) {
+  useEffect(() => {
+    const savedContrast = localStorage.getItem('wcag-high-contrast') === 'true';
+    const savedFontOffset = parseInt(
+      localStorage.getItem('wcag-font-offset') || '0',
+      10
+    );
+
+    if (savedContrast) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setHighContrast(true);
       document.documentElement.classList.add('wcag-high-contrast');
+    }
+
+    if (!isNaN(savedFontOffset) && savedFontOffset !== 0) {
+      setFontSizeOffset(savedFontOffset);
+      document.documentElement.style.fontSize = `calc(100% + ${savedFontOffset * 10}%)`;
+    }
+  }, []);
+
+  const toggleHighContrast = () => {
+    const newValue = !highContrast;
+    setHighContrast(newValue);
+    if (newValue) {
+      document.documentElement.classList.add('wcag-high-contrast');
+      localStorage.setItem('wcag-high-contrast', 'true');
     } else {
       document.documentElement.classList.remove('wcag-high-contrast');
+      localStorage.setItem('wcag-high-contrast', 'false');
     }
   };
 
   const changeFontSize = (step: number) => {
-    const newOffset = Math.min(Math.max(fontSizeOffset + step, -2), 4);
+    const newOffset = Math.min(Math.max(fontSizeOffset + step, 0), 4);
     setFontSizeOffset(newOffset);
+    localStorage.setItem('wcag-font-offset', newOffset.toString());
+
     if (newOffset === 0) {
       document.documentElement.style.fontSize = '';
     } else {

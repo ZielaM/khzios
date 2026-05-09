@@ -18,6 +18,7 @@ export interface NewsTileProps {
     translations: NewsTranslation[];
   };
   locale: string;
+  priority?: boolean;
 }
 
 // Nazwy języków do wyświetlenia w adnotacji
@@ -26,7 +27,11 @@ const LANGUAGE_NAMES: Record<string, string> = {
   en: 'English',
 };
 
-export default function NewsTile({ news, locale }: NewsTileProps) {
+export default function NewsTile({
+  news,
+  locale,
+  priority = false,
+}: NewsTileProps) {
   const t = useTranslations('HomePage');
 
   // Wybierz pierwsze zdjęcie jako miniaturę, lub użyj placeholdera
@@ -73,6 +78,7 @@ export default function NewsTile({ news, locale }: NewsTileProps) {
             src={thumbnail}
             alt={title}
             fill
+            priority={priority}
             className={style.image}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />

@@ -1,10 +1,9 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
-import { SearchX } from 'lucide-react';
-import { searchPublishedNews } from '@/actions/search';
 import { prisma } from '@/lib/prisma';
-import NewsTile from '@/components/NewsTile';
 import NewsSearchForm from '@/components/NewsSearchForm';
-import Pagination from '@/components/Pagination';
+import NewsGridServer from '@/components/NewsGrid/NewsGridServer';
+import NewsGridSkeleton from '@/components/NewsGrid/NewsGridSkeleton';
 import style from './page.module.scss';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -40,6 +39,8 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
   const limit = 12;
 
   // Fetch all tags for the dropdown
+  // To avoid blocking the page for tags fetching, we can fetch them here.
+  // Wait, dbTags query is fast, but if it blocks, it blocks the search form.
   const dbTags = await prisma.tag.findMany({ include: { translations: true } });
   const availableTags = dbTags.map((t) => {
     const translation = t.translations.find((tr) => tr.languageCode === locale);
@@ -49,16 +50,10 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
     };
   });
 
-  const { data, totalPages } = await searchPublishedNews({
-    query,
-    language: locale,
-    tag,
-    page,
-    limit,
-    sortBy,
-  });
-
   const t = await getTranslations('NewsPage');
+
+  // Klucz dla Suspense, żeby odświeżało się po zmianie parametrów!
+  const suspenseKey = JSON.stringify({ query, tag, page, sortBy });
 
   return (
     <main className={style.main}>
@@ -73,24 +68,16 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
         availableTags={availableTags}
       />
 
-      <div className={style.newsGrid}>
-        {data.length === 0 ? (
-          <div className={style.noResults}>
-            <SearchX
-              className={style.noResultsIcon}
-              size={48}
-              aria-hidden="true"
-            />
-            <p>{t('noResults')}</p>
-          </div>
-        ) : (
-          data.map((item) => (
-            <NewsTile key={item.id} news={item} locale={locale} />
-          ))
-        )}
-      </div>
-
-      <Pagination currentPage={page} totalPages={totalPages} />
+      <Suspense key={suspenseKey} fallback={<NewsGridSkeleton />}>
+        <NewsGridServer
+          query={query}
+          locale={locale}
+          tag={tag}
+          page={page}
+          limit={limit}
+          sortBy={sortBy}
+        />
+      </Suspense>
     </main>
   );
 }

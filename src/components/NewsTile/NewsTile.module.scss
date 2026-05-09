@@ -45,6 +45,15 @@
       }
     }
   }
+  &:has(:focus-visible) {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+    border-color: transparent;
+
+    :global(.wcag-high-contrast) & {
+      outline-color: var(--foreground);
+    }
+  }
 }
 
 .linkWrapper {
@@ -54,16 +63,6 @@
   flex-direction: column;
   height: 100%;
   outline: none;
-
-  &:focus-visible {
-    outline: 3px solid var(--color-primary);
-    outline-offset: 4px;
-    border-radius: 16px;
-
-    :global(.wcag-high-contrast) & {
-      outline-color: var(--foreground);
-    }
-  }
 }
 
 .imageContainer {

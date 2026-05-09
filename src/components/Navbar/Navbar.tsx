@@ -344,7 +344,7 @@ function WcagControls({
   };
 
   const changeFontSize = (step: number) => {
-    const newOffset = Math.min(Math.max(fontSizeOffset + step, 0), 4);
+    const newOffset = Math.min(Math.max(fontSizeOffset + step, 0), 10);
     setFontSizeOffset(newOffset);
     localStorage.setItem('wcag-font-offset', newOffset.toString());
 

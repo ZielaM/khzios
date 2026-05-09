@@ -40,7 +40,7 @@ export default async function RootLayout({
   const tWcag = await getTranslations('Wcag');
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{

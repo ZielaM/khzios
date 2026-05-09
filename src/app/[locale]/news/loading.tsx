@@ -4,7 +4,7 @@ import NewsGridSkeleton from '@/components/NewsGrid/NewsGridSkeleton';
 
 export default function Loading() {
   return (
-    <main className={style.main}>
+    <div className={style.main}>
       <div className={style.header}>
         <h1 className={style.title}>...</h1>
       </div>
@@ -14,6 +14,6 @@ export default function Loading() {
       </div>
 
       <NewsGridSkeleton />
-    </main>
+    </div>
   );
 }

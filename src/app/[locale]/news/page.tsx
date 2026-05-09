@@ -56,7 +56,7 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
   const suspenseKey = JSON.stringify({ query, tag, page, sortBy });
 
   return (
-    <main className={style.main}>
+    <div className={style.main}>
       <div className={style.header}>
         <h1 className={style.title}>{t('title')}</h1>
       </div>
@@ -78,6 +78,6 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
           sortBy={sortBy}
         />
       </Suspense>
-    </main>
+    </div>
   );
 }

@@ -51,6 +51,10 @@
     font-size: 0.85rem;
     letter-spacing: -0.5px;
     color: $accent-color;
+
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+    }
   }
 }
 
@@ -183,6 +187,10 @@
     background-color: $accent-color;
     transition: width 0.3s ease;
     border-radius: 2px;
+
+    :global(.wcag-high-contrast) & {
+      background-color: var(--foreground);
+    }
   }
 
   &:hover {
@@ -405,6 +413,10 @@
       text-decoration: underline;
       text-underline-offset: 4px;
 
+      :global(.wcag-high-contrast) & {
+        color: var(--foreground);
+      }
+
       &:hover {
         background-color: color-mix(in srgb, var(--foreground) 5%, transparent);
         border-radius: 6px;
@@ -453,6 +465,10 @@
       background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
       outline: 2px solid $accent-color;
       outline-offset: 2px;
+
+      :global(.wcag-high-contrast) & {
+        outline-color: var(--foreground);
+      }
     }
 
     &.active {

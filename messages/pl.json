@@ -31,7 +31,8 @@
     "groupLabel": "Narzędzia dostępności WCAG",
     "decreaseFont": "Pomniejsz tekst",
     "increaseFont": "Powiększ tekst",
-    "toggleContrast": "Przełącz wysoki kontrast"
+    "toggleContrast": "Przełącz wysoki kontrast",
+    "skipToMain": "Przejdź do głównej treści"
   },
   "Footer": {
     "brandTitle": "Katedra Hodowli Zwierząt <br></br> i Oceny Surowców",

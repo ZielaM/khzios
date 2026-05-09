@@ -31,7 +31,8 @@
     "groupLabel": "WCAG Accessibility Tools",
     "decreaseFont": "Decrease font size",
     "increaseFont": "Increase font size",
-    "toggleContrast": "Toggle high contrast"
+    "toggleContrast": "Toggle high contrast",
+    "skipToMain": "Skip to main content"
   },
   "Footer": {
     "brandTitle": "Department of Animal Breeding <br></br> and Product Evaluation",

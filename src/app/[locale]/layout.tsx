@@ -4,7 +4,11 @@ import '@/app/globals.scss';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 
@@ -33,6 +37,7 @@ export default async function RootLayout({
 
   setRequestLocale(locale);
   const messages = await getMessages();
+  const tWcag = await getTranslations('Wcag');
 
   return (
     <html lang={locale}>
@@ -55,8 +60,11 @@ export default async function RootLayout({
       </head>
       <body className={inter.variable}>
         <NextIntlClientProvider messages={messages}>
+          <a href="#main-content" className="skip-link">
+            {tWcag('skipToMain')}
+          </a>
           <Navbar />
-          <main>{children}</main>
+          <main id="main-content">{children}</main>
           <Footer />
         </NextIntlClientProvider>
       </body>

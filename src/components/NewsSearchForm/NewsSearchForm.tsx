@@ -210,7 +210,7 @@ export default function NewsSearchForm({
             <Select
               instanceId="news-sort-select"
               isSearchable={false}
-              aria-label="Sort"
+              aria-label={t('sortBy')}
               options={sortOptions}
               value={selectedSort}
               onChange={(newValue) => setSelectedSort(newValue as OptionType)}

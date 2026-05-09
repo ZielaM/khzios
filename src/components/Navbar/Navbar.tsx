@@ -175,7 +175,7 @@ function DropdownMenu({
         }
       }}
     >
-      <Link href={href} className={style.navLink} onClick={handleLinkClick}>
+      <Link href={href} className={style.navLink} onClick={handleLinkClick} aria-expanded={isDropdownOpen} aria-haspopup="true">
         {label}
         <svg
           className={clsx(style.dropdownIcon, { [style.open]: isDropdownOpen })}
@@ -245,6 +245,8 @@ function DropdownItem({
         href={href}
         className={style.dropdownLink}
         onClick={handleLinkClick}
+        aria-expanded={hasChildren ? isSubMenuOpen : undefined}
+        aria-haspopup={hasChildren ? 'true' : undefined}
       >
         <div className={style.dropdownItemContent}>
           <h4>{label}</h4>

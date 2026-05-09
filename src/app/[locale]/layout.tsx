@@ -51,7 +51,7 @@ export default async function RootLayout({
                 }
                 var fontOffset = parseInt(localStorage.getItem('wcag-font-offset') || '0', 10);
                 if (!isNaN(fontOffset) && fontOffset !== 0) {
-                  document.documentElement.style.fontSize = 'calc(100% + ' + (fontOffset * 10) + '%)';
+                  document.documentElement.style.setProperty('--wcag-font-scale', (1 + fontOffset * 0.1).toString());
                 }
               } catch (e) {}
             `,

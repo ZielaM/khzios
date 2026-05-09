@@ -327,7 +327,10 @@ function WcagControls({
 
     if (!isNaN(savedFontOffset) && savedFontOffset !== 0) {
       setFontSizeOffset(savedFontOffset);
-      document.documentElement.style.fontSize = `calc(100% + ${savedFontOffset * 10}%)`;
+      document.documentElement.style.setProperty(
+        '--wcag-font-scale',
+        (1 + savedFontOffset * 0.1).toString()
+      );
     }
   }, []);
 
@@ -349,9 +352,12 @@ function WcagControls({
     localStorage.setItem('wcag-font-offset', newOffset.toString());
 
     if (newOffset === 0) {
-      document.documentElement.style.fontSize = '';
+      document.documentElement.style.removeProperty('--wcag-font-scale');
     } else {
-      document.documentElement.style.fontSize = `calc(100% + ${newOffset * 10}%)`;
+      document.documentElement.style.setProperty(
+        '--wcag-font-scale',
+        (1 + newOffset * 0.1).toString()
+      );
     }
 
     // Force full repaint to prevent Chrome compositor artifacts

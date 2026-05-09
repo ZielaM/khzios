@@ -48,7 +48,7 @@
 
   .logoText {
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.85em;
     letter-spacing: -0.5px;
     color: $accent-color;
 
@@ -152,7 +152,7 @@
 }
 
 .navLink {
-  font-size: 0.95rem;
+  font-size: 0.95em;
   font-weight: 500;
   color: color-mix(in srgb, var(--foreground) 80%, transparent);
   transition: color 0.2s ease;
@@ -169,7 +169,7 @@
   @media (max-width: $breakpoint-tablet) {
     width: 100%;
     justify-content: space-between;
-    font-size: 1.1rem;
+    font-size: 1.1em;
     font-weight: 700;
 
     &::after {
@@ -291,14 +291,14 @@
 
         .dropdownItemContent {
           h4 {
-            font-size: 0.95rem;
+            font-size: 0.95em;
             font-weight: 600;
             margin-bottom: 0.3rem;
             color: var(--foreground);
           }
 
           p {
-            font-size: 0.825rem;
+            font-size: 0.825em;
             color: color-mix(in srgb, var(--foreground) 60%, transparent);
             line-height: 1.4;
           }
@@ -407,7 +407,7 @@
     .overviewLink {
       display: block;
       padding: 0.5rem 1rem;
-      font-size: 0.85rem;
+      font-size: 0.85em;
       font-weight: 700;
       color: $accent-color;
       text-decoration: underline;
@@ -478,11 +478,11 @@
     }
 
     .wcagTextSmall {
-      font-size: 0.85rem;
+      font-size: 0.85em;
     }
 
     .wcagTextLarge {
-      font-size: 1.15rem;
+      font-size: 1.15em;
     }
   }
 }

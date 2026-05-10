@@ -50,9 +50,14 @@ export default async function RootLayout({
                   document.documentElement.classList.add('wcag-high-contrast');
                 }
                 var fontOffset = parseInt(localStorage.getItem('wcag-font-offset') || '0', 10);
+                var scale = 1;
                 if (!isNaN(fontOffset) && fontOffset !== 0) {
-                  document.documentElement.style.setProperty('--wcag-font-scale', (1 + fontOffset * 0.1).toString());
+                  scale = 1 + fontOffset * 0.1;
+                  document.documentElement.style.setProperty('--wcag-font-scale', scale.toString());
                 }
+                var ew = window.innerWidth / scale;
+                if (ew < 1024) document.documentElement.classList.add('compact-layout');
+                if (ew < 768) document.documentElement.classList.add('compact-layout-sm');
               } catch (e) {}
             `,
           }}

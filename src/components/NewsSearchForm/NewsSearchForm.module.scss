@@ -1,3 +1,5 @@
+@use '@/styles/variables' as *;
+
 .searchForm {
   background: var(--background, #ffffff);
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -70,7 +72,12 @@
   gap: 1rem;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  :global(.compact-layout-sm) & {
     flex-direction: column;
     align-items: stretch;
   }
@@ -119,7 +126,12 @@
   flex: 0 1 auto;
   min-width: 200px;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-tablet) {
+    flex: 1;
+    min-width: 100%;
+  }
+
+  :global(.compact-layout-sm) & {
     flex: 1;
     min-width: 100%;
   }

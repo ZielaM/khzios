@@ -18,6 +18,11 @@
     flex-direction: column;
     justify-content: flex-start;
   }
+
+  :global(.compact-layout-sm) & {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 }
 
 .navbarHeader {
@@ -31,6 +36,11 @@
   }
 
   @media (max-width: $breakpoint-tablet) {
+    width: 100%;
+  }
+
+  :global(.compact-layout-sm) & {
+    flex: unset;
     width: 100%;
   }
 }
@@ -51,6 +61,7 @@
     font-size: 0.85em;
     letter-spacing: -0.5px;
     color: $accent-color;
+    white-space: nowrap;
 
     :global(.wcag-high-contrast) & {
       color: var(--foreground);
@@ -91,6 +102,30 @@
       transform: translateY(0);
     }
   }
+
+  :global(.compact-layout-sm) & {
+    flex: unset;
+    position: fixed;
+    top: $navbar-height;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - #{$navbar-height});
+    background-color: var(--background);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+
+    &.mobileOpen {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
 }
 
 .hamburger {
@@ -106,6 +141,10 @@
   z-index: 1001;
 
   @media (max-width: $breakpoint-tablet) {
+    display: flex;
+  }
+
+  :global(.compact-layout-sm) & {
     display: flex;
   }
 
@@ -144,6 +183,14 @@
   }
 
   @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  :global(.compact-layout-sm) & {
+    flex: unset;
     flex-direction: column;
     gap: 1.5rem;
     width: 100%;
@@ -436,6 +483,12 @@
   }
 
   @media (max-width: $breakpoint-tablet) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  :global(.compact-layout-sm) & {
+    flex: unset;
     width: 100%;
     justify-content: center;
   }

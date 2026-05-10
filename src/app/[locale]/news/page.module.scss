@@ -1,9 +1,15 @@
+@use '@/styles/variables' as *;
+
 .main {
-  max-width: 1200px;
+  max-width: $max-width-content;
   margin: 0 auto;
   padding: 2rem 4rem;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-tablet) {
+    padding: 6rem 1rem 2rem;
+  }
+
+  :global(.compact-layout-sm) & {
     padding: 6rem 1rem 2rem;
   }
 }
@@ -14,7 +20,13 @@
   align-items: center;
   margin-bottom: 2rem;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  :global(.compact-layout-sm) & {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
@@ -57,11 +69,19 @@
   gap: 2rem;
   width: 100%;
 
-  @media (max-width: 1024px) {
+  @media (max-width: $breakpoint-desktop) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 768px) {
+  :global(.compact-layout) & {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.compact-layout-sm) & {
     grid-template-columns: 1fr;
   }
 }

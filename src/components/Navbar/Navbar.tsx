@@ -175,7 +175,13 @@ function DropdownMenu({
         }
       }}
     >
-      <Link href={href} className={style.navLink} onClick={handleLinkClick} aria-expanded={isDropdownOpen} aria-haspopup="true">
+      <Link
+        href={href}
+        className={style.navLink}
+        onClick={handleLinkClick}
+        aria-expanded={isDropdownOpen}
+        aria-haspopup="true"
+      >
         {label}
         <svg
           className={clsx(style.dropdownIcon, { [style.open]: isDropdownOpen })}
@@ -314,6 +320,14 @@ function WcagControls({
   const [highContrast, setHighContrast] = useState(false);
   const [fontSizeOffset, setFontSizeOffset] = useState(0);
 
+  const updateCompactClasses = (scale: number) => {
+    const effectiveWidth = window.innerWidth / scale;
+    const root = document.documentElement.classList;
+
+    root.toggle('compact-layout', effectiveWidth < 1024);
+    root.toggle('compact-layout-sm', effectiveWidth < 768);
+  };
+
   useEffect(() => {
     const savedContrast = localStorage.getItem('wcag-high-contrast') === 'true';
     const savedFontOffset = parseInt(
@@ -327,13 +341,29 @@ function WcagControls({
       document.documentElement.classList.add('wcag-high-contrast');
     }
 
+    const scale = 1 + (!isNaN(savedFontOffset) ? savedFontOffset : 0) * 0.1;
+
     if (!isNaN(savedFontOffset) && savedFontOffset !== 0) {
       setFontSizeOffset(savedFontOffset);
       document.documentElement.style.setProperty(
         '--wcag-font-scale',
-        (1 + savedFontOffset * 0.1).toString()
+        scale.toString()
       );
     }
+
+    updateCompactClasses(scale);
+
+    const onResize = () => {
+      const currentScale = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          '--wcag-font-scale'
+        ) || '1'
+      );
+      updateCompactClasses(currentScale);
+    };
+
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   const toggleHighContrast = () => {
@@ -353,14 +383,18 @@ function WcagControls({
     setFontSizeOffset(newOffset);
     localStorage.setItem('wcag-font-offset', newOffset.toString());
 
+    const scale = 1 + newOffset * 0.1;
+
     if (newOffset === 0) {
       document.documentElement.style.removeProperty('--wcag-font-scale');
     } else {
       document.documentElement.style.setProperty(
         '--wcag-font-scale',
-        (1 + newOffset * 0.1).toString()
+        scale.toString()
       );
     }
+
+    updateCompactClasses(scale);
 
     // Force full repaint to prevent Chrome compositor artifacts
     requestAnimationFrame(() => {

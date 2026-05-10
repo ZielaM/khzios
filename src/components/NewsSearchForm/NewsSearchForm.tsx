@@ -28,7 +28,6 @@ const customSelectStyles: StylesConfig<OptionType, boolean> = {
     '&:hover': {
       borderColor: 'var(--rs-border-focus)',
     },
-    minWidth: '200px',
     background: 'var(--rs-bg)',
     cursor: 'pointer',
     fontSize: '1rem',

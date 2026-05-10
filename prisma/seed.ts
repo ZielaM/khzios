@@ -89,22 +89,22 @@ async function main() {
         create: [
           {
             languageCode: 'pl',
-            title: 'Nowa pracownia komputerowa',
+            title: 'Nowa pracownia komputerowa #2137',
             content: 'Z radością informujemy...',
           },
           {
             languageCode: 'en',
-            title: 'New computer lab',
+            title: 'New computer lab #2137',
             content: 'We are pleased to announce...',
           },
-          {
-            languageCode: 'uk',
-            title: "Нова комп'ютерна лабораторія",
-            content: 'Ми раді повідомити...',
-          },
+          // {
+          //   languageCode: 'uk',
+          //   title: "Нова комп'ютерна лабораторія",
+          //   content: 'Ми раді повідомити...',
+          // },
           {
             languageCode: 'ru',
-            title: 'Новая компьютерная лаборатория',
+            title: 'Новая компьютерная лаборатория #2137',
             content: 'Мы рады сообщить...',
           },
         ],
@@ -122,24 +122,24 @@ async function main() {
         create: [
           {
             languageCode: 'pl',
-            title: 'Wyniki szkolnego Hackathonu 2026',
+            title: 'Wyniki szkolnego Hackathonu 2026 #67',
             content: 'Znamy już zwycięzców...',
           },
-          {
-            languageCode: 'en',
-            title: 'School Hackathon 2026 Results',
-            content: 'We now know the winners...',
-          },
+          // {
+          //   languageCode: 'en',
+          //   title: 'School Hackathon 2026 Results',
+          //   content: 'We now know the winners...',
+          // },
           {
             languageCode: 'uk',
-            title: 'Результати шкільного Хакатону 2026',
+            title: 'Результати шкільного Хакатону 2026 #67',
             content: 'Ми вже знаємо...',
           },
-          {
-            languageCode: 'ru',
-            title: 'Результаты школьного Хакатона 2026',
-            content: 'Мы уже знаем...',
-          },
+          // {
+          //   languageCode: 'ru',
+          //   title: 'Результаты школьного Хакатона 2026',
+          //   content: 'Мы уже знаем...',
+          // },
         ],
       },
     },

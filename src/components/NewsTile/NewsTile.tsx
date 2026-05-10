@@ -11,6 +11,11 @@ import {
 } from '@/generated/prisma/client';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import {
+  resolveTranslation,
+  resolveTagName,
+  LANGUAGE_NAMES,
+} from '@/lib/translations';
 
 export interface NewsTileProps {
   news: News & {
@@ -21,12 +26,6 @@ export interface NewsTileProps {
   locale: string;
   priority?: boolean;
 }
-
-// Nazwy języków do wyświetlenia w adnotacji
-const LANGUAGE_NAMES: Record<string, string> = {
-  pl: 'polski',
-  en: 'English',
-};
 
 export default function NewsTile({
   news,
@@ -39,27 +38,18 @@ export default function NewsTile({
   const thumbnail =
     news.photos.length > 0 ? news.photos[0].url : '/placeholder-news.jpg';
 
-  // Wybierz odpowiednie tłumaczenie z fallbackiem: locale → en → pl
-  const findTranslation = (langCode: string) =>
-    news.translations?.find((tr) => tr.languageCode === langCode);
-
-  const localeTranslation = findTranslation(locale);
-  const enTranslation = findTranslation('en');
-  const plTranslation = findTranslation('pl');
-
-  const translation = localeTranslation ?? enTranslation ?? plTranslation;
-  const isFallback = translation && translation.languageCode !== locale;
+  // Rozwiąż tłumaczenie dla tego konkretnego newsa (z fallbackiem)
+  const { translation, isFallback } = resolveTranslation(
+    news.translations,
+    locale
+  );
 
   const title = translation?.title ?? 'Brak tłumaczenia';
   const content = translation?.content ?? '...';
 
-  // Pobierz przetłumaczoną nazwę tagu (fallback na tag.name)
-  const getTagName = (tag: Tag & { translations: TagTranslation[] }) => {
-    const tagTranslation = tag.translations?.find(
-      (tr) => tr.languageCode === locale
-    );
-    return tagTranslation?.name ?? tag.name;
-  };
+  // Pobierz przetłumaczoną nazwę tagu (z pełnym fallbackiem per-tag)
+  const getTagName = (tag: Tag & { translations: TagTranslation[] }) =>
+    resolveTagName(tag, locale);
 
   // Formatowanie daty odpowiednio do języka
   const formattedDate = new Intl.DateTimeFormat(locale, {
@@ -95,7 +85,7 @@ export default function NewsTile({
             ))}
           </div>
 
-          {isFallback && (
+          {isFallback && translation && (
             <span className={style.fallbackBadge}>
               {t('translationUnavailable', {
                 language:

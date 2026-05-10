@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { getTranslations } from 'next-intl/server';
+import { resolveTranslation } from '@/lib/translations';
 
 export async function GET(
   request: Request,
@@ -13,9 +14,6 @@ export async function GET(
   const news = await prisma.news.findMany({
     where: {
       published: true,
-      translations: {
-        some: { languageCode: locale },
-      },
     },
     include: {
       translations: true,
@@ -29,9 +27,12 @@ export async function GET(
 
   const feedItems = news
     .map((item) => {
-      const translation =
-        item.translations.find((t) => t.languageCode === locale) ||
-        item.translations[0];
+      // Rozwiąż tłumaczenie dla tego newsa (deterministyczny fallback)
+      const { translation: resolved } = resolveTranslation(
+        item.translations,
+        locale
+      );
+      const translation = resolved ?? item.translations[0];
       const url = `${baseUrl}/${locale}/news/${item.id}`;
 
       // Proste usuwanie tagów HTML z kontentu dla bezpieczeństwa i czytelności RSS

@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import NewsSearchForm from '@/components/NewsSearchForm';
 import NewsGridServer from '@/components/NewsGrid/NewsGridServer';
 import NewsGridSkeleton from '@/components/NewsGrid/NewsGridSkeleton';
+import { resolveTagName } from '@/lib/translations';
 import style from './page.module.scss';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -38,17 +39,12 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
 
   const limit = 12;
 
-  // Fetch all tags for the dropdown
-  // To avoid blocking the page for tags fetching, we can fetch them here.
-  // Wait, dbTags query is fast, but if it blocks, it blocks the search form.
+  // Fetch all tags for the dropdown (z fallbackiem per-tag)
   const dbTags = await prisma.tag.findMany({ include: { translations: true } });
-  const availableTags = dbTags.map((t) => {
-    const translation = t.translations.find((tr) => tr.languageCode === locale);
-    return {
-      value: t.name,
-      label: translation?.name || t.name,
-    };
-  });
+  const availableTags = dbTags.map((t) => ({
+    value: t.name,
+    label: resolveTagName(t, locale),
+  }));
 
   const t = await getTranslations('NewsPage');
 

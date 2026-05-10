@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@/generated/prisma/client';
+import { FALLBACK_CHAIN } from '@/lib/translations';
 
 export type SearchParams = {
   query?: string;
@@ -20,6 +21,9 @@ export async function searchPublishedNews({
   limit = 20,
   sortBy = 'date',
 }: SearchParams) {
+  // Języki fallback dla danego locale (np. uk → ['uk', 'en', 'pl'])
+  const fallbackLanguages = FALLBACK_CHAIN[language] ?? [language, 'en', 'pl'];
+
   const dictionary = (() => {
     switch (language) {
       case 'en':
@@ -38,17 +42,21 @@ export async function searchPublishedNews({
     // Since FTS uses raw sql, we'll fetch IDs via raw sql if query is present, otherwise pure Prisma
 
     let newsIds: string[] = [];
-    const highlightedMap: Record<string, { title: string; content: string }> =
-      {};
+    const highlightedMap: Record<
+      string,
+      { title: string; content: string; languageCode: string }
+    > = {};
     let totalCount = 0;
 
     if (query) {
       // 1. Raw SQL for Full Text Search to get matching IDs, highlighting, and count
+      // Szukamy we wszystkich językach z fallback chain, priorytetyzując trafienia
+      // w preferowanym języku użytkownika
       const sqlParts = [];
       const countParts = [];
 
-      const selectPart = Prisma.sql`SELECT n.id, ts_headline(${dictionary}::regconfig, nt.title, websearch_to_tsquery(${dictionary}::regconfig, ${query}), 'StartSel=<mark>, StopSel=</mark>, MaxFragments=0') AS highlighted_title, ts_headline(${dictionary}::regconfig, nt.content, websearch_to_tsquery(${dictionary}::regconfig, ${query}), 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content, ts_rank(to_tsvector(${dictionary}::regconfig, nt.title || ' ' || nt.content), websearch_to_tsquery(${dictionary}::regconfig, ${query})) AS rank`;
-      const selectCountPart = Prisma.sql`SELECT CAST(COUNT(*) AS INTEGER) as total`;
+      const selectPart = Prisma.sql`SELECT n.id, nt."languageCode", ts_headline(${dictionary}::regconfig, nt.title, websearch_to_tsquery(${dictionary}::regconfig, ${query}), 'StartSel=<mark>, StopSel=</mark>, MaxFragments=0') AS highlighted_title, ts_headline(${dictionary}::regconfig, nt.content, websearch_to_tsquery(${dictionary}::regconfig, ${query}), 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content, ts_rank(to_tsvector(${dictionary}::regconfig, nt.title || ' ' || nt.content), websearch_to_tsquery(${dictionary}::regconfig, ${query})) AS rank`;
+      const selectCountPart = Prisma.sql`SELECT CAST(COUNT(DISTINCT n.id) AS INTEGER) as total`;
 
       const fromPart = Prisma.sql`FROM "News" n JOIN "NewsTranslation" nt ON nt."newsId" = n.id`;
 
@@ -56,9 +64,12 @@ export async function searchPublishedNews({
       countParts.push(selectCountPart, fromPart);
 
       const whereParts = [];
-      whereParts.push(
-        Prisma.sql`nt."languageCode" = CAST(${language} AS "LanguageCode")`
+      // Szukaj w tłumaczeniach ze wszystkich języków w fallback chain
+      const langConditions = fallbackLanguages.map(
+        (lang) =>
+          Prisma.sql`nt."languageCode" = CAST(${lang} AS "LanguageCode")`
       );
+      whereParts.push(Prisma.sql`(${Prisma.join(langConditions, ' OR ')})`);
       whereParts.push(Prisma.sql`n.published = true`);
       whereParts.push(
         Prisma.sql`to_tsvector(${dictionary}::regconfig, nt.title || ' ' || nt.content) @@ websearch_to_tsquery(${dictionary}::regconfig, ${query})`
@@ -87,12 +98,15 @@ export async function searchPublishedNews({
           : Prisma.sql`ORDER BY n."createdAt" DESC`;
 
       sqlParts.push(orderBy);
-      sqlParts.push(Prisma.sql`LIMIT ${limit} OFFSET ${offset}`);
+      sqlParts.push(
+        Prisma.sql`LIMIT ${limit * fallbackLanguages.length} OFFSET 0`
+      );
 
       const [rawResults, rawCount] = await Promise.all([
         prisma.$queryRaw<
           {
             id: string;
+            languageCode: string;
             highlighted_title: string;
             highlighted_content: string;
             rank: number;
@@ -101,22 +115,60 @@ export async function searchPublishedNews({
         prisma.$queryRaw<{ total: number }[]>(Prisma.join(countParts, ' ')),
       ]);
 
-      newsIds = rawResults.map((r) => r.id);
-      totalCount = rawCount[0]?.total || 0;
+      // Deduplikacja: dla każdego news ID zachowaj najlepsze tłumaczenie
+      // (priorytet wg fallback chain, potem rank)
+      const bestByNewsId = new Map<
+        string,
+        {
+          id: string;
+          languageCode: string;
+          highlighted_title: string;
+          highlighted_content: string;
+          rank: number;
+        }
+      >();
 
       for (const r of rawResults) {
+        const existing = bestByNewsId.get(r.id);
+        if (!existing) {
+          bestByNewsId.set(r.id, r);
+        } else {
+          // Preferuj tłumaczenie wyżej w fallback chain
+          const existingPriority = fallbackLanguages.indexOf(
+            existing.languageCode
+          );
+          const newPriority = fallbackLanguages.indexOf(r.languageCode);
+          if (
+            newPriority < existingPriority ||
+            (newPriority === existingPriority && r.rank > existing.rank)
+          ) {
+            bestByNewsId.set(r.id, r);
+          }
+        }
+      }
+
+      // Posortuj deduplikowane wyniki i zastosuj paginację
+      const deduplicated = Array.from(bestByNewsId.values());
+      if (sortBy === 'relevance') {
+        deduplicated.sort((a, b) => b.rank - a.rank);
+      }
+      const paginated = deduplicated.slice(offset, offset + limit);
+
+      newsIds = paginated.map((r) => r.id);
+      totalCount = rawCount[0]?.total || 0;
+
+      for (const r of paginated) {
         highlightedMap[r.id] = {
           title: r.highlighted_title,
           content: r.highlighted_content,
+          languageCode: r.languageCode,
         };
       }
     } else {
       // 2. Pure Prisma for normal filtering
+      // Pokaż wszystkie opublikowane newsy — fallback tłumaczeń obsługuje NewsTile
       const whereCondition: Prisma.NewsWhereInput = {
         published: true,
-        translations: {
-          some: { languageCode: language },
-        },
       };
 
       if (tag) {
@@ -165,7 +217,9 @@ export async function searchPublishedNews({
       const item = newsItems.find((n) => n.id === id)!;
       // Inject highlighted content into the matching translation if available
       if (highlightedMap[id]) {
-        const tr = item.translations.find((t) => t.languageCode === language);
+        const tr = item.translations.find(
+          (t) => t.languageCode === highlightedMap[id].languageCode
+        );
         if (tr) {
           tr.title = highlightedMap[id].title;
           tr.content = highlightedMap[id].content;

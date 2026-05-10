@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import style from './NewsTile.module.scss';
+import clsx from 'clsx';
 import {
   News,
   Tag,
@@ -104,10 +105,19 @@ export default function NewsTile({
             </span>
           )}
 
-          <h3 className={style.title}>{title}</h3>
+          {title.includes('<mark>') ? (
+            <h3
+              className={style.title}
+              dangerouslySetInnerHTML={{ __html: title }}
+            />
+          ) : (
+            <h3 className={style.title}>{title}</h3>
+          )}
 
           <p
-            className={style.description}
+            className={clsx(style.description, {
+              [style.highlighted]: content.includes('<mark>'),
+            })}
             dangerouslySetInnerHTML={{ __html: content }}
           />
 

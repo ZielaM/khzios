@@ -173,6 +173,18 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   transition: color 0.3s ease;
+
+  :global(mark) {
+    background: rgba($color-primary, 0.15);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 3px;
+
+    :global(.wcag-high-contrast) & {
+      background: var(--foreground);
+      color: var(--background);
+    }
+  }
 }
 
 .description {
@@ -189,6 +201,28 @@
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
+  }
+
+  :global(mark) {
+    background: rgba($color-primary, 0.15);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 3px;
+
+    :global(.wcag-high-contrast) & {
+      background: var(--foreground);
+      color: var(--background);
+    }
+  }
+
+  // When content has highlighted search results, show the full snippet
+  // instead of clamping to first 3 lines (ts_headline already returns
+  // a focused excerpt around the matched phrase)
+  &.highlighted {
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    overflow: visible;
   }
 }
 

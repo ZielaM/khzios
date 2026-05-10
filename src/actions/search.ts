@@ -38,7 +38,8 @@ export async function searchPublishedNews({
     // Since FTS uses raw sql, we'll fetch IDs via raw sql if query is present, otherwise pure Prisma
 
     let newsIds: string[] = [];
-    const highlightedMap: Record<string, string> = {};
+    const highlightedMap: Record<string, { title: string; content: string }> =
+      {};
     let totalCount = 0;
 
     if (query) {
@@ -46,7 +47,7 @@ export async function searchPublishedNews({
       const sqlParts = [];
       const countParts = [];
 
-      const selectPart = Prisma.sql`SELECT n.id, ts_headline(${dictionary}::regconfig, nt.content, websearch_to_tsquery(${dictionary}::regconfig, ${query}), 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content, ts_rank(to_tsvector(${dictionary}::regconfig, nt.title || ' ' || nt.content), websearch_to_tsquery(${dictionary}::regconfig, ${query})) AS rank`;
+      const selectPart = Prisma.sql`SELECT n.id, ts_headline(${dictionary}::regconfig, nt.title, websearch_to_tsquery(${dictionary}::regconfig, ${query}), 'StartSel=<mark>, StopSel=</mark>, MaxFragments=0') AS highlighted_title, ts_headline(${dictionary}::regconfig, nt.content, websearch_to_tsquery(${dictionary}::regconfig, ${query}), 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content, ts_rank(to_tsvector(${dictionary}::regconfig, nt.title || ' ' || nt.content), websearch_to_tsquery(${dictionary}::regconfig, ${query})) AS rank`;
       const selectCountPart = Prisma.sql`SELECT CAST(COUNT(*) AS INTEGER) as total`;
 
       const fromPart = Prisma.sql`FROM "News" n JOIN "NewsTranslation" nt ON nt."newsId" = n.id`;
@@ -90,7 +91,12 @@ export async function searchPublishedNews({
 
       const [rawResults, rawCount] = await Promise.all([
         prisma.$queryRaw<
-          { id: string; highlighted_content: string; rank: number }[]
+          {
+            id: string;
+            highlighted_title: string;
+            highlighted_content: string;
+            rank: number;
+          }[]
         >(Prisma.join(sqlParts, ' ')),
         prisma.$queryRaw<{ total: number }[]>(Prisma.join(countParts, ' ')),
       ]);
@@ -99,7 +105,10 @@ export async function searchPublishedNews({
       totalCount = rawCount[0]?.total || 0;
 
       for (const r of rawResults) {
-        highlightedMap[r.id] = r.highlighted_content;
+        highlightedMap[r.id] = {
+          title: r.highlighted_title,
+          content: r.highlighted_content,
+        };
       }
     } else {
       // 2. Pure Prisma for normal filtering
@@ -158,8 +167,8 @@ export async function searchPublishedNews({
       if (highlightedMap[id]) {
         const tr = item.translations.find((t) => t.languageCode === language);
         if (tr) {
-          // We override the content with highlighted snippet
-          tr.content = highlightedMap[id];
+          tr.title = highlightedMap[id].title;
+          tr.content = highlightedMap[id].content;
         }
       }
       return item;

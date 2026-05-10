@@ -127,13 +127,15 @@ export default function Navbar() {
 
         {/* Language & WCAG Controls */}
         <div className={style.navActions}>
-          <LanguageSwitcher />
-          <WcagControls
-            groupLabel={tWcag('groupLabel')}
-            decreaseFont={tWcag('decreaseFont')}
-            increaseFont={tWcag('increaseFont')}
-            toggleContrast={tWcag('toggleContrast')}
-          />
+          <SettingsDropdown label={tWcag('settingsToggle')}>
+            <LanguageSwitcher />
+            <WcagControls
+              groupLabel={tWcag('groupLabel')}
+              decreaseFont={tWcag('decreaseFont')}
+              increaseFont={tWcag('increaseFont')}
+              toggleContrast={tWcag('toggleContrast')}
+            />
+          </SettingsDropdown>
         </div>
       </div>
     </nav>
@@ -303,6 +305,53 @@ function NavItem({
     <Link href={href} className={style.navLink} onClick={onClick}>
       {label}
     </Link>
+  );
+}
+
+function SettingsDropdown({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      {/* Toggle button — visible only in compact-layout */}
+      <button
+        className={style.settingsToggle}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-label={label}
+        title={label}
+      >
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+      </button>
+
+      {/* Controls — inline on desktop, dropdown in compact-layout */}
+      <div
+        className={clsx(style.settingsPanel, { [style.show]: isOpen })}
+        role="group"
+        aria-label={label}
+      >
+        {children}
+      </div>
+    </>
   );
 }
 

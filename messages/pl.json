@@ -32,7 +32,8 @@
     "decreaseFont": "Pomniejsz tekst",
     "increaseFont": "Powiększ tekst",
     "toggleContrast": "Przełącz wysoki kontrast",
-    "skipToMain": "Przejdź do głównej treści"
+    "skipToMain": "Przejdź do głównej treści",
+    "settingsToggle": "Ustawienia dostępności"
   },
   "Footer": {
     "brandTitle": "Katedra Hodowli Zwierząt <br></br> i Oceny Surowców",

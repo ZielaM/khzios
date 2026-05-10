@@ -32,7 +32,8 @@
     "decreaseFont": "Decrease font size",
     "increaseFont": "Increase font size",
     "toggleContrast": "Toggle high contrast",
-    "skipToMain": "Skip to main content"
+    "skipToMain": "Skip to main content",
+    "settingsToggle": "Accessibility settings"
   },
   "Footer": {
     "brandTitle": "Department of Animal Breeding <br></br> and Product Evaluation",

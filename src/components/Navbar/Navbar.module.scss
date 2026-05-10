@@ -477,6 +477,7 @@
   justify-content: flex-end;
   align-items: center;
   gap: 0.75rem;
+  position: relative;
 
   @media (min-width: $breakpoint-tablet) {
     flex: 1;
@@ -537,5 +538,98 @@
     .wcagTextLarge {
       font-size: 1.15em;
     }
+  }
+}
+
+.settingsToggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
+    outline: 2px solid $accent-color;
+    outline-offset: 2px;
+
+    :global(.wcag-high-contrast) & {
+      outline-color: var(--foreground);
+    }
+  }
+
+  :global(.compact-layout) & {
+    display: flex;
+  }
+
+  // In compact-layout-sm (hamburger), hide the toggle — controls show inline in menu
+  :global(.compact-layout-sm) & {
+    display: none;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    display: none;
+  }
+}
+
+.settingsPanel {
+  // Desktop: show inline, no special behavior
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+
+  // Compact layout: hide by default, show as dropdown
+  :global(.compact-layout) & {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--background);
+    border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 10;
+    min-width: 200px;
+
+    &.show {
+      display: flex;
+    }
+  }
+
+  // In compact-layout-sm (hamburger), show inline normally
+  :global(.compact-layout-sm) & {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    min-width: unset;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    min-width: unset;
   }
 }

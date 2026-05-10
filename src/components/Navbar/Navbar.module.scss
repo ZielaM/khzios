@@ -48,17 +48,20 @@
 .logo {
   display: flex;
   align-items: center;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  container-type: inline-size;
 
   .logoLink {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-width: 0;
   }
 
   .logoText {
     font-weight: 700;
-    font-size: 0.85em;
+    font-size: min(0.85em, 4cqi);
     letter-spacing: -0.5px;
     color: $accent-color;
     white-space: nowrap;

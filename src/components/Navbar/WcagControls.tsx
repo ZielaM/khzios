@@ -75,7 +75,7 @@ export default function WcagControls({
   };
 
   const changeFontSize = (step: number) => {
-    const newOffset = Math.min(Math.max(fontSizeOffset + step, 0), 10);
+    const newOffset = Math.min(Math.max(fontSizeOffset + step, 0), 6);
     setFontSizeOffset(newOffset);
     localStorage.setItem('wcag-font-offset', newOffset.toString());
 

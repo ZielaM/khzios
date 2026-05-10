@@ -1,0 +1,47 @@
+@use '@/styles/variables' as *;
+
+.wcagControls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.wcagButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
+    outline: 2px solid $accent-color;
+    outline-offset: 2px;
+
+    :global(.wcag-high-contrast) & {
+      outline-color: var(--foreground);
+    }
+  }
+
+  &.active {
+    background-color: var(--foreground);
+    color: var(--background);
+    border-color: var(--foreground);
+  }
+}
+
+.wcagTextSmall {
+  font-size: 0.85em;
+}
+
+.wcagTextLarge {
+  font-size: 1.15em;
+}

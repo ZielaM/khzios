@@ -1,0 +1,51 @@
+@use '@/styles/variables' as *;
+
+.navLink {
+  font-size: 0.95em;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--foreground) 80%, transparent);
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0;
+  text-wrap: nowrap;
+  position: relative;
+
+  @media (max-width: $breakpoint-tablet) {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 1.1em;
+    font-weight: 700;
+
+    &::after {
+      display: none; // Disable underline hover animation on mobile
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: $accent-color;
+    transition: width 0.3s ease;
+    border-radius: 2px;
+
+    :global(.wcag-high-contrast) & {
+      background-color: var(--foreground);
+    }
+  }
+
+  &:hover {
+    color: var(--foreground);
+    &::after {
+      width: 100%;
+    }
+  }
+}

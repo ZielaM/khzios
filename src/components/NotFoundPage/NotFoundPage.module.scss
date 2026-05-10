@@ -1,0 +1,68 @@
+@use '@/styles/variables' as *;
+
+.notFoundContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 300px);
+  padding: 4rem 2rem;
+  text-align: center;
+  background-color: var(--background);
+}
+
+.errorIcon {
+  color: $accent-color;
+  margin-bottom: 2rem;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.title {
+  font-size: 2.5em;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.description {
+  font-size: 1.1em;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  max-width: 500px;
+  margin-bottom: 2.5rem;
+  line-height: 1.5;
+}
+
+.homeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+
+  :global(.wcag-high-contrast) & {
+    background-color: var(--foreground);
+    color: var(--background);
+    border: 2px solid var(--background);
+  }
+
+  &:hover {
+    background-color: var(--color-secondary);
+    transform: translateY(-2px);
+
+    :global(.wcag-high-contrast) & {
+      background-color: var(--background);
+      color: var(--foreground);
+      border: 2px solid var(--foreground);
+    }
+  }
+}

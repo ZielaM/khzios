@@ -72,5 +72,10 @@
     "page": "Strona {page}",
     "navLabel": "Paginacja",
     "more": "Więcej stron"
+  },
+  "NotFound": {
+    "title": "Nie znaleziono strony",
+    "description": "Niestety, strona, której szukasz, nie istnieje lub została przeniesiona.",
+    "backHome": "Wróć na stronę główną"
   }
 }

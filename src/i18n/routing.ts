@@ -1,3 +1,9 @@
+// Routing Configuration:
+// Centralized setup for `next-intl` defining supported locales and translating route pathnames.
+// Instead of creating separate physical folders for `/news` vs `/aktualnosci`,
+// Next.js handles routing dynamically through the `[locale]` dynamic segment,
+// and `next-intl` maps the localized URL string back to the correct physical component route.
+
 import { defineRouting } from 'next-intl/routing';
 import { createNavigation } from 'next-intl/navigation';
 
@@ -101,5 +107,6 @@ export const routing = defineRouting({
 
 export type Locale = (typeof routing.locales)[number];
 
+// Re-export navigation hooks that are strictly typed and aware of localized routes
 export const { Link, redirect, usePathname, useRouter, getPathname } =
   createNavigation(routing);

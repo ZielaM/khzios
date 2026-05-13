@@ -1,13 +1,15 @@
 @use '@/styles/variables' as *;
 
+// Main wrapper creating a segmented control effect
 .switcher {
   display: flex;
   align-items: center;
   border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: hidden; // Ensures buttons respect the container's rounded corners
 }
 
+// Individual language button within the segmented control
 .localeButton {
   display: flex;
   align-items: center;
@@ -24,27 +26,34 @@
     background-color 0.2s ease,
     color 0.2s ease;
 
+  // Add borders between buttons, but not after the final one
   &:not(:last-child) {
     border-right: 1px solid
       color-mix(in srgb, var(--foreground) 15%, transparent);
   }
 
+  // Hover state (only applies if the button is not already active)
   &:hover:not(.active) {
     background-color: color-mix(in srgb, var(--foreground) 8%, transparent);
     color: var(--foreground);
   }
 
+  // Active state styling for the currently selected locale
   &.active {
     background-color: $accent-color;
     color: white;
-    cursor: default;
+    cursor: default; // Disables pointer affordance since it's already active
 
+    // High contrast override forces black/white
     :global(.wcag-high-contrast) & {
       background-color: var(--foreground);
       color: var(--background);
     }
   }
 
+  // Focus visible outline for accessibility
+  // Negative offset pulls the outline inside the button to avoid
+  // overflowing the segmented control wrapper.
   &:focus-visible {
     outline: 2px solid $accent-color;
     outline-offset: -2px;

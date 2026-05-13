@@ -1,5 +1,8 @@
 @use '@/styles/variables' as *;
 
+// Main navigation bar wrapper.
+// Fixed to the top to remain accessible during scrolling.
+// Uses translateZ(0) to force hardware acceleration, reducing repaints during scroll.
 .navbar {
   position: fixed;
   top: 0;
@@ -7,24 +10,28 @@
   width: 100%;
   height: $navbar-height;
   background-color: var(--background);
-  z-index: 1000;
+  z-index: 1000; // Ensures it sits above main content
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
   transform: translateZ(0);
 
+  // On tablet/mobile, we switch to column layout to stack logo and mobile menu toggle
   @media (max-width: $breakpoint-tablet) {
     flex-direction: column;
     justify-content: flex-start;
   }
 
+  // The 'compact-layout-sm' class is toggled by user preference (WCAG controls)
+  // It forces the mobile-like stacked layout even on desktop.
   :global(.compact-layout-sm) & {
     flex-direction: column;
     justify-content: flex-start;
   }
 }
 
+// Container holding the logo and hamburger menu button.
 .navbarHeader {
   display: flex;
   align-items: center;
@@ -32,7 +39,7 @@
   height: $navbar-height;
 
   @media (min-width: $breakpoint-tablet) {
-    flex: 1;
+    flex: 1; // Take available space on desktop to distribute links evenly
   }
 
   @media (max-width: $breakpoint-tablet) {
@@ -45,11 +52,13 @@
   }
 }
 
+// Logo wrapper. Uses container queries (inline-size) to potentially
+// adapt logo layout if container width shrinks.
 .logo {
   display: flex;
   align-items: center;
   flex: 1;
-  min-width: 0;
+  min-width: 0; // Prevents flex overflow when text is too long
   container-type: inline-size;
 
   .logoLink {
@@ -59,6 +68,8 @@
     min-width: 0;
   }
 
+  // Brand text scaling. Uses cqi (container query inline) to adjust size
+  // dynamically based on the parent's width, falling back to ems.
   .logoText {
     font-weight: 700;
     font-size: min(0.85em, 4cqi);
@@ -72,6 +83,8 @@
   }
 }
 
+// Container for the navigation links and actions (settings, language, search).
+// On desktop, it flows horizontally. On mobile, it becomes a fixed fullscreen overlay.
 .navMenuContainer {
   display: flex;
   align-items: center;
@@ -81,6 +94,7 @@
     flex: 2;
   }
 
+  // Mobile behavior: Transforms into a full-screen slide-down/fade-in menu
   @media (max-width: $breakpoint-tablet) {
     position: fixed;
     top: $navbar-height;
@@ -91,9 +105,8 @@
     flex-direction: column;
     justify-content: flex-start;
     padding: 2rem 1rem;
-    overflow-y: auto;
+    overflow-y: auto; // Allow scrolling if menu items exceed screen height
 
-    /* Ukryte domyślnie na mobile */
     opacity: 0;
     visibility: hidden;
     transform: translateY(-20px);
@@ -106,6 +119,7 @@
     }
   }
 
+  // Same fullscreen overlay behavior applied when user forces compact layout
   :global(.compact-layout-sm) & {
     flex: unset;
     position: fixed;
@@ -131,6 +145,8 @@
   }
 }
 
+// Mobile hamburger toggle button.
+// Hidden on desktop by default. Uses CSS transforms on the lines to animate into an 'X'.
 .hamburger {
   display: none;
   flex-direction: column;
@@ -141,7 +157,7 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  z-index: 1001;
+  z-index: 1001; // Must stay above the sliding menu
 
   @media (max-width: $breakpoint-tablet) {
     display: flex;
@@ -161,6 +177,7 @@
     transform-origin: 1px;
   }
 
+  // When active, rotate top and bottom lines to form an X, fade out middle line
   &.active {
     .hamburgerLine:nth-child(1) {
       transform: rotate(45deg);
@@ -175,6 +192,7 @@
   }
 }
 
+// Primary navigation links wrapper
 .navLinks {
   display: flex;
   justify-content: center;
@@ -185,6 +203,7 @@
     flex: 1;
   }
 
+  // Stack links vertically on mobile
   @media (max-width: $breakpoint-tablet) {
     flex-direction: column;
     gap: 1.5rem;
@@ -201,6 +220,7 @@
   }
 }
 
+// Utility actions (Settings, Language switcher, etc.)
 .navActions {
   display: flex;
   justify-content: flex-end;

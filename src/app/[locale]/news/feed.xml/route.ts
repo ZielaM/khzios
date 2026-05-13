@@ -27,7 +27,7 @@ export async function GET(
 
   const feedItems = news
     .map((item) => {
-      // Rozwiąż tłumaczenie dla tego newsa (deterministyczny fallback)
+      // Resolve translation for this news
       const { translation: resolved } = resolveTranslation(
         item.translations,
         locale
@@ -35,7 +35,7 @@ export async function GET(
       const translation = resolved ?? item.translations[0];
       const url = `${baseUrl}/${locale}/news/${item.id}`;
 
-      // Proste usuwanie tagów HTML z kontentu dla bezpieczeństwa i czytelności RSS
+      // Simple HTML tag removal from content for RSS safety and readability
       const cleanContent = translation.content.replace(/<[^>]*>?/gm, '');
 
       return `

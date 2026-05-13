@@ -1,14 +1,14 @@
 /**
- * Centralna logika rozwiązywania tłumaczeń z fallbackiem.
+ * Central translation fallback resolution logic.
  *
- * Każdy obiekt (News, Tag, itp.) ma swoją tablicę tłumaczeń —
- * te helpery operują na tablicy konkretnego obiektu,
- * więc fallback jest rozwiązywany per-instancję.
+ * Every object (News, Tag, etc.) has its own translations array —
+ * these helpers operate on a specific object's array,
+ * so the fallback is resolved on a per-instance basis.
  */
 
 /**
- * Kolejność języków fallback.
- * Np. dla locale='uk': szukaj uk → en → pl
+ * Fallback language chain order.
+ * E.g. for locale='uk': search uk -> en -> pl
  */
 export const FALLBACK_CHAIN: Record<string, readonly string[]> = {
   pl: ['pl'],
@@ -17,7 +17,6 @@ export const FALLBACK_CHAIN: Record<string, readonly string[]> = {
   ru: ['ru', 'en', 'pl'],
 };
 
-/** Nazwy języków do wyświetlenia w badgu fallback */
 export const LANGUAGE_NAMES: Record<string, string> = {
   pl: 'polski',
   en: 'English',
@@ -26,11 +25,11 @@ export const LANGUAGE_NAMES: Record<string, string> = {
 };
 
 /**
- * Rozwiązuje tłumaczenie z łańcucha fallback dla konkretnego obiektu.
- * Zwraca { translation, isFallback }.
+ * Resolves translation from the fallback chain for a specific object.
+ * Returns { translation, isFallback }.
  *
- * @param translations - tablica tłumaczeń danego obiektu (News, Tag, itp.)
- * @param locale - żądany język użytkownika
+ * @param translations - translations array for a given object (News, Tag, etc.)
+ * @param locale - user's requested language
  */
 export function resolveTranslation<T extends { languageCode: string }>(
   translations: T[],
@@ -52,11 +51,11 @@ export function resolveTranslation<T extends { languageCode: string }>(
 }
 
 /**
- * Rozwiązuje nazwę tagu z fallbackiem na inne języki,
- * a w ostateczności na natywną nazwę tagu.
+ * Resolves a tag name falling back to other languages,
+ * and ultimately to the native tag name.
  *
- * @param tag - obiekt tagu z jego tablicą tłumaczeń
- * @param locale - żądany język użytkownika
+ * @param tag - tag object with its translations array
+ * @param locale - user's requested language
  */
 export function resolveTagName(
   tag: { name: string; translations: { languageCode: string; name: string }[] },

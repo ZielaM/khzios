@@ -1,5 +1,8 @@
 @use '@/styles/variables' as *;
 
+// Main container for the search form.
+// Uses a slight overlap/negative margin strategy (margin-bottom) combined with shadow
+// to appear "floating" or attached to the content above it depending on the layout.
 .searchForm {
   background: var(--background, #ffffff);
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -14,6 +17,9 @@
   overflow: hidden;
   transition: box-shadow 0.3s ease;
 
+  // React-Select Custom Property Overrides.
+  // We use these custom CSS variables to globally theme the
+  // third-party `react-select` component without writing overly complex CSS selectors.
   --rs-bg: var(--background, #ffffff);
   --rs-text: var(--text-primary);
   --rs-border: var(--border-dark, #d1d5db);
@@ -31,6 +37,7 @@
     box-shadow: 0 20px 40px -10px rgba(36, 113, 81, 0.18);
   }
 
+  // Decorative top gradient border
   &::before {
     content: '';
     position: absolute;
@@ -46,12 +53,14 @@
     border-radius: 16px 16px 0 0;
   }
 
+  // High contrast mode overrides.
+  // This resets all subtle shades to stark foreground/background colors.
   :global(.wcag-high-contrast) & {
     border: 2px solid var(--foreground);
     box-shadow: none;
 
     &::before {
-      display: none;
+      display: none; // Remove decorative gradients
     }
 
     --rs-bg: var(--background);
@@ -69,12 +78,14 @@
   }
 }
 
+// Layout wrapper for the input fields
 .inputGroup {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; // Allows inputs to wrap onto new lines if container shrinks
   gap: 1rem;
   align-items: center;
 
+  // On mobile or compact layout, force elements to stack vertically and stretch to full width
   @media (max-width: $breakpoint-tablet) {
     flex-direction: column;
     align-items: stretch;
@@ -86,28 +97,32 @@
   }
 }
 
+// Wrapper for the text input field and search icon
 .searchInput {
   position: relative;
-  flex: 1;
-  min-width: min(300px, 100%);
+  flex: 1; // Take up remaining available width
+  min-width: min(
+    300px,
+    100%
+  ); // Prevent it from shrinking too much before wrapping
 
   .icon {
     position: absolute;
     left: 14px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%); // Perfect vertical centering
     color: var(--rs-text);
   }
 
   input {
     width: 100%;
-    padding: 0.85rem 1rem 0.85rem 2.75rem;
+    padding: 0.85rem 1rem 0.85rem 2.75rem; // Extra left padding to make room for absolute icon
     border: 1px solid var(--rs-border);
     border-radius: var(--radius-md, 8px);
     background: var(--rs-bg);
     color: var(--rs-text);
     font-size: 1em;
-    outline: none;
+    outline: none; // Outline replaced by box-shadow on focus for smoother look
     box-sizing: border-box;
     transition:
       border-color 0.2s ease,
@@ -126,10 +141,12 @@
   }
 }
 
+// Wrapper for the dropdown/select inputs
 .selectWrapper {
-  flex: 0 1 auto;
+  flex: 0 1 auto; // Shrink if needed, but don't grow unnecessarily
   min-width: min(200px, 100%);
 
+  // Stack full width on mobile/compact
   @media (max-width: $breakpoint-tablet) {
     flex: 1;
     min-width: 100%;

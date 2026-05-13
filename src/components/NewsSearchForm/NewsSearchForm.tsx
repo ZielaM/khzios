@@ -1,5 +1,12 @@
 'use client';
 
+// NewsSearchForm Architecture:
+// This component acts as the control panel for filtering and sorting news articles.
+// It manages local state for instantaneous UI feedback (typing, selecting dropdowns)
+// but synchronizes its final state to the URL search parameters via debouncing.
+// This ensures that the URL always represents the exact view, making searches
+// shareable and bookmarkable, while triggering server-side data fetching.
+
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import style from './NewsSearchForm.module.scss';
@@ -16,6 +23,10 @@ interface NewsSearchFormProps {
 
 type OptionType = { value: string; label: string };
 
+// React-Select Custom Styling Configuration:
+// We use CSS Custom Properties (variables) defined in NewsSearchForm.module.scss
+// to hook into react-select's JS-in-CSS style object. This allows us to handle
+// themes like WCAG high-contrast mode purely through CSS without re-rendering JS.
 const customSelectStyles: StylesConfig<OptionType, boolean> = {
   control: (base, state) => ({
     ...base,
@@ -88,6 +99,7 @@ export default function NewsSearchForm({
   const searchParams = useSearchParams();
   const t = useTranslations('NewsPage');
 
+  // Convert comma-separated string from URL into an array of selected values
   const initialTagsList = initialTag
     ? initialTag
         .split(',')
@@ -114,11 +126,16 @@ export default function NewsSearchForm({
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Synchronization Logic:
+  // Compares current local state to the actual URL query parameters.
+  // Pushes a new route ONLY if values have actually changed,
+  // preventing infinite loop renders and keeping the browser history clean.
   const applyChanges = useCallback(
     (newQuery: string, newTags: string[], newSort: string) => {
       const params = new URLSearchParams(searchParams.toString());
       let changed = false;
 
+      // Handle full-text search query diffs
       if (newQuery) {
         if (params.get('query') !== newQuery) {
           params.set('query', newQuery);
@@ -129,6 +146,7 @@ export default function NewsSearchForm({
         changed = true;
       }
 
+      // Handle tag multi-select diffs
       if (newTags.length > 0) {
         const tagsString = newTags.join(',');
         if (params.get('tag') !== tagsString) {
@@ -140,6 +158,8 @@ export default function NewsSearchForm({
         changed = true;
       }
 
+      // Logic Rule: Relevance sorting makes no sense if there is no text query.
+      // Automatically fallback to 'date' if query is empty.
       const finalSort =
         newQuery && newSort === 'relevance' ? 'relevance' : 'date';
       if (params.get('sort') !== finalSort) {
@@ -147,6 +167,8 @@ export default function NewsSearchForm({
         changed = true;
       }
 
+      // Only push router state if a param was actually modified.
+      // Resets pagination to page 1 upon any search criteria change.
       if (changed) {
         params.set('page', '1');
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
@@ -155,6 +177,9 @@ export default function NewsSearchForm({
     [searchParams, pathname, router]
   );
 
+  // Debouncing effect:
+  // Waits 500ms after the user stops interacting before pushing URL changes.
+  // This prevents spamming the server with requests while the user is typing.
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
@@ -181,6 +206,8 @@ export default function NewsSearchForm({
             value={query}
             onChange={(e) => {
               const val = e.target.value;
+              // Quality of life feature: if the user starts typing a query,
+              // automatically switch sort method to relevance for better initial results.
               if (!query && val) {
                 setSelectedSort(sortOptions[0]);
               }
@@ -204,6 +231,8 @@ export default function NewsSearchForm({
           />
         </div>
 
+        {/* Sorting is only revealed if there is an active search query 
+            to avoid confusing the user with useless relevance sorts. */}
         {query && (
           <div className={style.selectWrapper}>
             <Select

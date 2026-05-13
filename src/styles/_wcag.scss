@@ -1,15 +1,22 @@
-/* WCAG 2.1 High Contrast Mode */
+// WCAG 2.1 High Contrast Mode Overrides
+// When the `.wcag-high-contrast` class is added to the <html> tag via JS,
+// these global rules enforce a strict high-contrast color scheme (typically yellow on black).
+
 html.wcag-high-contrast {
   --background: #000000;
   --foreground: #ffff00;
+  // Further boosts the contrast of images/UI elements globally
   filter: contrast(120%) saturate(120%);
 }
 
+// Force all borders and outlines to be visible against the black background
 html.wcag-high-contrast * {
   border-color: #ffff00 !important;
   outline-color: #ffff00 !important;
 }
 
+// Ensure interactive elements have extremely clear visual affordances
+// by enforcing thick underlines on links and buttons.
 html.wcag-high-contrast a,
 html.wcag-high-contrast button {
   text-decoration: underline;
@@ -17,23 +24,28 @@ html.wcag-high-contrast button {
   text-underline-offset: 4px;
 }
 
+// Skip link for screen readers and keyboard-only users.
+// Hidden off-screen by default, but slides in visibly when focused via the Tab key.
+// This allows users to bypass repetitive navigation and jump straight to main content.
 .skip-link {
   position: absolute;
-  top: -100px;
+  top: -100px; // Hidden off-screen
   left: 0;
   background: var(--foreground);
   color: var(--background);
   padding: 10px 15px;
-  z-index: 10000;
+  z-index: 10000; // Must be visually on top of everything including modals
   font-weight: bold;
   text-decoration: none;
   transition: top 0.2s ease;
 
+  // Reveal when receiving keyboard focus
   &:focus {
     top: 0;
     outline: 3px solid var(--color-primary);
   }
 
+  // Adjust outline color dynamically if high contrast is active
   html.wcag-high-contrast & {
     outline: 3px solid var(--foreground);
   }

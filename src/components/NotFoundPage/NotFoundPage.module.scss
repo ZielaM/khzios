@@ -1,16 +1,19 @@
 @use '@/styles/variables' as *;
 
+// Container for the 404 page content
+// Centers content vertically and horizontally, taking up most of the viewport
 .notFoundContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 300px);
+  min-height: calc(100vh - 300px); // Account for navbar and footer heights
   padding: 4rem 2rem;
   text-align: center;
   background-color: var(--background);
 }
 
+// Icon representing the error state (e.g. broken file, warning sign)
 .errorIcon {
   color: $accent-color;
   margin-bottom: 2rem;
@@ -20,6 +23,7 @@
   }
 }
 
+// Main 404 header typography
 .title {
   font-size: 2.5em;
   font-weight: 800;
@@ -27,6 +31,7 @@
   color: var(--foreground);
 }
 
+// Explanatory text for the 404 error
 .description {
   font-size: 1.1em;
   color: color-mix(in srgb, var(--foreground) 70%, transparent);
@@ -35,6 +40,7 @@
   line-height: 1.5;
 }
 
+// Call to action button to return to the homepage
 .homeButton {
   display: inline-flex;
   align-items: center;
@@ -49,6 +55,7 @@
     background-color 0.2s ease,
     transform 0.2s ease;
 
+  // High contrast mode makes the button inverted with a thick border
   :global(.wcag-high-contrast) & {
     background-color: var(--foreground);
     color: var(--background);

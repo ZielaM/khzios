@@ -1,11 +1,13 @@
 @use '@/styles/variables' as *;
 
+// Container for accessibility toggles (contrast, text size)
 .wcagControls {
   display: flex;
   gap: 0.5rem;
   align-items: center;
 }
 
+// Individual accessibility toggle button
 .wcagButton {
   display: flex;
   align-items: center;
@@ -20,6 +22,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
 
+  // Clear focus states for keyboard navigation
   &:hover,
   &:focus-visible {
     background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
@@ -31,6 +34,7 @@
     }
   }
 
+  // Inverted styling to indicate the setting is currently active
   &.active {
     background-color: var(--foreground);
     color: var(--background);
@@ -38,6 +42,7 @@
   }
 }
 
+// Utility classes for inner button typography
 .wcagTextSmall {
   font-size: 0.85em;
 }

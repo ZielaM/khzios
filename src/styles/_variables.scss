@@ -1,6 +1,7 @@
-/* Zmienne globalne preprocesora SASS */
+// Build-time SCSS variables. These are used to maintain a single source of truth
+// for static values like breakpoints and initial color definitions.
+// NOTE: For runtime theming, these colors are mapped to CSS variables in _themes.scss.
 
-/* Kolory z palety */
 $color-primary: #247151;
 $color-secondary: #367c2b;
 $color-tertiary: #5d8a66;
@@ -10,7 +11,11 @@ $color-bg: #ffffff;
 $color-text: $color-neutral;
 $accent-color: $color-primary;
 
+// Media query breakpoints. Used heavily across component modules
+// to ensure responsive design consistency.
 $breakpoint-tablet: 768px;
 $breakpoint-desktop: 1024px;
+
+// Global layout constraints
 $max-width-content: 1200px;
 $navbar-height: 70px;

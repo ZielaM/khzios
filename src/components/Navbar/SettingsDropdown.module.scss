@@ -1,5 +1,8 @@
 @use '@/styles/variables' as *;
 
+// Settings toggle button (gear icon)
+// Only visible on desktop when the user forces compact-layout,
+// acting as a trigger for a dropdown panel.
 .settingsToggle {
   display: none;
   align-items: center;
@@ -15,6 +18,7 @@
     background-color 0.2s ease,
     color 0.2s ease;
 
+  // Accessible focus outline
   &:hover,
   &:focus-visible {
     background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
@@ -26,27 +30,31 @@
     }
   }
 
+  // Show toggle when desktop user explicitly activates compact-layout
   :global(.compact-layout) & {
     display: flex;
   }
 
-  // In compact-layout-sm (hamburger), hide the toggle — controls show inline in menu
+  // In compact-layout-sm (hamburger menu active), hide the toggle — controls show inline in menu instead
   :global(.compact-layout-sm) & {
     display: none;
   }
 
+  // Hide on physical mobile devices, as controls are always inline in the mobile menu
   @media (max-width: $breakpoint-tablet) {
     display: none;
   }
 }
 
+// Container for settings controls (WCAG buttons, Language switcher, etc.)
 .settingsPanel {
-  // Desktop: show inline, no special behavior
+  // Desktop Default: show inline, flowing horizontally within the navbar
   display: flex;
   gap: 0.75rem;
   align-items: center;
 
-  // Compact layout: hide by default, show as dropdown
+  // Desktop Compact Layout: hide by default, render as an absolute dropdown menu
+  // triggered by `.settingsToggle`
   :global(.compact-layout) & {
     display: none;
     position: absolute;
@@ -57,7 +65,7 @@
     border-radius: 12px;
     padding: 1rem;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    flex-direction: column;
+    flex-direction: column; // Stack controls vertically
     gap: 1rem;
     z-index: 10;
     min-width: 200px;
@@ -67,7 +75,8 @@
     }
   }
 
-  // In compact-layout-sm (hamburger), show stacked in menu
+  // In compact-layout-sm (hamburger menu active), reset dropdown styles
+  // and show the controls stacked inline directly within the mobile menu
   :global(.compact-layout-sm) & {
     display: flex;
     position: static;
@@ -82,6 +91,7 @@
     min-width: unset;
   }
 
+  // Mobile layout behavior: exactly identical to compact-layout-sm
   @media (max-width: $breakpoint-tablet) {
     display: flex;
     position: static;

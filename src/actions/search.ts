@@ -21,7 +21,7 @@ export async function searchPublishedNews({
   limit = 20,
   sortBy = 'date',
 }: SearchParams) {
-  // Języki fallback dla danego locale (np. uk → ['uk', 'en', 'pl'])
+  // Fallback languages for a given locale (e.g. uk -> ['uk', 'en', 'pl'])
   const fallbackLanguages = FALLBACK_CHAIN[language] ?? [language, 'en', 'pl'];
 
   const dictionary = (() => {
@@ -50,8 +50,8 @@ export async function searchPublishedNews({
 
     if (query) {
       // 1. Raw SQL for Full Text Search to get matching IDs, highlighting, and count
-      // Szukamy we wszystkich językach z fallback chain, priorytetyzując trafienia
-      // w preferowanym języku użytkownika
+      // Search in all languages within the fallback chain, prioritizing hits
+      // in the user's preferred language
       const sqlParts = [];
       const countParts = [];
 
@@ -64,7 +64,7 @@ export async function searchPublishedNews({
       countParts.push(selectCountPart, fromPart);
 
       const whereParts = [];
-      // Szukaj w tłumaczeniach ze wszystkich języków w fallback chain
+      // Search in translations from all languages in the fallback chain
       const langConditions = fallbackLanguages.map(
         (lang) =>
           Prisma.sql`nt."languageCode" = CAST(${lang} AS "LanguageCode")`
@@ -76,7 +76,7 @@ export async function searchPublishedNews({
       );
 
       if (tag) {
-        // Podziel tagi po przecinku
+        // Split tags by comma
         const tags = tag.split(',').map((t) => t.trim());
 
         // Find news IDs that have ANY of these tags (in any language translation or native)
@@ -115,8 +115,8 @@ export async function searchPublishedNews({
         prisma.$queryRaw<{ total: number }[]>(Prisma.join(countParts, ' ')),
       ]);
 
-      // Deduplikacja: dla każdego news ID zachowaj najlepsze tłumaczenie
-      // (priorytet wg fallback chain, potem rank)
+      // Deduplication: keep the best translation for each news ID
+      // (priority by fallback chain, then rank)
       const bestByNewsId = new Map<
         string,
         {
@@ -133,7 +133,7 @@ export async function searchPublishedNews({
         if (!existing) {
           bestByNewsId.set(r.id, r);
         } else {
-          // Preferuj tłumaczenie wyżej w fallback chain
+          // Prefer translation higher up in the fallback chain
           const existingPriority = fallbackLanguages.indexOf(
             existing.languageCode
           );
@@ -147,7 +147,7 @@ export async function searchPublishedNews({
         }
       }
 
-      // Posortuj deduplikowane wyniki i zastosuj paginację
+      // Sort deduplicated results and apply pagination
       const deduplicated = Array.from(bestByNewsId.values());
       if (sortBy === 'relevance') {
         deduplicated.sort((a, b) => b.rank - a.rank);
@@ -166,7 +166,7 @@ export async function searchPublishedNews({
       }
     } else {
       // 2. Pure Prisma for normal filtering
-      // Pokaż wszystkie opublikowane newsy — fallback tłumaczeń obsługuje NewsTile
+      // Show all published news — translation fallback is handled by NewsTile
       const whereCondition: Prisma.NewsWhereInput = {
         published: true,
       };
@@ -235,7 +235,7 @@ export async function searchPublishedNews({
       totalPages: Math.ceil(totalCount / limit),
     };
   } catch (error) {
-    console.error('Błąd wyszukiwania:', error);
+    console.error('Search error:', error);
     return { data: [], total: 0, page, totalPages: 0 };
   }
 }

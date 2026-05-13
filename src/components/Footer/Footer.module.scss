@@ -1,5 +1,6 @@
 @use '@/styles/variables' as *;
 
+// Main footer wrapping element
 .footer {
   background-color: #f7f9f7;
   padding: 4rem 2rem;
@@ -12,25 +13,32 @@
   }
 }
 
+// Inner container implementing CSS Grid for responsive columns
 .container {
   max-width: $max-width-content;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; // Mobile: 1 column stacking vertically
   gap: 3rem;
 
+  // Tablet/Desktop: 3 columns.
+  // The first column (Brand/Address) takes up 1.5 fraction units,
+  // making it slightly wider than the other two columns (Links/Contact).
   @media (min-width: $breakpoint-tablet) {
     grid-template-columns: 1.5fr 1fr 1fr;
     gap: 2rem;
   }
 }
 
+// Generic column wrapper
 .column {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
+// Used primarily in the first column to stretch content vertically
+// and push copyright/bottom elements to the bottom edge.
 .columnWrapper {
   display: flex;
   flex-direction: column;
@@ -38,6 +46,7 @@
   height: 100%;
 }
 
+// Brand title styling
 .brandTitle {
   color: var(--color-primary);
   font-size: 1.25em;
@@ -50,6 +59,7 @@
   }
 }
 
+// Address paragraph styling
 .addressInfo {
   color: #6b7280;
   font-size: 0.875em;
@@ -65,6 +75,7 @@
   }
 }
 
+// Title header for individual columns (e.g., "Links", "Contact")
 .colTitle {
   color: var(--color-tertiary);
   font-size: 0.85em;
@@ -78,6 +89,7 @@
   }
 }
 
+// Unordered list reset for navigation links
 .linksList {
   list-style: none;
   padding: 0;
@@ -97,6 +109,7 @@
       color: var(--foreground);
     }
 
+    // Add underline for accessibility on hover/focus
     &:hover,
     &:focus {
       color: var(--color-primary);
@@ -109,6 +122,7 @@
   }
 }
 
+// Unordered list reset for contact information (often with icons)
 .contactList {
   list-style: none;
   padding: 0;
@@ -131,12 +145,11 @@
   }
 }
 
+// Shared icon styling for contact list
 .icon {
   color: var(--color-primary);
-  flex-shrink: 0;
-  fill: var(
-    --color-primary
-  ); /* To make it look solid like the image if possible, though Lucide icons are stroke-based */
+  flex-shrink: 0; // Prevents icon from squishing if text wraps
+  fill: var(--color-primary);
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -144,6 +157,7 @@
   }
 }
 
+// Copyright text positioned at the bottom of the first column
 .copyright {
   margin-top: 3rem;
   color: #9ca3af;

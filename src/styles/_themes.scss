@@ -1,13 +1,19 @@
 @use './variables' as *;
 
+// Expose SCSS variables as CSS custom properties (variables) on the :root element.
+// This allows dynamic runtime theming (e.g., toggling light/dark mode, or applying
+// WCAG high-contrast themes) without needing to recompile the SCSS.
 :root {
   --background: #{$color-bg};
   --foreground: #{$color-text};
 
+  // Primary brand colors mapped to variables for usage across components
   --color-primary: #{$color-primary};
   --color-secondary: #{$color-secondary};
   --color-tertiary: #{$color-tertiary};
   --color-neutral: #{$color-neutral};
 
+  // Multiplier for accessible font scaling, easily modified by JS
+  // when a user requests larger text.
   --wcag-font-scale: 1;
 }

@@ -1,10 +1,12 @@
 @use '@/styles/variables' as *;
 
+// Main container for the News page
 .main {
   max-width: $max-width-content;
   margin: 0 auto;
   padding: 2rem 4rem;
 
+  // Increase top padding on mobile/compact to avoid overlapping with the fixed navbar
   @media (max-width: $breakpoint-tablet) {
     padding: 6rem 1rem 2rem;
   }
@@ -14,6 +16,7 @@
   }
 }
 
+// Header section containing the title and RSS button
 .header {
   display: flex;
   justify-content: space-between;
@@ -33,6 +36,7 @@
   }
 }
 
+// Page title styling
 .title {
   font-size: 2.5em;
   font-weight: 700;
@@ -40,13 +44,14 @@
   margin: 0;
 }
 
+// RSS Feed link styled as a button
 .rssButton {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: var(--surface);
-  color: #f26522; // RSS orange
+  color: #f26522; // Distinct RSS brand orange
   border: 1px solid var(--border);
   border-radius: var(--radius-md, 8px);
   font-weight: 600;
@@ -56,6 +61,7 @@
     color 0.2s ease,
     border-color 0.2s ease;
 
+  // Invert colors on hover for a filled look
   &:hover {
     background: #f26522;
     color: white;
@@ -63,31 +69,36 @@
   }
 }
 
+// CSS Grid for displaying News Tiles
+// Dynamically adjusts columns based on viewport size and compact-layout settings
 .newsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); // Desktop default: 3 columns
   gap: 2rem;
   width: 100%;
 
   @media (max-width: $breakpoint-desktop) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); // Tablet default: 2 columns
   }
 
+  // User preference override: 2 columns
   :global(.compact-layout) & {
     grid-template-columns: repeat(2, 1fr);
   }
 
   @media (max-width: $breakpoint-tablet) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; // Mobile: 1 column
   }
 
+  // User preference override: 1 column
   :global(.compact-layout-sm) & {
     grid-template-columns: 1fr;
   }
 }
 
+// Empty state displayed when search yields no results
 .noResults {
-  grid-column: 1 / -1;
+  grid-column: 1 / -1; // Span all available grid columns
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -109,6 +120,7 @@
   }
 }
 
+// Icon for the empty state
 .noResultsIcon {
   color: var(--color-primary);
   opacity: 0.8;

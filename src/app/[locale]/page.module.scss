@@ -1,5 +1,6 @@
 @use '@/styles/variables' as *;
 
+// Main landing page content wrapper
 .main {
   padding: 2rem 1rem;
 
@@ -15,12 +16,16 @@
   }
 }
 
+// Global max-width container to prevent content from stretching too wide on large screens
 .container {
   max-width: $max-width-content;
   margin: 0 auto;
   width: 100%;
 }
 
+// Responsive CSS Grid for landing page tiles
+// Uses auto-fill and minmax to automatically wrap items into new rows
+// when the screen width shrinks, without needing explicit media queries.
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

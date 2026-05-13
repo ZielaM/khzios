@@ -1,15 +1,16 @@
 @use '@/styles/variables' as *;
 
+// Main wrapper for a single news article card
 .newsTile {
   background: var(--background);
   border-radius: 16px;
-  overflow: hidden;
+  overflow: hidden; // Ensures children (like the image zoom) don't escape the rounded corners
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   transition:
     transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
     box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
     border-color 0.3s ease;
-  height: 100%;
+  height: 100%; // Fill the grid cell vertically
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -17,9 +18,10 @@
 
   :global(.wcag-high-contrast) & {
     border-color: var(--foreground);
-    box-shadow: none;
+    box-shadow: none; // Box shadows reduce contrast, disable them in WCAG mode
   }
 
+  // Float up and cast a deeper shadow when hovered
   &:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
@@ -30,10 +32,12 @@
       box-shadow: 0 0 15px var(--foreground);
     }
 
+    // Trigger inner image zoom effect
     .image {
       transform: scale(1.05);
     }
 
+    // Emphasize the "Read More" call to action
     .readMore {
       color: var(--color-primary);
       text-decoration: underline;
@@ -43,11 +47,15 @@
         color: var(--foreground);
       }
 
+      // Slide the arrow icon to the right
       svg {
         transform: translateX(6px);
       }
     }
   }
+
+  // Use :has(:focus-visible) so the entire card gets a focus ring
+  // when the hidden inner link receives keyboard focus
   &:has(:focus-visible) {
     outline: 3px solid var(--color-primary);
     outline-offset: 4px;
@@ -59,15 +67,17 @@
   }
 }
 
+// Stretches the semantic <a> tag over the entire card layout
 .linkWrapper {
   text-decoration: none;
   color: inherit;
   display: flex;
   flex-direction: column;
   height: 100%;
-  outline: none;
+  outline: none; // Outline is handled by the parent .newsTile
 }
 
+// Wrapper to enforce an aspect ratio/fixed height for the thumbnail
 .imageContainer {
   position: relative;
   width: 100%;
@@ -76,17 +86,19 @@
   background-color: #f5f5f5;
 }
 
+// The thumbnail image itself, set to cover the container
 .image {
   object-fit: cover;
   transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+// Absolute positioned date pill overlaying the image
 .dateBadge {
   position: absolute;
   top: 16px;
   right: 16px;
   background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px); // Glassmorphism effect
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 0.8em;
@@ -104,6 +116,7 @@
   }
 }
 
+// The text container, growing to push the footer down if needed
 .content {
   padding: 24px;
   display: flex;
@@ -116,6 +129,7 @@
   }
 }
 
+// Tag list container
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -123,6 +137,7 @@
   margin-bottom: 16px;
 }
 
+// Individual category tag
 .tag {
   background: rgba($color-primary, 0.08);
   color: var(--color-primary);
@@ -141,10 +156,12 @@
   }
 }
 
+// Badge shown when the current locale's translation is missing
+// and we had to fall back to English or Polish.
 .fallbackBadge {
   display: inline-block;
   background: rgba(255, 170, 0, 0.1);
-  color: #b38600;
+  color: #b38600; // Warning orange
   padding: 3px 10px;
   border-radius: 6px;
   font-size: 0.7em;
@@ -161,12 +178,15 @@
   }
 }
 
+// Article title with multi-line truncation
 .title {
   font-size: 1.35em;
   font-weight: 800;
   margin-bottom: 14px;
   line-height: 1.4;
   color: var(--foreground);
+
+  // Truncate text after 2 lines
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -174,6 +194,7 @@
   overflow: hidden;
   transition: color 0.3s ease;
 
+  // Search keyword highlighting overrides injected via <mark> tags
   :global(mark) {
     background: rgba($color-primary, 0.15);
     color: inherit;
@@ -187,17 +208,20 @@
   }
 }
 
+// Article excerpt/summary with multi-line truncation
 .description {
   font-size: 0.95em;
   color: #555;
   line-height: 1.6;
   margin-bottom: 24px;
+
+  // Truncate text after 3 lines
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  flex-grow: 1;
+  flex-grow: 1; // Pushes the "Read More" button to the bottom
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -226,6 +250,7 @@
   }
 }
 
+// The CTA link at the bottom of the card
 .readMore {
   display: flex;
   align-items: center;
@@ -233,7 +258,7 @@
   font-weight: 700;
   font-size: 0.9em;
   color: var(--color-tertiary);
-  margin-top: auto;
+  margin-top: auto; // Force to bottom
   transition: color 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;

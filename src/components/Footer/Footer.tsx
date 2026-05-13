@@ -1,3 +1,8 @@
+// Footer Architecture:
+// Standard static layout component used at the bottom of every page.
+// It relies on CSS Grid (via Footer.module.scss) to organize content into responsive columns.
+// Next-intl is used to translate static strings.
+
 import styles from './Footer.module.scss';
 import { Phone, Mail, Rss } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
@@ -41,6 +46,7 @@ const Footer = () => {
               <a href="#">LinkedIn</a>
             </li>
             <li>
+              {/* Dynamic RSS Feed link depending on the current locale */}
               <a
                 href={`/${locale}/news/feed.xml`}
                 target="_blank"
@@ -61,6 +67,8 @@ const Footer = () => {
         </div>
 
         {/* Column 3: Contact */}
+        {/* columnWrapper is used here specifically to push the copyright text 
+            to the absolute bottom of the column via flexbox justify-content: space-between */}
         <div className={styles.columnWrapper}>
           <div className={styles.column}>
             <h4 className={styles.colTitle}>{t('contactTitle')}</h4>

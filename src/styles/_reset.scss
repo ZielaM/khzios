@@ -1,34 +1,48 @@
 @use '@/styles/variables' as *;
 
+// Global layout constraints to prevent horizontal scrolling on mobile devices
+// and ensure the viewport width is respected strictly.
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
 }
 
+// Base body styles setting up the global design system variables (typography, colors)
+// Uses flexbox to ensure the footer sticks to the bottom even on pages with little content.
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: var(--font-inter), sans-serif;
+
+  // Font scale variable allows dynamic resizing for WCAG accessibility features
   font-size: calc(1rem * var(--wcag-font-scale));
+
+  // Font smoothing for better legibility on macOS/iOS
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+// Layout relationship: the <main> tag following <nav> pushes the content down
+// to avoid being hidden under the fixed/absolute navbar, and expands to push the footer down.
 nav + main {
   flex: 1;
   margin-top: $navbar-height;
 }
 
+// Standard box-sizing reset for more predictable element sizing
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
+// Global anchor reset to inherit text colors and remove default underlines
+// Specific components (or high contrast mode) will add decorations explicitly when needed.
 a {
   color: inherit;
   text-decoration: none;

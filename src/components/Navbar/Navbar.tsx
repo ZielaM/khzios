@@ -1,5 +1,12 @@
 'use client';
 
+// Navbar Component Architecture:
+// This is the primary navigation shell for the application.
+// It handles responsive layout switching between a standard desktop bar
+// and a full-screen mobile overlay menu. It relies heavily on CSS Modules
+// for media queries and class toggling rather than conditional React rendering,
+// ensuring the menu is always in the DOM for SEO and immediate accessibility.
+
 import { useState, useEffect } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
 import Image from 'next/image';
@@ -13,11 +20,16 @@ import SettingsDropdown from './SettingsDropdown';
 import WcagControls from './WcagControls';
 
 export default function Navbar() {
+  // State controlling the mobile slide-down menu visibility
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations('Navbar');
   const tWcag = useTranslations('Wcag');
 
+  // Automatic Menu Closing Logic:
+  // Whenever the pathname changes (user clicked a link and navigated successfully),
+  // we force the mobile menu to close. A timeout is used to ensure the navigation
+  // event loop finishes before ripping the menu out of view.
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setIsMobileMenuOpen(false);
@@ -25,7 +37,7 @@ export default function Navbar() {
     return () => clearTimeout(timeoutId);
   }, [pathname]);
 
-  // Zamyka menu po przejściu
+  // Manual close handler passed down to individual NavItems.
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
@@ -36,12 +48,13 @@ export default function Navbar() {
           <Link href="/" className={style.logoLink} onClick={closeMobileMenu}>
             <Image src="/logo.png" alt={t('logoAlt')} width={40} height={40} />
             <span className={style.logoText}>
+              {/* .rich allows rendering injected tags like <br /> from translation strings */}
               {t.rich('logoText', { br: () => <br /> })}
             </span>
           </Link>
         </div>
 
-        {/* Hamburger Button */}
+        {/* Mobile Hamburger Toggle Button */}
         <button
           className={clsx(style.hamburger, {
             [style.active]: isMobileMenuOpen,
@@ -55,23 +68,25 @@ export default function Navbar() {
         </button>
       </div>
 
+      {/* Main Navigation Container (links + actions) */}
       <div
         className={clsx(style.navMenuContainer, {
           [style.mobileOpen]: isMobileMenuOpen,
         })}
       >
-        {/* Links */}
+        {/* Links Array */}
         <div className={style.navLinks}>
           <NavItem label={t('news')} href="/news" onClick={closeMobileMenu} />
 
-          {/* O nas */}
+          {/* Nested Dropdown Menu structure for "About Us" */}
           <DropdownMenu label={t('aboutUs')} href="/about-us">
-            {/* Struktura */}
+            {/* Level 1 Submenu */}
             <DropdownItem
               label={t('structure')}
               desc={t('structureDesc')}
               href="/about-us/structure"
             >
+              {/* Level 2 Submenus (Flyout on desktop, accordion on mobile) */}
               <DropdownItem
                 label={t('headOfDepartment')}
                 href="/about-us/structure/head"
@@ -105,7 +120,7 @@ export default function Navbar() {
                 href="/about-us/structure/zlotnicka-pig-herdbooks"
               />
             </DropdownItem>
-            {/* Publikacje */}
+            {/* Another Level 1 Item */}
             <DropdownItem
               label={t('publications')}
               desc={t('publicationsDesc')}
@@ -125,7 +140,9 @@ export default function Navbar() {
           />
         </div>
 
-        {/* Language & WCAG Controls */}
+        {/* System Actions (Language & Accessibility Settings) */}
+        {/* Placed inside SettingsDropdown to save space, but CSS modules 
+            extract them inline on larger screens by default. */}
         <div className={style.navActions}>
           <SettingsDropdown label={tWcag('settingsToggle')}>
             <LanguageSwitcher />

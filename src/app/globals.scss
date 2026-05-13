@@ -1,3 +1,8 @@
+// Global stylesheet entry point
+// This file aggregates all the global styling modules (variables, resets, themes)
+// and is imported directly into the Next.js root layout.
+// DO NOT put component-specific styles here; use CSS modules instead.
+
 @use '@/styles/variables';
 @use '@/styles/themes';
 @use '@/styles/reset';

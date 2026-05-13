@@ -48,7 +48,7 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
 
   const t = await getTranslations('NewsPage');
 
-  // Klucz dla Suspense, żeby odświeżało się po zmianie parametrów!
+  // Key for Suspense to trigger re-render on param change
   const suspenseKey = JSON.stringify({ query, tag, page, sortBy });
 
   return (

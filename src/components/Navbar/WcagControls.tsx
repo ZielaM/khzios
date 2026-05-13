@@ -1,3 +1,9 @@
+// WCAG Controls Architecture:
+// This component manages global accessibility overrides (High Contrast & Font Scaling).
+// It directly mutates the DOM (adding classes and CSS Custom Properties to the `<html>` root element)
+// to ensure that layout updates happen synchronously without waiting for a full React state tree re-render.
+// Preferences are synced with localStorage to persist across sessions.
+
 import { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import style from './WcagControls.module.scss';
@@ -16,6 +22,11 @@ export default function WcagControls({
   const [highContrast, setHighContrast] = useState(false);
   const [fontSizeOffset, setFontSizeOffset] = useState(0);
 
+  // Dynamic Compact Layout Calculation:
+  // When the font size scales up significantly, standard desktop layouts break.
+  // We calculate an 'effectiveWidth' dividing actual pixel width by the scale factor.
+  // If the effective width drops below tablet breakpoints, we forcefully apply
+  // global `.compact-layout` classes, forcing the UI into mobile-view even on desktop.
   const updateCompactClasses = (scale: number) => {
     const effectiveWidth = window.innerWidth / scale;
     const root = document.documentElement.classList;
@@ -75,10 +86,12 @@ export default function WcagControls({
   };
 
   const changeFontSize = (step: number) => {
+    // Restrict offset bounds (e.g. max 6 steps)
     const newOffset = Math.min(Math.max(fontSizeOffset + step, 0), 6);
     setFontSizeOffset(newOffset);
     localStorage.setItem('wcag-font-offset', newOffset.toString());
 
+    // Scale is mathematically calculated where 1 step = 10% increase
     const scale = 1 + newOffset * 0.1;
 
     if (newOffset === 0) {
@@ -92,7 +105,9 @@ export default function WcagControls({
 
     updateCompactClasses(scale);
 
-    // Force full repaint to prevent Chrome compositor artifacts
+    // Force full DOM repaint:
+    // Sometimes Chromium-based browsers fail to update deep deeply nested REM values
+    // dynamically. Toggling body display forces the browser compositor to recalculate everything.
     requestAnimationFrame(() => {
       document.body.style.display = 'none';
       void document.body.offsetHeight;

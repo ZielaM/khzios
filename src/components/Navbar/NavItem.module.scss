@@ -1,8 +1,10 @@
 @use '@/styles/variables' as *;
 
+// Individual navigation item link
 .navLink {
   font-size: 0.95em;
   font-weight: 500;
+  // Use color-mix to create a slightly muted color, making hover states more obvious
   color: color-mix(in srgb, var(--foreground) 80%, transparent);
   transition: color 0.2s ease;
   background: none;
@@ -15,6 +17,7 @@
   text-wrap: nowrap;
   position: relative;
 
+  // On mobile, the links are rendered as large, bold items in a vertical list
   @media (max-width: $breakpoint-tablet) {
     width: 100%;
     justify-content: space-between;
@@ -26,6 +29,8 @@
     }
   }
 
+  // Underline effect on hover (Desktop only).
+  // Starts at 0% width and grows to 100% when the parent is hovered.
   &::after {
     content: '';
     position: absolute;
@@ -37,6 +42,7 @@
     transition: width 0.3s ease;
     border-radius: 2px;
 
+    // High contrast overrides the accent color with the strict foreground color
     :global(.wcag-high-contrast) & {
       background-color: var(--foreground);
     }
@@ -44,6 +50,7 @@
 
   &:hover {
     color: var(--foreground);
+    // Trigger the underline growth animation
     &::after {
       width: 100%;
     }

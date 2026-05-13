@@ -1,13 +1,16 @@
 @use '@/styles/variables' as *;
 
+// Wrapper for the dropdown trigger and the menu itself.
 .dropdownContainer {
   position: relative;
   height: 100%;
   display: flex;
   align-items: center;
-  /* Extra padding to prevent the hover loss between button and menu */
+  // Extra vertical padding prevents the cursor from "falling off"
+  // and closing the menu when moving from the trigger to the dropdown panel.
   padding: 1rem 0;
 
+  // On mobile, the dropdown shifts from a flyout to an inline accordion.
   @media (max-width: $breakpoint-tablet) {
     flex-direction: column;
     align-items: flex-start;
@@ -17,6 +20,7 @@
   }
 }
 
+// Small chevron icon indicating a dropdown
 .dropdownIcon {
   transition: transform 0.3s ease;
   &.open {
@@ -24,6 +28,9 @@
   }
 }
 
+// The main dropdown panel (Level 1).
+// Desktop: positioned absolutely below the trigger.
+// Mobile: positioned statically, expanding like an accordion.
 .dropdownMenu {
   position: absolute;
   top: 100%;
@@ -35,10 +42,13 @@
   border-radius: 12px;
   padding: 0.5rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+
+  // Hidden by default using opacity/visibility rather than display: none
+  // to allow CSS transitions to run smoothly.
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
+  pointer-events: none; // Prevent accidental clicks when invisible
   z-index: 10;
 
   @media (prefers-color-scheme: dark) {
@@ -52,7 +62,7 @@
     pointer-events: auto;
   }
 
-  /* Wymuszenie wyświetlania w linii na mobile (model akordeonu) */
+  // Mobile accordion behavior overrides absolute positioning
   @media (max-width: $breakpoint-tablet) {
     position: static;
     transform: none;
@@ -61,7 +71,7 @@
     background: transparent;
     padding: 0 0.5rem 0 0;
     min-width: 100%;
-    display: none;
+    display: none; // Use display none on mobile so it doesn't take up space when closed
 
     &.show {
       display: block;
@@ -72,10 +82,11 @@
   }
 }
 
+// Individual clickable item within a dropdown menu
 .dropdownItem {
   border-radius: 8px;
   transition: background-color 0.2s ease;
-  position: relative; // needed for absolute submenu positioning
+  position: relative; // Needed for absolute positioning of nested submenus
 
   @media (max-width: $breakpoint-tablet) {
     width: 100%;
@@ -86,6 +97,7 @@
   }
 }
 
+// Link wrapper inside the item
 .dropdownLink {
   display: flex;
   align-items: center;
@@ -96,6 +108,7 @@
   width: 100%;
 }
 
+// Typography styling for the dropdown content
 .dropdownItemContent {
   h4 {
     font-size: 0.95em;
@@ -111,6 +124,7 @@
   }
 }
 
+// Icon for items that trigger a level-2 nested submenu
 .subMenuIcon {
   margin-left: 0.5rem;
   opacity: 0.5;
@@ -118,23 +132,23 @@
     transform 0.3s ease,
     opacity 0.3s ease;
 
-  /* Mobile: start down, rotate up */
   @media (max-width: $breakpoint-tablet) {
     transform: rotate(90deg);
   }
 
   &.open {
-    transform: rotate(-90deg); /* Desktop: rotate up */
+    transform: rotate(-90deg);
     opacity: 1;
   }
 }
 
-/* Styl dla zagnieżdżonego submenu (flyout) */
+// Level 2 nested submenu (flyout)
+// Extends horizontally to the right of the parent item on desktop.
 .subMenu {
   position: absolute;
   top: 0;
-  left: 100%; /* Wysuń mocno w prawo od rodzica */
-  transform: translateX(10px); /* Delikatne przesunięcie dla animacji */
+  left: 100%;
+  transform: translateX(10px);
   min-width: 260px;
   background-color: var(--background);
   border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
@@ -154,21 +168,24 @@
   &.show {
     opacity: 1;
     visibility: visible;
-    transform: translateX(0); /* Reset transformacji po najechaniu */
+    transform: translateX(0);
     pointer-events: auto;
   }
 
-  /* Lekki odstęp / padding pseudo-elementem żeby kursor nie zgubił focusa przechodząc na menu boczne */
+  // CRITICAL HITBOX TRICK:
+  // This pseudo-element bridges the gap between the parent item and this submenu.
+  // Without it, moving the mouse diagonally towards the submenu would leave
+  // the parent item, causing the submenu to close instantly before the mouse reaches it.
   &::before {
     content: '';
     position: absolute;
     top: 0;
-    left: -15px; /* Szerokość luki po lewej (pomiędzy rodzicem a submenu) */
+    left: -15px; // Matches the gap width
     width: 15px;
     height: 100%;
   }
 
-  /* Wymuszenie zachowania akordeonu poniżej klikniętego elementu dla submenu */
+  // On mobile, force accordion behavior
   @media (max-width: $breakpoint-tablet) {
     position: static;
     transform: none;
@@ -176,7 +193,7 @@
     border: none;
     background: transparent;
     padding: 0;
-    margin-left: 1rem;
+    margin-left: 1rem; // Indent child items
     min-width: 100%;
     display: none;
 
@@ -193,6 +210,7 @@
   }
 }
 
+// A specific item type visible only on mobile, often used as a category header
 .mobileOverviewItem {
   display: none;
 
@@ -205,6 +223,7 @@
   }
 }
 
+// Styling for the mobile overview link
 .overviewLink {
   display: block;
   padding: 0.5rem 1rem;

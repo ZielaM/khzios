@@ -1,3 +1,9 @@
+// NewsTile Architecture:
+// A reusable card component representing a single news article in feeds/grids.
+// It relies on centralized utility functions (`resolveTranslation`, `resolveTagName`)
+// to decouple layout logic from the complexities of language fallback chains
+// (e.g. falling back to EN if RU translation is missing).
+
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import style from './NewsTile.module.scss';
@@ -34,24 +40,27 @@ export default function NewsTile({
 }: NewsTileProps) {
   const t = useTranslations('HomePage');
 
-  // Wybierz pierwsze zdjęcie jako miniaturę, lub użyj placeholdera
+  // Select the first uploaded photo as the thumbnail,
+  // or fallback to a static local placeholder image if the article has no photos.
   const thumbnail =
     news.photos.length > 0 ? news.photos[0].url : '/placeholder-news.jpg';
 
-  // Rozwiąż tłumaczenie dla tego konkretnego newsa (z fallbackiem)
+  // Extract the most appropriate translation based on the user's locale.
+  // The 'isFallback' flag warns us if the content is being displayed in a language
+  // different than the user's primary preference.
   const { translation, isFallback } = resolveTranslation(
     news.translations,
     locale
   );
 
-  const title = translation?.title ?? 'Brak tłumaczenia';
+  const title = translation?.title ?? 'Translation missing';
   const content = translation?.content ?? '...';
 
-  // Pobierz przetłumaczoną nazwę tagu (z pełnym fallbackiem per-tag)
+  // Re-use standard fallback logic for each individual tag
   const getTagName = (tag: Tag & { translations: TagTranslation[] }) =>
     resolveTagName(tag, locale);
 
-  // Formatowanie daty odpowiednio do języka
+  // Use the native Intl API to format dates consistently according to locale rules
   const formattedDate = new Intl.DateTimeFormat(locale, {
     day: 'numeric',
     month: 'long',
@@ -77,6 +86,7 @@ export default function NewsTile({
         </div>
 
         <div className={style.content}>
+          {/* Tag Rendering */}
           <div className={style.tags}>
             {news.tags.map((tag) => (
               <span key={tag.id} className={style.tag}>
@@ -85,6 +95,7 @@ export default function NewsTile({
             ))}
           </div>
 
+          {/* Render an informational badge if the user is seeing fallback content */}
           {isFallback && translation && (
             <span className={style.fallbackBadge}>
               {t('translationUnavailable', {
@@ -95,6 +106,10 @@ export default function NewsTile({
             </span>
           )}
 
+          {/* Search Result Highlighting Logic:
+              If the database query included a full-text search, the returned content 
+              will contain raw HTML <mark> tags emphasizing the matching query string. 
+              We MUST use dangerouslySetInnerHTML to render these. */}
           {title.includes('<mark>') ? (
             <h3
               className={style.title}

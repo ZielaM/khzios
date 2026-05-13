@@ -1,5 +1,7 @@
 @use '@/styles/variables' as *;
 
+// Base wrapper for the skeleton card, matching the exact dimensions
+// and border-radius of the real NewsTile to prevent layout shifts.
 .skeleton {
   background: var(--background);
   border-radius: 16px;
@@ -14,6 +16,7 @@
   }
 }
 
+// Continuous fading animation simulating "loading"
 @keyframes pulse {
   0% {
     opacity: 1;
@@ -26,6 +29,7 @@
   }
 }
 
+// Shared mixin/class for all animated skeleton shapes
 .pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   background-color: rgba(0, 0, 0, 0.1);
@@ -35,12 +39,14 @@
   }
 }
 
+// Placeholder mimicking the article thumbnail
 .imagePlaceholder {
   @extend .pulse;
   width: 100%;
   height: 240px;
 }
 
+// Container mimicking the padding of the real content body
 .content {
   padding: 24px;
   display: flex;
@@ -48,6 +54,7 @@
   flex-grow: 1;
 }
 
+// Placeholder mimicking the tags flex container
 .tags {
   display: flex;
   gap: 8px;
@@ -61,6 +68,7 @@
   border-radius: 8px;
 }
 
+// Placeholders for title lines
 .titlePlaceholder {
   @extend .pulse;
   height: 24px;
@@ -72,11 +80,12 @@
 .titlePlaceholderShort {
   @extend .pulse;
   height: 24px;
-  width: 70%;
+  width: 70%; // Simulates an uneven wrapping line
   border-radius: 4px;
   margin-bottom: 16px;
 }
 
+// Placeholders for description lines
 .textPlaceholder {
   @extend .pulse;
   height: 16px;

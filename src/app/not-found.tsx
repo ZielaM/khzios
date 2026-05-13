@@ -4,9 +4,9 @@ import Link from 'next/link';
 const inter = Inter({ subsets: ['latin'] });
 
 // This global not-found.tsx is necessary to catch errors outside of
-// the [locale] segment (e.g., when the locale is missing or unsupported).
+// the [locale] segment.
 export default function GlobalNotFound() {
-  // Basic styling since we might not have the main styles loaded here
+  // Basic styling since the main styles might not be loaded here
   return (
     <html lang="pl" suppressHydrationWarning>
       <body className={inter.className} style={{ margin: 0, padding: 0 }}>

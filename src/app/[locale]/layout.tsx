@@ -42,6 +42,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
+        {/* script to avoid visual flash before WCAG preferences, font scaling and page layout are applied */}
         <script
           dangerouslySetInnerHTML={{
             __html: `

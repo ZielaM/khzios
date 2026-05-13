@@ -97,11 +97,6 @@ async function main() {
             title: 'New computer lab #2137',
             content: 'We are pleased to announce...',
           },
-          // {
-          //   languageCode: 'uk',
-          //   title: "Нова комп'ютерна лабораторія",
-          //   content: 'Ми раді повідомити...',
-          // },
           {
             languageCode: 'ru',
             title: 'Новая компьютерная лаборатория #2137',
@@ -125,21 +120,11 @@ async function main() {
             title: 'Wyniki szkolnego Hackathonu 2026 #67',
             content: 'Znamy już zwycięzców...',
           },
-          // {
-          //   languageCode: 'en',
-          //   title: 'School Hackathon 2026 Results',
-          //   content: 'We now know the winners...',
-          // },
           {
             languageCode: 'uk',
             title: 'Результати шкільного Хакатону 2026 #67',
             content: 'Ми вже знаємо...',
           },
-          // {
-          //   languageCode: 'ru',
-          //   title: 'Результаты школьного Хакатона 2026',
-          //   content: 'Мы уже знаем...',
-          // },
         ],
       },
     },
@@ -300,11 +285,11 @@ async function main() {
 
   await prisma.$transaction(
     async (tx) => {
-      // Używamy bezpiecznej, sekwencyjnej pętli wewnątrz ZABLOKOWANEJ transakcji
+      // Using safe, sequential loop inside a LOCKED transaction
       for (let i = 0; i < 50; i++) {
         const topic = baseTopics[i % baseTopics.length];
-        const isPublished = i % 7 !== 0; // Co 7 artykuł jest nieopublikowany
-        const photoCount = (i % 3) + 1; // Od 1 do 3 zdjęć
+        const isPublished = i % 7 !== 0; // every 7th article is unpublished
+        const photoCount = (i % 3) + 1; // 1 to 3 photos
         const photos = Array.from({ length: photoCount }).map(() => ({
           url: '/image.png',
         }));
@@ -345,7 +330,7 @@ async function main() {
       }
     },
     {
-      timeout: 100000, // Zapas czasu dla bazy danych
+      timeout: 100000,
     }
   );
 

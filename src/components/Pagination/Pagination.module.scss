@@ -1,3 +1,4 @@
+// Main pagination container
 .pagination {
   display: flex;
   justify-content: center;
@@ -7,12 +8,13 @@
   margin-bottom: 2rem;
 }
 
+// Shared styling for both Previous/Next nav buttons and numbered page buttons
 .navButton,
 .pageButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.5rem;
+  min-width: 2.5rem; // Ensure single digits look like squares/circles rather than skinny rectangles
   height: 2.5rem;
   padding: 0 0.5rem;
   border: 1px solid var(--border);
@@ -40,8 +42,9 @@
     cursor: not-allowed;
   }
 
-  outline: none;
+  outline: none; // Reset native outline
 
+  // Provide explicit focus outline for accessibility
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
@@ -63,6 +66,7 @@
   }
 }
 
+// Modifier class for the currently selected page
 .active {
   background: var(--color-primary);
   color: #ffffff;
@@ -71,7 +75,7 @@
   box-shadow:
     0 4px 6px -1px rgba(36, 113, 81, 0.3),
     0 2px 4px -1px rgba(36, 113, 81, 0.2);
-  transform: scale(1.05);
+  transform: scale(1.05); // Pop out slightly to indicate active state
 
   &:hover:not(:disabled) {
     background: var(--color-secondary);
@@ -91,10 +95,11 @@
   }
 }
 
+// Styling for the ellipsis (...) indicating skipped pages
 .dots {
   border: none;
   background: transparent;
-  cursor: default;
+  cursor: default; // Indicates it is not clickable
 
   &:hover {
     background: transparent;

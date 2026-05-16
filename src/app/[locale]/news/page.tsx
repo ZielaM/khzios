@@ -27,10 +27,11 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
     typeof resolvedSearchParams.tag === 'string'
       ? resolvedSearchParams.tag
       : undefined;
-  const page =
+  const parsedPage =
     typeof resolvedSearchParams.page === 'string'
       ? parseInt(resolvedSearchParams.page, 10)
-      : 1;
+      : NaN;
+  const page = Number.isFinite(parsedPage) ? parsedPage : 1;
   const sortBy =
     typeof resolvedSearchParams.sort === 'string' &&
     ['date', 'relevance'].includes(resolvedSearchParams.sort)

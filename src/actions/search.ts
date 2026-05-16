@@ -2,7 +2,8 @@
 
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@/generated/prisma/client';
-import { FALLBACK_CHAIN } from '@/lib/translations';
+
+import { validateSearchParams } from '@/lib/validation';
 
 export type SearchParams = {
   query?: string;
@@ -13,40 +14,16 @@ export type SearchParams = {
   sortBy?: 'date' | 'relevance';
 };
 
-export async function searchPublishedNews({
-  query,
-  language,
-  tag,
-  page = 1,
-  limit = 12,
-  sortBy = 'date',
-}: SearchParams) {
-  // Input validation
-  const safePage = Math.min(1000, Math.max(1, Math.floor(page))); // Max 1000 pages to prevent extreme OFFSET
-  const safeLimit = Math.min(60, Math.max(1, Math.floor(limit)));
-  const safeQuery = query ? query.trim().substring(0, 256) : undefined;
-  const safeTag = tag ? tag.trim().substring(0, 256) : undefined;
-
-  const allowedLanguages = ['pl', 'en', 'uk', 'ru'];
-  const safeLanguage = allowedLanguages.includes(language) ? language : 'en';
-
-  // Fallback languages for a given locale (e.g. uk -> ['uk', 'en', 'pl'])
-  const fallbackLanguages = FALLBACK_CHAIN[safeLanguage] ?? [
-    safeLanguage,
-    'en',
-    'pl',
-  ];
-
-  const dictionary = (() => {
-    switch (safeLanguage) {
-      case 'en':
-        return 'english';
-      case 'ru':
-        return 'russian';
-      default:
-        return 'simple';
-    }
-  })();
+export async function searchPublishedNews(params: SearchParams) {
+  const {
+    safePage,
+    safeLimit,
+    safeQuery,
+    safeTags,
+    fallbackLanguages,
+    dictionary,
+    safeSortBy,
+  } = validateSearchParams(params);
 
   try {
     const offset = (safePage - 1) * safeLimit;
@@ -93,22 +70,14 @@ export async function searchPublishedNews({
         Prisma.sql`to_tsvector(${dictionary}::regconfig, nt.title || ' ' || nt.content) @@ websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})`
       );
 
-      if (safeTag) {
-        // Split tags by comma and filter empty
-        const tags = safeTag
-          .split(',')
-          .map((t) => t.trim())
-          .filter(Boolean);
-
-        if (tags.length > 0) {
-          // Find news IDs that have ANY of these tags (in any language translation or native)
-          const tagConditions = tags.map(
-            (t) => Prisma.sql`t.name = ${t} OR tt.name = ${t}`
-          );
-          whereParts.push(
-            Prisma.sql`n.id IN (SELECT "A" FROM "_NewsToTag" rel JOIN "Tag" t ON t.id = rel."B" LEFT JOIN "TagTranslation" tt ON tt."tagId" = t.id WHERE ${Prisma.join(tagConditions, ' OR ')})`
-          );
-        }
+      if (safeTags) {
+        // Find news IDs that have ANY of these tags (in any language translation or native)
+        const tagConditions = safeTags.map(
+          (t) => Prisma.sql`t.name = ${t} OR tt.name = ${t}`
+        );
+        whereParts.push(
+          Prisma.sql`n.id IN (SELECT "A" FROM "_NewsToTag" rel JOIN "Tag" t ON t.id = rel."B" LEFT JOIN "TagTranslation" tt ON tt."tagId" = t.id WHERE ${Prisma.join(tagConditions, ' OR ')})`
+        );
       }
 
       const whereClause = Prisma.sql`WHERE ${Prisma.join(whereParts, ' AND ')}`;
@@ -124,7 +93,7 @@ export async function searchPublishedNews({
       sqlParts.push(mainSelect);
 
       const orderBy =
-        sortBy === 'relevance'
+        safeSortBy === 'relevance'
           ? Prisma.sql`ORDER BY rank DESC, "createdAt" DESC`
           : Prisma.sql`ORDER BY "createdAt" DESC`;
 
@@ -161,21 +130,15 @@ export async function searchPublishedNews({
         published: true,
       };
 
-      if (safeTag) {
-        const tags = safeTag
-          .split(',')
-          .map((t) => t.trim())
-          .filter(Boolean);
-        if (tags.length > 0) {
-          whereCondition.tags = {
-            some: {
-              OR: tags.flatMap((t) => [
-                { name: t },
-                { translations: { some: { name: t } } },
-              ]),
-            },
-          };
-        }
+      if (safeTags) {
+        whereCondition.tags = {
+          some: {
+            OR: safeTags.flatMap((t) => [
+              { name: t },
+              { translations: { some: { name: t } } },
+            ]),
+          },
+        };
       }
 
       const [newsData, count] = await Promise.all([

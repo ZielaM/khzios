@@ -69,7 +69,7 @@ export default function NewsTile({
   }).format(new Date(news.createdAt));
 
   return (
-    <article className={style.newsTile}>
+    <article className={style.newsTile} data-testid="news-tile">
       <Link
         href={{ pathname: '/news/[id]', params: { id: news.id } }}
         className={style.linkWrapper}
@@ -98,7 +98,10 @@ export default function NewsTile({
 
           {/* Render an informational badge if the user is seeing fallback content */}
           {isFallback && translation && (
-            <span className={style.fallbackBadge}>
+            <span
+              className={style.fallbackBadge}
+              data-testid="news-fallback-badge"
+            >
               {t('translationUnavailable', {
                 language:
                   LANGUAGE_NAMES[translation.languageCode] ??
@@ -113,6 +116,7 @@ export default function NewsTile({
               We MUST use dangerouslySetInnerHTML to render these. */}
           <h3
             className={style.title}
+            data-testid="news-title"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
           />
 

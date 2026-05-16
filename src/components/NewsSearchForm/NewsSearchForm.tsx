@@ -13,6 +13,7 @@ import style from './NewsSearchForm.module.scss';
 import { useTranslations } from 'next-intl';
 import { Search } from 'lucide-react';
 import Select, { StylesConfig } from 'react-select';
+import { computeNextSearchParams } from '@/lib/url-utils';
 
 interface NewsSearchFormProps {
   initialQuery?: string;
@@ -126,52 +127,18 @@ export default function NewsSearchForm({
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Synchronization Logic:
-  // Compares current local state to the actual URL query parameters.
-  // Pushes a new route ONLY if values have actually changed,
-  // preventing infinite loop renders and keeping the browser history clean.
   const applyChanges = useCallback(
     (newQuery: string, newTags: string[], newSort: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      let changed = false;
-
-      // Handle full-text search query diffs
-      if (newQuery) {
-        if (params.get('query') !== newQuery) {
-          params.set('query', newQuery);
-          changed = true;
-        }
-      } else if (params.has('query')) {
-        params.delete('query');
-        changed = true;
-      }
-
-      // Handle tag multi-select diffs
-      if (newTags.length > 0) {
-        const tagsString = newTags.join(',');
-        if (params.get('tag') !== tagsString) {
-          params.set('tag', tagsString);
-          changed = true;
-        }
-      } else if (params.has('tag')) {
-        params.delete('tag');
-        changed = true;
-      }
-
-      // Logic Rule: Relevance sorting makes no sense if there is no text query.
-      // Automatically fallback to 'date' if query is empty.
-      const finalSort =
-        newQuery && newSort === 'relevance' ? 'relevance' : 'date';
-      if (params.get('sort') !== finalSort) {
-        params.set('sort', finalSort);
-        changed = true;
-      }
+      const nextParams = computeNextSearchParams(
+        new URLSearchParams(searchParams.toString()),
+        newQuery,
+        newTags,
+        newSort
+      );
 
       // Only push router state if a param was actually modified.
-      // Resets pagination to page 1 upon any search criteria change.
-      if (changed) {
-        params.set('page', '1');
-        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      if (nextParams) {
+        router.push(`${pathname}?${nextParams.toString()}`, { scroll: false });
       }
     },
     [searchParams, pathname, router]
@@ -195,11 +162,12 @@ export default function NewsSearchForm({
   }, [query, selectedTags, selectedSort, applyChanges]);
 
   return (
-    <div className={style.searchForm}>
+    <div className={style.searchForm} data-testid="news-search-form">
       <div className={style.inputGroup}>
         <div className={style.searchInput}>
           <Search className={style.icon} size={20} aria-hidden="true" />
           <input
+            data-testid="search-input"
             type="text"
             placeholder={t('searchPlaceholder')}
             aria-label={t('searchPlaceholder')}

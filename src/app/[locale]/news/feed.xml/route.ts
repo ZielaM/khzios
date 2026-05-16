@@ -40,11 +40,11 @@ export async function GET(
 
       return `
       <item>
-        <title><![CDATA[${translation.title}]]></title>
+        <title><![CDATA[${translation.title.replace(/]]>/g, ']]]]><![CDATA[>')}]]></title>
         <link>${url}</link>
         <guid isPermaLink="true">${url}</guid>
         <pubDate>${new Date(item.createdAt).toUTCString()}</pubDate>
-        <description><![CDATA[${cleanContent}]]></description>
+        <description><![CDATA[${cleanContent.replace(/]]>/g, ']]]]><![CDATA[>')}]]></description>
       </item>
     `;
     })
@@ -53,9 +53,9 @@ export async function GET(
   const feed = `<?xml version="1.0" encoding="UTF-8" ?>
     <rss version="2.0">
       <channel>
-        <title><![CDATA[${t('title')} - KHZiOS]]></title>
+        <title><![CDATA[${t('title').replace(/]]>/g, ']]]]><![CDATA[>')} - KHZiOS]]></title>
         <link>${baseUrl}/${locale}/news</link>
-        <description><![CDATA[${t('title')}]]></description>
+        <description><![CDATA[${t('title').replace(/]]>/g, ']]]]><![CDATA[>')}]]></description>
         <language>${locale}</language>
         ${feedItems}
       </channel>

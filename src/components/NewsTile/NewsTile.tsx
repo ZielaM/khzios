@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import style from './NewsTile.module.scss';
 import clsx from 'clsx';
+import DOMPurify from 'isomorphic-dompurify';
 import {
   News,
   Tag,
@@ -110,20 +111,16 @@ export default function NewsTile({
               If the database query included a full-text search, the returned content 
               will contain raw HTML <mark> tags emphasizing the matching query string. 
               We MUST use dangerouslySetInnerHTML to render these. */}
-          {title.includes('<mark>') ? (
-            <h3
-              className={style.title}
-              dangerouslySetInnerHTML={{ __html: title }}
-            />
-          ) : (
-            <h3 className={style.title}>{title}</h3>
-          )}
+          <h3
+            className={style.title}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
+          />
 
           <p
             className={clsx(style.description, {
               [style.highlighted]: content.includes('<mark>'),
             })}
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
           />
 
           <div className={style.readMore}>

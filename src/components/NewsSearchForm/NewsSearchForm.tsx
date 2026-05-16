@@ -204,6 +204,7 @@ export default function NewsSearchForm({
             placeholder={t('searchPlaceholder')}
             aria-label={t('searchPlaceholder')}
             value={query}
+            maxLength={256}
             onChange={(e) => {
               const val = e.target.value;
               // Quality of life feature: if the user starts typing a query,

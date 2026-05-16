@@ -1,7 +1,9 @@
-import { SearchParams } from '@/actions/search';
+import { SearchParams, ValidatedSearchParams } from '@/types/search-types';
 import { FALLBACK_CHAIN } from './translations';
 
-export function validateSearchParams(params: SearchParams) {
+export function validateSearchParams(
+  params: SearchParams
+): ValidatedSearchParams {
   const {
     query,
     language,

@@ -6,11 +6,13 @@
  * so the fallback is resolved on a per-instance basis.
  */
 
+import { LanguageCode } from '@/types/search-types';
+
 /**
  * Fallback language chain order.
  * E.g. for locale='uk': search uk -> en -> pl
  */
-export const FALLBACK_CHAIN: Record<string, readonly string[]> = {
+export const FALLBACK_CHAIN: Record<LanguageCode, readonly LanguageCode[]> = {
   pl: ['pl'],
   en: ['en', 'pl'],
   uk: ['uk', 'en', 'pl'],
@@ -35,7 +37,7 @@ export function resolveTranslation<T extends { languageCode: string }>(
   translations: T[],
   locale: string
 ): { translation: T | undefined; isFallback: boolean } {
-  const chain = FALLBACK_CHAIN[locale] ?? [locale, 'en', 'pl'];
+  const chain = FALLBACK_CHAIN[locale as LanguageCode] ?? [locale, 'en', 'pl'];
 
   for (const lang of chain) {
     const found = translations.find((t) => t.languageCode === lang);

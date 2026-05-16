@@ -1,9 +1,10 @@
 import { News, NewsTranslation } from '@/generated/prisma/client';
 import { resolveTranslation } from '@/lib/translations';
+import { LanguageCode } from '@/types/search-types';
 
 export function generateRssFeed(
   news: (News & { translations: NewsTranslation[] })[],
-  locale: 'pl' | 'en' | 'uk' | 'ru',
+  locale: LanguageCode,
   baseUrl: string,
   siteTitle: string
 ): string {

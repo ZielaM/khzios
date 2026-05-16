@@ -14,11 +14,12 @@ import { useTranslations } from 'next-intl';
 import { Search } from 'lucide-react';
 import Select, { StylesConfig } from 'react-select';
 import { computeNextSearchParams } from '@/lib/url-utils';
+import { SortBy } from '@/types/search-types';
 
 interface NewsSearchFormProps {
   initialQuery?: string;
   initialTag?: string;
-  initialSort: 'date' | 'relevance';
+  initialSort: SortBy;
   availableTags: { value: string; label: string }[];
 }
 

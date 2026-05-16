@@ -1,13 +1,14 @@
 import { prisma } from '@/lib/prisma';
 import { getTranslations } from 'next-intl/server';
 import { generateRssFeed } from '@/lib/rss';
+import { LanguageCode } from '@/types/search-types';
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ locale: string }> }
 ) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as 'pl' | 'en' | 'uk' | 'ru';
+  const locale = resolvedParams.locale as LanguageCode;
 
   const t = await getTranslations({ locale, namespace: 'NewsPage' });
 

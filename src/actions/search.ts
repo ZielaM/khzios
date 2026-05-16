@@ -5,14 +5,7 @@ import { Prisma } from '@/generated/prisma/client';
 
 import { validateSearchParams } from '@/lib/validation';
 
-export type SearchParams = {
-  query?: string;
-  language: 'pl' | 'en' | 'uk' | 'ru';
-  tag?: string;
-  page?: number;
-  limit?: number;
-  sortBy?: 'date' | 'relevance';
-};
+import { SearchParams } from '@/types/search-types';
 
 export async function searchPublishedNews(params: SearchParams) {
   const {

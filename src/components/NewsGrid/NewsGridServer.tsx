@@ -4,14 +4,15 @@ import Pagination from '@/components/Pagination';
 import style from '@/app/[locale]/news/page.module.scss';
 import { SearchX } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import { LanguageCode, SortBy } from '@/types/search-types';
 
 interface NewsGridServerProps {
   query?: string;
-  locale: 'pl' | 'en' | 'uk' | 'ru';
+  locale: LanguageCode;
   tag?: string;
   page: number;
   limit: number;
-  sortBy: 'date' | 'relevance';
+  sortBy: SortBy;
 }
 
 export default async function NewsGridServer({

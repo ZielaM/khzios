@@ -5,6 +5,7 @@ import NewsSearchForm from '@/components/NewsSearchForm';
 import NewsGridServer from '@/components/NewsGrid/NewsGridServer';
 import NewsGridSkeleton from '@/components/NewsGrid/NewsGridSkeleton';
 import { resolveTagName } from '@/lib/translations';
+import { LanguageCode, SortBy } from '@/types/search-types';
 import style from './page.module.scss';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,7 +17,7 @@ interface PageProps {
 
 export default async function NewsPage({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as 'pl' | 'en' | 'uk' | 'ru';
+  const locale = resolvedParams.locale as LanguageCode;
 
   const resolvedSearchParams = await searchParams;
   const query =
@@ -35,7 +36,7 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
   const sortBy =
     typeof resolvedSearchParams.sort === 'string' &&
     ['date', 'relevance'].includes(resolvedSearchParams.sort)
-      ? (resolvedSearchParams.sort as 'date' | 'relevance')
+      ? (resolvedSearchParams.sort as SortBy)
       : 'relevance';
 
   const limit = 12;

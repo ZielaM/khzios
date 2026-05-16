@@ -12,8 +12,14 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    setupFiles: ['./vitest.setup.ts'],
+    setupFiles: ['./vitest.setup.tsx'],
     include: ['src/**/*.test.{ts,tsx}'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      include: ['src/lib/**'],
+      exclude: ['src/**/*.test.ts', 'src/generated/**', 'src/lib/prisma.ts'],
+    },
     css: {
       // CSS modules are mocked — we don't need actual class names in unit tests
       modules: { classNameStrategy: 'non-scoped' },

@@ -16,6 +16,10 @@ export function generateRssFeed(
         locale
       );
       const translation = resolved ?? item.translations[0];
+
+      // Skip news items with no translations at all
+      if (!translation) return null;
+
       const url = `${baseUrl}/${locale}/news/${item.id}`;
 
       // Simple HTML tag removal from content for RSS safety and readability
@@ -31,6 +35,7 @@ export function generateRssFeed(
       </item>
     `;
     })
+    .filter(Boolean)
     .join('');
 
   const feed = `<?xml version="1.0" encoding="UTF-8" ?>

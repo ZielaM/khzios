@@ -31,6 +31,7 @@ export default function LanguageSwitcher() {
     router.replace(
       {
         pathname,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         params: params as any,
         query: Object.fromEntries(searchParams.entries()),
       },

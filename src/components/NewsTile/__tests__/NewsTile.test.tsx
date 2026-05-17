@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import type { Tag, TagTranslation, Photo } from '@/generated/prisma/client';
 import NewsTile from '../NewsTile';
+import { LanguageCode } from '@/types/search-types';
 
 // ─── Helpers ───────────────────────────────────────────────────────────
 
@@ -56,7 +58,7 @@ describe('NewsTile', () => {
               {
                 id: 't1',
                 tagId: 'tag-1',
-                languageCode: 'en' as any,
+                languageCode: 'en' as LanguageCode,
                 name: 'Dogs',
               },
             ],
@@ -68,12 +70,12 @@ describe('NewsTile', () => {
               {
                 id: 't2',
                 tagId: 'tag-2',
-                languageCode: 'en' as any,
+                languageCode: 'en' as LanguageCode,
                 name: 'Cats',
               },
             ],
           },
-        ] as any,
+        ] as unknown as (Tag & { translations: TagTranslation[] })[],
       });
       render(<NewsTile news={news} locale="en" />);
 
@@ -92,7 +94,7 @@ describe('NewsTile', () => {
       const news = mockNewsData({
         photos: [
           { id: 'p1', newsId: 'test-id-1', url: '/photo1.jpg', altText: null },
-        ] as any,
+        ] as unknown as Photo[],
       });
       render(<NewsTile news={news} locale="en" />);
 

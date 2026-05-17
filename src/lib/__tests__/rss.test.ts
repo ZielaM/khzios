@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateRssFeed } from '../rss';
+import { LanguageCode } from '@/types/search-types';
 
 // ─── Helpers ───────────────────────────────────────────────────────────
 
@@ -16,7 +17,7 @@ function mockNews(
     published: true,
     translations: translations.map((t) => ({
       newsId: id,
-      languageCode: t.languageCode as any,
+      languageCode: t.languageCode as unknown as LanguageCode,
       title: t.title,
       content: t.content,
       searchVector: null,
@@ -204,7 +205,7 @@ describe('generateRssFeed', () => {
     });
 
     it('should escape CDATA closing sequence in site title', () => {
-      const news: any[] = [];
+      const news: never[] = [];
       const maliciousTitle = 'News ]]><evil>hack</evil>';
       const feed = generateRssFeed(news, 'en', BASE_URL, maliciousTitle);
 

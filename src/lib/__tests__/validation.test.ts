@@ -77,7 +77,7 @@ describe('validateSearchParams', () => {
       it('should return "date" when sortBy is not valid', () => {
         const result = validateSearchParams({
           language: 'en',
-          sortBy: 'not_a_sort_value' as unknown as any,
+          sortBy: 'not_a_sort_value' as unknown as SearchParams['sortBy'],
         });
         expect(result.safeSortBy).toBe('date');
       });
@@ -87,7 +87,7 @@ describe('validateSearchParams', () => {
       it('should not crash when sortBy is a number', () => {
         const result = validateSearchParams({
           language: 'en',
-          sortBy: 1 as unknown as any,
+          sortBy: 1 as unknown as SearchParams['sortBy'],
         });
         expect(result.safeSortBy).toBe('date');
       });
@@ -126,7 +126,7 @@ describe('validateSearchParams', () => {
 
       it('should return "english" dictionary and ["en", "pl"] fallback languages when language is not valid', () => {
         const result = validateSearchParams({
-          language: 'not_a_language' as unknown as any,
+          language: 'not_a_language' as unknown as SearchParams['language'],
         });
         expect(result.safeLanguage).toBe('en');
         expect(result.dictionary).toBe('english');
@@ -134,7 +134,7 @@ describe('validateSearchParams', () => {
       });
 
       it('should return "english" dictionary and ["en", "pl"] fallback languages when language is not provided', () => {
-        const result = validateSearchParams({} as unknown as any);
+        const result = validateSearchParams({} as unknown as SearchParams);
         expect(result.safeLanguage).toBe('en');
         expect(result.dictionary).toBe('english');
         expect(result.fallbackLanguages).toEqual(['en', 'pl']);
@@ -144,7 +144,7 @@ describe('validateSearchParams', () => {
     describe('wrong types check', () => {
       it('should not crash when language is a number', () => {
         const result = validateSearchParams({
-          language: 999 as unknown as any,
+          language: 999 as unknown as SearchParams['language'],
         });
         expect(result.safeLanguage).toBe('en');
         expect(result.dictionary).toBe('english');

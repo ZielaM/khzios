@@ -1,5 +1,6 @@
 import { vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import React from 'react';
 
 // ─── Mock: next-intl ────────────────────────────────────────────────
 // Components use useTranslations() which requires IntlProvider context.
@@ -44,7 +45,13 @@ vi.mock('next/navigation', () => ({
 // We replace it with a simple <a> tag for rendering tests.
 
 vi.mock('@/i18n/routing', () => ({
-  Link: ({ href, children, ...props }: any) => {
+  Link: ({
+    href,
+    children,
+    ...props
+  }: React.ComponentProps<'a'> & {
+    href: string | { pathname?: string; params?: Record<string, string> };
+  }) => {
     const hrefString =
       typeof href === 'object'
         ? (href.pathname?.replace('[id]', href.params?.id ?? '') ?? '#')
@@ -62,5 +69,8 @@ vi.mock('@/i18n/routing', () => ({
 // Replace with a plain <img> for unit tests.
 
 vi.mock('next/image', () => ({
-  default: ({ src, alt, ...props }: any) => <img src={src} alt={alt} />,
+  default: ({ src, alt }: { src: string; alt: string }) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={alt} />
+  ),
 }));

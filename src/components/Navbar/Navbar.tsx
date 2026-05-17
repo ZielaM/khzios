@@ -45,7 +45,12 @@ export default function Navbar() {
       <div className={style.navbarHeader}>
         {/* Logo */}
         <div className={style.logo}>
-          <Link href="/" className={style.logoLink} onClick={closeMobileMenu}>
+          <Link
+            href="/"
+            className={style.logoLink}
+            onClick={closeMobileMenu}
+            data-testid="logo-link"
+          >
             <Image src="/logo.png" alt={t('logoAlt')} width={40} height={40} />
             <span className={style.logoText}>
               {/* .rich allows rendering injected tags like <br /> from translation strings */}

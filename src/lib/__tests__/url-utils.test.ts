@@ -105,9 +105,7 @@ describe('computeNextSearchParams', () => {
     });
 
     it('should remove query and switch sort to date simultaneously', () => {
-      const params = new URLSearchParams(
-        'query=hello&page=2&sort=relevance'
-      );
+      const params = new URLSearchParams('query=hello&page=2&sort=relevance');
       const result = computeNextSearchParams(params, '', [], 'relevance');
 
       expect(result).not.toBeNull();

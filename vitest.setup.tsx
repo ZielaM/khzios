@@ -47,7 +47,7 @@ vi.mock('@/i18n/routing', () => ({
   Link: ({ href, children, ...props }: any) => {
     const hrefString =
       typeof href === 'object'
-        ? href.pathname?.replace('[id]', href.params?.id ?? '') ?? '#'
+        ? (href.pathname?.replace('[id]', href.params?.id ?? '') ?? '#')
         : href;
     return (
       <a href={hrefString} {...props}>

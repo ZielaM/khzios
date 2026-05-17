@@ -9,7 +9,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { routing, type Locale } from '@/i18n/routing';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import style from './LanguageSwitcher.module.scss';
 import clsx from 'clsx';
 
@@ -18,6 +18,7 @@ export default function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations('LocaleSwitcher');
+  const searchParams = useSearchParams();
 
   // Grab any dynamic route segments (like [id]) to retain them during locale switch
   const params = useParams();
@@ -28,7 +29,11 @@ export default function LanguageSwitcher() {
   // if the user tries to hit the "Back" button later.
   const handleLocaleChange = (newLocale: string) => {
     router.replace(
-      { pathname, params } as Parameters<typeof router.replace>[0],
+      {
+        pathname,
+        params: params as any,
+        query: Object.fromEntries(searchParams.entries()),
+      },
       { locale: newLocale as Locale }
     );
   };

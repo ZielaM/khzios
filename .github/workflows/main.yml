@@ -5,12 +5,28 @@ on:
   pull_request:
 
 jobs:
-  verify-and-build:
-    name: Verify Code and Build
+  quality-and-unit:
+    name: Quality Checks & Unit Tests
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: dummy
+          POSTGRES_PASSWORD: dummy
+          POSTGRES_DB: dummy
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     env:
       DATABASE_URL: 'postgresql://dummy:dummy@localhost:5432/dummy'
+      CI: true
 
     steps:
       - name: Checkout repository
@@ -19,7 +35,66 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 11
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
+      - name: Deploy Database Migrations (dla testów integracyjnych)
+        run: pnpm prisma migrate deploy
+
+      - name: Check formatting (Prettier)
+        run: pnpm format:check
+
+      - name: Run linter (ESLint)
+        run: pnpm lint
+
+      - name: Check types (TypeScript)
+        run: pnpm typecheck
+
+      - name: Run Unit Tests (Vitest)
+        run: pnpm test
+
+  build-and-e2e:
+    name: Build & E2E Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: dummy
+          POSTGRES_PASSWORD: dummy
+          POSTGRES_DB: dummy
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: 'postgresql://dummy:dummy@localhost:5432/dummy'
+      CI: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -42,14 +117,22 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm prisma generate
 
-      - name: Check formatting (Prettier)
-        run: pnpm format:check
+      - name: Deploy Database Migrations
+        run: pnpm prisma migrate deploy
 
-      - name: Run linter (ESLint)
-        run: pnpm lint
+      - name: Create dummy .env file
+        run: touch .env
 
-      - name: Check types (TypeScript)
-        run: pnpm tsc --noEmit
+      - name: Seed Database
+        run: pnpm dlx tsx prisma/seed.ts
 
-      - name: Test Production Build
+      - name: Build Next.js app
         run: pnpm build
+        env:
+          IS_E2E_TESTING: 'true'
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run E2E Tests (Playwright)
+        run: pnpm test:e2e

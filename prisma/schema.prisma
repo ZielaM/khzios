@@ -36,11 +36,12 @@ model NewsTranslation {
 
   news         News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
   
-  // Wirtualna kolumna do wyszukiwania
+  // Search vector for full-text search
   searchVector Unsupported("tsvector")? 
 
   @@id([newsId, languageCode])
-  // Brak indeksu w Prismie dla searchVector, zrobimy to w SQL
+  // Index for full-text search
+  @@index([searchVector])
 }
 
 model Tag {

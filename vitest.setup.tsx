@@ -49,7 +49,7 @@ vi.mock('@/i18n/routing', () => ({
     href,
     children,
     ...props
-  }: React.ComponentProps<'a'> & {
+  }: Omit<React.ComponentProps<'a'>, 'href'> & {
     href: string | { pathname?: string; params?: Record<string, string> };
   }) => {
     const hrefString =

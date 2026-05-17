@@ -6,7 +6,7 @@ test.describe('Search Pagination Spec', () => {
     await page.setViewportSize({ width: 1280, height: 800 });
     // Start on the English news list (has plenty of seeded items, 12 items per page)
     await page.goto('/en/news');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('load');
 
     // CRITICAL: Wait for initial search synchronization debounce to stabilize URL state (sort=date)
     // to prevent race conditions during E2E testing
@@ -55,7 +55,7 @@ test.describe('Search Pagination Spec', () => {
   }) => {
     // 1. Start on page 2 directly
     await page.goto('/en/news?page=2&sort=date');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('load');
 
     // Wait for page load state to stabilize
     await expect(page).toHaveURL(/page=2/);

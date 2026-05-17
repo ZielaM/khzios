@@ -21,6 +21,7 @@ interface NewsSearchFormProps {
   initialTag?: string;
   initialSort: SortBy;
   availableTags: { value: string; label: string }[];
+  isSkeleton?: boolean;
 }
 
 type OptionType = { value: string; label: string };
@@ -95,6 +96,7 @@ export default function NewsSearchForm({
   initialTag,
   initialSort,
   availableTags,
+  isSkeleton = false,
 }: NewsSearchFormProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -149,6 +151,7 @@ export default function NewsSearchForm({
   // Waits 500ms after the user stops interacting before pushing URL changes.
   // This prevents spamming the server with requests while the user is typing.
   useEffect(() => {
+    if (isSkeleton) return;
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       applyChanges(
@@ -160,20 +163,26 @@ export default function NewsSearchForm({
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [query, selectedTags, selectedSort, applyChanges]);
+  }, [query, selectedTags, selectedSort, applyChanges, isSkeleton]);
 
   return (
-    <div className={style.searchForm} data-testid="news-search-form">
+    <div
+      className={style.searchForm}
+      data-testid={
+        isSkeleton ? 'news-search-form-skeleton' : 'news-search-form'
+      }
+    >
       <div className={style.inputGroup}>
         <div className={style.searchInput}>
           <Search className={style.icon} size={20} aria-hidden="true" />
           <input
-            data-testid="search-input"
+            data-testid={isSkeleton ? 'search-input-skeleton' : 'search-input'}
             type="text"
             placeholder={t('searchPlaceholder')}
-            aria-label={t('searchPlaceholder')}
+            aria-label={isSkeleton ? undefined : t('searchPlaceholder')}
             value={query}
             maxLength={256}
+            disabled={isSkeleton}
             onChange={(e) => {
               const val = e.target.value;
               // Quality of life feature: if the user starts typing a query,
@@ -190,9 +199,10 @@ export default function NewsSearchForm({
           <Select
             instanceId="news-tags-select"
             isMulti
-            isSearchable
+            isSearchable={!isSkeleton}
+            isDisabled={isSkeleton}
             placeholder={t('tagPlaceholder')}
-            aria-label={t('tagPlaceholder')}
+            aria-label={isSkeleton ? undefined : t('tagPlaceholder')}
             options={availableTags}
             value={selectedTags}
             onChange={(newValue) => setSelectedTags(newValue as OptionType[])}
@@ -208,7 +218,8 @@ export default function NewsSearchForm({
             <Select
               instanceId="news-sort-select"
               isSearchable={false}
-              aria-label={t('sortBy')}
+              isDisabled={isSkeleton}
+              aria-label={isSkeleton ? undefined : t('sortBy')}
               options={sortOptions}
               value={selectedSort}
               onChange={(newValue) => setSelectedSort(newValue as OptionType)}

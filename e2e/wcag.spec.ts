@@ -5,7 +5,7 @@ test.describe('WCAG Accessibility Controls', () => {
     // Set a large desktop viewport to keep controls inline by default
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/en/news');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('load');
 
     // Robust toggle: if settings are collapsed inside a dropdown panel, expand them
     const settingsToggle = page.getByRole('button', {
@@ -40,7 +40,7 @@ test.describe('WCAG Accessibility Controls', () => {
 
     // 5. Reload the page and ensure the high contrast class persists from localStorage
     await page.reload();
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('load');
     await expect(html).toHaveClass(/wcag-high-contrast/);
 
     // Re-expand settings dropdown after reload if compact layout is active
@@ -103,7 +103,7 @@ test.describe('WCAG Accessibility Controls', () => {
 
     // 6. Reload page and check if style scaling is preserved from localStorage
     await page.reload();
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('load');
 
     // Re-expand settings dropdown after reload if compact layout is active
     const settingsToggle = page.getByRole('button', {

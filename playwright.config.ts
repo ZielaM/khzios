@@ -31,14 +31,28 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
   ],
 
-  /* Run your local dev server before starting the tests */
   webServer: {
     command: 'pnpm start',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     stdout: 'ignore',
     stderr: 'pipe',
+  },
+
+  timeout: 120 * 1000,
+  globalTimeout: 240 * 1000,
+
+  expect: {
+    timeout: 15 * 1000,
   },
 });

@@ -4,13 +4,15 @@ test.describe('News Search & Filtering Spec', () => {
   test.beforeEach(async ({ page }) => {
     // Set a large desktop viewport to keep controls fully visible
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto('/en/news');
-    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should apply query with debounce and reset pagination to page 1', async ({
     page,
   }) => {
+    // Moved here to prevent race conditions
+    await page.goto('/en/news');
+    await page.waitForLoadState('load');
+
     const searchInput = page.getByTestId('search-input');
     await expect(searchInput).toBeVisible();
 
@@ -18,6 +20,7 @@ test.describe('News Search & Filtering Spec', () => {
     await expect(page).not.toHaveURL(/\?.*query=/);
 
     // 2. Type "performance" (a word present in the seed data for Sports)
+    await searchInput.click();
     await searchInput.fill('performance');
 
     // 3. Immediately after typing, the URL shouldn't have changed due to the 500ms debounce
@@ -33,6 +36,9 @@ test.describe('News Search & Filtering Spec', () => {
   test('should show sort option only when query is active and switch to relevance sorting automatically', async ({
     page,
   }) => {
+    await page.goto('/en/news');
+    await page.waitForLoadState('load');
+
     const searchInput = page.getByTestId('search-input');
 
     // Use standard accessibility role/aria-label to locate the Sort By dropdown
@@ -43,6 +49,7 @@ test.describe('News Search & Filtering Spec', () => {
     await expect(page).toHaveURL(/sort=date/);
 
     // 2. Type a query, which should make the sorting selector visible
+    await searchInput.click();
     await searchInput.fill('team');
     await expect(sortSelect).toBeVisible();
 
@@ -53,6 +60,9 @@ test.describe('News Search & Filtering Spec', () => {
   test('should allow filtering by tags using react-select and update the URL', async ({
     page,
   }) => {
+    await page.goto('/en/news');
+    await page.waitForLoadState('load');
+
     // Locate react-select by its standard accessible aria-label defined in en.json
     const tagSelectInput = page.getByLabel('Tag (e.g. education)');
     await expect(tagSelectInput).toBeVisible();
@@ -73,13 +83,14 @@ test.describe('News Search & Filtering Spec', () => {
   }) => {
     // 1. Start with an existing query and relevance sorting in the URL
     await page.goto('/en/news?query=computer&sort=relevance');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('load');
 
     const searchInput = page.getByTestId('search-input');
     await expect(searchInput).toHaveValue('computer');
     await expect(page).toHaveURL(/sort=relevance/);
 
     // 2. Clear the query input
+    await searchInput.click();
     await searchInput.fill('');
 
     // 3. Expect sort parameter to fall back to 'date' because relevance sorting requires a query
@@ -92,13 +103,14 @@ test.describe('News Search & Filtering Spec', () => {
   }) => {
     // 1. Start with an existing query and date sorting in the URL
     await page.goto('/en/news?query=computer&sort=date');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('load');
 
     const searchInput = page.getByTestId('search-input');
     await expect(searchInput).toHaveValue('computer');
     await expect(page).toHaveURL(/sort=date/);
 
     // 2. Change the query input
+    await searchInput.click();
     await searchInput.fill('art');
 
     // 3. Expect sort parameter to be 'date' even after changing query

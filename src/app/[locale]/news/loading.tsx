@@ -11,7 +11,11 @@ export default function Loading() {
 
       {/* Inline styles are used here to avoid adding a new className just for skeleton */}
       <div style={{ opacity: 0.5, pointerEvents: 'none' }}>
-        <NewsSearchForm initialSort="relevance" availableTags={[]} />
+        <NewsSearchForm
+          initialSort="relevance"
+          availableTags={[]}
+          isSkeleton={true}
+        />
       </div>
 
       <NewsGridSkeleton />

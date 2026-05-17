@@ -11,7 +11,7 @@ test.describe('Language Switching & State Preservation Spec', () => {
   }) => {
     // 1. Start on the English news page
     await page.goto('/en/news');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('load');
 
     // Wait for initial search synchronization debounce to stabilize URL state (sort=date)
     await expect(page).toHaveURL(/sort=date/);
@@ -60,7 +60,7 @@ test.describe('Language Switching & State Preservation Spec', () => {
   }) => {
     // 1. Load the page with multiple active filters, sorting, and pagination
     await page.goto('/en/news?query=art&tag=Education&sort=relevance&page=1');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('load');
 
     // Expand settings dropdown if collapsed
     const settingsToggle = page.getByRole('button', {

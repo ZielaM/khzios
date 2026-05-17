@@ -131,8 +131,20 @@ jobs:
         env:
           IS_E2E_TESTING: 'true'
 
-      - name: Install Playwright Browsers
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Playwright Browsers (Cache Miss)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm exec playwright install --with-deps
+
+      - name: Install Playwright OS Dependencies (Cache Hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps
 
       - name: Run E2E Tests (Playwright)
         run: pnpm test:e2e

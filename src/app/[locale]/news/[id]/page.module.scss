@@ -1,5 +1,29 @@
 @use '@/styles/variables' as *;
 
+// ─── Entry Animations ─────────────────────────────────────────────────
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// ─── Page Layout ──────────────────────────────────────────────────────
+
 .pageWrapper {
   width: 100%;
   min-height: 100vh;
@@ -32,6 +56,7 @@
   display: flex;
   flex-direction: column;
   gap: 48px;
+  animation: fadeInUp 0.6s ease-out;
 
   :global(.wcag-high-contrast) & {
     border: 2px solid var(--foreground);
@@ -46,10 +71,21 @@
   }
 }
 
+// ─── Header ───────────────────────────────────────────────────────────
+
 .header {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  animation: fadeInUp 0.5s ease-out 0.1s both;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .backLink {
@@ -117,6 +153,8 @@
   }
 }
 
+// ─── Metadata ─────────────────────────────────────────────────────────
+
 .metadata {
   display: flex;
   flex-wrap: wrap;
@@ -136,7 +174,8 @@
   }
 }
 
-.dateWrapper {
+.dateWrapper,
+.readingTimeWrapper {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -151,7 +190,8 @@
   }
 }
 
-.date {
+.date,
+.readingTime {
   font-size: 1rem;
   font-weight: 600;
 
@@ -188,6 +228,8 @@
   }
 }
 
+// ─── Hero Image ───────────────────────────────────────────────────────
+
 .heroImageContainer {
   position: relative;
   width: 100%;
@@ -196,6 +238,7 @@
   overflow: hidden;
   background-color: #f5f5f5;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.6s ease-out 0.2s both;
 
   :global(.wcag-high-contrast) & {
     border: 2px solid var(--foreground);
@@ -213,10 +256,29 @@
   }
 }
 
+// Subtle gradient overlay at the bottom of the hero image for depth
+.heroGradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.12));
+  pointer-events: none;
+  border-radius: 0 0 16px 16px;
+
+  :global(.wcag-high-contrast) & {
+    display: none;
+  }
+}
+
+// ─── Article Content ──────────────────────────────────────────────────
+
 .articleContent {
   font-size: 1.15rem;
   line-height: 1.8;
   color: var(--foreground);
+  animation: fadeInUp 0.5s ease-out 0.3s both;
 
   // Make the first paragraph distinct (lead text)
   p:first-of-type {
@@ -330,4 +392,25 @@
       }
     }
   }
+}
+
+// ─── Gallery Section ──────────────────────────────────────────────────
+
+.gallerySection {
+  border-top: 2px solid rgba(0, 0, 0, 0.06);
+  padding-top: 40px;
+  animation: fadeInUp 0.5s ease-out 0.4s both;
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+  }
+}
+
+.gallerySectionTitle {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--foreground);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
 }

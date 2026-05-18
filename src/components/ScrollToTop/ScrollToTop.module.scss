@@ -1,0 +1,63 @@
+@use '@/styles/variables' as *;
+
+.scrollToTop {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 9000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.3s ease,
+    background-color 0.2s ease;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: var(--color-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--foreground);
+    outline-offset: 2px;
+  }
+
+  :global(.wcag-high-contrast) & {
+    background: var(--foreground);
+    color: var(--background);
+    box-shadow: none;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--foreground);
+    }
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+  }
+}

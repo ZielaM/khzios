@@ -1,0 +1,42 @@
+@use '@/styles/variables' as *;
+
+.shareButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.04);
+  color: #555;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-primary);
+    background-color: rgba($color-primary, 0.1);
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+    background-color: transparent;
+    border: 2px solid var(--foreground);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--foreground);
+      color: var(--background);
+    }
+  }
+}

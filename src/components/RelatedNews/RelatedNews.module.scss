@@ -1,0 +1,145 @@
+@use '@/styles/variables' as *;
+
+.relatedSection {
+  border-top: 2px solid rgba(0, 0, 0, 0.06);
+  padding-top: 48px;
+  animation: fadeIn 0.6s ease-out 0.4s both;
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+  }
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--foreground);
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.02);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    background: transparent;
+    box-shadow: none;
+
+    &:hover,
+    &:focus-visible {
+      box-shadow: none;
+    }
+  }
+}
+
+.cardImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+
+  .card:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.cardContent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.cardDate {
+  font-size: 0.8rem;
+  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.cardTitle {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--foreground);
+  margin: 0;
+  // Clamp to 3 lines for visual consistency
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-top: auto;
+  padding-top: 8px;
+  transition: gap 0.2s ease;
+
+  .card:hover & {
+    gap: 10px;
+  }
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

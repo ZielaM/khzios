@@ -18,6 +18,7 @@ import ShareButton from '@/components/ShareButton/ShareButton';
 import RelatedNews from '@/components/RelatedNews/RelatedNews';
 import ReadingProgress from '@/components/ReadingProgress/ReadingProgress';
 import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
+import AnimateOnce from '@/components/AnimateOnce/AnimateOnce';
 
 // For Next.js dynamic routes, define the expected params interface
 interface NewsDetailsPageProps {
@@ -129,7 +130,7 @@ export default async function NewsDetailsPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main className={style.pageWrapper}>
-        <div className={style.container}>
+        <AnimateOnce className={style.container}>
           <header className={style.header}>
             <div className={style.headerActions}>
               <Link href="/news" className={style.backLink}>
@@ -215,7 +216,7 @@ export default async function NewsDetailsPage({
           )}
 
           <RelatedNews articles={relatedArticles} locale={locale} />
-        </div>
+        </AnimateOnce>
       </main>
       <ScrollToTop />
     </>

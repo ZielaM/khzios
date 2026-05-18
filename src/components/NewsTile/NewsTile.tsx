@@ -44,7 +44,7 @@ export default function NewsTile({
   // Select the first uploaded photo as the thumbnail,
   // or fallback to a static local placeholder image if the article has no photos.
   const thumbnail =
-    news.photos.length > 0 ? news.photos[0].url : '/placeholder-news.jpg';
+    news.photos.length > 0 ? news.photos[0].url : '/placeholder-image.png';
 
   // Extract the most appropriate translation based on the user's locale.
   // The 'isFallback' flag warns us if the content is being displayed in a language
@@ -117,14 +117,18 @@ export default function NewsTile({
           <h3
             className={style.title}
             data-testid="news-title"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(title, { ALLOWED_TAGS: ['mark'] }),
+            }}
           />
 
           <p
             className={clsx(style.description, {
               [style.highlighted]: content.includes('<mark>'),
             })}
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(content, { ALLOWED_TAGS: ['mark'] }),
+            }}
           />
 
           <div className={style.readMore}>

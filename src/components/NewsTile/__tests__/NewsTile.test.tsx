@@ -87,7 +87,7 @@ describe('NewsTile', () => {
       render(<NewsTile news={mockNewsData()} locale="en" />);
 
       const img = screen.getByRole('img');
-      expect(img).toHaveAttribute('src', '/placeholder-news.jpg');
+      expect(img).toHaveAttribute('src', '/placeholder-image.png');
     });
 
     it('should use first photo as thumbnail when photos exist', () => {

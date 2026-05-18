@@ -23,6 +23,7 @@ import {
   resolveTagName,
   LANGUAGE_NAMES,
 } from '@/lib/translations';
+import { getPhotoUrl } from '@/lib/photos';
 
 export interface NewsTileProps {
   news: News & {
@@ -43,8 +44,7 @@ export default function NewsTile({
 
   // Select the first uploaded photo as the thumbnail,
   // or fallback to a static local placeholder image if the article has no photos.
-  const thumbnail =
-    news.photos.length > 0 ? news.photos[0].url : '/placeholder-image.png';
+  const thumbnail = getPhotoUrl(news.photos);
 
   // Extract the most appropriate translation based on the user's locale.
   // The 'isFallback' flag warns us if the content is being displayed in a language

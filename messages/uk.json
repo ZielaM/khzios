@@ -82,11 +82,18 @@
     "backToNews": "Повернутися до новин",
     "translationUnavailable": "Показано мовою: {language}",
     "publishedOn": "Опубліковано {date}",
+    "readingTime": "{minutes} хв читання",
     "notFoundTitle": "Новину не знайдено",
     "notFoundDesc": "Стаття, яку ви шукаєте, не існує.",
     "closeGallery": "Закрити галерею",
     "prevImage": "Попереднє фото",
     "nextImage": "Наступне фото",
-    "imageCounter": "Фото {current} з {total}"
+    "imageCounter": "Фото {current} з {total}",
+    "share": "Поділитися",
+    "linkCopied": "Посилання скопійовано",
+    "gallery": "Фотогалерея",
+    "relatedArticles": "Читайте також",
+    "readArticle": "Читати далі",
+    "scrollToTop": "Прокрутити вгору"
   }
 }

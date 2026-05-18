@@ -82,11 +82,18 @@
     "backToNews": "Back to news",
     "translationUnavailable": "Shown in {language}",
     "publishedOn": "Published on {date}",
+    "readingTime": "{minutes} min read",
     "notFoundTitle": "News not found",
     "notFoundDesc": "The article you are looking for does not exist.",
     "closeGallery": "Close gallery",
     "prevImage": "Previous image",
     "nextImage": "Next image",
-    "imageCounter": "Image {current} of {total}"
+    "imageCounter": "Image {current} of {total}",
+    "share": "Share",
+    "linkCopied": "Link copied",
+    "gallery": "Photo gallery",
+    "relatedArticles": "Read also",
+    "readArticle": "Read more",
+    "scrollToTop": "Scroll to top"
   }
 }

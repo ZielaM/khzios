@@ -82,11 +82,18 @@
     "backToNews": "Вернуться к новостям",
     "translationUnavailable": "Показано на: {language}",
     "publishedOn": "Опубликовано {date}",
+    "readingTime": "{minutes} мин чтения",
     "notFoundTitle": "Новость не найдена",
     "notFoundDesc": "Статья, которую вы ищете, не существует.",
     "closeGallery": "Закрыть галерею",
     "prevImage": "Предыдущее фото",
     "nextImage": "Следующее фото",
-    "imageCounter": "Фото {current} из {total}"
+    "imageCounter": "Фото {current} из {total}",
+    "share": "Поделиться",
+    "linkCopied": "Ссылка скопирована",
+    "gallery": "Фотогалерея",
+    "relatedArticles": "Читайте также",
+    "readArticle": "Читать далее",
+    "scrollToTop": "Наверх"
   }
 }

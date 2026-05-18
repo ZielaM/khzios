@@ -82,11 +82,18 @@
     "backToNews": "Wróć do aktualności",
     "translationUnavailable": "Wyświetlono w języku: {language}",
     "publishedOn": "Opublikowano {date}",
+    "readingTime": "{minutes} min czytania",
     "notFoundTitle": "Nie znaleziono aktualności",
     "notFoundDesc": "Artykuł, którego szukasz, nie istnieje.",
     "closeGallery": "Zamknij galerię",
     "prevImage": "Poprzednie zdjęcie",
     "nextImage": "Następne zdjęcie",
-    "imageCounter": "Zdjęcie {current} z {total}"
+    "imageCounter": "Zdjęcie {current} z {total}",
+    "share": "Udostępnij",
+    "linkCopied": "Skopiowano link",
+    "gallery": "Galeria zdjęć",
+    "relatedArticles": "Czytaj też",
+    "readArticle": "Czytaj dalej",
+    "scrollToTop": "Przewiń do góry"
   }
 }

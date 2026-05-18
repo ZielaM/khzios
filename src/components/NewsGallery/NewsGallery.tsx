@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { Photo } from '@/generated/prisma/client';
 import { useTranslations } from 'next-intl';
@@ -36,7 +36,29 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
     }
   }, [selectedIndex, photos.length]);
 
-  // Handle keyboard navigation and focus trapping basics
+  // Track touch position for swipe gesture detection
+  const touchStartX = useRef<number | null>(null);
+
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e: TouchEvent) => {
+      if (touchStartX.current === null) return;
+      const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+      const SWIPE_THRESHOLD = 50;
+
+      if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+        if (deltaX < 0) showNext();
+        else showPrev();
+      }
+      touchStartX.current = null;
+    },
+    [showNext, showPrev]
+  );
+
+  // Handle keyboard navigation, scroll locking, and touch swipe
   useEffect(() => {
     if (selectedIndex === null) return;
 
@@ -47,6 +69,11 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
     };
 
     document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('touchstart', handleTouchStart, {
+      passive: true,
+    });
+    document.addEventListener('touchend', handleTouchEnd);
+
     // Prevent scrolling globally when lightbox is open
     // Blocking both root and body ensures scroll is blocked in all browsers
     const originalBodyOverflow = document.body.style.overflow;
@@ -57,10 +84,12 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchend', handleTouchEnd);
       document.body.style.overflow = originalBodyOverflow;
       document.documentElement.style.overflow = originalHtmlOverflow;
     };
-  }, [selectedIndex, showNext, showPrev]);
+  }, [selectedIndex, showNext, showPrev, handleTouchStart, handleTouchEnd]);
 
   if (!photos || photos.length === 0) return null;
 

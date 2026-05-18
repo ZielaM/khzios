@@ -1,7 +1,14 @@
 import { prisma } from '@/lib/prisma';
 
+// Helper to get random elements
+const getRandom = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+const getRandomMultiple = <T>(arr: T[], count: number) => {
+  const shuffled = [...arr].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
+};
+
 async function main() {
-  console.log('Rozpoczynam populację bazy danych...');
+  console.log('Rozpoczynam populację bazy danych KHZIOS...');
 
   console.log('Czyszczenie istniejących danych...');
   await prisma.newsTranslation.deleteMany();
@@ -11,318 +18,258 @@ async function main() {
   await prisma.tag.deleteMany();
 
   console.log('Tworzenie tagów...');
-  const tagTechnologia = await prisma.tag.create({
-    data: {
-      name: 'Technology',
-      translations: {
-        create: [
-          { languageCode: 'pl', name: 'Technologia' },
-          { languageCode: 'en', name: 'Technology' },
-          { languageCode: 'uk', name: 'Технології' },
-          { languageCode: 'ru', name: 'Технологии' },
-        ],
-      },
-    },
-  });
-  const tagEdukacja = await prisma.tag.create({
-    data: {
-      name: 'Education',
-      translations: {
-        create: [
-          { languageCode: 'pl', name: 'Edukacja' },
-          { languageCode: 'en', name: 'Education' },
-          { languageCode: 'uk', name: 'Освіта' },
-          { languageCode: 'ru', name: 'Образование' },
-        ],
-      },
-    },
-  });
-  const tagWydarzenia = await prisma.tag.create({
-    data: {
-      name: 'Events',
-      translations: {
-        create: [
-          { languageCode: 'pl', name: 'Wydarzenia' },
-          { languageCode: 'en', name: 'Events' },
-          { languageCode: 'uk', name: 'Події' },
-          { languageCode: 'ru', name: 'События' },
-        ],
-      },
-    },
-  });
-
-  const tagSport = await prisma.tag.create({
-    data: {
-      name: 'Sports',
-      translations: {
-        create: [
-          { languageCode: 'pl', name: 'Sport' },
-          { languageCode: 'en', name: 'Sports' },
-          { languageCode: 'uk', name: 'Спорт' },
-          { languageCode: 'ru', name: 'Спорт' },
-        ],
-      },
-    },
-  });
-
-  const tagSztuka = await prisma.tag.create({
-    data: {
-      name: 'Art',
-      translations: {
-        create: [
-          { languageCode: 'pl', name: 'Sztuka' },
-          { languageCode: 'en', name: 'Art' },
-          { languageCode: 'uk', name: 'Мистецтво' },
-          { languageCode: 'ru', name: 'Искусство' },
-        ],
-      },
-    },
-  });
-
-  console.log('Tworzenie unikalnych artykułów...');
-  const news1 = await prisma.news.create({
-    data: {
-      published: true,
-      tags: { connect: [{ id: tagTechnologia.id }, { id: tagEdukacja.id }] },
-      photos: { create: [{ url: '/image.png' }, { url: '/image.png' }] },
-      translations: {
-        create: [
-          {
-            languageCode: 'pl',
-            title: 'Nowa pracownia komputerowa #2137',
-            content: 'Z radością informujemy...',
-          },
-          {
-            languageCode: 'en',
-            title: 'New computer lab #2137',
-            content: 'We are pleased to announce...',
-          },
-          {
-            languageCode: 'ru',
-            title: 'Новая компьютерная лаборатория #2137',
-            content: 'Мы рады сообщить...',
-          },
-        ],
-      },
-    },
-    include: { translations: true },
-  });
-
-  const news2 = await prisma.news.create({
-    data: {
-      published: true,
-      tags: { connect: [{ id: tagWydarzenia.id }, { id: tagTechnologia.id }] },
-      photos: { create: [{ url: '/image.png' }] },
-      translations: {
-        create: [
-          {
-            languageCode: 'pl',
-            title: 'Wyniki szkolnego Hackathonu 2026 #67',
-            content: 'Znamy już zwycięzców...',
-          },
-          {
-            languageCode: 'uk',
-            title: 'Результати шкільного Хакатону 2026 #67',
-            content: 'Ми вже знаємо...',
-          },
-        ],
-      },
-    },
-    include: { translations: true },
-  });
-
-  const news3 = await prisma.news.create({
-    data: {
-      published: false,
-      tags: { connect: [{ id: tagEdukacja.id }] },
-      translations: {
-        create: [
-          {
-            languageCode: 'pl',
-            title: 'Zapisy na kółko z algorytmiki',
-            content: 'Ruszyły zapisy...',
-          },
-          {
-            languageCode: 'en',
-            title: 'Algorithmics club sign-ups',
-            content: 'Sign-ups for extra...',
-          },
-          {
-            languageCode: 'uk',
-            title: 'Реєстрація на гурток з алгоритміки',
-            content: 'Розпочалась реєстрація...',
-          },
-          {
-            languageCode: 'ru',
-            title: 'Регистрация на кружок по алгоритмике',
-            content: 'Началась регистрация...',
-          },
-        ],
-      },
-    },
-    include: { translations: true },
-  });
-
-  console.log('Masowe generowanie 50 artykułów testowych...');
-
-  const baseTopics = [
+  const tagsData = [
     {
-      pl: {
-        title: 'Wspaniały występ naszej drużyny',
-        content:
-          'Nasza szkolna drużyna piłkarska zajęła pierwsze miejsce w międzyszkolnym turnieju! Gratulujemy wszystkim zawodnikom wspaniałej gry i zaangażowania.',
-      },
-      en: {
-        title: 'Great performance by our team',
-        content:
-          'Our school football team took first place in the inter-school tournament! Congratulations to all players for their great game and commitment.',
-      },
-      uk: {
-        title: 'Чудовий виступ нашої команди',
-        content:
-          'Наша шкільна футбольна команда посіла перше місце у міжшкільному турнірі! Вітаємо всіх гравців з чудовою грою та самовідданістю.',
-      },
-      ru: {
-        title: 'Отличное выступление нашей команды',
-        content:
-          'Наша школьная футбольная команда заняла первое место в межшкольном турнире! Поздравляем всех игроков с отличной игрой и самоотдачей.',
-      },
-      tags: [tagSport, tagWydarzenia],
+      pl: 'Hodowla Trzody',
+      en: 'Swine Breeding',
+      uk: 'Розведення свиней',
+      ru: 'Разведение свиней',
     },
     {
-      pl: {
-        title: 'Dzień Otwarty Szkoły',
-        content:
-          'Zapraszamy wszystkich kandydatów na Dzień Otwarty, który odbędzie się w najbliższą sobotę. W programie zwiedzanie szkoły, spotkania z nauczycielami oraz prezentacje kół zainteresowań.',
-      },
-      en: {
-        title: 'School Open Day',
-        content:
-          'We invite all candidates to the Open Day, which will take place this Saturday. The program includes a school tour, meetings with teachers, and presentations of interest clubs.',
-      },
-      uk: {
-        title: 'День відкритих дверей',
-        content:
-          'Запрошуємо всіх кандидатів на День відкритих дверей, який відбудеться цієї суботи. У програмі екскурсія школою, зустрічі з вчителями та презентації гуртків за інтересами.',
-      },
-      ru: {
-        title: 'День открытых дверей',
-        content:
-          'Приглашаем всех кандидатов на День открытых дверей, который состоится в эту субботу. В программе экскурсия по школе, встречи с учителями и презентации кружков по интересам.',
-      },
-      tags: [tagEdukacja, tagWydarzenia],
+      pl: 'Ocena Surowców',
+      en: 'Product Evaluation',
+      uk: 'Оцінка сировини',
+      ru: 'Оценка сырья',
     },
     {
-      pl: {
-        title: 'Wystawa prac plastycznych',
-        content:
-          'Na korytarzu głównym można już podziwiać prace naszych uczniów przygotowane w ramach zajęć artystycznych. Tematem przewodnim wystawy jest "Wiosna w naszym mieście".',
-      },
-      en: {
-        title: 'Art exhibition',
-        content:
-          'In the main corridor, you can now admire the artwork of our students prepared during art classes. The main theme of the exhibition is "Spring in our city".',
-      },
-      uk: {
-        title: 'Виставка художніх робіт',
-        content:
-          'У головному коридорі вже можна помилуватися роботами наших учнів, підготовленими на уроках мистецтва. Головна тема виставки – "Весна в нашому місті".',
-      },
-      ru: {
-        title: 'Выставка художественных работ',
-        content:
-          'В главном коридоре уже можно полюбоваться работами наших учеников, подготовленными на уроках искусства. Главная тема выставки – "Весна в нашем городе".',
-      },
-      tags: [tagSztuka, tagWydarzenia],
+      pl: 'Drób',
+      en: 'Poultry',
+      uk: 'Птиця',
+      ru: 'Птица',
     },
     {
-      pl: {
-        title: 'Sukces w olimpiadzie informatycznej',
-        content:
-          'Z dumą ogłaszamy, że dwoje naszych uczniów zakwalifikowało się do finału ogólnopolskiej olimpiady informatycznej. Trzymamy kciuki za kolejne etapy!',
-      },
-      en: {
-        title: 'Success in the IT olympiad',
-        content:
-          'We are proud to announce that two of our students have qualified for the finals of the national IT olympiad. Fingers crossed for the next stages!',
-      },
-      uk: {
-        title: 'Успіх в олімпіаді з інформатики',
-        content:
-          'З гордістю повідомляємо, що двоє наших учнів вийшли до фіналу загальнонаціональної олімпіади з інформатики. Тримаємо кулаки за наступні етапи!',
-      },
-      ru: {
-        title: 'Успех в олимпиаде по информатике',
-        content:
-          'С гордостью сообщаем, что двое наших учеников вышли в финал всероссийской олимпиады по информатике. Держим кулаки за следующие этапы!',
-      },
-      tags: [tagTechnologia, tagEdukacja],
+      pl: 'Zwierzęta Futerkowe',
+      en: 'Fur Animals',
+      uk: 'Хутрові звірі',
+      ru: 'Пушные звери',
     },
     {
-      pl: {
-        title: 'Zbiórka charytatywna',
-        content:
-          'Samorząd szkolny organizuje zbiórkę karmy oraz koców dla lokalnego schroniska dla zwierząt. Prosimy o przynoszenie darów do sali 102 do końca miesiąca.',
-      },
-      en: {
-        title: 'Charity collection',
-        content:
-          'The student council is organizing a collection of pet food and blankets for the local animal shelter. Please bring your donations to room 102 by the end of the month.',
-      },
-      uk: {
-        title: 'Благодійний збір',
-        content:
-          'Шкільна рада організовує збір корму та ковдр для місцевого притулку для тварин. Будь ласка, приносьте пожертви в кабінет 102 до кінця місяця.',
-      },
-      ru: {
-        title: 'Благотворительный сбор',
-        content:
-          'Школьный совет организует сбор корма и одеял для местного приюта для животных. Пожалуйста, приносите пожертвования в кабинет 102 до конца месяца.',
-      },
-      tags: [tagWydarzenia],
+      pl: 'Wydarzenia',
+      en: 'Events',
+      uk: 'Події',
+      ru: 'События',
     },
+    {
+      pl: 'Publikacje',
+      en: 'Publications',
+      uk: 'Публікації',
+      ru: 'Публикации',
+    },
+    {
+      pl: 'Badania',
+      en: 'Research',
+      uk: 'Дослідження',
+      ru: 'Исследования',
+    },
+  ];
+
+  const createdTags = await Promise.all(
+    tagsData.map((t) =>
+      prisma.tag.create({
+        data: {
+          name: t.en, // Internal unique name
+          translations: {
+            create: [
+              { languageCode: 'pl', name: t.pl },
+              { languageCode: 'en', name: t.en },
+              { languageCode: 'uk', name: t.uk },
+              { languageCode: 'ru', name: t.ru },
+            ],
+          },
+        },
+      })
+    )
+  );
+
+  console.log('Generowanie 100 zaawansowanych artykułów...');
+
+  // Fragments to build titles
+  const titlePrefixes = {
+    pl: [
+      'Nowe badania:',
+      'Raport:',
+      'Sukces Katedry:',
+      'Wydarzenie:',
+      'Odkrycie:',
+    ],
+    en: [
+      'New Research:',
+      'Report:',
+      'Department Success:',
+      'Event:',
+      'Discovery:',
+    ],
+    uk: [
+      'Нові дослідження:',
+      'Звіт:',
+      'Успіх кафедри:',
+      'Подія:',
+      'Відкриття:',
+    ],
+    ru: [
+      'Новые исследования:',
+      'Отчет:',
+      'Успех кафедры:',
+      'Событие:',
+      'Открытие:',
+    ],
+  };
+
+  const titleSubjects = {
+    pl: [
+      'Ocena jakości mięsa wieprzowego',
+      'Genetyka drobiu ozdobnego',
+      'Hodowla rasy Złotnickiej',
+      'Wpływ żywienia na jakość mleka',
+      'Ochrona zdrowia zwierząt futerkowych',
+      'Nowoczesne metody oceny surowców',
+    ],
+    en: [
+      'Pork meat quality evaluation',
+      'Genetics of ornamental poultry',
+      'Zlotnicka breed breeding',
+      'Impact of feeding on milk quality',
+      'Health protection of fur animals',
+      'Modern methods of raw material evaluation',
+    ],
+    uk: [
+      'Оцінка якості свинини',
+      'Генетика декоративної птиці',
+      'Розведення породи Злотницька',
+      'Вплив годівлі на якість молока',
+      "Охорона здоров'я хутрових звірів",
+      'Сучасні методи оцінки сировини',
+    ],
+    ru: [
+      'Оценка качества свинины',
+      'Генетика декоративной птицы',
+      'Разведение породы Злотницкая',
+      'Влияние кормления на качество молока',
+      'Охрана здоровья пушных зверей',
+      'Современные методы оценки сырья',
+    ],
+  };
+
+  // Fragments to build rich HTML content
+  const htmlTemplates = [
+    (topic: string, lang: string) => `
+      <p>W dzisiejszym artykule omawiamy zagadnienie: <strong>${topic}</strong>. Badania prowadzone przez naszą Katedrę przynoszą obiecujące rezultaty, które mogą zrewolucjonizować branżę.</p>
+      <h2>Główne założenia</h2>
+      <p>Przeanalizowaliśmy ponad 500 próbek w naszym najnowocześniejszym laboratorium weterynaryjnym.</p>
+      <ul>
+        <li>Zwiększona odporność stad</li>
+        <li>Optymalizacja procesów oceny surowców</li>
+        <li>Wdrażanie standardów dobrostanu zwierząt</li>
+      </ul>
+      <blockquote>"To przełom w naszej dziedzinie. Dzięki wsparciu Uniwersytetu Przyrodniczego w Poznaniu osiągnęliśmy więcej, niż zakładaliśmy." - prof. dr hab. Jan Kowalski</blockquote>
+      <p>Zapraszamy do zapoznania się z pełną publikacją w naszym repozytorium.</p>
+    `,
+    (topic: string, lang: string) => `
+      <style>
+        .highlight-box { background: rgba(36, 113, 81, 0.1); border-left: 4px solid #247151; padding: 16px; margin: 20px 0; border-radius: 4px; }
+      </style>
+      <p>Katedra Hodowli Zwierząt i Oceny Surowców ma zaszczyt przedstawić najnowsze wytyczne dotyczące <em>${topic}</em>.</p>
+      <div class="highlight-box">
+        <strong>Ważne:</strong> Nowe protokoły obowiązują od początku nadchodzącego semestru dla wszystkich studentów i pracowników.
+      </div>
+      <h3>Szczegóły techniczne</h3>
+      <p>Wykorzystując nowoczesne metody analityczne, udało nam się wyizolować kluczowe czynniki wpływające na jakość końcowego surowca pochodzenia zwierzęcego.</p>
+      <ol>
+        <li>Pobór próbek w środowisku sterylnym</li>
+        <li>Analiza spektrometryczna</li>
+        <li>Korelacja z danymi genetycznymi stada matczynego</li>
+      </ol>
+      <p>Dalsze kroki obejmują publikację wyników w czasopismach z listy filadelfijskiej.</p>
+    `,
+    (topic: string, lang: string) => `
+      <p>Nasze zespoły badawcze nie zwalniają tempa. Skupiając się na <strong>${topic}</strong>, wyznaczamy nowe standardy edukacyjne i naukowe.</p>
+      <h2>Konferencja Międzynarodowa</h2>
+      <p>Już wkrótce zaprezentujemy nasze osiągnięcia na arenie międzynarodowej. Studenci zaangażowani w projekt otrzymają możliwość uczestnictwa w wyjazdach zagranicznych.</p>
+      <blockquote>Ciągły rozwój to podstawa hodowli na miarę XXI wieku. Nasi specjaliści dbają o to każdego dnia.</blockquote>
+      <p>Poniżej przedstawiamy wstępny harmonogram prac na najbliższy kwartał. Zachęcamy do śledzenia aktualizacji na naszej stronie głównej KHZIOS.</p>
+    `,
+  ];
+
+  // Helper to construct English/UK/RU generic equivalents since LLM can't translate 100 perfectly on the fly,
+  // we will map the Polish template structure dynamically.
+  const contentGenerators = {
+    pl: (topic: string, idx: number) =>
+      htmlTemplates[idx % htmlTemplates.length](topic, 'pl'),
+    en: (topic: string, idx: number) => {
+      if (idx % htmlTemplates.length === 0)
+        return `<p>In today's article, we discuss: <strong>${topic}</strong>. The research conducted by our Department brings promising results.</p><h2>Main objectives</h2><ul><li>Increased herd immunity</li><li>Optimization of raw material evaluation</li><li>Implementation of animal welfare standards</li></ul><blockquote>"This is a breakthrough in our field." - Prof. Jan Kowalski</blockquote>`;
+      if (idx % htmlTemplates.length === 1)
+        return `<style>.highlight-box { background: rgba(36, 113, 81, 0.1); border-left: 4px solid #247151; padding: 16px; margin: 20px 0; border-radius: 4px; }</style><p>The Department of Animal Breeding and Product Evaluation presents guidelines on <em>${topic}</em>.</p><div class="highlight-box"><strong>Important:</strong> New protocols apply from next semester.</div><h3>Technical details</h3><ol><li>Sterile sampling</li><li>Spectrometric analysis</li><li>Correlation with genetic data</li></ol>`;
+      return `<p>Our research teams are not slowing down. Focusing on <strong>${topic}</strong>, we set new educational and scientific standards.</p><h2>International Conference</h2><p>We will soon present our achievements internationally.</p><blockquote>Continuous development is the basis of 21st-century breeding.</blockquote>`;
+    },
+    uk: (topic: string, idx: number) => {
+      if (idx % htmlTemplates.length === 0)
+        return `<p>Сьогодні ми обговорюємо: <strong>${topic}</strong>. Дослідження, проведені нашою кафедрою, дають багатообіцяючі результати.</p><h2>Основні цілі</h2><ul><li>Підвищення імунітету стада</li><li>Оптимізація оцінки сировини</li><li>Впровадження стандартів добробуту тварин</li></ul><blockquote>"Це прорив у нашій галузі." - проф. Ян Ковальський</blockquote>`;
+      if (idx % htmlTemplates.length === 1)
+        return `<style>.highlight-box { background: rgba(36, 113, 81, 0.1); border-left: 4px solid #247151; padding: 16px; margin: 20px 0; border-radius: 4px; }</style><p>Кафедра представляє рекомендації щодо <em>${topic}</em>.</p><div class="highlight-box"><strong>Важливо:</strong> Нові протоколи діють з наступного семестру.</div><h3>Технічні деталі</h3><ol><li>Стерильний відбір проб</li><li>Спектрометричний аналіз</li><li>Кореляція з генетичними даними</li></ol>`;
+      return `<p>Наші дослідницькі групи не збавляють темпів. Зосереджуючись на <strong>${topic}</strong>, ми встановлюємо нові стандарти.</p><h2>Міжнародна конференція</h2><p>Незабаром ми представимо наші досягнення на міжнародному рівні.</p><blockquote>Постійний розвиток - основа селекції 21 століття.</blockquote>`;
+    },
+    ru: (topic: string, idx: number) => {
+      if (idx % htmlTemplates.length === 0)
+        return `<p>Сегодня мы обсуждаем: <strong>${topic}</strong>. Исследования, проведенные нашей кафедрой, приносят многообещающие результаты.</p><h2>Основные цели</h2><ul><li>Повышение иммунитета стада</li><li>Оптимизация оценки сырья</li><li>Внедрение стандартов благополучия животных</li></ul><blockquote>"Это прорыв в нашей области." - проф. Ян Ковальский</blockquote>`;
+      if (idx % htmlTemplates.length === 1)
+        return `<style>.highlight-box { background: rgba(36, 113, 81, 0.1); border-left: 4px solid #247151; padding: 16px; margin: 20px 0; border-radius: 4px; }</style><p>Кафедра представляет рекомендации по <em>${topic}</em>.</p><div class="highlight-box"><strong>Важно:</strong> Новые протоколы действуют со следующего семестра.</div><h3>Технические детали</h3><ol><li>Стерильный отбор проб</li><li>Спектрометрический анализ</li><li>Корреляция с генетическими данными</li></ol>`;
+      return `<p>Наши исследовательские группы не сбавляют темп. Ориентируясь на <strong>${topic}</strong>, мы устанавливаем новые стандарты.</p><h2>Международная конференция</h2><p>Вскоре мы представим наши достижения на международном уровне.</p><blockquote>Постоянное развитие - основа селекции 21 века.</blockquote>`;
+    },
+  };
+
+  const images = [
+    '/image1.png',
+    '/image2.png',
+    '/image3.png',
+    '/image4.png',
+    '/image5.png',
   ];
 
   await prisma.$transaction(
     async (tx) => {
-      // Using safe, sequential loop inside a LOCKED transaction
-      for (let i = 0; i < 50; i++) {
-        const topic = baseTopics[i % baseTopics.length];
-        const isPublished = i % 7 !== 0; // every 7th article is unpublished
-        const photoCount = (i % 3) + 1; // 1 to 3 photos
-        const photos = Array.from({ length: photoCount }).map(() => ({
-          url: '/image.png',
+      for (let i = 0; i < 100; i++) {
+        // Select random title components
+        const prefixIdx = i % titlePrefixes.pl.length;
+        const subjectIdx = i % titleSubjects.pl.length;
+
+        const titlePl = `${titlePrefixes.pl[prefixIdx]} ${titleSubjects.pl[subjectIdx]} (#${i + 1})`;
+        const titleEn = `${titlePrefixes.en[prefixIdx]} ${titleSubjects.en[subjectIdx]} (#${i + 1})`;
+        const titleUk = `${titlePrefixes.uk[prefixIdx]} ${titleSubjects.uk[subjectIdx]} (#${i + 1})`;
+        const titleRu = `${titlePrefixes.ru[prefixIdx]} ${titleSubjects.ru[subjectIdx]} (#${i + 1})`;
+
+        const contentPl = contentGenerators.pl(titleSubjects.pl[subjectIdx], i);
+        const contentEn = contentGenerators.en(titleSubjects.en[subjectIdx], i);
+        const contentUk = contentGenerators.uk(titleSubjects.uk[subjectIdx], i);
+        const contentRu = contentGenerators.ru(titleSubjects.ru[subjectIdx], i);
+
+        const isPublished = i % 10 !== 0; // 90% published
+        const randomTags = getRandomMultiple(createdTags, (i % 3) + 1); // 1 to 3 tags
+
+        // Photos
+        const photoCount = i % 6; // 0 to 5 photos per gallery
+        const photos = Array.from({ length: photoCount }).map((_, pIdx) => ({
+          url: images[pIdx % images.length],
         }));
+
+        // Date spread over the last year
+        const date = new Date();
+        date.setDate(date.getDate() - i * 3); // every 3 days
 
         await tx.news.create({
           data: {
             published: isPublished,
+            createdAt: date,
             tags: {
-              connect: topic.tags.map((t) => ({ id: t.id })),
+              connect: randomTags.map((t) => ({ id: t.id })),
             },
             photos: { create: photos },
             translations: {
               create: [
-                {
-                  languageCode: 'pl',
-                  title: `${topic.pl.title} #${i + 1}`,
-                  content: topic.pl.content,
-                },
-                {
-                  languageCode: 'en',
-                  title: `${topic.en.title} #${i + 1}`,
-                  content: topic.en.content,
-                },
-                {
-                  languageCode: 'uk',
-                  title: `${topic.uk.title} #${i + 1}`,
-                  content: topic.uk.content,
-                },
-                {
-                  languageCode: 'ru',
-                  title: `${topic.ru.title} #${i + 1}`,
-                  content: topic.ru.content,
-                },
+                { languageCode: 'pl', title: titlePl, content: contentPl },
+                { languageCode: 'en', title: titleEn, content: contentEn },
+                { languageCode: 'uk', title: titleUk, content: contentUk },
+                { languageCode: 'ru', title: titleRu, content: contentRu },
               ],
             },
           },
@@ -330,19 +277,12 @@ async function main() {
       }
     },
     {
-      timeout: 100000,
+      timeout: 150000, // Extend timeout for 100 articles
     }
   );
 
-  const getTitle = (news: typeof news1) =>
-    news.translations.find((t) => t.languageCode === 'pl')?.title ?? news.id;
-
   console.log('Populacja bazy zakończona sukcesem!');
-  console.log(`Utworzono ręczne artykuły:
-  - ${getTitle(news1)}
-  - ${getTitle(news2)}
-  - ${getTitle(news3)}
-  Oraz wygenerowano 50 dodatkowych!`);
+  console.log('Utworzono 100 unikalnych, bogatych w HTML artykułów.');
 }
 
 main()

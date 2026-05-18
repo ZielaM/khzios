@@ -83,6 +83,10 @@
     "translationUnavailable": "Показано мовою: {language}",
     "publishedOn": "Опубліковано {date}",
     "notFoundTitle": "Новину не знайдено",
-    "notFoundDesc": "Стаття, яку ви шукаєте, не існує."
+    "notFoundDesc": "Стаття, яку ви шукаєте, не існує.",
+    "closeGallery": "Закрити галерею",
+    "prevImage": "Попереднє фото",
+    "nextImage": "Наступне фото",
+    "imageCounter": "Фото {current} з {total}"
   }
 }

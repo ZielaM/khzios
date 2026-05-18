@@ -83,6 +83,10 @@
     "translationUnavailable": "Shown in {language}",
     "publishedOn": "Published on {date}",
     "notFoundTitle": "News not found",
-    "notFoundDesc": "The article you are looking for does not exist."
+    "notFoundDesc": "The article you are looking for does not exist.",
+    "closeGallery": "Close gallery",
+    "prevImage": "Previous image",
+    "nextImage": "Next image",
+    "imageCounter": "Image {current} of {total}"
   }
 }

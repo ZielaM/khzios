@@ -6,8 +6,9 @@ import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import style from './page.module.scss';
 import DOMPurify from 'isomorphic-dompurify';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Calendar } from 'lucide-react';
 import { resolveTranslation, resolveTagName, LANGUAGE_NAMES } from '@/lib/translations';
+import NewsGallery from '@/components/NewsGallery/NewsGallery';
 
 // For Next.js dynamic routes, define the expected params interface
 interface NewsDetailsPageProps {
@@ -44,7 +45,7 @@ export async function generateMetadata({
     : '';
 
   const imageUrl =
-    news.photos.length > 0 ? news.photos[0].url : '/placeholder-news.jpg';
+    news.photos.length > 0 ? news.photos[0].url : '/placeholder-image.png';
 
   return {
     title,
@@ -97,7 +98,7 @@ export default async function NewsDetailsPage({
   }).format(new Date(news.createdAt));
 
   const mainPhoto =
-    news.photos.length > 0 ? news.photos[0].url : '/placeholder-news.jpg';
+    news.photos.length > 0 ? news.photos[0].url : '/placeholder-image.png';
 
   // Pass all photos to the gallery
   const galleryPhotos = news.photos;
@@ -107,7 +108,7 @@ export default async function NewsDetailsPage({
       <div className={style.container}>
         <header className={style.header}>
           <Link href="/news" className={style.backLink}>
-            <ArrowLeft size={20} aria-hidden="true" />
+            <ArrowLeft size={18} aria-hidden="true" />
             <span>{t('backToNews')}</span>
           </Link>
 
@@ -121,15 +122,13 @@ export default async function NewsDetailsPage({
             </div>
           )}
 
-          <h1
-            className={style.title}
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
-          />
-
           <div className={style.metadata}>
-            <time className={style.date} dateTime={news.createdAt.toISOString()}>
-              {t('publishedOn', { date: formattedDate })}
-            </time>
+            <div className={style.dateWrapper}>
+              <Calendar size={18} aria-hidden="true" className={style.metaIcon} />
+              <time className={style.date} dateTime={news.createdAt.toISOString()}>
+                {t('publishedOn', { date: formattedDate })}
+              </time>
+            </div>
             {news.tags.length > 0 && (
               <div className={style.tags}>
                 {news.tags.map((tag) => (
@@ -140,6 +139,11 @@ export default async function NewsDetailsPage({
               </div>
             )}
           </div>
+
+          <h1
+            className={style.title}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
+          />
         </header>
 
         <section className={style.heroImageContainer}>
@@ -158,21 +162,7 @@ export default async function NewsDetailsPage({
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
         />
 
-        {galleryPhotos.length > 0 && (
-          <section className={style.gallery}>
-            {galleryPhotos.map((photo, index) => (
-              <div key={photo.id} className={style.galleryImageWrapper}>
-                <Image
-                  src={photo.url}
-                  alt={`Gallery image ${index + 1}`}
-                  fill
-                  className={style.galleryImage}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
-            ))}
-          </section>
-        )}
+        <NewsGallery photos={galleryPhotos} />
       </div>
     </main>
   );

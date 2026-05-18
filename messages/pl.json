@@ -83,6 +83,10 @@
     "translationUnavailable": "Wyświetlono w języku: {language}",
     "publishedOn": "Opublikowano {date}",
     "notFoundTitle": "Nie znaleziono aktualności",
-    "notFoundDesc": "Artykuł, którego szukasz, nie istnieje."
+    "notFoundDesc": "Artykuł, którego szukasz, nie istnieje.",
+    "closeGallery": "Zamknij galerię",
+    "prevImage": "Poprzednie zdjęcie",
+    "nextImage": "Następne zdjęcie",
+    "imageCounter": "Zdjęcie {current} z {total}"
   }
 }

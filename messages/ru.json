@@ -83,6 +83,10 @@
     "translationUnavailable": "Показано на: {language}",
     "publishedOn": "Опубликовано {date}",
     "notFoundTitle": "Новость не найдена",
-    "notFoundDesc": "Статья, которую вы ищете, не существует."
+    "notFoundDesc": "Статья, которую вы ищете, не существует.",
+    "closeGallery": "Закрыть галерею",
+    "prevImage": "Предыдущее фото",
+    "nextImage": "Следующее фото",
+    "imageCounter": "Фото {current} из {total}"
   }
 }

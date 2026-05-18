@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
 
 // Helper to get random elements
-const getRandom = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 const getRandomMultiple = <T>(arr: T[], count: number) => {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
@@ -152,7 +151,7 @@ async function main() {
 
   // Fragments to build rich HTML content
   const htmlTemplates = [
-    (topic: string, lang: string) => `
+    (topic: string) => `
       <p>W dzisiejszym artykule omawiamy zagadnienie: <strong>${topic}</strong>. Badania prowadzone przez naszą Katedrę przynoszą obiecujące rezultaty, które mogą zrewolucjonizować branżę.</p>
       <h2>Główne założenia</h2>
       <p>Przeanalizowaliśmy ponad 500 próbek w naszym najnowocześniejszym laboratorium weterynaryjnym.</p>
@@ -164,7 +163,7 @@ async function main() {
       <blockquote>"To przełom w naszej dziedzinie. Dzięki wsparciu Uniwersytetu Przyrodniczego w Poznaniu osiągnęliśmy więcej, niż zakładaliśmy." - prof. dr hab. Jan Kowalski</blockquote>
       <p>Zapraszamy do zapoznania się z pełną publikacją w naszym repozytorium.</p>
     `,
-    (topic: string, lang: string) => `
+    (topic: string) => `
       <style>
         .highlight-box { background: rgba(36, 113, 81, 0.1); border-left: 4px solid #247151; padding: 16px; margin: 20px 0; border-radius: 4px; }
       </style>
@@ -181,7 +180,7 @@ async function main() {
       </ol>
       <p>Dalsze kroki obejmują publikację wyników w czasopismach z listy filadelfijskiej.</p>
     `,
-    (topic: string, lang: string) => `
+    (topic: string) => `
       <p>Nasze zespoły badawcze nie zwalniają tempa. Skupiając się na <strong>${topic}</strong>, wyznaczamy nowe standardy edukacyjne i naukowe.</p>
       <h2>Konferencja Międzynarodowa</h2>
       <p>Już wkrótce zaprezentujemy nasze osiągnięcia na arenie międzynarodowej. Studenci zaangażowani w projekt otrzymają możliwość uczestnictwa w wyjazdach zagranicznych.</p>
@@ -194,7 +193,7 @@ async function main() {
   // we will map the Polish template structure dynamically.
   const contentGenerators = {
     pl: (topic: string, idx: number) =>
-      htmlTemplates[idx % htmlTemplates.length](topic, 'pl'),
+      htmlTemplates[idx % htmlTemplates.length](topic),
     en: (topic: string, idx: number) => {
       if (idx % htmlTemplates.length === 0)
         return `<p>In today's article, we discuss: <strong>${topic}</strong>. The research conducted by our Department brings promising results.</p><h2>Main objectives</h2><ul><li>Increased herd immunity</li><li>Optimization of raw material evaluation</li><li>Implementation of animal welfare standards</li></ul><blockquote>"This is a breakthrough in our field." - Prof. Jan Kowalski</blockquote>`;

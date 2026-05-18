@@ -51,7 +51,7 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
     // Blocking both root and body ensures scroll is blocked in all browsers
     const originalBodyOverflow = document.body.style.overflow;
     const originalHtmlOverflow = document.documentElement.style.overflow;
-    
+
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
@@ -72,7 +72,10 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
             key={photo.id}
             className={style.galleryImageWrapper}
             onClick={() => openLightbox(index)}
-            aria-label={t('imageCounter', { current: index + 1, total: photos.length })}
+            aria-label={t('imageCounter', {
+              current: index + 1,
+              total: photos.length,
+            })}
           >
             <Image
               src={photo.url}
@@ -86,16 +89,16 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
       </section>
 
       {selectedIndex !== null && (
-        <div 
-          className={style.lightbox} 
-          role="dialog" 
+        <div
+          className={style.lightbox}
+          role="dialog"
           aria-modal="true"
           onClick={closeLightbox}
         >
           <div className={style.lightboxOverlay} />
-          
-          <button 
-            className={style.closeButton} 
+
+          <button
+            className={style.closeButton}
             onClick={closeLightbox}
             aria-label={t('closeGallery')}
           >
@@ -103,16 +106,19 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
           </button>
 
           {photos.length > 1 && (
-            <button 
-              className={clsx(style.navButton, style.prevButton)} 
-              onClick={(e) => { e.stopPropagation(); showPrev(); }}
+            <button
+              className={clsx(style.navButton, style.prevButton)}
+              onClick={(e) => {
+                e.stopPropagation();
+                showPrev();
+              }}
               aria-label={t('prevImage')}
             >
               <ChevronLeft size={48} />
             </button>
           )}
 
-          <div 
+          <div
             className={style.lightboxContent}
             onClick={(e) => e.stopPropagation()} // Prevent click from closing when clicking on image
           >
@@ -125,14 +131,20 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
               priority
             />
             <div className={style.imageCounter}>
-              {t('imageCounter', { current: selectedIndex + 1, total: photos.length })}
+              {t('imageCounter', {
+                current: selectedIndex + 1,
+                total: photos.length,
+              })}
             </div>
           </div>
 
           {photos.length > 1 && (
-            <button 
-              className={clsx(style.navButton, style.nextButton)} 
-              onClick={(e) => { e.stopPropagation(); showNext(); }}
+            <button
+              className={clsx(style.navButton, style.nextButton)}
+              onClick={(e) => {
+                e.stopPropagation();
+                showNext();
+              }}
               aria-label={t('nextImage')}
             >
               <ChevronRight size={48} />

@@ -7,7 +7,11 @@ import { Link } from '@/i18n/routing';
 import style from './page.module.scss';
 import DOMPurify from 'isomorphic-dompurify';
 import { ArrowLeft, Calendar } from 'lucide-react';
-import { resolveTranslation, resolveTagName, LANGUAGE_NAMES } from '@/lib/translations';
+import {
+  resolveTranslation,
+  resolveTagName,
+  LANGUAGE_NAMES,
+} from '@/lib/translations';
 import NewsGallery from '@/components/NewsGallery/NewsGallery';
 
 // For Next.js dynamic routes, define the expected params interface
@@ -124,8 +128,15 @@ export default async function NewsDetailsPage({
 
           <div className={style.metadata}>
             <div className={style.dateWrapper}>
-              <Calendar size={18} aria-hidden="true" className={style.metaIcon} />
-              <time className={style.date} dateTime={news.createdAt.toISOString()}>
+              <Calendar
+                size={18}
+                aria-hidden="true"
+                className={style.metaIcon}
+              />
+              <time
+                className={style.date}
+                dateTime={news.createdAt.toISOString()}
+              >
                 {t('publishedOn', { date: formattedDate })}
               </time>
             </div>

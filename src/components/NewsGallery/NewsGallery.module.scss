@@ -21,12 +21,15 @@
   overflow: hidden;
   background-color: #f5f5f5;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   border: none;
   padding: 0;
   cursor: pointer;
 
-  &:hover, &:focus-visible {
+  &:hover,
+  &:focus-visible {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     outline: none;
@@ -122,7 +125,9 @@
   border: none;
   color: white;
   cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
   opacity: 0.8;
   display: flex;
   align-items: center;
@@ -137,7 +142,8 @@
     right: 12px;
   }
 
-  &:hover, &:focus-visible {
+  &:hover,
+  &:focus-visible {
     opacity: 1;
     transform: scale(1.1);
     outline: none;
@@ -151,7 +157,7 @@
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
     opacity: 1;
-    
+
     &:focus-visible {
       border-color: var(--foreground);
     }
@@ -169,7 +175,9 @@
   border: none;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease, opacity 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    opacity 0.2s ease;
   opacity: 0.8;
   display: flex;
   align-items: center;
@@ -177,7 +185,8 @@
   padding: 0;
   z-index: 5;
 
-  &:hover, &:focus-visible {
+  &:hover,
+  &:focus-visible {
     opacity: 1;
     outline: none;
     background-color: rgba(0, 0, 0, 0.2); // subtle indication of the hit area
@@ -198,7 +207,7 @@
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
     opacity: 1;
-    
+
     &:focus-visible {
       border-color: var(--foreground);
     }

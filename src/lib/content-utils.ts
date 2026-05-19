@@ -1,9 +1,9 @@
 /**
- * Centralized photo fallback utilities.
+ * Content utility functions for news articles.
  *
- * Ensures consistent image selection across the entire application.
- * Every component that needs a news thumbnail or hero image
- * should use getPhotoUrl() instead of inlining the fallback logic.
+ * Provides shared helpers for photo fallback resolution,
+ * HTML sanitization (XSS-safe text stripping), and
+ * reading time estimation used across the application.
  */
 
 import { Photo } from '@/generated/prisma/client';
@@ -16,8 +16,8 @@ const PLACEHOLDER_IMAGE = '/placeholder-image.png';
  * Resolves the primary photo URL from a photos array.
  * Returns the first available photo URL or the default placeholder.
  */
-export function getPhotoUrl(photos: Photo[]): string {
-  return photos.length > 0 ? photos[0].url : PLACEHOLDER_IMAGE;
+export function getPhotoUrl(photos: Photo[] | null | undefined): string {
+  return photos && photos?.length > 0 ? photos[0].url : PLACEHOLDER_IMAGE;
 }
 
 /**
@@ -27,6 +27,9 @@ export function getPhotoUrl(photos: Photo[]): string {
  * Useful for generating clean alt text and meta descriptions.
  */
 export function stripHtml(html: string): string {
+  if (typeof html !== 'string') {
+    return '';
+  }
   return DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
 }
 

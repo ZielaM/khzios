@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
 import { resolveTranslation } from '@/lib/translations';
-import { getPhotoUrl, stripHtml } from '@/lib/photos';
+import { getPhotoUrl, stripHtml } from '@/lib/content-utils';
 import { getRelatedNews } from '@/lib/news-queries';
 import { ArrowRight } from 'lucide-react';
 import style from './RelatedNews.module.scss';

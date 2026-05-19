@@ -23,7 +23,7 @@ import {
   resolveTagName,
   LANGUAGE_NAMES,
 } from '@/lib/translations';
-import { getPhotoUrl } from '@/lib/photos';
+import { getPhotoUrl } from '@/lib/content-utils';
 
 export interface NewsTileProps {
   news: News & {

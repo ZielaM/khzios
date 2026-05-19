@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
@@ -12,13 +13,14 @@ import {
   LANGUAGE_NAMES,
 } from '@/lib/translations';
 import { getPhotoUrl, stripHtml, estimateReadingTime } from '@/lib/photos';
-import { getNewsById, getRelatedNews } from '@/lib/news-queries';
+import { getNewsById } from '@/lib/news-queries';
 import NewsGallery from '@/components/NewsGallery/NewsGallery';
 import ShareButton from '@/components/ShareButton/ShareButton';
 import RelatedNews from '@/components/RelatedNews/RelatedNews';
 import ReadingProgress from '@/components/ReadingProgress/ReadingProgress';
 import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
 import AnimateOnce from '@/components/AnimateOnce/AnimateOnce';
+import RelatedNewsSkeleton from '@/components/RelatedNews/RelatedNewsSkeleton';
 
 // For Next.js dynamic routes, define the expected params interface
 interface NewsDetailsPageProps {
@@ -96,9 +98,8 @@ export default async function NewsDetailsPage({
   const mainPhoto = getPhotoUrl(news.photos);
   const readingTime = estimateReadingTime(content);
 
-  // Fetch related articles (shares at least one tag)
+  // Tag IDs for the Suspense-wrapped RelatedNews component
   const tagIds = news.tags.map((tag) => tag.id);
-  const relatedArticles = await getRelatedNews(news.id, tagIds, 3);
 
   // Pass all photos to the gallery
   const galleryPhotos = news.photos;
@@ -215,7 +216,9 @@ export default async function NewsDetailsPage({
             </section>
           )}
 
-          <RelatedNews articles={relatedArticles} locale={locale} />
+          <Suspense fallback={<RelatedNewsSkeleton />}>
+            <RelatedNews newsId={news.id} tagIds={tagIds} locale={locale} />
+          </Suspense>
         </AnimateOnce>
       </main>
       <ScrollToTop />

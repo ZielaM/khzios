@@ -1,39 +1,34 @@
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
-import {
-  News,
-  Tag,
-  Photo,
-  NewsTranslation,
-  TagTranslation,
-} from '@/generated/prisma/client';
 import { resolveTranslation } from '@/lib/translations';
 import { getPhotoUrl, stripHtml } from '@/lib/photos';
+import { getRelatedNews } from '@/lib/news-queries';
 import { ArrowRight } from 'lucide-react';
 import style from './RelatedNews.module.scss';
 
-type NewsWithRelations = News & {
-  translations: NewsTranslation[];
-  tags: (Tag & { translations: TagTranslation[] })[];
-  photos: Photo[];
-};
-
 interface RelatedNewsProps {
-  articles: NewsWithRelations[];
+  newsId: string;
+  tagIds: string[];
   locale: string;
 }
 
 /**
- * Server component that renders a "Read also" section at the
- * bottom of an article page. Shows up to 3 related articles
- * matched by shared tags, or the most recent ones if no tags exist.
+ * Async server component that fetches and renders a "Read also" section.
+ *
+ * Designed to be wrapped in <Suspense> so the main article content
+ * can stream to the client immediately while this component loads
+ * its own data (related articles query) independently.
  */
 export default async function RelatedNews({
-  articles,
+  newsId,
+  tagIds,
   locale,
 }: RelatedNewsProps) {
-  const t = await getTranslations({ locale, namespace: 'NewsDetails' });
+  const [articles, t] = await Promise.all([
+    getRelatedNews(newsId, tagIds, 3),
+    getTranslations({ locale, namespace: 'NewsDetails' }),
+  ]);
 
   if (articles.length === 0) return null;
 

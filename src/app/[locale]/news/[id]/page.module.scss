@@ -387,3 +387,94 @@
   margin-bottom: 8px;
   letter-spacing: -0.01em;
 }
+
+// ─── Loading Skeleton ─────────────────────────────────────────────────
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// Shared shimmer effect for all skeleton elements
+%skeleton-base {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+
+  :global(.wcag-high-contrast) & {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.skeletonPill {
+  @extend %skeleton-base;
+  width: 160px;
+  height: 36px;
+  border-radius: 999px;
+}
+
+.skeletonPillSmall {
+  @extend %skeleton-base;
+  width: 110px;
+  height: 36px;
+  border-radius: 999px;
+}
+
+.skeletonLine {
+  @extend %skeleton-base;
+  height: 18px;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.skeletonLineShort {
+  @extend %skeleton-base;
+  height: 18px;
+  width: 65%;
+  border-radius: 4px;
+}
+
+.skeletonLineSpacer {
+  height: 24px;
+}
+
+.skeletonTag {
+  @extend %skeleton-base;
+  width: 72px;
+  height: 28px;
+  border-radius: 8px;
+}
+
+.skeletonTitleLine {
+  @extend %skeleton-base;
+  height: 40px;
+  width: 100%;
+  border-radius: 6px;
+}
+
+.skeletonTitleLineShort {
+  @extend %skeleton-base;
+  height: 40px;
+  width: 55%;
+  border-radius: 6px;
+}
+
+.skeletonHero {
+  @extend %skeleton-base;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+}
+
+.skeletonContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

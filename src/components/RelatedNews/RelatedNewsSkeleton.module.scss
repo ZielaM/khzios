@@ -1,0 +1,92 @@
+@use '@/styles/variables' as *;
+
+// Shared shimmer animation for skeleton elements
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+%skeleton-base {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+
+  :global(.wcag-high-contrast) & {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.relatedSkeleton {
+  border-top: 2px solid rgba(0, 0, 0, 0.06);
+  padding-top: 48px;
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+  }
+}
+
+.relatedSkeletonTitle {
+  @extend %skeleton-base;
+  height: 28px;
+  width: 180px;
+  margin-bottom: 32px;
+  border-radius: 6px;
+}
+
+.relatedSkeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.relatedSkeletonCard {
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.02);
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+  }
+}
+
+.relatedSkeletonImage {
+  @extend %skeleton-base;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 0;
+}
+
+.relatedSkeletonContent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.relatedSkeletonDate {
+  @extend %skeleton-base;
+  height: 12px;
+  width: 100px;
+  border-radius: 4px;
+}
+
+.relatedSkeletonCardTitle {
+  @extend %skeleton-base;
+  height: 16px;
+  width: 90%;
+  border-radius: 4px;
+}
+
+.relatedSkeletonCardTitleShort {
+  @extend %skeleton-base;
+  height: 16px;
+  width: 60%;
+  border-radius: 4px;
+}

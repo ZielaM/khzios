@@ -33,18 +33,27 @@ describe('ReadingProgress', () => {
   it('should update progress on scroll', () => {
     // Mock the DOM dimensions needed for the calculation
     // Total document height: 2000px, Viewport height: 1000px -> Scrollable area: 1000px
-    Object.defineProperty(document.documentElement, 'scrollHeight', { value: 2000, configurable: true });
-    Object.defineProperty(window, 'innerHeight', { value: 1000, configurable: true });
-    
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      configurable: true,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+      value: 1000,
+      configurable: true,
+    });
+
     const { container } = render(<ReadingProgress />);
-    
+
     // Simulate scrolling exactly halfway down the page (500px / 1000px scrollable area)
-    Object.defineProperty(window, 'scrollY', { value: 500, configurable: true });
+    Object.defineProperty(window, 'scrollY', {
+      value: 500,
+      configurable: true,
+    });
     fireEvent.scroll(window);
-    
+
     const bar = screen.getByRole('progressbar');
     const fill = container.querySelector('[class*="progressFill"]');
-    
+
     expect(bar).toHaveAttribute('aria-valuenow', '50');
     expect(fill).toHaveStyle({ width: '50%' });
   });

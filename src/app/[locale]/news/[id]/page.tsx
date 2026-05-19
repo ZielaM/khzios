@@ -12,7 +12,11 @@ import {
   resolveTagName,
   LANGUAGE_NAMES,
 } from '@/lib/translations';
-import { getPhotoUrl, stripHtml, estimateReadingTime } from '@/lib/content-utils';
+import {
+  getPhotoUrl,
+  stripHtml,
+  estimateReadingTime,
+} from '@/lib/content-utils';
 import { getNewsById } from '@/lib/news-queries';
 import NewsGallery from '@/components/NewsGallery/NewsGallery';
 import ShareButton from '@/components/ShareButton/ShareButton';

@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import RelatedNews from '../RelatedNews';
 import { getRelatedNews } from '@/lib/news-queries';
-import { getTranslations } from 'next-intl/server';
 
 // Mocking the server query
 vi.mock('@/lib/news-queries', () => ({
@@ -17,7 +16,10 @@ vi.mock('next-intl/server', () => ({
 type RelatedArticle = Awaited<ReturnType<typeof getRelatedNews>>[number];
 
 // Helper to construct Prisma mock data
-function mockArticle(id: string, overrides: Partial<RelatedArticle> = {}): RelatedArticle {
+function mockArticle(
+  id: string,
+  overrides: Partial<RelatedArticle> = {}
+): RelatedArticle {
   return {
     id,
     createdAt: new Date('2026-01-01'),
@@ -52,7 +54,7 @@ describe('RelatedNews Server Component', () => {
       tagIds: ['tag1'],
       locale: 'en',
     });
-    
+
     // An async component returns a JSX element, which we can render.
     // If it returns null, render yields empty container.
     const { container } = render(jsx);

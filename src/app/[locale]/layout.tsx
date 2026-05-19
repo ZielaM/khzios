@@ -19,6 +19,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    // to be changed
+    process.env.NEXT_PUBLIC_APP_URL || 'https://khzios.up.poznan.pl'
+  ),
   title: 'Katedra Hodowli Zwierząt i Oceny Surowców',
   description: 'Katedra Hodowli Zwierząt i Oceny Surowców',
 };

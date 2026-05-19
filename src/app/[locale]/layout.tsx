@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import '@/app/globals.scss';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import ScrollRestoration from '@/components/ScrollRestoration/ScrollRestoration';
 import { NextIntlClientProvider } from 'next-intl';
 import {
   getMessages,
@@ -66,6 +67,7 @@ export default async function RootLayout({
       </head>
       <body className={inter.variable}>
         <NextIntlClientProvider messages={messages}>
+          <ScrollRestoration />
           <a href="#main-content" className="skip-link">
             {tWcag('skipToMain')}
           </a>

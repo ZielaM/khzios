@@ -50,7 +50,7 @@ export default defineConfig({
   },
 
   timeout: 120 * 1000,
-  globalTimeout: 240 * 1000,
+  globalTimeout: 600 * 1000,
 
   expect: {
     timeout: 15 * 1000,

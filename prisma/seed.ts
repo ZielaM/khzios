@@ -243,7 +243,22 @@ async function main() {
         const contentRu = contentGenerators.ru(titleSubjects.ru[subjectIdx], i);
 
         const isPublished = i % 10 !== 0; // 90% published
-        const randomTags = getRandomMultiple(createdTags, (i % 3) + 1); // 1 to 3 tags
+
+        // First 7 articles (i=0..6) use deterministic tags for reliable E2E testing.
+        // Remaining articles use random tags for realistic data variety.
+        // See e2e/article-details.spec.ts for the full article layout reference.
+        const deterministicTagMap: Record<number, number[]> = {
+          1: [0], // 1 photo, 1 tag  (Swine Breeding)
+          2: [1, 2], // 2 photos, 2 tags (Product Evaluation, Poultry)
+          3: [3, 4, 5], // 3 photos, 3 tags (Fur Animals, Events, Publications)
+          4: [0, 6], // 4 photos, 2 tags (Swine Breeding, Research)
+          5: [1, 2, 3], // 5 photos, 3 tags (Product Eval, Poultry, Fur Animals)
+          6: [4], // 0 photos, 1 tag  (Events) — no gallery
+        };
+        const articleTags =
+          i in deterministicTagMap
+            ? deterministicTagMap[i].map((idx) => createdTags[idx])
+            : getRandomMultiple(createdTags, (i % 3) + 1);
 
         // Photos
         const photoCount = i % 6; // 0 to 5 photos per gallery
@@ -260,7 +275,7 @@ async function main() {
             published: isPublished,
             createdAt: date,
             tags: {
-              connect: randomTags.map((t) => ({ id: t.id })),
+              connect: articleTags.map((t) => ({ id: t.id })),
             },
             photos: { create: photos },
             translations: {

@@ -39,9 +39,9 @@ export function DropdownMenu({
   return (
     <div
       className={style.dropdownContainer}
-      onMouseEnter={() => setIsDropdownOpen(true)}
-      onMouseLeave={() => setIsDropdownOpen(false)}
-      onFocus={() => setIsDropdownOpen(true)}
+      onMouseEnter={() => window.innerWidth > 768 && setIsDropdownOpen(true)}
+      onMouseLeave={() => window.innerWidth > 768 && setIsDropdownOpen(false)}
+      onFocus={() => window.innerWidth > 768 && setIsDropdownOpen(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           setIsDropdownOpen(false);
@@ -113,9 +113,9 @@ export function DropdownItem({
   return (
     <div
       className={clsx(style.dropdownItem, { [style.hasSubmenu]: hasChildren })}
-      onMouseEnter={() => setIsSubMenuOpen(true)}
-      onMouseLeave={() => setIsSubMenuOpen(false)}
-      onFocus={() => setIsSubMenuOpen(true)}
+      onMouseEnter={() => window.innerWidth > 768 && setIsSubMenuOpen(true)}
+      onMouseLeave={() => window.innerWidth > 768 && setIsSubMenuOpen(false)}
+      onFocus={() => window.innerWidth > 768 && setIsSubMenuOpen(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           setIsSubMenuOpen(false);

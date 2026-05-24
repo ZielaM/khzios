@@ -3,9 +3,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 3rem;
   margin-bottom: 2rem;
+
+  @media (max-width: 640px) {
+    gap: 0.25rem;
+  }
 }
 
 // Shared styling for both Previous/Next nav buttons and numbered page buttons
@@ -31,6 +36,13 @@
     color 0.2s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
+
+  @media (max-width: 640px) {
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.25rem;
+    font-size: 0.875rem;
+  }
 
   &:hover:not(:disabled) {
     background: var(--surface-alt, #f8f9fa);
@@ -100,6 +112,11 @@
   border: none;
   background: transparent;
   cursor: default; // Indicates it is not clickable
+
+  @media (max-width: 640px) {
+    min-width: 1rem;
+    padding: 0;
+  }
 
   &:hover {
     background: transparent;

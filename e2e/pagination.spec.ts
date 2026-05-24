@@ -123,4 +123,31 @@ test.describe('Search Pagination Spec', () => {
     const expectedPrevPage = Number(lastPageNumber) - 1;
     await expect(page).toHaveURL(new RegExp(`page=${expectedPrevPage}`));
   });
+
+  test('should not overflow on mobile viewports', async ({ page }) => {
+    // 1. Set a narrow mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+
+    // 2. Ensure the pagination is visible
+    const paginationNav = page.getByRole('navigation', { name: 'Pagination' });
+    await expect(paginationNav).toBeVisible();
+
+    // 3. Check if the document has horizontal scroll (which indicates overflow)
+    const hasHorizontalScroll = await page.evaluate(() => {
+      // Allow a small 1px margin of error for fractional pixel rounding
+      return (
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth + 1
+      );
+    });
+    expect(hasHorizontalScroll).toBe(false);
+
+    // 4. Also check the bounding box of the pagination specifically
+    const box = await paginationNav.boundingBox();
+    expect(box).not.toBeNull();
+    if (box) {
+      // The right edge of the pagination should not exceed the viewport width
+      expect(box.x + box.width).toBeLessThanOrEqual(375);
+    }
+  });
 });

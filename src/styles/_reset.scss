@@ -39,6 +39,7 @@ nav + main {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 // Global anchor reset to inherit text colors and remove default underlines

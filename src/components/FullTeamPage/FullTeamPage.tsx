@@ -20,36 +20,28 @@ export default function FullTeamPage({ team, locale }: FullTeamPageProps) {
   );
 
   return (
-    <div className={style.fullTeam}>
-      <AnimateOnce>
+    <AnimateOnce>
+      <div className={style.fullTeam}>
         <TeamHero name={teamTranslation?.name || team.slug} />
-      </AnimateOnce>
 
-      <div className={style.contentGrid}>
-        <AnimateOnce>
+        <div className={style.contentGrid}>
           <TeamMembers members={team.members} locale={locale} />
-        </AnimateOnce>
 
-        <AnimateOnce>
           <TeamResearch content={teamTranslation?.researchDescription} />
-        </AnimateOnce>
 
-        <AnimateOnce>
           <TeamPublications
             publications={team.publications}
             projects={team.projects}
             locale={locale}
           />
-        </AnimateOnce>
 
-        <AnimateOnce>
           <TeamTeaching
             content={teamTranslation?.teachingDescription}
             courses={team.courses}
             locale={locale}
           />
-        </AnimateOnce>
+        </div>
       </div>
-    </div>
+    </AnimateOnce>
   );
 }

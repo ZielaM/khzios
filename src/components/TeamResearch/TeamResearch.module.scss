@@ -1,0 +1,41 @@
+@use '@/styles/variables' as *;
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0;
+  letter-spacing: -0.01em;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 12px;
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+  }
+}
+
+.content {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333;
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}

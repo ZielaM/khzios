@@ -12,8 +12,9 @@ import { routing, type Locale } from '@/i18n/routing';
 import { useParams, useSearchParams } from 'next/navigation';
 import style from './LanguageSwitcher.module.scss';
 import clsx from 'clsx';
+import { Suspense } from 'react';
 
-export default function LanguageSwitcher() {
+function LanguageSwitcherInner() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -57,5 +58,13 @@ export default function LanguageSwitcher() {
         </button>
       ))}
     </div>
+  );
+}
+
+export default function LanguageSwitcher() {
+  return (
+    <Suspense fallback={<div className={style.switcher}>...</div>}>
+      <LanguageSwitcherInner />
+    </Suspense>
   );
 }

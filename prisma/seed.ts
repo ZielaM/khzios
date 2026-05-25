@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { seedTeams } from './seed-teams';
 
 // Helper to get random elements
 const getRandomMultiple = <T>(arr: T[], count: number) => {
@@ -10,6 +11,20 @@ async function main() {
   console.log('Rozpoczynam populację bazy danych KHZIOS...');
 
   console.log('Czyszczenie istniejących danych...');
+  // Team-related cleanup (order matters due to FK constraints)
+  await prisma.teamLinkTranslation.deleteMany();
+  await prisma.teamLink.deleteMany();
+  await prisma.teachingCourseTranslation.deleteMany();
+  await prisma.teachingCourse.deleteMany();
+  await prisma.researchProjectTranslation.deleteMany();
+  await prisma.researchProject.deleteMany();
+  await prisma.publicationTranslation.deleteMany();
+  await prisma.publication.deleteMany();
+  await prisma.teamMemberTranslation.deleteMany();
+  await prisma.teamMember.deleteMany();
+  await prisma.teamTranslation.deleteMany();
+  await prisma.team.deleteMany();
+  // News-related cleanup
   await prisma.newsTranslation.deleteMany();
   await prisma.tagTranslation.deleteMany();
   await prisma.photo.deleteMany();
@@ -295,8 +310,12 @@ async function main() {
     }
   );
 
-  console.log('Populacja bazy zakończona sukcesem!');
   console.log('Utworzono 100 unikalnych, bogatych w HTML artykułów.');
+
+  // ──── Team Seeding ────────────────────────────────────────────────
+  await seedTeams();
+
+  console.log('Populacja bazy zakończona sukcesem!');
 }
 
 main()

@@ -69,3 +69,165 @@ model Photo {
 
   @@index([newsId])
 }
+
+// ──── Team Models ─────────────────────────────────────────────────────
+
+enum TeamType {
+  FULL
+  EXTERNAL
+}
+
+enum MemberCategory {
+  ACADEMIC    // Pracownicy naukowo-dydaktyczni
+  TECHNICAL   // Pracownicy inżynieryjno-techniczni
+}
+
+model Team {
+  id           String       @id @default(uuid(7))
+  slug         String       @unique       // Canonical key ("ruminants", "poultry", etc.)
+  type         TeamType
+  displayOrder Int          @db.SmallInt  @default(0)
+
+  translations TeamTranslation[]
+  members      TeamMember[]
+  publications Publication[]
+  projects     ResearchProject[]
+  courses      TeachingCourse[]
+  links        TeamLink[]
+}
+
+model TeamTranslation {
+  teamId              String
+  languageCode        LanguageCode
+  name                String          // Team name
+  researchDescription String?         // Research directions paragraph
+  teachingDescription String?         // Teaching paragraph
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([teamId, languageCode])
+}
+
+model TeamLink {
+  id           String @id @default(uuid(7))
+  teamId       String
+  url          String
+  icon         String           // Icon identifier: "globe", "facebook", "instagram", etc.
+  displayOrder Int    @db.SmallInt  @default(0)
+
+  team         Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  translations TeamLinkTranslation[]
+
+  @@index([teamId])
+}
+
+model TeamLinkTranslation {
+  linkId       String
+  languageCode LanguageCode
+  label        String       // e.g. "Visit website", "Facebook"
+
+  link TeamLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@id([linkId, languageCode])
+}
+
+// ──── Team Members ────────────────────────────────────────────────────
+
+model TeamMember {
+  id           String         @id @default(uuid(7))
+  teamId       String
+  category     MemberCategory
+  name         String                      // Full name (not translated)
+  photoUrl     String?                     // null → CSS initials avatar
+  profileSlug  String?                     // Auto-generated from name, e.g. "jan-kowalski"
+  displayOrder Int            @db.SmallInt @default(0)
+
+  team         Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  translations TeamMemberTranslation[]
+
+  @@index([teamId])
+}
+
+model TeamMemberTranslation {
+  memberId     String
+  languageCode LanguageCode
+  title        String        // Academic title (e.g. "dr hab." / "Associate Prof.")
+
+  member TeamMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@id([memberId, languageCode])
+}
+
+// ──── Publications ────────────────────────────────────────────────────
+
+model Publication {
+  id      String @id @default(uuid(7))
+  teamId  String
+  year    Int    @db.SmallInt
+  doi     String?
+  authors String                  // Not translated
+  journal String                  // Not translated
+
+  team         Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  translations PublicationTranslation[]
+
+  @@index([teamId, year(sort: Desc)])
+}
+
+model PublicationTranslation {
+  publicationId String
+  languageCode  LanguageCode
+  title         String        // Publication title (translated)
+
+  publication Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+
+  @@id([publicationId, languageCode])
+}
+
+// ──── Research Projects ───────────────────────────────────────────────
+
+model ResearchProject {
+  id     String @id @default(uuid(7))
+  teamId String
+  years  String              // e.g. "2022–2025"
+
+  team         Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  translations ResearchProjectTranslation[]
+
+  @@index([teamId])
+}
+
+model ResearchProjectTranslation {
+  projectId    String
+  languageCode LanguageCode
+  title        String
+  funder       String?
+
+  project ResearchProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, languageCode])
+}
+
+// ──── Teaching Courses ────────────────────────────────────────────────
+
+model TeachingCourse {
+  id     String @id @default(uuid(7))
+  teamId String
+
+  team         Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  translations TeachingCourseTranslation[]
+
+  @@index([teamId])
+}
+
+model TeachingCourseTranslation {
+  courseId      String
+  languageCode  LanguageCode
+  name          String          // Course name
+  program       String          // Study program & degree level
+  coordinator   String          // Course coordinator
+
+  course TeachingCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@id([courseId, languageCode])
+}

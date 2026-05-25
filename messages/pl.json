@@ -95,5 +95,25 @@
     "relatedArticles": "Czytaj też",
     "readArticle": "Czytaj dalej",
     "scrollToTop": "Przewiń do góry"
+  },
+  "TeamPage": {
+    "backToStructure": "Wróć do struktury",
+    "membersTitle": "Skład osobowy",
+    "academicStaff": "Pracownicy naukowo-dydaktyczni",
+    "technicalStaff": "Pracownicy inżynieryjno-techniczni",
+    "researchTitle": "Główne kierunki badawcze",
+    "publicationsTitle": "Wybrane publikacje i projekty badawcze",
+    "publicationsSubtitle": "z ostatnich 5 lat",
+    "publicationsTab": "Publikacje",
+    "projectsTab": "Projekty badawcze",
+    "teachingTitle": "Dydaktyka",
+    "courseNameHeader": "Nazwa przedmiotu",
+    "programHeader": "Kierunek i stopień studiów",
+    "coordinatorHeader": "Kierownik przedmiotu",
+    "viewProfile": "Zobacz profil",
+    "externalRedirect": "Strona tego zespołu jest dostępna pod adresem zewnętrznym.",
+    "noPublications": "Brak publikacji z ostatnich 5 lat.",
+    "noProjects": "Brak projektów z ostatnich 5 lat.",
+    "funder": "Finansowanie"
   }
 }

@@ -95,5 +95,25 @@
     "relatedArticles": "Read also",
     "readArticle": "Read more",
     "scrollToTop": "Scroll to top"
+  },
+  "TeamPage": {
+    "backToStructure": "Back to structure",
+    "membersTitle": "Team Members",
+    "academicStaff": "Academic Staff",
+    "technicalStaff": "Technical Staff",
+    "researchTitle": "Main Research Areas",
+    "publicationsTitle": "Selected Publications and Research Projects",
+    "publicationsSubtitle": "from the last 5 years",
+    "publicationsTab": "Publications",
+    "projectsTab": "Research Projects",
+    "teachingTitle": "Teaching",
+    "courseNameHeader": "Course Name",
+    "programHeader": "Program and Degree Level",
+    "coordinatorHeader": "Course Coordinator",
+    "viewProfile": "View profile",
+    "externalRedirect": "This team's page is available at an external address.",
+    "noPublications": "No publications from the last 5 years.",
+    "noProjects": "No projects from the last 5 years.",
+    "funder": "Funding"
   }
 }

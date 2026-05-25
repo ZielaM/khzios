@@ -95,5 +95,25 @@
     "relatedArticles": "Читайте также",
     "readArticle": "Читать далее",
     "scrollToTop": "Наверх"
+  },
+  "TeamPage": {
+    "backToStructure": "Вернуться к структуре",
+    "membersTitle": "Состав группы",
+    "academicStaff": "Научно-преподавательский состав",
+    "technicalStaff": "Инженерно-технический состав",
+    "researchTitle": "Основные направления исследований",
+    "publicationsTitle": "Избранные публикации и исследовательские проекты",
+    "publicationsSubtitle": "за последние 5 лет",
+    "publicationsTab": "Публикации",
+    "projectsTab": "Исследовательские проекты",
+    "teachingTitle": "Преподавание",
+    "courseNameHeader": "Название курса",
+    "programHeader": "Программа и уровень",
+    "coordinatorHeader": "Координатор курса",
+    "viewProfile": "Посмотреть профиль",
+    "externalRedirect": "Страница этой группы доступна по внешнему адресу.",
+    "noPublications": "Нет публикаций за последние 5 лет.",
+    "noProjects": "Нет проектов за последние 5 лет.",
+    "funder": "Финансирование"
   }
 }

@@ -95,5 +95,25 @@
     "relatedArticles": "Читайте також",
     "readArticle": "Читати далі",
     "scrollToTop": "Прокрутити вгору"
+  },
+  "TeamPage": {
+    "backToStructure": "Повернутися до структури",
+    "membersTitle": "Склад групи",
+    "academicStaff": "Науково-викладацький склад",
+    "technicalStaff": "Інженерно-технічний склад",
+    "researchTitle": "Основні напрямки досліджень",
+    "publicationsTitle": "Вибрані публікації та дослідницькі проєкти",
+    "publicationsSubtitle": "за останні 5 років",
+    "publicationsTab": "Публікації",
+    "projectsTab": "Дослідницькі проєкти",
+    "teachingTitle": "Викладання",
+    "courseNameHeader": "Назва курсу",
+    "programHeader": "Програма та рівень",
+    "coordinatorHeader": "Координатор курсу",
+    "viewProfile": "Переглянути профіль",
+    "externalRedirect": "Сторінка цієї групи доступна за зовнішньою адресою.",
+    "noPublications": "Немає публікацій за останні 5 років.",
+    "noProjects": "Немає проєктів за останні 5 років.",
+    "funder": "Фінансування"
   }
 }

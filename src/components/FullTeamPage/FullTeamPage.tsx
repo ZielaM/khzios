@@ -1,6 +1,6 @@
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
-import AnimateOnce from '@/components/AnimateOnce/AnimateOnce';
+import AnimateOnce from '@/components/AnimateOnce';
 import TeamHero from '@/components/TeamHero';
 import TeamMembers from '@/components/TeamMembers';
 import TeamResearch from '@/components/TeamResearch';

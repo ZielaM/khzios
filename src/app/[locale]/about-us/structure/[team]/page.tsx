@@ -5,7 +5,7 @@ import { resolveTranslation } from '@/lib/translations';
 import { Link, routing } from '@/i18n/routing';
 import { ChevronLeft } from 'lucide-react';
 import style from './page.module.scss';
-import AnimateOnce from '@/components/AnimateOnce/AnimateOnce';
+import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
 
 // Components

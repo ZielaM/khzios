@@ -23,7 +23,7 @@ import ShareButton from '@/components/ShareButton/ShareButton';
 import RelatedNews from '@/components/RelatedNews/RelatedNews';
 import ReadingProgress from '@/components/ReadingProgress/ReadingProgress';
 import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
-import AnimateOnce from '@/components/AnimateOnce/AnimateOnce';
+import AnimateOnce from '@/components/AnimateOnce';
 import RelatedNewsSkeleton from '@/components/RelatedNews/RelatedNewsSkeleton';
 
 // For Next.js dynamic routes, define the expected params interface

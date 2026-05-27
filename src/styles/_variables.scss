@@ -19,3 +19,20 @@ $breakpoint-desktop: 1024px;
 // Global layout constraints
 $max-width-content: 1200px;
 $navbar-height: 70px;
+
+// Centralne sterowanie marginesem górnym dla wszystkich podstron
+$page-padding-top: 16px;
+$page-padding-top-mobile: 12px;
+
+// Wspólny mixin dla wszystkich głównych widoków podstron,
+// zapewniający scentralizowane zarządzanie marginesami i zachowaniem układu.
+@mixin page-container {
+  max-width: $breakpoint-desktop;
+  margin: 0 auto;
+  // Margines górny scentralizowany (zmniejszony zgodnie z prośbą)
+  padding: $page-padding-top 24px 80px;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: $page-padding-top-mobile 16px 40px;
+  }
+}

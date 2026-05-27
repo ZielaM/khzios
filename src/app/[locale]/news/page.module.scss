@@ -4,15 +4,15 @@
 .main {
   max-width: $max-width-content;
   margin: 0 auto;
-  padding: 2rem 4rem;
+  padding: $page-padding-top 4rem;
 
   // Increase top padding on mobile/compact to avoid overlapping with the fixed navbar
   @media (max-width: $breakpoint-tablet) {
-    padding: 6rem 1rem 2rem;
+    padding: $page-padding-top-mobile 1rem 2rem;
   }
 
   :global(.compact-layout-sm) & {
-    padding: 6rem 1rem 2rem;
+    padding: $page-padding-top-mobile 1rem 2rem;
   }
 }
 

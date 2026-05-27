@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { User, ChevronRight } from 'lucide-react';
+import { Link } from '@/i18n/routing';
 import style from './TeamMembers.module.scss';
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
@@ -8,9 +9,14 @@ import { resolveTranslation } from '@/lib/translations';
 interface TeamMembersProps {
   members: TeamWithRelations['members'];
   locale: string;
+  teamSlug: string;
 }
 
-export default function TeamMembers({ members, locale }: TeamMembersProps) {
+export default function TeamMembers({
+  members,
+  locale,
+  teamSlug,
+}: TeamMembersProps) {
   const t = useTranslations('TeamPage');
 
   const academicStaff = members.filter((m) => m.category === 'ACADEMIC');
@@ -27,7 +33,12 @@ export default function TeamMembers({ members, locale }: TeamMembersProps) {
           <h3 className={style.categoryTitle}>{t('academicStaff')}</h3>
           <div className={style.grid}>
             {academicStaff.map((member) => (
-              <MemberCard key={member.id} member={member} locale={locale} />
+              <MemberCard
+                key={member.id}
+                member={member}
+                locale={locale}
+                teamSlug={teamSlug}
+              />
             ))}
           </div>
         </div>
@@ -38,7 +49,12 @@ export default function TeamMembers({ members, locale }: TeamMembersProps) {
           <h3 className={style.categoryTitle}>{t('technicalStaff')}</h3>
           <div className={style.grid}>
             {technicalStaff.map((member) => (
-              <MemberCard key={member.id} member={member} locale={locale} />
+              <MemberCard
+                key={member.id}
+                member={member}
+                locale={locale}
+                teamSlug={teamSlug}
+              />
             ))}
           </div>
         </div>
@@ -50,9 +66,11 @@ export default function TeamMembers({ members, locale }: TeamMembersProps) {
 function MemberCard({
   member,
   locale,
+  teamSlug,
 }: {
   member: TeamWithRelations['members'][0];
   locale: string;
+  teamSlug: string;
 }) {
   const t = useTranslations('TeamPage');
   const { translation } = resolveTranslation(member.translations, locale);
@@ -80,9 +98,15 @@ function MemberCard({
         <div className={style.title}>{title}</div>
         <div className={style.name}>{member.name}</div>
         {member.profileSlug && (
-          <a href="#" className={style.profileLink}>
+          <Link
+            href={{
+              pathname: '/about-us/structure/[team]/[member]' as const,
+              params: { team: teamSlug, member: member.profileSlug },
+            }}
+            className={style.profileLink}
+          >
             {t('viewProfile')} <ChevronRight size={14} />
-          </a>
+          </Link>
         )}
       </div>
     </div>

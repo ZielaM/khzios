@@ -25,7 +25,11 @@ export default function FullTeamPage({ team, locale }: FullTeamPageProps) {
         <TeamHero name={teamTranslation?.name || team.slug} />
 
         <div className={style.contentGrid}>
-          <TeamMembers members={team.members} locale={locale} />
+          <TeamMembers
+            members={team.members}
+            locale={locale}
+            teamSlug={team.slug}
+          />
 
           <TeamResearch content={teamTranslation?.researchDescription} />
 

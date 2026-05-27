@@ -55,3 +55,42 @@ export async function getAllTeamSlugs() {
 export type TeamWithRelations = NonNullable<
   Awaited<ReturnType<typeof getTeamBySlug>>
 >;
+
+// ──── Member Queries ──────────────────────────────────────────────────
+
+/**
+ * Fetches a single team member by their profileSlug with translations
+ * and the parent team info for breadcrumbs / context.
+ */
+export const getMemberBySlug = cache(async (profileSlug: string) => {
+  return prisma.teamMember.findUnique({
+    where: { profileSlug },
+    include: {
+      translations: true,
+      team: {
+        include: {
+          translations: true,
+        },
+      },
+    },
+  });
+});
+
+/**
+ * Returns all member profile slugs with their parent team slug
+ * for static path generation.
+ */
+export async function getAllMemberSlugs() {
+  return prisma.teamMember.findMany({
+    where: { profileSlug: { not: null } },
+    select: {
+      profileSlug: true,
+      team: { select: { slug: true } },
+    },
+  });
+}
+
+/** Return type of getMemberBySlug when the member exists */
+export type MemberWithRelations = NonNullable<
+  Awaited<ReturnType<typeof getMemberBySlug>>
+>;

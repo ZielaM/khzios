@@ -115,5 +115,16 @@
     "noPublications": "No publications from the last 5 years.",
     "noProjects": "No projects from the last 5 years.",
     "funder": "Funding"
+  },
+  "MemberProfile": {
+    "backToTeam": "Back to team",
+    "contactTitle": "Contact",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "orcidTitle": "ORCID",
+    "orcidDesc": "Research identifier",
+    "viewOrcid": "View ORCID profile",
+    "noContact": "No contact information available.",
+    "teamLabel": "Team"
   }
 }

@@ -115,5 +115,16 @@
     "noPublications": "Немає публікацій за останні 5 років.",
     "noProjects": "Немає проєктів за останні 5 років.",
     "funder": "Фінансування"
+  },
+  "MemberProfile": {
+    "backToTeam": "Повернутися до групи",
+    "contactTitle": "Контакт",
+    "emailLabel": "E-mail",
+    "phoneLabel": "Телефон",
+    "orcidTitle": "ORCID",
+    "orcidDesc": "Дослідницький ідентифікатор",
+    "viewOrcid": "Переглянути профіль ORCID",
+    "noContact": "Контактна інформація відсутня.",
+    "teamLabel": "Група"
   }
 }

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
@@ -40,6 +40,9 @@ export async function generateMetadata({
 }: NewsDetailsPageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const { locale, id } = resolvedParams;
+
+  // Wymagane dla statycznego renderowania przez next-intl
+  setRequestLocale(locale);
 
   // Uses React.cache() — deduplicated with the page component's call
   const news = await getNewsById(id);

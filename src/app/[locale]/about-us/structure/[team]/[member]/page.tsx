@@ -15,21 +15,16 @@ export const revalidate = 604800;
 
 export async function generateStaticParams() {
   const members = await getAllMemberSlugs();
-  const params: Array<{ locale: string; team: string; member: string }> = [];
 
-  for (const locale of routing.locales) {
-    for (const m of members) {
-      if (m.profileSlug) {
-        params.push({
-          locale,
-          team: m.team.slug,
-          member: m.profileSlug,
-        });
-      }
-    }
-  }
-
-  return params;
+  return routing.locales.flatMap((locale) =>
+    members
+      .filter((m) => m.profileSlug)
+      .map((m) => ({
+        locale,
+        team: m.team.slug,
+        member: m.profileSlug!,
+      }))
+  );
 }
 
 interface Props {
@@ -38,14 +33,15 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, member: memberSlug } = await params;
-  const member = await getMemberBySlug(memberSlug);
+  setRequestLocale(locale);
 
+  const member = await getMemberBySlug(memberSlug);
   if (!member) return {};
 
   const { translation } = resolveTranslation(member.translations, locale);
-  const title = translation
-    ? `${translation.title} ${member.name} | KHZIOS`
-    : `${member.name} | KHZIOS`;
+
+  const titlePrefix = translation?.title ? `${translation.title} ` : '';
+  const title = `${titlePrefix}${member.name} | KHZIOS`;
 
   return { title };
 }

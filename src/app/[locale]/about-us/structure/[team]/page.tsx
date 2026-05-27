@@ -17,15 +17,13 @@ export const revalidate = 604800;
 
 export async function generateStaticParams() {
   const teams = await getAllTeamSlugs();
-  const params: Array<{ locale: string; team: string }> = [];
 
-  for (const locale of routing.locales) {
-    for (const team of teams) {
-      params.push({ locale, team: team.slug });
-    }
-  }
-
-  return params;
+  return routing.locales.flatMap((locale) =>
+    teams.map((team) => ({
+      locale,
+      team: team.slug,
+    }))
+  );
 }
 
 interface Props {
@@ -34,8 +32,9 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, team: teamSlug } = await params;
-  const team = await getTeamBySlug(teamSlug);
+  setRequestLocale(locale);
 
+  const team = await getTeamBySlug(teamSlug);
   if (!team) return {};
 
   const { translation } = resolveTranslation(team.translations, locale);

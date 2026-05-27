@@ -139,13 +139,19 @@ model TeamMember {
   category     MemberCategory
   name         String                      // Full name (not translated)
   photoUrl     String?                     // null → CSS initials avatar
-  profileSlug  String?                     // Auto-generated from name, e.g. "jan-kowalski"
+  profileSlug  String?        @unique      // Auto-generated from name, e.g. "jan-kowalski"
   displayOrder Int            @db.SmallInt @default(0)
+
+  // Contact & identifier fields for profile pages
+  email        String?
+  phone        String?
+  orcid        String?                     // ORCID iD, e.g. "0000-0002-1825-0097"
 
   team         Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
   translations TeamMemberTranslation[]
 
   @@index([teamId])
+  @@index([profileSlug])
 }
 
 model TeamMemberTranslation {

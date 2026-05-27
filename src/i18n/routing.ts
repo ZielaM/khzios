@@ -90,6 +90,12 @@ export const routing = defineRouting({
       uk: '/pro-nas/publikatsii',
       ru: '/o-nas/publikatsii',
     },
+    '/about-us/structure/[team]/[member]': {
+      pl: '/o-nas/struktura/[team]/[member]',
+      en: '/about-us/structure/[team]/[member]',
+      uk: '/pro-nas/struktura/[team]/[member]',
+      ru: '/o-nas/struktura/[team]/[member]',
+    },
     '/student': {
       pl: '/student',
       en: '/student',

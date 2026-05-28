@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin, Clock, User } from 'lucide-react';
 import style from './HeadProfile.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { useTranslations } from 'next-intl';
+import { ReactNode } from 'react';
 
 export interface HeadProfileProps {
   name: string;
@@ -12,6 +13,7 @@ export interface HeadProfileProps {
   officeLocation: string;
   workingHours: { day: string; hours: string }[];
   photoUrl?: string;
+  fallbackIcon?: ReactNode;
 }
 
 export default function HeadProfile({
@@ -22,6 +24,7 @@ export default function HeadProfile({
   officeLocation,
   workingHours,
   photoUrl,
+  fallbackIcon,
 }: HeadProfileProps) {
   const tMember = useTranslations('MemberProfile');
 
@@ -48,12 +51,12 @@ export default function HeadProfile({
               />
             ) : (
               <div className={style.avatarFallback}>
-                <User size={64} />
+                {fallbackIcon || <User size={64} />}
               </div>
             )}
           </div>
           <div className={style.heroInfo}>
-            <span className={style.heroTitle}>{title}</span>
+            {title && <span className={style.heroTitle}>{title}</span>}
             <h1 className={style.heroName}>{name}</h1>
           </div>
         </div>

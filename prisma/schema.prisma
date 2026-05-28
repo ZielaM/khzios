@@ -237,3 +237,49 @@ model TeachingCourseTranslation {
 
   @@id([courseId, languageCode])
 }
+
+// ──── Department Head ─────────────────────────────────────────────────
+
+model DepartmentHead {
+  id             String @id @default(uuid(7))
+  name           String
+  email          String?
+  phone          String?
+  photoUrl       String?
+  officeLocation String?
+
+  translations   DepartmentHeadTranslation[]
+  workingHours   DepartmentHeadHour[]
+}
+
+model DepartmentHeadTranslation {
+  headId       String
+  languageCode LanguageCode
+  title        String
+
+  head DepartmentHead @relation(fields: [headId], references: [id], onDelete: Cascade)
+
+  @@id([headId, languageCode])
+}
+
+model DepartmentHeadHour {
+  id           String @id @default(uuid(7))
+  headId       String
+  displayOrder Int    @db.SmallInt @default(0)
+
+  head         DepartmentHead @relation(fields: [headId], references: [id], onDelete: Cascade)
+  translations DepartmentHeadHourTranslation[]
+
+  @@index([headId])
+}
+
+model DepartmentHeadHourTranslation {
+  hourId       String
+  languageCode LanguageCode
+  day          String
+  hours        String
+
+  hour DepartmentHeadHour @relation(fields: [hourId], references: [id], onDelete: Cascade)
+
+  @@id([hourId, languageCode])
+}

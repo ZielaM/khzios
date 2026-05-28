@@ -125,6 +125,15 @@
     "orcidDesc": "Research identifier",
     "viewOrcid": "View ORCID profile",
     "noContact": "No contact information available.",
-    "teamLabel": "Team"
+    "closedLabel": "Closed",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "hoursLabel": "Working hours",
+    "locationLabel": "Office location"
   }
 }

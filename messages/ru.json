@@ -125,6 +125,15 @@
     "orcidDesc": "Исследовательский идентификатор",
     "viewOrcid": "Посмотреть профиль ORCID",
     "noContact": "Контактная информация отсутствует.",
-    "teamLabel": "Группа"
+    "closedLabel": "Закрыто",
+    "monday": "Понедельник",
+    "tuesday": "Вторник",
+    "wednesday": "Среда",
+    "thursday": "Четверг",
+    "friday": "Пятница",
+    "saturday": "Суббота",
+    "sunday": "Воскресенье",
+    "hoursLabel": "Часы работы",
+    "locationLabel": "Расположение офиса"
   }
 }

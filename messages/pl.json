@@ -125,6 +125,15 @@
     "orcidDesc": "Identyfikator badawczy",
     "viewOrcid": "Zobacz profil ORCID",
     "noContact": "Brak danych kontaktowych.",
-    "teamLabel": "Zespół"
+    "closedLabel": "Nieczynne",
+    "monday": "Poniedziałek",
+    "tuesday": "Wtorek",
+    "wednesday": "Środa",
+    "thursday": "Czwartek",
+    "friday": "Piątek",
+    "saturday": "Sobota",
+    "sunday": "Niedziela",
+    "hoursLabel": "Godziny pracy",
+    "locationLabel": "Lokalizacja biura"
   }
 }

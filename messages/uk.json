@@ -125,6 +125,16 @@
     "orcidDesc": "Дослідницький ідентифікатор",
     "viewOrcid": "Переглянути профіль ORCID",
     "noContact": "Контактна інформація відсутня.",
-    "teamLabel": "Група"
+    "teamLabel": "Група",
+    "closedLabel": "Зачинено",
+    "monday": "Понеділок",
+    "tuesday": "Вівторок",
+    "wednesday": "Середа",
+    "thursday": "Четвер",
+    "friday": "П'ятниця",
+    "saturday": "Субота",
+    "sunday": "Неділя",
+    "hoursLabel": "Години роботи",
+    "locationLabel": "Локація офісу"
   }
 }

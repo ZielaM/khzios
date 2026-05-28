@@ -1,11 +1,11 @@
 import Image from 'next/image';
 import { Mail, Phone, MapPin, Clock, User } from 'lucide-react';
-import style from './HeadProfile.module.scss';
+import style from './ContactProfile.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { useTranslations } from 'next-intl';
 import { ReactNode } from 'react';
 
-export interface HeadProfileProps {
+export interface ContactProfileProps {
   name: string;
   title: string;
   email: string;
@@ -16,7 +16,7 @@ export interface HeadProfileProps {
   fallbackIcon?: ReactNode;
 }
 
-export default function HeadProfile({
+export default function ContactProfile({
   name,
   title,
   email,
@@ -25,7 +25,7 @@ export default function HeadProfile({
   workingHours,
   photoUrl,
   fallbackIcon,
-}: HeadProfileProps) {
+}: ContactProfileProps) {
   const tMember = useTranslations('MemberProfile');
 
   const contactLabel = tMember('contactTitle');

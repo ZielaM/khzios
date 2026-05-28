@@ -2,11 +2,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, routing } from '@/i18n/routing';
 import { ChevronLeft } from 'lucide-react';
 import { Metadata } from 'next';
-import HeadProfile from '@/components/HeadProfile';
+import ContactProfile from '@/components/ContactProfile';
 import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
 import { getDepartmentHead } from '@/lib/head-queries';
 import { resolveTranslation } from '@/lib/translations';
+import { mapWorkingHours } from '@/lib/working-hours';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -57,34 +58,14 @@ export default async function HeadPage({ params }: Props) {
     locale
   );
 
-  const defaultDays = [
-    { key: 'monday', order: 1 },
-    { key: 'tuesday', order: 2 },
-    { key: 'wednesday', order: 3 },
-    { key: 'thursday', order: 4 },
-    { key: 'friday', order: 5 },
-    { key: 'saturday', order: 6 },
-    { key: 'sunday', order: 7 },
-  ] as const;
-
-  const workingHours = defaultDays.map(({ key, order }) => {
-    const dbDay = head.workingHours.find((wh) => wh.displayOrder === order);
-
-    if (dbDay) {
-      const { translation: whTranslation } = resolveTranslation(
-        dbDay.translations,
-        locale
-      );
-      return {
-        day: whTranslation?.day || tMember(key),
-        hours: whTranslation?.hours?.trim() || '',
-      };
-    }
-
-    return {
-      day: tMember(key),
-      hours: '',
-    };
+  const workingHours = mapWorkingHours(head.workingHours, locale, {
+    monday: tMember('monday'),
+    tuesday: tMember('tuesday'),
+    wednesday: tMember('wednesday'),
+    thursday: tMember('thursday'),
+    friday: tMember('friday'),
+    saturday: tMember('saturday'),
+    sunday: tMember('sunday'),
   });
 
   return (
@@ -96,7 +77,7 @@ export default async function HeadPage({ params }: Props) {
         </Link>
       </AnimateOnce>
 
-      <HeadProfile
+      <ContactProfile
         name={head.name}
         title={headTranslation?.title || tNav('headOfDepartment')}
         email={head.email || ''}

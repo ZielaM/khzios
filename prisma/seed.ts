@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { seedTeams } from './seed-teams';
 import { seedHead } from './seed-head';
+import { seedSecretariat } from './seed-secretariat';
 
 // Helper to get random elements
 const getRandomMultiple = <T>(arr: T[], count: number) => {
@@ -318,6 +319,9 @@ async function main() {
 
   // ──── Head Seeding ────────────────────────────────────────────────
   await seedHead();
+
+  // ──── Secretariat Seeding ─────────────────────────────────────────
+  await seedSecretariat();
 
   console.log('Populacja bazy zakończona sukcesem!');
 }

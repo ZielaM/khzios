@@ -283,3 +283,48 @@ model DepartmentHeadHourTranslation {
 
   @@id([hourId, languageCode])
 }
+
+// ──── Secretariat ─────────────────────────────────────────────────
+
+model Secretariat {
+  id             String @id @default(uuid(7))
+  email          String?
+  phone          String?
+  photoUrl       String?
+  officeLocation String?
+
+  translations   SecretariatTranslation[]
+  workingHours   SecretariatHour[]
+}
+
+model SecretariatTranslation {
+  secretariatId String
+  languageCode  LanguageCode
+  title         String
+
+  secretariat Secretariat @relation(fields: [secretariatId], references: [id], onDelete: Cascade)
+
+  @@id([secretariatId, languageCode])
+}
+
+model SecretariatHour {
+  id            String @id @default(uuid(7))
+  secretariatId String
+  displayOrder  Int    @db.SmallInt @default(0)
+
+  secretariat  Secretariat @relation(fields: [secretariatId], references: [id], onDelete: Cascade)
+  translations SecretariatHourTranslation[]
+
+  @@index([secretariatId])
+}
+
+model SecretariatHourTranslation {
+  hourId       String
+  languageCode LanguageCode
+  day          String
+  hours        String
+
+  hour SecretariatHour @relation(fields: [hourId], references: [id], onDelete: Cascade)
+
+  @@id([hourId, languageCode])
+}

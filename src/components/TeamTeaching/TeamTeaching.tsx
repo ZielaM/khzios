@@ -50,9 +50,18 @@ export default function TeamTeaching({
 
                 return (
                   <tr key={course.id}>
-                    <td className={style.courseName}>{translation.name}</td>
-                    <td>{translation.program}</td>
-                    <td>{translation.coordinator}</td>
+                    <td
+                      className={style.courseName}
+                      data-label={t('courseNameHeader')}
+                    >
+                      {translation.name}
+                    </td>
+                    <td data-label={t('programHeader')}>
+                      {translation.program}
+                    </td>
+                    <td data-label={t('coordinatorHeader')}>
+                      {translation.coordinator}
+                    </td>
                   </tr>
                 );
               })}

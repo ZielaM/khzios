@@ -134,6 +134,7 @@
     "saturday": "Суббота",
     "sunday": "Воскресенье",
     "hoursLabel": "Часы работы",
-    "locationLabel": "Расположение офиса"
+    "locationLabel": "Расположение офиса",
+    "teamLabel": "Команда"
   }
 }

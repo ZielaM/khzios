@@ -134,6 +134,7 @@
     "saturday": "Saturday",
     "sunday": "Sunday",
     "hoursLabel": "Working hours",
-    "locationLabel": "Office location"
+    "locationLabel": "Office location",
+    "teamLabel": "Team"
   }
 }

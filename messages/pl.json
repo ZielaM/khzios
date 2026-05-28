@@ -134,6 +134,7 @@
     "saturday": "Sobota",
     "sunday": "Niedziela",
     "hoursLabel": "Godziny pracy",
-    "locationLabel": "Lokalizacja biura"
+    "locationLabel": "Lokalizacja biura",
+    "teamLabel": "Zespół"
   }
 }

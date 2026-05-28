@@ -71,7 +71,7 @@
   color: #555;
   font-weight: 700;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   transition: all 0.2s ease;
   align-self: flex-start;
   text-transform: uppercase;
@@ -104,7 +104,7 @@
   color: #b38600;
   padding: 12px 24px;
   border-radius: 12px;
-  font-size: 0.95rem;
+  font-size: 0.95em;
   font-weight: 600;
   border-left: 4px solid #b38600;
 
@@ -117,7 +117,7 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-size: clamp(2.2em, 5vw, 3.5em);
   font-weight: 800;
   color: var(--foreground);
   line-height: 1.15;
@@ -168,7 +168,7 @@
 
 .date,
 .readingTime {
-  font-size: 1rem;
+  font-size: 1em;
   font-weight: 600;
 
   :global(.wcag-high-contrast) & {
@@ -187,7 +187,7 @@
   color: var(--color-primary);
   padding: 6px 14px;
   border-radius: 8px;
-  font-size: 0.85rem;
+  font-size: 0.85em;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -250,13 +250,13 @@
 // ─── Article Content ──────────────────────────────────────────────────
 
 .articleContent {
-  font-size: 1.15rem;
+  font-size: 1.15em;
   line-height: 1.8;
   color: var(--foreground);
 
   // Make the first paragraph distinct (lead text)
   p:first-of-type {
-    font-size: 1.3rem;
+    font-size: 1.3em;
     line-height: 1.7;
     font-weight: 500;
     color: var(--color-primary);
@@ -278,7 +278,7 @@
 
   h2 {
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: 2em;
     margin-top: 48px;
     margin-bottom: 24px;
     color: var(--foreground);
@@ -287,7 +287,7 @@
 
   h3 {
     font-family: var(--font-heading);
-    font-size: 1.6rem;
+    font-size: 1.6em;
     margin-top: 32px;
     margin-bottom: 16px;
   }
@@ -328,7 +328,7 @@
     padding-left: 32px;
     margin: 40px 0;
     font-style: italic;
-    font-size: 1.25rem;
+    font-size: 1.25em;
     color: #444;
     background-color: rgba(0, 0, 0, 0.02);
     padding: 32px;
@@ -341,7 +341,7 @@
       position: absolute;
       top: -10px;
       left: 10px;
-      font-size: 4rem;
+      font-size: 4em;
       color: rgba($color-primary, 0.1);
       font-family: Georgia, serif;
     }
@@ -381,7 +381,7 @@
 
 .gallerySectionTitle {
   font-family: var(--font-heading);
-  font-size: 1.6rem;
+  font-size: 1.6em;
   font-weight: 800;
   color: var(--foreground);
   margin-bottom: 8px;

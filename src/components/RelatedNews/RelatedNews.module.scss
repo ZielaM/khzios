@@ -11,7 +11,7 @@
 
 .sectionTitle {
   font-family: var(--font-heading);
-  font-size: 1.6rem;
+  font-size: 1.6em;
   font-weight: 800;
   color: var(--foreground);
   margin-bottom: 32px;
@@ -86,7 +86,7 @@
 }
 
 .cardDate {
-  font-size: 0.8rem;
+  font-size: 0.8em;
   color: #888;
   font-weight: 600;
   text-transform: uppercase;
@@ -99,7 +99,7 @@
 
 .cardTitle {
   font-family: var(--font-heading);
-  font-size: 1.05rem;
+  font-size: 1.05em;
   font-weight: 700;
   line-height: 1.35;
   color: var(--foreground);
@@ -117,7 +117,7 @@
   align-items: center;
   gap: 6px;
   color: var(--color-primary);
-  font-size: 0.85rem;
+  font-size: 0.85em;
   font-weight: 700;
   margin-top: auto;
   padding-top: 8px;

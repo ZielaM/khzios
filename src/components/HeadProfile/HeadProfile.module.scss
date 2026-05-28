@@ -1,0 +1,363 @@
+@use '@/styles/variables' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── Hero Card ─────────────────────────────────────────────────────── */
+
+.heroCard {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 40px;
+  background: linear-gradient(
+    135deg,
+    rgba(36, 113, 81, 0.04) 0%,
+    rgba(54, 124, 43, 0.06) 100%
+  );
+  border: 1px solid rgba(36, 113, 81, 0.1);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 160px;
+    height: 160px;
+    background: radial-gradient(
+      circle,
+      rgba(36, 113, 81, 0.08) 0%,
+      transparent 70%
+    );
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    text-align: center;
+    padding: 28px 20px;
+    gap: 20px;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+    background: transparent;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.avatarContainer {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
+  border: 4px solid rgba(36, 113, 81, 0.15);
+  box-shadow: 0 8px 24px rgba(36, 113, 81, 0.1);
+
+  @media (max-width: $breakpoint-tablet) {
+    width: 120px;
+    height: 120px;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+.avatarFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  background-color: #f0f0f0;
+
+  :global(.wcag-high-contrast) & {
+    background-color: transparent;
+    color: var(--foreground);
+  }
+}
+
+.heroInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.heroTitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-primary);
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.heroName {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.2;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 2rem;
+  }
+}
+
+/* ── Info Cards Grid ───────────────────────────────────────────────── */
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.hoursCard {
+  grid-row: span 2;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-row: auto;
+  }
+}
+
+.infoCard {
+  padding: 28px;
+  background-color: var(--background);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+    box-shadow: none;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid rgba(36, 113, 81, 0.1);
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+  }
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(36, 113, 81, 0.1) 0%,
+    rgba(54, 124, 43, 0.12) 100%
+  );
+  color: var(--color-primary);
+  flex-shrink: 0;
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    border: 2px solid var(--foreground);
+    color: var(--foreground);
+    border-radius: 0;
+  }
+}
+
+.cardTitle {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.contactList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.contactIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.04);
+  color: #555;
+  flex-shrink: 0;
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    border: 1px solid var(--foreground);
+    color: var(--foreground);
+    border-radius: 0;
+  }
+}
+
+.contactLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  margin-bottom: 2px;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.contactValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.contactLink {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--color-secondary);
+    text-decoration: underline;
+  }
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+    text-decoration: underline;
+  }
+}
+
+/* ── Working Hours ─────────────────────────────────────────────────── */
+
+.hoursList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hoursItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.02);
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    border: 1px solid var(--foreground);
+    border-radius: 0;
+  }
+}
+
+.dayLabel {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.hoursValue {
+  font-family: 'Roboto Mono', monospace;
+  color: var(--color-primary);
+  font-weight: 600;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+/* ── Office Location ───────────────────────────────────────────────── */
+
+.locationContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.locationText {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.locationMap {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+  }
+}

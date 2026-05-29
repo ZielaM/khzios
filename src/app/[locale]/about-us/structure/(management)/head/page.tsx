@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link, routing } from '@/i18n/routing';
+import { routing } from '@/i18n/routing';
 import { Metadata } from 'next';
 import BackLink from '@/components/BackLink';
 import ContactProfile from '@/components/ContactProfile';
@@ -26,11 +26,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const t = await getTranslations('Navbar');
   const head = await getDepartmentHead();
-  
+
   if (head) {
-    const headTranslation = head.translations.find((t) => t.languageCode === locale) || head.translations[0];
-    const prefix = headTranslation?.academicTitle ? `${headTranslation.academicTitle} ` : '';
-    return { title: `${prefix}${head.name} - ${t('headOfDepartment')} | KHZIOS` };
+    const headTranslation =
+      head.translations.find((t) => t.languageCode === locale) ||
+      head.translations[0];
+    const prefix = headTranslation?.academicTitle
+      ? `${headTranslation.academicTitle} `
+      : '';
+    return {
+      title: `${prefix}${head.name} - ${t('headOfDepartment')} | KHZIOS`,
+    };
   }
 
   return { title: `${t('headOfDepartment')} | KHZIOS` };
@@ -84,7 +90,11 @@ export default async function HeadPage({ params }: Props) {
       </AnimateOnce>
 
       <ContactProfile
-        name={headTranslation?.academicTitle ? `${headTranslation.academicTitle} ${head.name}` : head.name}
+        name={
+          headTranslation?.academicTitle
+            ? `${headTranslation.academicTitle} ${head.name}`
+            : head.name
+        }
         title={headTranslation?.title || tNav('headOfDepartment')}
         email={head.email || ''}
         phone={head.phone || ''}

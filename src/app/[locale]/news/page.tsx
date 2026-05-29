@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/routing';
 import BackLink from '@/components/BackLink';
 import AnimateOnce from '@/components/AnimateOnce';
 import { prisma } from '@/lib/prisma';

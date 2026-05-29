@@ -3,11 +3,10 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { Link } from '@/i18n/routing';
 import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
 import DOMPurify from 'isomorphic-dompurify';
-import { ArrowLeft, Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock } from 'lucide-react';
 import {
   resolveTranslation,
   resolveTagName,

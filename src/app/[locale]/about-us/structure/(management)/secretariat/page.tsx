@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link, routing } from '@/i18n/routing';
+import { routing } from '@/i18n/routing';
 import { Briefcase } from 'lucide-react';
 import { Metadata } from 'next';
 import BackLink from '@/components/BackLink';

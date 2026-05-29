@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getTeamBySlug, getAllTeamSlugs } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
-import { Link, routing } from '@/i18n/routing';
+import { routing } from '@/i18n/routing';
 import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';

@@ -17,10 +17,26 @@ export async function seedHead() {
       officeLocation: 'ul. Wołyńska 33, 60-637 Poznań, pok. 112',
       translations: {
         create: [
-          { languageCode: 'pl', title: 'Kierownik Katedry', academicTitle: 'prof. dr hab.' },
-          { languageCode: 'en', title: 'Head of Department', academicTitle: 'Full Professor' },
-          { languageCode: 'uk', title: 'Завідувач кафедри', academicTitle: 'проф. д-р габ.' },
-          { languageCode: 'ru', title: 'Заведующий кафедрой', academicTitle: 'проф. д-р габ.' },
+          {
+            languageCode: 'pl',
+            title: 'Kierownik Katedry',
+            academicTitle: 'prof. dr hab.',
+          },
+          {
+            languageCode: 'en',
+            title: 'Head of Department',
+            academicTitle: 'Full Professor',
+          },
+          {
+            languageCode: 'uk',
+            title: 'Завідувач кафедри',
+            academicTitle: 'проф. д-р габ.',
+          },
+          {
+            languageCode: 'ru',
+            title: 'Заведующий кафедрой',
+            academicTitle: 'проф. д-р габ.',
+          },
         ],
       },
       workingHours: {

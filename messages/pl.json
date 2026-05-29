@@ -126,7 +126,8 @@
     "secretariatCard": "Sekretariat katedry",
     "secretariatDesc": "Godziny pracy, dane kontaktowe i lokalizacja sekretariatu.",
     "viewDetails": "Zobacz szczegóły",
-    "backToHome": "Wróć do strony głównej"
+    "backToHome": "Wróć do strony głównej",
+    "backToAboutUs": "Wróć do zakładki O nas"
   },
   "MemberProfile": {
     "backToTeam": "Wróć do zespołu",

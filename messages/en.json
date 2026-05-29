@@ -126,7 +126,8 @@
     "secretariatCard": "Secretariat",
     "secretariatDesc": "Working hours, contact details and office location.",
     "viewDetails": "View details",
-    "backToHome": "Back to homepage"
+    "backToHome": "Back to homepage",
+    "backToAboutUs": "Back to About us"
   },
   "MemberProfile": {
     "backToTeam": "Back to team",

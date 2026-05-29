@@ -126,7 +126,8 @@
     "secretariatCard": "Секретаріат",
     "secretariatDesc": "Години роботи, контактні дані та розташування офісу.",
     "viewDetails": "Детальніше",
-    "backToHome": "Повернутися на головну"
+    "backToHome": "Повернутися на головну",
+    "backToAboutUs": "Повернутися до Про нас"
   },
   "MemberProfile": {
     "backToTeam": "Повернутися до групи",

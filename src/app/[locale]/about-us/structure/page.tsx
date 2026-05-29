@@ -36,9 +36,9 @@ export default async function StructurePage({ params }: Props) {
   return (
     <div className={style.page}>
       <AnimateOnce>
-        <Link href="/" className={style.backLink}>
+        <Link href="/about-us" className={style.backLink}>
           <ChevronLeft size={20} />
-          {t('backToHome')}
+          {t('backToAboutUs')}
         </Link>
       </AnimateOnce>
 

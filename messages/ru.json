@@ -126,7 +126,8 @@
     "secretariatCard": "Секретариат",
     "secretariatDesc": "Часы работы, контактные данные и расположение офиса.",
     "viewDetails": "Подробнее",
-    "backToHome": "Вернуться на главную"
+    "backToHome": "Вернуться на главную",
+    "backToAboutUs": "Вернуться к О нас"
   },
   "MemberProfile": {
     "backToTeam": "Вернуться к группе",

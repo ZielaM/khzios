@@ -1,0 +1,81 @@
+@use '@/styles/variables' as *;
+.page {
+  @include page-container;
+}
+
+.backLink {
+  @include back-link;
+  margin-bottom: 32px;
+}
+.skeleton {
+  @include skeleton-shimmer;
+  border-radius: 12px;
+}
+
+.backLink {
+  width: 180px;
+  height: 38px;
+  border-radius: 20px;
+  margin-bottom: 32px;
+}
+
+.heroCard {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 40px;
+  border-radius: 24px;
+  margin-bottom: 32px;
+  min-height: 180px;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    padding: 28px 20px;
+    gap: 20px;
+  }
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.heroLines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.heroLine1 {
+  width: 120px;
+  height: 16px;
+}
+
+.heroLine2 {
+  width: 260px;
+  height: 32px;
+}
+
+.heroLine3 {
+  width: 200px;
+  height: 16px;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.infoCard {
+  height: 220px;
+  border-radius: 20px;
+}

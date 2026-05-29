@@ -90,27 +90,29 @@ export default async function StructurePage({ params }: Props) {
         <h2 className={style.sectionTitle}>{t('teamsTitle')}</h2>
       </AnimateOnce>
 
-      <div className={style.teamsGrid}>
-        {teams.map((team) => {
-          const { translation } = resolveTranslation(team.translations, locale);
-          if (!translation) return null;
+      <div className={style.teamsSection}>
+        <div className={style.teamsGrid}>
+          {teams.map((team) => {
+            const { translation } = resolveTranslation(team.translations, locale);
+            if (!translation) return null;
 
-          // Build the href using the team slug as a typed route
-          const href =
-            `/about-us/structure/${team.slug}` as `/about-us/structure/ruminants`;
+            // Build the href using the team slug as a typed route
+            const href =
+              `/about-us/structure/${team.slug}` as `/about-us/structure/ruminants`;
 
-          return (
-            <AnimateOnce key={team.id}>
-              <Link href={href} className={style.card}>
-                <h3 className={style.cardTitle}>{translation.name}</h3>
-                <span className={style.cardFooter}>
-                  {t('viewDetails')}
-                  <ArrowRight size={16} className={style.cardArrow} />
-                </span>
-              </Link>
-            </AnimateOnce>
-          );
-        })}
+            return (
+              <AnimateOnce key={team.id}>
+                <Link href={href} className={style.card}>
+                  <h3 className={style.cardTitle}>{translation.name}</h3>
+                  <span className={style.cardFooter}>
+                    {t('viewDetails')}
+                    <ArrowRight size={16} className={style.cardArrow} />
+                  </span>
+                </Link>
+              </AnimateOnce>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

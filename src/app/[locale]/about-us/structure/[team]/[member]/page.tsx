@@ -3,10 +3,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getMemberBySlug, getAllMemberSlugs } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { Link, routing } from '@/i18n/routing';
-import { Mail, Phone, ExternalLink, Users } from 'lucide-react';
+import { Mail, Phone, ExternalLink, Users, User } from 'lucide-react';
 import BackLink from '@/components/BackLink';
 import Image from 'next/image';
-import { User } from 'lucide-react';
+import OrcidIcon from '@/components/OrcidIcon';
 import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
@@ -183,21 +183,7 @@ export default async function MemberPage({ params }: Props) {
             <div className={style.infoCard}>
               <div className={style.cardHeader}>
                 <div className={style.cardIcon}>
-                  {/* ORCID icon as inline SVG */}
-                  <svg
-                    className={style.orcidLogo}
-                    viewBox="0 0 256 256"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M128 0C57.3 0 0 57.3 0 128s57.3 128 128 128 128-57.3 128-128S198.7 0 128 0z"
-                      fill="#A6CE39"
-                    />
-                    <path
-                      d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111 181 92.6 152 92.6h-27.7v79.8zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"
-                      fill="#fff"
-                    />
-                  </svg>
+                  <OrcidIcon className={style.orcidLogo} />
                 </div>
                 <h2 className={style.cardTitle}>{t('orcidTitle')}</h2>
               </div>
@@ -205,20 +191,7 @@ export default async function MemberPage({ params }: Props) {
               <div className={style.orcidContent}>
                 <p className={style.orcidDesc}>{t('orcidDesc')}</p>
                 <div className={style.orcidId}>
-                  <svg
-                    className={style.orcidLogo}
-                    viewBox="0 0 256 256"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M128 0C57.3 0 0 57.3 0 128s57.3 128 128 128 128-57.3 128-128S198.7 0 128 0z"
-                      fill="#A6CE39"
-                    />
-                    <path
-                      d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111 181 92.6 152 92.6h-27.7v79.8zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"
-                      fill="#fff"
-                    />
-                  </svg>
+                  <OrcidIcon className={style.orcidLogo} />
                   <span>{member.orcid}</span>
                 </div>
                 <a

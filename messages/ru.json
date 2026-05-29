@@ -133,7 +133,9 @@
     "secretariatDesc": "Часы работы, контактные данные и расположение офиса.",
     "viewDetails": "Подробнее",
     "backToHome": "Вернуться на главную",
-    "backToAboutUs": "Вернуться к О нас"
+    "backToAboutUs": "Вернуться к О нас",
+    "headNotConfigured": "Заведующий кафедрой ещё не добавлен в систему.",
+    "secretariatNotConfigured": "Секретариат ещё не добавлен в систему."
   },
   "MemberProfile": {
     "backToTeam": "Вернуться к группе",

@@ -10,7 +10,6 @@ import {
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import style from './ExternalTeamPage.module.scss';
-import DOMPurify from 'isomorphic-dompurify';
 
 interface ExternalTeamPageProps {
   team: TeamWithRelations;
@@ -38,10 +37,7 @@ export default function ExternalTeamPage({
   return (
     <div className={style.container}>
       <div className={style.card}>
-        <h1
-          className={style.title}
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
-        />
+        <h1 className={style.title}>{title}</h1>
 
         <p className={style.description}>{t('externalRedirect')}</p>
 

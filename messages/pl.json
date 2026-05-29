@@ -133,7 +133,9 @@
     "secretariatDesc": "Godziny pracy, dane kontaktowe i lokalizacja sekretariatu.",
     "viewDetails": "Zobacz szczegóły",
     "backToHome": "Wróć do strony głównej",
-    "backToAboutUs": "Wróć do zakładki O nas"
+    "backToAboutUs": "Wróć do zakładki O nas",
+    "headNotConfigured": "Kierownik katedry nie został jeszcze dodany w systemie.",
+    "secretariatNotConfigured": "Sekretariat nie został jeszcze dodany w systemie."
   },
   "MemberProfile": {
     "backToTeam": "Wróć do zespołu",

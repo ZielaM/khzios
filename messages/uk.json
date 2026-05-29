@@ -133,7 +133,9 @@
     "secretariatDesc": "Години роботи, контактні дані та розташування офісу.",
     "viewDetails": "Детальніше",
     "backToHome": "Повернутися на головну",
-    "backToAboutUs": "Повернутися до Про нас"
+    "backToAboutUs": "Повернутися до Про нас",
+    "headNotConfigured": "Завідувача кафедри ще не додано до системи.",
+    "secretariatNotConfigured": "Секретаріат ще не додано до системи."
   },
   "MemberProfile": {
     "backToTeam": "Повернутися до групи",

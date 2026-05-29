@@ -289,6 +289,17 @@
 
 /* ── Working Hours ─────────────────────────────────────────────────── */
 
+.noData {
+  font-size: 0.95em;
+  color: #666;
+  font-style: italic;
+  margin: 0;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
 .hoursList {
   list-style: none;
   padding: 0;

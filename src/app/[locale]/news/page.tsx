@@ -10,11 +10,29 @@ import { resolveTagName } from '@/lib/translations';
 import { LanguageCode, SortBy } from '@/types/search-types';
 import style from './page.module.scss';
 
+import { Metadata } from 'next';
+import { setRequestLocale } from 'next-intl/server';
+
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 interface PageProps {
   params: Promise<{ locale: string }>;
   searchParams: SearchParams;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  setRequestLocale(locale);
+
+  const t = await getTranslations({ locale, namespace: 'NewsPage' });
+  return {
+    title: `${t('title')} | KHZIOS`,
+  };
 }
 
 export default async function NewsPage({ params, searchParams }: PageProps) {

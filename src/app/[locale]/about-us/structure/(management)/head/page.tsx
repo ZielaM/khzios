@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (head) {
     const headTranslation =
-      head.translations.find((t) => t.languageCode === locale) ||
+      head.translations.find((tr) => tr.languageCode === locale) ||
       head.translations[0];
     const prefix = headTranslation?.academicTitle
       ? `${headTranslation.academicTitle} `
@@ -49,6 +49,7 @@ export default async function HeadPage({ params }: Props) {
   const tTeam = await getTranslations('TeamPage');
   const tMember = await getTranslations('MemberProfile');
   const tNav = await getTranslations('Navbar');
+  const tStruct = await getTranslations('StructurePage');
 
   const head = await getDepartmentHead();
 
@@ -61,7 +62,7 @@ export default async function HeadPage({ params }: Props) {
             {tTeam('backToStructure')}
           </BackLink>
         </AnimateOnce>
-        <p>Kierownik katedry nie został jeszcze dodany w systemie.</p>
+        <p>{tStruct('headNotConfigured')}</p>
       </div>
     );
   }

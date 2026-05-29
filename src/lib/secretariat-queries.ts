@@ -1,6 +1,7 @@
+import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
 
-export async function getSecretariat() {
+export const getSecretariat = cache(async () => {
   return prisma.secretariat.findFirst({
     include: {
       translations: true,
@@ -14,4 +15,4 @@ export async function getSecretariat() {
       },
     },
   });
-}
+});

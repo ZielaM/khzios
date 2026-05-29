@@ -36,6 +36,7 @@ export default async function SecretariatPage({ params }: Props) {
   const tTeam = await getTranslations('TeamPage');
   const tMember = await getTranslations('MemberProfile');
   const tNav = await getTranslations('Navbar');
+  const tStruct = await getTranslations('StructurePage');
 
   const secretariat = await getSecretariat();
 
@@ -47,7 +48,7 @@ export default async function SecretariatPage({ params }: Props) {
             {tTeam('backToStructure')}
           </BackLink>
         </AnimateOnce>
-        <p>Sekretariat nie został jeszcze dodany w systemie.</p>
+        <p>{tStruct('secretariatNotConfigured')}</p>
       </div>
     );
   }

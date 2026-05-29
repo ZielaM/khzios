@@ -74,41 +74,48 @@ export default function ContactProfile({
               </div>
               <h2 className={style.cardTitle}>{contactLabel}</h2>
             </div>
-            <ul className={style.contactList}>
-              {email && (
-                <li className={style.contactItem}>
-                  <div className={style.contactIconWrapper}>
-                    <Mail size={18} />
-                  </div>
-                  <div>
-                    <div className={style.contactLabel}>{emailLabel}</div>
-                    <div className={style.contactValue}>
-                      <a href={`mailto:${email}`} className={style.contactLink}>
-                        {email}
-                      </a>
+            {email || phone ? (
+              <ul className={style.contactList}>
+                {email && (
+                  <li className={style.contactItem}>
+                    <div className={style.contactIconWrapper}>
+                      <Mail size={18} />
                     </div>
-                  </div>
-                </li>
-              )}
-              {phone && (
-                <li className={style.contactItem}>
-                  <div className={style.contactIconWrapper}>
-                    <Phone size={18} />
-                  </div>
-                  <div>
-                    <div className={style.contactLabel}>{phoneLabel}</div>
-                    <div className={style.contactValue}>
-                      <a
-                        href={`tel:${phone.replace(/\s/g, '')}`}
-                        className={style.contactLink}
-                      >
-                        {phone}
-                      </a>
+                    <div>
+                      <div className={style.contactLabel}>{emailLabel}</div>
+                      <div className={style.contactValue}>
+                        <a
+                          href={`mailto:${email}`}
+                          className={style.contactLink}
+                        >
+                          {email}
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                </li>
-              )}
-            </ul>
+                  </li>
+                )}
+                {phone && (
+                  <li className={style.contactItem}>
+                    <div className={style.contactIconWrapper}>
+                      <Phone size={18} />
+                    </div>
+                    <div>
+                      <div className={style.contactLabel}>{phoneLabel}</div>
+                      <div className={style.contactValue}>
+                        <a
+                          href={`tel:${phone.replace(/\s/g, '')}`}
+                          className={style.contactLink}
+                        >
+                          {phone}
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                )}
+              </ul>
+            ) : (
+              <p className={style.noData}>{tMember('noContact')}</p>
+            )}
           </div>
 
           {/* Working Hours Card */}

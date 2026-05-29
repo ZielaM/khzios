@@ -133,7 +133,9 @@
     "secretariatDesc": "Working hours, contact details and office location.",
     "viewDetails": "View details",
     "backToHome": "Back to homepage",
-    "backToAboutUs": "Back to About us"
+    "backToAboutUs": "Back to About us",
+    "headNotConfigured": "The head of department has not been added to the system yet.",
+    "secretariatNotConfigured": "The secretariat has not been added to the system yet."
   },
   "MemberProfile": {
     "backToTeam": "Back to team",

@@ -1,6 +1,7 @@
+import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
 
-export async function getDepartmentHead() {
+export const getDepartmentHead = cache(async () => {
   return prisma.departmentHead.findFirst({
     include: {
       translations: true,
@@ -14,4 +15,4 @@ export async function getDepartmentHead() {
       },
     },
   });
-}
+});

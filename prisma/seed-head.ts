@@ -11,16 +11,16 @@ export async function seedHead() {
 
   await prisma.departmentHead.create({
     data: {
-      name: 'prof. dr hab. Piotr Ślósarz',
+      name: 'Piotr Ślósarz',
       email: 'piotr.slosarz@up.poznan.pl',
       phone: '+48 61 848 72 23',
       officeLocation: 'ul. Wołyńska 33, 60-637 Poznań, pok. 112',
       translations: {
         create: [
-          { languageCode: 'pl', title: 'Kierownik Katedry' },
-          { languageCode: 'en', title: 'Head of Department' },
-          { languageCode: 'uk', title: 'Завідувач кафедри' },
-          { languageCode: 'ru', title: 'Заведующий кафедрой' },
+          { languageCode: 'pl', title: 'Kierownik Katedry', academicTitle: 'prof. dr hab.' },
+          { languageCode: 'en', title: 'Head of Department', academicTitle: 'Full Professor' },
+          { languageCode: 'uk', title: 'Завідувач кафедри', academicTitle: 'проф. д-р габ.' },
+          { languageCode: 'ru', title: 'Заведующий кафедрой', academicTitle: 'проф. д-р габ.' },
         ],
       },
       workingHours: {

@@ -256,6 +256,7 @@ model DepartmentHeadTranslation {
   headId       String
   languageCode LanguageCode
   title        String
+  academicTitle String?
 
   head DepartmentHead @relation(fields: [headId], references: [id], onDelete: Cascade)
 

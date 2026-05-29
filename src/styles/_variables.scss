@@ -67,3 +67,13 @@ $page-padding-top-mobile: 12px;
     }
   }
 }
+
+// Wspólny mixin dla tytułów sekcji (np. TeamResearch, TeamTeaching, RelatedNews)
+@mixin section-title {
+  font-family: var(--font-heading);
+  font-size: 1.8em;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0;
+  letter-spacing: -0.01em;
+}

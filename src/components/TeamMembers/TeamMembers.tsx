@@ -5,6 +5,7 @@ import { Link } from '@/i18n/routing';
 import style from './TeamMembers.module.scss';
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
+import AnimateOnce from '@/components/AnimateOnce';
 
 interface TeamMembersProps {
   members: TeamWithRelations['members'];
@@ -78,37 +79,39 @@ function MemberCard({
   const title = translation?.title ?? '';
 
   return (
-    <div className={style.card}>
-      <div className={style.avatarContainer}>
-        {member.photoUrl ? (
-          <Image
-            src={member.photoUrl}
-            alt={member.name}
-            fill
-            className={style.avatar}
-            sizes="80px"
-          />
-        ) : (
-          <div className={style.avatarFallback}>
-            <User size={32} />
-          </div>
-        )}
+    <AnimateOnce>
+      <div className={style.card}>
+        <div className={style.avatarContainer}>
+          {member.photoUrl ? (
+            <Image
+              src={member.photoUrl}
+              alt={member.name}
+              fill
+              className={style.avatar}
+              sizes="80px"
+            />
+          ) : (
+            <div className={style.avatarFallback}>
+              <User size={32} />
+            </div>
+          )}
+        </div>
+        <div className={style.info}>
+          <div className={style.title}>{title}</div>
+          <div className={style.name}>{member.name}</div>
+          {member.profileSlug && (
+            <Link
+              href={{
+                pathname: '/about-us/structure/[team]/[member]' as const,
+                params: { team: teamSlug, member: member.profileSlug },
+              }}
+              className={style.profileLink}
+            >
+              {t('viewProfile')} <ChevronRight size={14} />
+            </Link>
+          )}
+        </div>
       </div>
-      <div className={style.info}>
-        <div className={style.title}>{title}</div>
-        <div className={style.name}>{member.name}</div>
-        {member.profileSlug && (
-          <Link
-            href={{
-              pathname: '/about-us/structure/[team]/[member]' as const,
-              params: { team: teamSlug, member: member.profileSlug },
-            }}
-            className={style.profileLink}
-          >
-            {t('viewProfile')} <ChevronRight size={14} />
-          </Link>
-        )}
-      </div>
-    </div>
+    </AnimateOnce>
   );
 }

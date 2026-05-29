@@ -24,6 +24,7 @@ import {
   LANGUAGE_NAMES,
 } from '@/lib/translations';
 import { getPhotoUrl } from '@/lib/content-utils';
+import AnimateOnce from '@/components/AnimateOnce';
 
 export interface NewsTileProps {
   news: News & {
@@ -69,74 +70,76 @@ export default function NewsTile({
   }).format(new Date(news.createdAt));
 
   return (
-    <article className={style.newsTile} data-testid="news-tile">
-      <Link
-        href={{ pathname: '/news/[id]', params: { id: news.id } }}
-        className={style.linkWrapper}
-      >
-        <div className={style.imageContainer}>
-          <Image
-            src={thumbnail}
-            alt={title}
-            fill
-            priority={priority}
-            className={style.image}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-          <div className={style.dateBadge}>{formattedDate}</div>
-        </div>
+    <AnimateOnce>
+      <article className={style.newsTile} data-testid="news-tile">
+        <Link
+          href={{ pathname: '/news/[id]', params: { id: news.id } }}
+          className={style.linkWrapper}
+        >
+          <div className={style.imageContainer}>
+            <Image
+              src={thumbnail}
+              alt={title}
+              fill
+              priority={priority}
+              className={style.image}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+            <div className={style.dateBadge}>{formattedDate}</div>
+          </div>
 
-        <div className={style.content}>
-          {/* Tag Rendering */}
-          <div className={style.tags}>
-            {news.tags.map((tag) => (
-              <span key={tag.id} className={style.tag}>
-                {getTagName(tag)}
+          <div className={style.content}>
+            {/* Tag Rendering */}
+            <div className={style.tags}>
+              {news.tags.map((tag) => (
+                <span key={tag.id} className={style.tag}>
+                  {getTagName(tag)}
+                </span>
+              ))}
+            </div>
+
+            {/* Render an informational badge if the user is seeing fallback content */}
+            {isFallback && translation && (
+              <span
+                className={style.fallbackBadge}
+                data-testid="news-fallback-badge"
+              >
+                {t('translationUnavailable', {
+                  language:
+                    LANGUAGE_NAMES[translation.languageCode] ??
+                    translation.languageCode,
+                })}
               </span>
-            ))}
-          </div>
+            )}
 
-          {/* Render an informational badge if the user is seeing fallback content */}
-          {isFallback && translation && (
-            <span
-              className={style.fallbackBadge}
-              data-testid="news-fallback-badge"
-            >
-              {t('translationUnavailable', {
-                language:
-                  LANGUAGE_NAMES[translation.languageCode] ??
-                  translation.languageCode,
+            {/* Search Result Highlighting Logic:
+                If the database query included a full-text search, the returned content 
+                will contain raw HTML <mark> tags emphasizing the matching query string. 
+                We MUST use dangerouslySetInnerHTML to render these. */}
+            <h3
+              className={style.title}
+              data-testid="news-title"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(title, { ALLOWED_TAGS: ['mark'] }),
+              }}
+            />
+
+            <p
+              className={clsx(style.description, {
+                [style.highlighted]: content.includes('<mark>'),
               })}
-            </span>
-          )}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(content, { ALLOWED_TAGS: ['mark'] }),
+              }}
+            />
 
-          {/* Search Result Highlighting Logic:
-              If the database query included a full-text search, the returned content 
-              will contain raw HTML <mark> tags emphasizing the matching query string. 
-              We MUST use dangerouslySetInnerHTML to render these. */}
-          <h3
-            className={style.title}
-            data-testid="news-title"
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(title, { ALLOWED_TAGS: ['mark'] }),
-            }}
-          />
-
-          <p
-            className={clsx(style.description, {
-              [style.highlighted]: content.includes('<mark>'),
-            })}
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(content, { ALLOWED_TAGS: ['mark'] }),
-            }}
-          />
-
-          <div className={style.readMore}>
-            {t('readMore')}
-            <ArrowRight size={18} aria-hidden="true" />
+            <div className={style.readMore}>
+              {t('readMore')}
+              <ArrowRight size={18} aria-hidden="true" />
+            </div>
           </div>
-        </div>
-      </Link>
-    </article>
+        </Link>
+      </article>
+    </AnimateOnce>
   );
 }

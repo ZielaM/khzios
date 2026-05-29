@@ -5,6 +5,7 @@ import { resolveTranslation } from '@/lib/translations';
 import { getPhotoUrl, stripHtml } from '@/lib/content-utils';
 import { getRelatedNews } from '@/lib/news-queries';
 import { ArrowRight } from 'lucide-react';
+import AnimateOnce from '@/components/AnimateOnce';
 import style from './RelatedNews.module.scss';
 
 interface RelatedNewsProps {
@@ -52,29 +53,30 @@ export default async function RelatedNews({
           }).format(new Date(article.createdAt));
 
           return (
-            <Link
-              key={article.id}
-              href={{ pathname: '/news/[id]', params: { id: article.id } }}
-              className={style.card}
-            >
-              <div className={style.cardImage}>
-                <Image
-                  src={photoUrl}
-                  alt={cleanTitle}
-                  fill
-                  className={style.image}
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-              </div>
-              <div className={style.cardContent}>
-                <span className={style.cardDate}>{formattedDate}</span>
-                <h3 className={style.cardTitle}>{cleanTitle}</h3>
-                <span className={style.cardLink}>
-                  {t('readArticle')}
-                  <ArrowRight size={16} aria-hidden="true" />
-                </span>
-              </div>
-            </Link>
+            <AnimateOnce key={article.id}>
+              <Link
+                href={{ pathname: '/news/[id]', params: { id: article.id } }}
+                className={style.card}
+              >
+                <div className={style.cardImage}>
+                  <Image
+                    src={photoUrl}
+                    alt={cleanTitle}
+                    fill
+                    className={style.image}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <div className={style.cardContent}>
+                  <span className={style.cardDate}>{formattedDate}</span>
+                  <h3 className={style.cardTitle}>{cleanTitle}</h3>
+                  <span className={style.cardLink}>
+                    {t('readArticle')}
+                    <ArrowRight size={16} aria-hidden="true" />
+                  </span>
+                </div>
+              </Link>
+            </AnimateOnce>
           );
         })}
       </div>

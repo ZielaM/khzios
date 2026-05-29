@@ -126,6 +126,10 @@
     &:hover {
       transform: none;
       box-shadow: 0 0 12px var(--foreground);
+
+      .cardArrow {
+        color: var(--foreground);
+      }
     }
 
     &:focus-visible {

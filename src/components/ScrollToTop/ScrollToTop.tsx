@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { ArrowUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import style from './ScrollToTop.module.scss';
@@ -29,7 +30,7 @@ export default function ScrollToTop() {
 
   return (
     <button
-      className={`${style.scrollToTop} ${visible ? style.visible : ''}`}
+      className={clsx(style.scrollToTop, visible && style.visible)}
       onClick={scrollToTop}
       aria-label={t('scrollToTop')}
       title={t('scrollToTop')}

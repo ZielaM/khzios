@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import clsx from 'clsx';
 import style from './AnimateOnce.module.scss';
 
 interface AnimateOnceProps {
@@ -62,7 +63,7 @@ export default function AnimateOnce({ children, className }: AnimateOnceProps) {
   }, []);
 
   return (
-    <div ref={ref} className={`${style.wrapper} ${className ?? ''}`}>
+    <div ref={ref} className={clsx(style.wrapper, className)}>
       {children}
     </div>
   );

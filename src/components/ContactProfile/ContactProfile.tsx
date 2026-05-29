@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Mail, Phone, MapPin, Clock, User } from 'lucide-react';
+import clsx from 'clsx';
 import style from './ContactProfile.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { useTranslations } from 'next-intl';
@@ -111,7 +112,7 @@ export default function ContactProfile({
           </div>
 
           {/* Working Hours Card */}
-          <div className={`${style.infoCard} ${style.hoursCard}`}>
+          <div className={clsx(style.infoCard, style.hoursCard)}>
             <div className={style.cardHeader}>
               <div className={style.cardIcon}>
                 <Clock size={20} />

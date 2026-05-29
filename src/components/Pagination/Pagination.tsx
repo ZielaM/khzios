@@ -7,6 +7,7 @@
 // which reads the updated `page` parameter from the URL.
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import clsx from 'clsx';
 import style from './Pagination.module.scss';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -82,7 +83,11 @@ export default function Pagination({
       {filteredPages.map((p, i) => (
         <button
           key={i}
-          className={`${style.pageButton} ${p === currentPage ? style.active : ''} ${p === '...' ? style.dots : ''}`}
+          className={clsx(
+            style.pageButton,
+            p === currentPage && style.active,
+            p === '...' && style.dots
+          )}
           onClick={() => typeof p === 'number' && handlePageChange(p)}
           disabled={p === '...'}
           // Screen readers need specific context for "..." vs "Page X"

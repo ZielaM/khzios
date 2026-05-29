@@ -125,7 +125,8 @@
     "headDesc": "Informacje kontaktowe i godziny pracy kierownika.",
     "secretariatCard": "Sekretariat katedry",
     "secretariatDesc": "Godziny pracy, dane kontaktowe i lokalizacja sekretariatu.",
-    "viewDetails": "Zobacz szczegóły"
+    "viewDetails": "Zobacz szczegóły",
+    "backToHome": "Wróć do strony głównej"
   },
   "MemberProfile": {
     "backToTeam": "Wróć do zespołu",

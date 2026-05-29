@@ -125,7 +125,8 @@
     "headDesc": "Contact information and working hours of the head.",
     "secretariatCard": "Secretariat",
     "secretariatDesc": "Working hours, contact details and office location.",
-    "viewDetails": "View details"
+    "viewDetails": "View details",
+    "backToHome": "Back to homepage"
   },
   "MemberProfile": {
     "backToTeam": "Back to team",

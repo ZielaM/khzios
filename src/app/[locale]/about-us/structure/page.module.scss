@@ -4,6 +4,37 @@
   @include page-container;
 }
 
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 1.05em;
+  font-weight: 600;
+  color: #666;
+  text-decoration: none;
+  margin-bottom: 24px;
+  padding: 8px 16px 8px 8px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  background: transparent;
+
+  &:hover {
+    color: var(--color-primary);
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+
+    &:hover {
+      background: var(--foreground);
+      color: var(--background);
+    }
+  }
+}
+
 /* ── Hero Section ──────────────────────────────────────────────────── */
 
 .hero {

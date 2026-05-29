@@ -1,0 +1,15 @@
+@use '@/styles/variables' as *;
+
+.main {
+  @include page-container;
+}
+
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  @include section-title;
+  margin-bottom: 0.5rem;
+}

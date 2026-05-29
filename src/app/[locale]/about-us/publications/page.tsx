@@ -1,5 +1,8 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/routing';
+import BackLink from '@/components/BackLink';
+import AnimateOnce from '@/components/AnimateOnce';
 import PublicationsSearchForm from '@/components/PublicationsSearchForm';
 import PublicationsListServer from '@/components/PublicationsListServer';
 import PublicationsListSkeleton from '@/components/PublicationsListSkeleton';
@@ -35,12 +38,17 @@ export default async function PublicationsPage({
   const limit = 12;
 
   const t = await getTranslations('PublicationsPage');
+  const tStruct = await getTranslations('StructurePage');
 
   // Key for Suspense to trigger re-render on param change
   const suspenseKey = JSON.stringify({ query, page });
 
   return (
     <div className={style.main}>
+      <AnimateOnce>
+        <BackLink href="/about-us">{tStruct('backToAboutUs')}</BackLink>
+      </AnimateOnce>
+
       <div className={style.header}>
         <h1 className={style.title}>{t('title')}</h1>
       </div>

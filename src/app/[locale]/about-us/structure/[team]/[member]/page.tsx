@@ -3,7 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getMemberBySlug, getAllMemberSlugs } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { Link, routing } from '@/i18n/routing';
-import { ChevronLeft, Mail, Phone, ExternalLink, Users } from 'lucide-react';
+import { Mail, Phone, ExternalLink, Users } from 'lucide-react';
+import BackLink from '@/components/BackLink';
 import Image from 'next/image';
 import { User } from 'lucide-react';
 import style from './page.module.scss';
@@ -71,15 +72,13 @@ export default async function MemberPage({ params }: Props) {
     <div className={style.page}>
       {/* Back Link */}
       <AnimateOnce>
-        <Link
+        <BackLink
           href={
             `/about-us/structure/${teamSlug}` as `/about-us/structure/ruminants`
           }
-          className={style.backLink}
         >
-          <ChevronLeft size={20} />
           {t('backToTeam')}
-        </Link>
+        </BackLink>
       </AnimateOnce>
 
       {/* Hero Card */}

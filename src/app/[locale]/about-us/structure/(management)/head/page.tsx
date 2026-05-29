@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, routing } from '@/i18n/routing';
-import { ChevronLeft } from 'lucide-react';
 import { Metadata } from 'next';
+import BackLink from '@/components/BackLink';
 import ContactProfile from '@/components/ContactProfile';
 import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
@@ -43,10 +43,9 @@ export default async function HeadPage({ params }: Props) {
     return (
       <div className={style.page}>
         <AnimateOnce>
-          <Link href="/about-us/structure" className={style.backLink}>
-            <ChevronLeft size={20} />
+          <BackLink href="/about-us/structure">
             {tTeam('backToStructure')}
-          </Link>
+          </BackLink>
         </AnimateOnce>
         <p>Kierownik katedry nie został jeszcze dodany w systemie.</p>
       </div>
@@ -71,10 +70,9 @@ export default async function HeadPage({ params }: Props) {
   return (
     <div className={style.page}>
       <AnimateOnce>
-        <Link href="/about-us/structure" className={style.backLink}>
-          <ChevronLeft size={20} />
+        <BackLink href="/about-us/structure">
           {tTeam('backToStructure')}
-        </Link>
+        </BackLink>
       </AnimateOnce>
 
       <ContactProfile

@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
+import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
 import DOMPurify from 'isomorphic-dompurify';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
@@ -141,10 +142,9 @@ export default async function NewsDetailsPage({
         <AnimateOnce className={style.container}>
           <header className={style.header}>
             <div className={style.headerActions}>
-              <Link href="/news" className={style.backLink}>
-                <ArrowLeft size={18} aria-hidden="true" />
-                <span>{t('backToNews')}</span>
-              </Link>
+              <BackLink href="/news" className={style.backLink}>
+                {t('backToNews')}
+              </BackLink>
               <ShareButton title={cleanTitle} />
             </div>
 

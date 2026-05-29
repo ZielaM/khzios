@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getTeamBySlug, getAllTeamSlugs } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { Link, routing } from '@/i18n/routing';
-import { ChevronLeft } from 'lucide-react';
+import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
@@ -55,10 +55,7 @@ export default async function TeamPage({ params }: Props) {
   return (
     <div className={style.page}>
       <AnimateOnce>
-        <Link href="/about-us/structure" className={style.backLink}>
-          <ChevronLeft size={20} />
-          {t('backToStructure')}
-        </Link>
+        <BackLink href="/about-us/structure">{t('backToStructure')}</BackLink>
       </AnimateOnce>
 
       {team.type === 'EXTERNAL' ? (

@@ -1,0 +1,6 @@
+@use '@/styles/variables' as *;
+
+.backLink {
+  @include back-link;
+  margin-bottom: 24px;
+}

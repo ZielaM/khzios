@@ -1,7 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, routing } from '@/i18n/routing';
 import { Metadata } from 'next';
-import { ArrowRight, Crown, Briefcase, ChevronLeft } from 'lucide-react';
+import { ArrowRight, Crown, Briefcase } from 'lucide-react';
+import BackLink from '@/components/BackLink';
 import AnimateOnce from '@/components/AnimateOnce';
 import { getAllTeams } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
@@ -36,10 +37,7 @@ export default async function StructurePage({ params }: Props) {
   return (
     <div className={style.page}>
       <AnimateOnce>
-        <Link href="/about-us" className={style.backLink}>
-          <ChevronLeft size={20} />
-          {t('backToAboutUs')}
-        </Link>
+        <BackLink href="/about-us">{t('backToAboutUs')}</BackLink>
       </AnimateOnce>
 
       {/* ── Hero ──────────────────────────────────────────────── */}

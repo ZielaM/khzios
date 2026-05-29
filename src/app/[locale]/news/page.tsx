@@ -1,5 +1,8 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/routing';
+import BackLink from '@/components/BackLink';
+import AnimateOnce from '@/components/AnimateOnce';
 import { prisma } from '@/lib/prisma';
 import NewsSearchForm from '@/components/NewsSearchForm';
 import NewsGridServer from '@/components/NewsGrid/NewsGridServer';
@@ -49,12 +52,17 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
   }));
 
   const t = await getTranslations('NewsPage');
+  const tStruct = await getTranslations('StructurePage');
 
   // Key for Suspense to trigger re-render on param change
   const suspenseKey = JSON.stringify({ query, tag, page, sortBy });
 
   return (
     <div className={style.main}>
+      <AnimateOnce>
+        <BackLink href="/">{tStruct('backToHome')}</BackLink>
+      </AnimateOnce>
+
       <div className={style.header}>
         <h1 className={style.title}>{t('title')}</h1>
       </div>

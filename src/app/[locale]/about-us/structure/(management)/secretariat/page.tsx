@@ -1,7 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, routing } from '@/i18n/routing';
-import { ChevronLeft, Briefcase } from 'lucide-react';
+import { Briefcase } from 'lucide-react';
 import { Metadata } from 'next';
+import BackLink from '@/components/BackLink';
 import ContactProfile from '@/components/ContactProfile';
 import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
@@ -42,10 +43,9 @@ export default async function SecretariatPage({ params }: Props) {
     return (
       <div className={style.page}>
         <AnimateOnce>
-          <Link href="/about-us/structure" className={style.backLink}>
-            <ChevronLeft size={20} />
+          <BackLink href="/about-us/structure">
             {tTeam('backToStructure')}
-          </Link>
+          </BackLink>
         </AnimateOnce>
         <p>Sekretariat nie został jeszcze dodany w systemie.</p>
       </div>
@@ -70,10 +70,9 @@ export default async function SecretariatPage({ params }: Props) {
   return (
     <div className={style.page}>
       <AnimateOnce>
-        <Link href="/about-us/structure" className={style.backLink}>
-          <ChevronLeft size={20} />
+        <BackLink href="/about-us/structure">
           {tTeam('backToStructure')}
-        </Link>
+        </BackLink>
       </AnimateOnce>
 
       <ContactProfile

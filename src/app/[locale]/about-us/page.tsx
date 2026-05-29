@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, routing } from '@/i18n/routing';
 import { Metadata } from 'next';
 import { ArrowRight, BookOpen, Network } from 'lucide-react';
+import BackLink from '@/components/BackLink';
 import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
 
@@ -29,9 +30,14 @@ export default async function AboutUsPage({ params }: Props) {
   setRequestLocale(locale);
 
   const t = await getTranslations('AboutUsPage');
+  const tStruct = await getTranslations('StructurePage');
 
   return (
     <div className={style.page}>
+      <AnimateOnce>
+        <BackLink href="/">{tStruct('backToHome')}</BackLink>
+      </AnimateOnce>
+
       {/* ── Hero ──────────────────────────────────────────────── */}
       <AnimateOnce>
         <section className={style.hero}>

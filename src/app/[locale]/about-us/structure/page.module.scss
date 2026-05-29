@@ -1,0 +1,253 @@
+@use '@/styles/variables' as *;
+
+.page {
+  @include page-container;
+}
+
+/* ── Hero Section ──────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  width: 100%;
+  padding: 48px 40px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 48px;
+  text-align: center;
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    border: 2px solid var(--foreground);
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 32px 24px;
+    border-radius: 16px;
+    margin-bottom: 32px;
+  }
+}
+
+.heroTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2em, 4vw, 3em);
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 12px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+    text-shadow: none;
+  }
+}
+
+.heroDesc {
+  font-size: 1.15em;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+/* ── Section Titles ────────────────────────────────────────────────── */
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 1.6em;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+  }
+}
+
+/* ── Management Grid (Kierownik + Sekretariat) ─────────────────────── */
+
+.managementGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+
+  // Ensure AnimateOnce wrappers stretch to fill grid cells
+  > * {
+    height: 100%;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+}
+
+/* ── Teams Grid (Bento-style) ──────────────────────────────────────── */
+
+.teamsSection {
+  margin-bottom: 48px;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-bottom: 32px;
+  }
+}
+
+.teamsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  // Ensure AnimateOnce wrappers stretch to fill grid cells
+  > * {
+    height: 100%;
+  }
+
+  @media (max-width: $breakpoint-desktop) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* ── Shared Card Styles ────────────────────────────────────────────── */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px;
+  height: 100%;
+  background: var(--background);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+    border-color 0.25s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    border-color: rgba($color-primary, 0.2);
+
+    .cardArrow {
+      transform: translateX(4px);
+      color: var(--color-primary);
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+    border-color: transparent;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+    box-shadow: none;
+
+    &:hover {
+      transform: none;
+      box-shadow: 0 0 12px var(--foreground);
+    }
+
+    &:focus-visible {
+      outline-color: var(--foreground);
+    }
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 24px;
+  }
+}
+
+.cardIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(36, 113, 81, 0.1) 0%,
+    rgba(54, 124, 43, 0.12) 100%
+  );
+  color: var(--color-primary);
+  flex-shrink: 0;
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    border: 2px solid var(--foreground);
+    color: var(--foreground);
+    border-radius: 0;
+  }
+}
+
+.cardTitle {
+  font-family: var(--font-heading);
+  font-size: 1.25em;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.cardDesc {
+  font-size: 0.95em;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  font-size: 0.9em;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.cardArrow {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}

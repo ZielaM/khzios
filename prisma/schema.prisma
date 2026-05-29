@@ -168,13 +168,13 @@ model TeamMemberTranslation {
 
 model Publication {
   id      String @id @default(uuid(7))
-  teamId  String
+  teamId  String?
   year    Int    @db.SmallInt
   doi     String?
   authors String                  // Not translated
   journal String                  // Not translated
 
-  team         Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team         Team? @relation(fields: [teamId], references: [id], onDelete: SetNull)
   translations PublicationTranslation[]
 
   @@index([teamId, year(sort: Desc)])

@@ -323,6 +323,45 @@ async function main() {
   // ──── Secretariat Seeding ─────────────────────────────────────────
   await seedSecretariat();
 
+  console.log('Generowanie dodatkowych 50 publikacji naukowych...');
+  await prisma.$transaction(
+    async (tx) => {
+      for (let i = 0; i < 50; i++) {
+        const year = 2015 + (i % 10);
+
+        await tx.publication.create({
+          data: {
+            year,
+            authors: `Author ${i + 1}, Co-author A., Co-author B.`,
+            journal: `Journal of Animal Science #${(i % 5) + 1}`,
+            doi: `10.1016/j.animal.${year}.${i}`,
+            translations: {
+              create: [
+                {
+                  languageCode: 'pl',
+                  title: `Przykładowa publikacja naukowa #${i + 1} dotycząca zaawansowanych badań`,
+                },
+                {
+                  languageCode: 'en',
+                  title: `Sample scientific publication #${i + 1} regarding advanced research`,
+                },
+                {
+                  languageCode: 'uk',
+                  title: `Приклад наукової публікації #${i + 1} щодо передових досліджень`,
+                },
+                {
+                  languageCode: 'ru',
+                  title: `Пример научной публикации #${i + 1} о передовых исследованиях`,
+                },
+              ],
+            },
+          },
+        });
+      }
+    },
+    { timeout: 30000 }
+  );
+
   console.log('Populacja bazy zakończona sukcesem!');
 }
 

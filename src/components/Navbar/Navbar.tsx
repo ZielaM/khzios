@@ -7,7 +7,7 @@
 // for media queries and class toggling rather than conditional React rendering,
 // ensuring the menu is always in the DOM for SEO and immediate accessibility.
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
 import Image from 'next/image';
 import style from './Navbar.module.scss';
@@ -26,15 +26,20 @@ export default function Navbar() {
   const t = useTranslations('Navbar');
   const tWcag = useTranslations('Wcag');
 
+  const prevPathname = useRef(pathname);
+
   // Automatic Menu Closing Logic:
   // Whenever the pathname changes (user clicked a link and navigated successfully),
-  // we force the mobile menu to close. A timeout is used to ensure the navigation
-  // event loop finishes before ripping the menu out of view.
+  // we force the mobile menu to close. We use a ref to ensure we only close
+  // when the pathname ACTUALLY changes, ignoring initial mount or hydration quirks.
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setIsMobileMenuOpen(false);
-    }, 0);
-    return () => clearTimeout(timeoutId);
+    if (prevPathname.current !== pathname) {
+      const timeoutId = setTimeout(() => {
+        setIsMobileMenuOpen(false);
+      }, 0);
+      prevPathname.current = pathname;
+      return () => clearTimeout(timeoutId);
+    }
   }, [pathname]);
 
   // Manual close handler passed down to individual NavItems.

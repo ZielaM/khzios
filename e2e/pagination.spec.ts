@@ -7,10 +7,6 @@ test.describe('Search Pagination Spec', () => {
     // Start on the English news list (has plenty of seeded items, 12 items per page)
     await page.goto('/en/news');
     await page.waitForLoadState('load');
-
-    // CRITICAL: Wait for initial search synchronization debounce to stabilize URL state (sort=date)
-    // to prevent race conditions during E2E testing
-    await expect(page).toHaveURL(/sort=date/);
   });
 
   test('should disable previous button on page 1 and allow navigating to page 2', async ({
@@ -64,8 +60,8 @@ test.describe('Search Pagination Spec', () => {
     const prevButton = page.getByRole('button', { name: 'Previous page' });
     await prevButton.click();
 
-    // 3. Expect URL to change back to page=1
-    await expect(page).toHaveURL(/page=1/);
+    // 3. Expect URL to change back to page=1 (removed from url)
+    await expect(page).not.toHaveURL(/page=/);
 
     // 4. Click "Next page" button
     const nextButton = page.getByRole('button', { name: 'Next page' });

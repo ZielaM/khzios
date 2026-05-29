@@ -13,9 +13,6 @@ test.describe('Language Switching & State Preservation Spec', () => {
     await page.goto('/en/news');
     await page.waitForLoadState('load');
 
-    // Wait for initial search synchronization debounce to stabilize URL state (sort=date)
-    await expect(page).toHaveURL(/sort=date/);
-
     // Expand settings dropdown if collapsed inside a compact layout
     const settingsToggle = page.getByRole('button', {
       name: 'Accessibility settings',
@@ -59,7 +56,7 @@ test.describe('Language Switching & State Preservation Spec', () => {
     page,
   }) => {
     // 1. Load the page with multiple active filters, sorting, and pagination
-    await page.goto('/en/news?query=art&tag=Education&sort=relevance&page=1');
+    await page.goto('/en/news?query=art&tag=Research&sort=relevance&page=1');
     await page.waitForLoadState('load');
 
     // Wait for the debounce-based search synchronization to fully stabilize

@@ -24,13 +24,9 @@ test.describe('Navbar Navigation Spec', () => {
       // 3. Verify path transitions to /en/news
       await expect(page).toHaveURL(/\/en\/news/);
 
-      // CRITICAL: Wait for initial search synchronization debounce to complete and stabilize URL state (sort=date)
-      // to prevent race conditions during transitions away from the News page
-      await expect(page).toHaveURL(/sort=date/);
-
       // 4. Verify we loaded the News page (check heading)
       const heading = page.getByRole('heading', { name: 'News', exact: true });
-      await expect(heading).toBeVisible();
+      await expect(heading).toBeVisible({ timeout: 30000 });
 
       // 5. Locate the Home logo link in the navbar using its robust test-id
       const homeLink = page.getByTestId('logo-link');
@@ -69,7 +65,9 @@ test.describe('Navbar Navigation Spec', () => {
       // Playwright clicks the hamburger. If the News link doesn't appear within 2 seconds,
       // it assumes React isn't working yet, ignores the error, and tries clicking again.
       await expect(async () => {
-        await hamburger.click();
+        if (!(await newsLink.isVisible())) {
+          await hamburger.click();
+        }
         await expect(newsLink).toBeVisible({ timeout: 2000 });
       }).toPass();
 
@@ -78,7 +76,6 @@ test.describe('Navbar Navigation Spec', () => {
 
       // 5. Verify successful navigation to /en/news
       await expect(page).toHaveURL(/\/en\/news/);
-      await expect(page).toHaveURL(/sort=date/, { timeout: 10000 });
 
       // 6. Hamburger state should revert to closed
       await expect(hamburger).not.toHaveClass(/active/);

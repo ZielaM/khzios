@@ -29,8 +29,8 @@ test.describe('News Search & Filtering Spec', () => {
     // 4. Wait for the debounce to trigger URL push (Playwright will auto-wait until expectation is met)
     await expect(page).toHaveURL(/query=performance/);
 
-    // 5. Ensure that page=1 was forced on query change
-    await expect(page).toHaveURL(/page=1/);
+    // 5. Ensure that page=1 was forced on query change (removed from url)
+    await expect(page).not.toHaveURL(/page=/);
   });
 
   test('should show sort option only when query is active and switch to relevance sorting automatically', async ({
@@ -46,7 +46,7 @@ test.describe('News Search & Filtering Spec', () => {
 
     // 1. Initial State: No query, so sorting dropdown should NOT be visible/rendered and sort=date should be present
     await expect(sortSelect).not.toBeVisible();
-    await expect(page).toHaveURL(/sort=date/);
+    await expect(page).not.toHaveURL(/sort=/);
 
     // 2. Type a query, which should make the sorting selector visible
     await searchInput.click();
@@ -94,7 +94,7 @@ test.describe('News Search & Filtering Spec', () => {
     await searchInput.fill('');
 
     // 3. Expect sort parameter to fall back to 'date' because relevance sorting requires a query
-    await expect(page).toHaveURL(/sort=date/);
+    await expect(page).not.toHaveURL(/sort=/);
     await expect(page).not.toHaveURL(/query=/);
   });
 
@@ -116,6 +116,6 @@ test.describe('News Search & Filtering Spec', () => {
     // 3. Expect sort parameter to be 'date' even after changing query
     await expect(page).toHaveURL(/sort=date/);
     await expect(page).toHaveURL(/query=art/);
-    await expect(page).toHaveURL(/page=1/);
+    await expect(page).not.toHaveURL(/page=/);
   });
 });

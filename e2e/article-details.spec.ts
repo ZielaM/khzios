@@ -4,7 +4,6 @@ import { test, expect, Page } from '@playwright/test';
 async function navigateToArticle(page: Page, position: number) {
   await page.goto('/en/news');
   await page.waitForLoadState('load');
-  await expect(page).toHaveURL(/sort=date/);
 
   const tile = page.getByTestId('news-tile').nth(position - 1);
   await expect(tile).toBeVisible();
@@ -55,7 +54,6 @@ test.describe('News Article Detail Page', () => {
   }) => {
     await page.goto('/en/news');
     await page.waitForLoadState('load');
-    await expect(page).toHaveURL(/sort=date/);
 
     // Scroll down on the list page
     await page.evaluate(() => window.scrollTo(0, 500));

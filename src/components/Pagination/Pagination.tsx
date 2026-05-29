@@ -34,7 +34,11 @@ export default function Pagination({
     if (page < 1 || page > totalPages) return;
 
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', page.toString());
+    if (page === 1) {
+      params.delete('page');
+    } else {
+      params.set('page', page.toString());
+    }
 
     router.push(`${pathname}?${params.toString()}`, { scroll: true });
   };

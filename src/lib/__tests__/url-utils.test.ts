@@ -33,7 +33,7 @@ describe('computeNextSearchParams', () => {
 
       expect(result).not.toBeNull();
       expect(result?.get('query')).toBe('hello');
-      expect(result?.get('page')).toBe('1');
+      expect(result?.has('page')).toBe(false);
     });
 
     it('should update an existing query, reset page to 1', () => {
@@ -41,7 +41,7 @@ describe('computeNextSearchParams', () => {
       const result = computeNextSearchParams(params, 'new', [], 'date');
 
       expect(result?.get('query')).toBe('new');
-      expect(result?.get('page')).toBe('1');
+      expect(result?.has('page')).toBe(false);
     });
 
     it('should add tags as comma-separated string', () => {
@@ -101,7 +101,7 @@ describe('computeNextSearchParams', () => {
       const result = computeNextSearchParams(params, '', [], 'relevance');
 
       expect(result).not.toBeNull();
-      expect(result?.get('sort')).toBe('date');
+      expect(result?.has('sort')).toBe(false);
     });
 
     it('should remove query and switch sort to date simultaneously', () => {
@@ -110,8 +110,8 @@ describe('computeNextSearchParams', () => {
 
       expect(result).not.toBeNull();
       expect(result?.has('query')).toBe(false);
-      expect(result?.get('sort')).toBe('date');
-      expect(result?.get('page')).toBe('1');
+      expect(result?.has('sort')).toBe(false);
+      expect(result?.has('page')).toBe(false);
     });
   });
 
@@ -131,7 +131,7 @@ describe('computeNextSearchParams', () => {
       expect(result?.get('query')).toBe('zwierzęta');
       expect(result?.get('tag')).toBe('psy,koty');
       expect(result?.get('sort')).toBe('relevance');
-      expect(result?.get('page')).toBe('1');
+      expect(result?.has('page')).toBe(false);
     });
 
     it('should handle clearing everything at once', () => {
@@ -143,8 +143,8 @@ describe('computeNextSearchParams', () => {
       expect(result).not.toBeNull();
       expect(result?.has('query')).toBe(false);
       expect(result?.has('tag')).toBe(false);
-      expect(result?.get('sort')).toBe('date');
-      expect(result?.get('page')).toBe('1');
+      expect(result?.has('sort')).toBe(false);
+      expect(result?.has('page')).toBe(false);
     });
   });
 });

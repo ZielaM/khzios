@@ -36,6 +36,9 @@ export default function ContactProfile({
   const locationLabel = tMember('locationLabel');
   const closedLabel = tMember('closedLabel');
 
+  const safeEmail = typeof email === 'string' ? email.trim() : '';
+  const safePhone = typeof phone === 'string' ? phone.trim() : '';
+
   return (
     <div className={style.container}>
       {/* Hero Card */}
@@ -74,9 +77,9 @@ export default function ContactProfile({
               </div>
               <h2 className={style.cardTitle}>{contactLabel}</h2>
             </div>
-            {email || phone ? (
+            {safeEmail || safePhone ? (
               <ul className={style.contactList}>
-                {email && (
+                {safeEmail && (
                   <li className={style.contactItem}>
                     <div className={style.contactIconWrapper}>
                       <Mail size={18} />
@@ -127,14 +130,16 @@ export default function ContactProfile({
               <h2 className={style.cardTitle}>{hoursLabel}</h2>
             </div>
             <ul className={style.hoursList}>
-              {workingHours.map((wh, idx) => (
-                <li key={idx} className={style.hoursItem}>
-                  <span className={style.dayLabel}>{wh.day}</span>
-                  <span className={style.hoursValue}>
-                    {wh.hours || closedLabel}
-                  </span>
-                </li>
-              ))}
+              {(Array.isArray(workingHours) ? workingHours : []).map(
+                (wh, idx) => (
+                  <li key={idx} className={style.hoursItem}>
+                    <span className={style.dayLabel}>{wh?.day}</span>
+                    <span className={style.hoursValue}>
+                      {wh?.hours || closedLabel}
+                    </span>
+                  </li>
+                )
+              )}
             </ul>
           </div>
 

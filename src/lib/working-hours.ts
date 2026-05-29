@@ -25,8 +25,10 @@ export function mapWorkingHours<
     { key: 'sunday', order: 7 },
   ] as const;
 
+  const safeWorkingHours = Array.isArray(dbWorkingHours) ? dbWorkingHours : [];
+
   return defaultDays.map(({ key, order }) => {
-    const dbDay = dbWorkingHours.find((wh) => wh.displayOrder === order);
+    const dbDay = safeWorkingHours.find((wh) => wh.displayOrder === order);
 
     if (dbDay) {
       const { translation: whTranslation } = resolveTranslation(

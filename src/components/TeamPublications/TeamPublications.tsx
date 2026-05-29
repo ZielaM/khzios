@@ -25,12 +25,16 @@ export default function TeamPublications({
   const t = useTranslations('TeamPage');
   const [activeTab, setActiveTab] = useState<Tab>('publications');
 
-  if (publications.length === 0 && projects.length === 0) return null;
+  // Fallback do pustych tablic, by unikać crashy przy obiektach / stringach
+  const safePublications = Array.isArray(publications) ? publications : [];
+  const safeProjects = Array.isArray(projects) ? projects : [];
+
+  if (safePublications.length === 0 && safeProjects.length === 0) return null;
 
   // If one of them is empty, default to the other one
-  if (publications.length === 0 && activeTab === 'publications')
+  if (safePublications.length === 0 && activeTab === 'publications')
     setActiveTab('projects');
-  if (projects.length === 0 && activeTab === 'projects')
+  if (safeProjects.length === 0 && activeTab === 'projects')
     setActiveTab('publications');
 
   return (
@@ -70,7 +74,7 @@ export default function TeamPublications({
       <div className={style.content}>
         {activeTab === 'publications' && (
           <div className={style.list}>
-            {publications.map((pub) => {
+            {safePublications.map((pub) => {
               const { translation } = resolveTranslation(
                 pub.translations,
                 locale
@@ -110,7 +114,7 @@ export default function TeamPublications({
 
         {activeTab === 'projects' && (
           <div className={style.list}>
-            {projects.map((proj) => {
+            {safeProjects.map((proj) => {
               const { translation } = resolveTranslation(
                 proj.translations,
                 locale

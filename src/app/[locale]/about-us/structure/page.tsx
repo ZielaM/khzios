@@ -93,7 +93,10 @@ export default async function StructurePage({ params }: Props) {
       <div className={style.teamsSection}>
         <div className={style.teamsGrid}>
           {teams.map((team) => {
-            const { translation } = resolveTranslation(team.translations, locale);
+            const { translation } = resolveTranslation(
+              team.translations,
+              locale
+            );
             if (!translation) return null;
 
             // Build the href using the team slug as a typed route

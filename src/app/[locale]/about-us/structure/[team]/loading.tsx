@@ -6,7 +6,9 @@ import clsx from 'clsx';
 export default function Loading() {
   return (
     <div className={style.page}>
-      <div className={clsx(skeletonStyle.skeleton, skeletonStyle.backLinkSkeleton)} />
+      <div
+        className={clsx(skeletonStyle.skeleton, skeletonStyle.backLinkSkeleton)}
+      />
 
       <div className={fullTeamStyle.fullTeam}>
         <div className={clsx(skeletonStyle.skeleton, skeletonStyle.hero)} />

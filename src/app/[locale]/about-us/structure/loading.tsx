@@ -13,11 +13,18 @@ export default function Loading() {
       />
 
       <section
-        className={clsx(style.hero, skeletonStyle.skeleton, skeletonStyle.heroSkeleton)}
+        className={clsx(
+          style.hero,
+          skeletonStyle.skeleton,
+          skeletonStyle.heroSkeleton
+        )}
       />
 
       <div
-        className={clsx(skeletonStyle.skeleton, skeletonStyle.sectionTitleSkeleton)}
+        className={clsx(
+          skeletonStyle.skeleton,
+          skeletonStyle.sectionTitleSkeleton
+        )}
       />
 
       <div className={style.managementGrid}>
@@ -30,7 +37,10 @@ export default function Loading() {
       </div>
 
       <div
-        className={clsx(skeletonStyle.skeleton, skeletonStyle.sectionTitleSkeleton)}
+        className={clsx(
+          skeletonStyle.skeleton,
+          skeletonStyle.sectionTitleSkeleton
+        )}
       />
 
       <div className={style.teamsSection}>

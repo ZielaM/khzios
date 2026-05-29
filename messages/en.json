@@ -66,6 +66,12 @@
     "noResults": "No results found.",
     "rss": "RSS Feed"
   },
+  "PublicationsPage": {
+    "title": "Scientific Publications",
+    "searchPlaceholder": "Search by title, authors, or journal...",
+    "searchButton": "Search",
+    "noResults": "No publications found matching the criteria."
+  },
   "Pagination": {
     "prev": "Previous page",
     "next": "Next page",

@@ -66,6 +66,12 @@
     "noResults": "Nie znaleziono wyników.",
     "rss": "Kanał RSS"
   },
+  "PublicationsPage": {
+    "title": "Publikacje naukowe",
+    "searchPlaceholder": "Szukaj po tytule, autorach lub czasopiśmie...",
+    "searchButton": "Szukaj",
+    "noResults": "Nie znaleziono żadnych publikacji spełniających podane kryteria."
+  },
   "Pagination": {
     "prev": "Poprzednia strona",
     "next": "Następna strona",

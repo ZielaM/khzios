@@ -155,5 +155,14 @@
     "hoursLabel": "Godziny pracy",
     "locationLabel": "Lokalizacja biura",
     "teamLabel": "Zespół"
+  },
+  "AboutUsPage": {
+    "title": "O nas",
+    "description": "Dowiedz się więcej o Zakładzie Hodowli Zwierząt i Ocenie Produktów. Poznaj naszą strukturę organizacyjną, zespoły badawcze oraz publikacje naukowe.",
+    "structureCardTitle": "Struktura Zakładu",
+    "structureCardDesc": "Poznaj kierownictwo, sekretariat oraz specjalistyczne zespoły badawcze działające w ramach Zakładu.",
+    "publicationsCardTitle": "Publikacje Naukowe",
+    "publicationsCardDesc": "Przeglądaj repozytorium artykułów naukowych i monografii opublikowanych przez naszych pracowników.",
+    "viewDetails": "Zobacz szczegóły"
   }
 }

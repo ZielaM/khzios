@@ -155,5 +155,14 @@
     "hoursLabel": "Working hours",
     "locationLabel": "Office location",
     "teamLabel": "Team"
+  },
+  "AboutUsPage": {
+    "title": "About Us",
+    "description": "Learn more about the Department of Animal Breeding and Product Evaluation. Explore our organizational structure, research teams, and scientific publications.",
+    "structureCardTitle": "Department Structure",
+    "structureCardDesc": "Get to know the management, secretariat, and specialized research teams operating within the Department.",
+    "publicationsCardTitle": "Scientific Publications",
+    "publicationsCardDesc": "Browse our repository of scientific articles, research papers, and monographs published by our staff.",
+    "viewDetails": "Explore"
   }
 }

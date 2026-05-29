@@ -116,6 +116,17 @@
     "noProjects": "Brak projektów z ostatnich 5 lat.",
     "funder": "Finansowanie"
   },
+  "StructurePage": {
+    "title": "Struktura katedry",
+    "description": "Poznaj jednostki organizacyjne, zespoły badawcze i administrację naszej katedry.",
+    "managementTitle": "Zarządzanie i Administracja",
+    "teamsTitle": "Zespoły Badawcze i Dydaktyczne",
+    "headCard": "Kierownik katedry",
+    "headDesc": "Informacje kontaktowe i godziny pracy kierownika.",
+    "secretariatCard": "Sekretariat katedry",
+    "secretariatDesc": "Godziny pracy, dane kontaktowe i lokalizacja sekretariatu.",
+    "viewDetails": "Zobacz szczegóły"
+  },
   "MemberProfile": {
     "backToTeam": "Wróć do zespołu",
     "contactTitle": "Kontakt",

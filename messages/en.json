@@ -116,6 +116,17 @@
     "noProjects": "No projects from the last 5 years.",
     "funder": "Funding"
   },
+  "StructurePage": {
+    "title": "Department Structure",
+    "description": "Explore the organisational units, research teams and administration of our department.",
+    "managementTitle": "Management & Administration",
+    "teamsTitle": "Research & Teaching Teams",
+    "headCard": "Head of Department",
+    "headDesc": "Contact information and working hours of the head.",
+    "secretariatCard": "Secretariat",
+    "secretariatDesc": "Working hours, contact details and office location.",
+    "viewDetails": "View details"
+  },
   "MemberProfile": {
     "backToTeam": "Back to team",
     "contactTitle": "Contact",

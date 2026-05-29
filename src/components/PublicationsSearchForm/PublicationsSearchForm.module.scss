@@ -1,0 +1,51 @@
+@use '@/styles/variables' as *;
+
+.form {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.searchBox {
+  display: flex;
+  width: 100%;
+  max-width: 600px;
+  gap: 0.5rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+  }
+}
+
+.inputWrapper {
+  position: relative;
+  flex: 1;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.input {
+  width: 100%;
+  padding: 1rem 1.5rem 1rem 3rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background-color: var(--bg-secondary);
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 1.125em;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: var(--background);
+  }
+}

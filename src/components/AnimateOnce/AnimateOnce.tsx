@@ -9,13 +9,15 @@ interface AnimateOnceProps {
 }
 
 /**
- * Wrapper that applies a one-shot fade-in-up animation on mount.
+ * Wrapper that applies a one-shot fade-in-up animation when the element
+ * scrolls into the viewport via IntersectionObserver.
  *
- * Unlike bare CSS `animation` on server-rendered elements, this approach
- * is immune to animation replays caused by WCAG font-scaling's force-repaint
- * (`display: none` toggle). The animation class is added once via useEffect
- * and the `animationend` listener removes it immediately after completion,
- * so subsequent repaints have nothing to replay.
+ * The element starts visually hidden (opacity: 0, translateY offset) and
+ * transitions in once it enters the viewport. After the animation completes,
+ * the animation class is removed immediately so that WCAG font-scaling's
+ * force-repaint (`display: none` toggle) cannot replay it.
+ *
+ * The observer disconnects after the first intersection — truly "once".
  */
 export default function AnimateOnce({ children, className }: AnimateOnceProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -24,18 +26,43 @@ export default function AnimateOnce({ children, className }: AnimateOnceProps) {
     const el = ref.current;
     if (!el) return;
 
-    // Add animation class on mount
-    el.classList.add(style.animate);
+    // If IntersectionObserver is unavailable (e.g. old browsers, test env),
+    // show the element immediately without animation.
+    if (typeof IntersectionObserver === 'undefined') {
+      el.classList.add(style.visible);
+      return;
+    }
 
-    // Remove animation class after it completes — prevents replay on repaint
-    const handleEnd = () => el.classList.remove(style.animate);
-    el.addEventListener('animationend', handleEnd);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Trigger animation
+          el.classList.add(style.animate);
 
-    return () => el.removeEventListener('animationend', handleEnd);
+          // Remove animation class after it completes — prevents replay on repaint
+          const handleEnd = () => {
+            el.classList.remove(style.animate);
+            el.classList.add(style.visible);
+          };
+          el.addEventListener('animationend', handleEnd, { once: true });
+
+          // Stop observing — this element only animates once
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    );
+
+    observer.observe(el);
+
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} className={`${style.wrapper} ${className ?? ''}`}>
       {children}
     </div>
   );

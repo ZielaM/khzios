@@ -9,6 +9,18 @@
   }
 }
 
+// Start hidden — elements are invisible until the observer triggers
+.wrapper {
+  opacity: 0;
+}
+
+// Applied by IntersectionObserver when element enters the viewport
 .animate {
   animation: fadeInUp 0.6s ease-out both;
+}
+
+// Applied after animation completes — element stays visible,
+// animation class is removed to prevent replays on WCAG repaint
+.visible {
+  opacity: 1;
 }

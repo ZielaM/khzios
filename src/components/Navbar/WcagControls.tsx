@@ -109,15 +109,18 @@ export default function WcagControls({
     // Sometimes Chromium-based browsers fail to update deep deeply nested REM values
     // dynamically. Toggling body display forces the browser compositor to recalculate everything.
     requestAnimationFrame(() => {
+      const currentScroll = window.scrollY;
       document.body.style.display = 'none';
       void document.body.offsetHeight;
       document.body.style.display = '';
+      window.scrollTo(0, currentScroll);
     });
   };
 
   return (
     <div className={style.wcagControls} role="group" aria-label={groupLabel}>
       <button
+        type="button"
         onClick={() => changeFontSize(-1)}
         className={style.wcagButton}
         aria-label={decreaseFont}
@@ -126,6 +129,7 @@ export default function WcagControls({
         <span className={style.wcagTextSmall}>A</span>-
       </button>
       <button
+        type="button"
         onClick={() => changeFontSize(1)}
         className={style.wcagButton}
         aria-label={increaseFont}
@@ -134,6 +138,7 @@ export default function WcagControls({
         <span className={style.wcagTextLarge}>A</span>+
       </button>
       <button
+        type="button"
         onClick={toggleHighContrast}
         className={clsx(style.wcagButton, { [style.active]: highContrast })}
         aria-label={toggleContrast}

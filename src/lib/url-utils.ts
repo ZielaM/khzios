@@ -7,40 +7,33 @@ export function computeNextSearchParams(
   const params = new URLSearchParams(currentParams.toString());
   let changed = false;
 
-  // Handle full-text search query diffs
-  if (newQuery) {
-    if (params.get('query') !== newQuery) {
-      params.set('query', newQuery);
-      changed = true;
-    }
-  } else if (params.has('query')) {
-    params.delete('query');
+  const currentQuery = params.get('query') || '';
+  const trimmedQuery = newQuery.trim();
+  if (trimmedQuery !== currentQuery) {
+    if (trimmedQuery) params.set('query', trimmedQuery);
+    else params.delete('query');
     changed = true;
   }
 
-  // Handle tag multi-select diffs
-  if (newTags.length > 0) {
-    const tagsString = newTags.join(',');
-    if (params.get('tag') !== tagsString) {
-      params.set('tag', tagsString);
-      changed = true;
-    }
-  } else if (params.has('tag')) {
-    params.delete('tag');
+  const currentTag = params.get('tag') || '';
+  const tagsString = newTags.join(',');
+  if (tagsString !== currentTag) {
+    if (tagsString) params.set('tag', tagsString);
+    else params.delete('tag');
     changed = true;
   }
 
-  // Logic Rule: Relevance sorting makes no sense if there is no text query.
-  // Automatically fallback to 'date' if query is empty.
-  const finalSort = newQuery && newSort === 'relevance' ? 'relevance' : 'date';
-  if (params.get('sort') !== finalSort) {
-    params.set('sort', finalSort);
+  const finalSort =
+    trimmedQuery && newSort === 'relevance' ? 'relevance' : 'date';
+  const currentSort = params.get('sort') || 'date';
+  if (finalSort !== currentSort) {
+    if (finalSort === 'date') params.delete('sort');
+    else params.set('sort', finalSort);
     changed = true;
   }
 
-  // Resets pagination to page 1 upon any search criteria change.
   if (changed) {
-    params.set('page', '1');
+    params.delete('page');
     return params;
   }
 

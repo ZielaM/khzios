@@ -112,9 +112,12 @@ export default function NewsSearchForm({
     : [];
 
   const [query, setQuery] = useState(initialQuery || '');
+  const [prevInitialQuery, setPrevInitialQuery] = useState(initialQuery);
+
   const [selectedTags, setSelectedTags] = useState<OptionType[]>(
     availableTags.filter((t) => initialTagsList.includes(t.value))
   );
+  const [prevInitialTag, setPrevInitialTag] = useState(initialTag);
 
   const sortOptions: OptionType[] = useMemo(
     () => [
@@ -127,6 +130,27 @@ export default function NewsSearchForm({
   const [selectedSort, setSelectedSort] = useState<OptionType>(
     sortOptions.find((o) => o.value === initialSort) || sortOptions[0]
   );
+  const [prevInitialSort, setPrevInitialSort] = useState(initialSort);
+
+  if (
+    initialQuery !== prevInitialQuery ||
+    initialTag !== prevInitialTag ||
+    initialSort !== prevInitialSort
+  ) {
+    setPrevInitialQuery(initialQuery);
+    setPrevInitialTag(initialTag);
+    setPrevInitialSort(initialSort);
+
+    if (!isSkeleton) {
+      setQuery(initialQuery || '');
+      setSelectedTags(
+        availableTags.filter((t) => initialTagsList.includes(t.value))
+      );
+      setSelectedSort(
+        sortOptions.find((o) => o.value === initialSort) || sortOptions[0]
+      );
+    }
+  }
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 

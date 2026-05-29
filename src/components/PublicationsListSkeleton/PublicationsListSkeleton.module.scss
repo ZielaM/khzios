@@ -1,0 +1,38 @@
+@use '@/styles/variables' as *;
+
+.skeletonItem {
+  pointer-events: none;
+
+  * {
+    @include skeleton-shimmer;
+    border-radius: 4px;
+  }
+}
+
+.skeletonYear {
+  width: 4em;
+  height: 2em;
+}
+
+.skeletonTitle {
+  width: 100%;
+  height: 1.5em;
+  margin-bottom: 0.25rem;
+}
+
+.skeletonTitleHalf {
+  width: 60%;
+  height: 1.5em;
+  margin-bottom: 0.5rem;
+}
+
+.skeletonMeta {
+  width: 40%;
+  height: 1em;
+  margin-bottom: 0.25rem;
+}
+
+.skeletonLink {
+  width: 6em;
+  height: 1.5em;
+}

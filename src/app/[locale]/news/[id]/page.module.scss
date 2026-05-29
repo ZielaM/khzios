@@ -388,29 +388,10 @@
   letter-spacing: -0.01em;
 }
 
-// ─── Loading Skeleton ─────────────────────────────────────────────────
-
-@keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 // Shared shimmer effect for all skeleton elements
 %skeleton-base {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  background-color: rgba(0, 0, 0, 0.08);
+  @include skeleton-pulse;
   border-radius: 8px;
-
-  :global(.wcag-high-contrast) & {
-    background-color: rgba(255, 255, 255, 0.15);
-  }
 }
 
 .skeletonPill {

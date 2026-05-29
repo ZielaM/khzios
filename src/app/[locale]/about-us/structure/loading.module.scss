@@ -1,0 +1,32 @@
+@use '@/styles/variables' as *;
+
+.skeleton {
+  @include skeleton-shimmer;
+}
+
+.card {
+  height: 200px;
+  border-radius: 20px;
+}
+
+.backLinkSkeleton {
+  width: 180px;
+  height: 38px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+
+.heroSkeleton {
+  height: 200px;
+}
+
+.sectionTitleSkeleton {
+  width: 250px;
+  height: 36px;
+  margin: 0 0 24px;
+  border-radius: 4px;
+}
+
+.teamCardSkeleton {
+  height: 150px;
+}

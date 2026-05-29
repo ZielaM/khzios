@@ -77,3 +77,59 @@ $page-padding-top-mobile: 12px;
   margin: 0;
   letter-spacing: -0.01em;
 }
+
+// ──── Zmienne i Mixiny dla Skeletonów ──────────────────────────────────
+$skeleton-bg: rgba(0, 0, 0, 0.05);
+$skeleton-highlight: rgba(0, 0, 0, 0.1);
+
+$skeleton-bg-hc: rgba(255, 255, 255, 0.1);
+$skeleton-highlight-hc: rgba(255, 255, 255, 0.2);
+
+@keyframes pulse-skeleton {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer-skeleton {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@mixin skeleton-shimmer {
+  animation: shimmer-skeleton 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    $skeleton-bg 4%,
+    $skeleton-highlight 25%,
+    $skeleton-bg 36%
+  );
+  background-size: 1000px 100%;
+
+  :global(.wcag-high-contrast) & {
+    background: linear-gradient(
+      to right,
+      $skeleton-bg-hc 4%,
+      $skeleton-highlight-hc 25%,
+      $skeleton-bg-hc 36%
+    );
+    background-size: 1000px 100%;
+  }
+}
+
+@mixin skeleton-pulse {
+  animation: pulse-skeleton 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: $skeleton-highlight;
+
+  :global(.wcag-high-contrast) & {
+    background-color: $skeleton-highlight-hc;
+  }
+}

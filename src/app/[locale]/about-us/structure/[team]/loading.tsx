@@ -1,16 +1,17 @@
 import style from './page.module.scss';
 import skeletonStyle from './loading.module.scss';
+import fullTeamStyle from '@/components/FullTeamPage/FullTeamPage.module.scss';
 import clsx from 'clsx';
 
 export default function Loading() {
   return (
     <div className={style.page}>
-      <div className={clsx(skeletonStyle.skeleton, skeletonStyle.title)} />
+      <div className={clsx(skeletonStyle.skeleton, skeletonStyle.backLinkSkeleton)} />
 
-      <div className={style.fullTeam}>
+      <div className={fullTeamStyle.fullTeam}>
         <div className={clsx(skeletonStyle.skeleton, skeletonStyle.hero)} />
 
-        <div className={style.contentGrid}>
+        <div className={fullTeamStyle.contentGrid}>
           <div className={skeletonStyle.sectionBlock}>
             <div
               className={clsx(

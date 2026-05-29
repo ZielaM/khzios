@@ -51,6 +51,21 @@ export async function getAllTeamSlugs() {
   });
 }
 
+/**
+ * Zwraca wszystkie zespoły z tłumaczeniami
+ * do renderowania kart na stronie zbiorczej struktury.
+ */
+export const getAllTeams = cache(async () => {
+  return prisma.team.findMany({
+    include: {
+      translations: true,
+    },
+    orderBy: {
+      displayOrder: 'asc',
+    },
+  });
+});
+
 /** Return type of getTeamBySlug when the team exists */
 export type TeamWithRelations = NonNullable<
   Awaited<ReturnType<typeof getTeamBySlug>>

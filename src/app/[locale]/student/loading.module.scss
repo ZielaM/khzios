@@ -1,0 +1,35 @@
+@use '@/styles/variables' as *;
+
+.skeleton {
+  @include skeleton-shimmer;
+  border-radius: 0.5rem;
+}
+
+.backLinkSkeleton {
+  width: 150px;
+  height: 24px;
+  margin-bottom: 2rem;
+}
+
+.titleSkeleton {
+  width: 300px;
+  height: 40px;
+  margin: 0 auto 32px;
+}
+
+.tableContainerSkeleton {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.tableRowSkeleton {
+  width: 100%;
+  height: 60px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}

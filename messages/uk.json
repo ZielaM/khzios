@@ -156,7 +156,8 @@
     "saturday": "Субота",
     "sunday": "Неділя",
     "hoursLabel": "Години роботи",
-    "locationLabel": "Локація офісу"
+    "locationLabel": "Локація офісу",
+    "consultationsLabel": "Консультації"
   },
   "AboutUsPage": {
     "title": "Про нас",
@@ -166,5 +167,14 @@
     "publicationsCardTitle": "Наукові Публікації",
     "publicationsCardDesc": "Переглядайте наш репозиторій наукових статей, дослідницьких робіт та монографій, опублікованих нашими співробітниками.",
     "viewDetails": "Детальніше"
+  },
+  "StudentsPage": {
+    "title": "Для студентів",
+    "consultationsTitle": "Консультації для студентів",
+    "employeeName": "Ім'я та прізвище",
+    "consultationDay": "День",
+    "consultationTime": "Години",
+    "consultationRoom": "Місце",
+    "noConsultations": "Немає заявлених консультацій"
   }
 }

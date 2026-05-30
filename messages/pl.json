@@ -156,7 +156,8 @@
     "sunday": "Niedziela",
     "hoursLabel": "Godziny pracy",
     "locationLabel": "Lokalizacja biura",
-    "teamLabel": "Zespół"
+    "teamLabel": "Zespół",
+    "consultationsLabel": "Konsultacje"
   },
   "AboutUsPage": {
     "title": "O nas",
@@ -166,5 +167,14 @@
     "publicationsCardTitle": "Publikacje Naukowe",
     "publicationsCardDesc": "Przeglądaj repozytorium artykułów naukowych i monografii opublikowanych przez naszych pracowników.",
     "viewDetails": "Zobacz szczegóły"
+  },
+  "StudentsPage": {
+    "title": "Dla studentów",
+    "consultationsTitle": "Konsultacje dla studentów",
+    "employeeName": "Imię i nazwisko",
+    "consultationDay": "Dzień",
+    "consultationTime": "Godziny",
+    "consultationRoom": "Miejsce",
+    "noConsultations": "Brak zadeklarowanych konsultacji"
   }
 }

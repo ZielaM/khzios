@@ -156,7 +156,8 @@
     "sunday": "Sunday",
     "hoursLabel": "Working hours",
     "locationLabel": "Office location",
-    "teamLabel": "Team"
+    "teamLabel": "Team",
+    "consultationsLabel": "Consultations"
   },
   "AboutUsPage": {
     "title": "About Us",
@@ -166,5 +167,14 @@
     "publicationsCardTitle": "Scientific Publications",
     "publicationsCardDesc": "Browse our repository of scientific articles, research papers, and monographs published by our staff.",
     "viewDetails": "Explore"
+  },
+  "StudentsPage": {
+    "title": "For Students",
+    "consultationsTitle": "Student Consultations",
+    "employeeName": "Name",
+    "consultationDay": "Day",
+    "consultationTime": "Hours",
+    "consultationRoom": "Location",
+    "noConsultations": "No consultations declared"
   }
 }

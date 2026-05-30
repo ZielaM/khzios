@@ -156,7 +156,8 @@
     "sunday": "Воскресенье",
     "hoursLabel": "Часы работы",
     "locationLabel": "Расположение офиса",
-    "teamLabel": "Команда"
+    "teamLabel": "Команда",
+    "consultationsLabel": "Консультации"
   },
   "AboutUsPage": {
     "title": "О нас",
@@ -166,5 +167,14 @@
     "publicationsCardTitle": "Научные Публикации",
     "publicationsCardDesc": "Просматривайте наш репозиторий научных статей, исследовательских работ и монографий, опубликованных нашими сотрудниками.",
     "viewDetails": "Подробнее"
+  },
+  "StudentsPage": {
+    "title": "Для студентов",
+    "consultationsTitle": "Консультации для студентов",
+    "employeeName": "Имя и фамилия",
+    "consultationDay": "День",
+    "consultationTime": "Часы",
+    "consultationRoom": "Место",
+    "noConsultations": "Нет заявленных консультаций"
   }
 }

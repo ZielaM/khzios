@@ -74,18 +74,21 @@ function MemberCard({
   teamSlug: string;
 }) {
   const t = useTranslations('TeamPage');
-  const { translation } = resolveTranslation(member.translations, locale);
+  const { translation } = resolveTranslation(
+    member.employee.translations,
+    locale
+  );
 
-  const title = translation?.title ?? '';
+  const title = translation?.academicTitle ?? '';
 
   return (
     <AnimateOnce>
       <div className={style.card}>
         <div className={style.avatarContainer}>
-          {member.photoUrl ? (
+          {member.employee.photoUrl ? (
             <Image
-              src={member.photoUrl}
-              alt={member.name}
+              src={member.employee.photoUrl}
+              alt={`${member.employee.firstName} ${member.employee.lastName}`}
               fill
               className={style.avatar}
               sizes="80px"
@@ -98,12 +101,14 @@ function MemberCard({
         </div>
         <div className={style.info}>
           <div className={style.title}>{title}</div>
-          <div className={style.name}>{member.name}</div>
-          {member.profileSlug && (
+          <div
+            className={style.name}
+          >{`${member.employee.firstName} ${member.employee.lastName}`}</div>
+          {member.employee.profileSlug && (
             <Link
               href={{
                 pathname: '/about-us/structure/[team]/[member]' as const,
-                params: { team: teamSlug, member: member.profileSlug },
+                params: { team: teamSlug, member: member.employee.profileSlug },
               }}
               className={style.profileLink}
             >

@@ -15,6 +15,7 @@ export interface ContactProfileProps {
   workingHours: { day: string; hours: string }[];
   photoUrl?: string;
   fallbackIcon?: ReactNode;
+  hoursTitle?: string;
 }
 
 export default function ContactProfile({
@@ -26,13 +27,14 @@ export default function ContactProfile({
   workingHours,
   photoUrl,
   fallbackIcon,
+  hoursTitle,
 }: ContactProfileProps) {
   const tMember = useTranslations('MemberProfile');
 
   const contactLabel = tMember('contactTitle');
   const emailLabel = tMember('emailLabel');
   const phoneLabel = tMember('phoneLabel');
-  const hoursLabel = tMember('hoursLabel');
+  const hoursLabel = hoursTitle || tMember('hoursLabel');
   const locationLabel = tMember('locationLabel');
   const closedLabel = tMember('closedLabel');
 

@@ -19,11 +19,11 @@ export async function generateStaticParams() {
 
   return routing.locales.flatMap((locale) =>
     members
-      .filter((m) => m.profileSlug)
+      .filter((m) => m.employee.profileSlug)
       .map((m) => ({
         locale,
         team: m.team.slug,
-        member: m.profileSlug!,
+        member: m.employee.profileSlug!,
       }))
   );
 }
@@ -39,10 +39,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const member = await getMemberBySlug(memberSlug);
   if (!member) return {};
 
-  const { translation } = resolveTranslation(member.translations, locale);
+  const { translation } = resolveTranslation(
+    member.employee.translations,
+    locale
+  );
 
-  const titlePrefix = translation?.title ? `${translation.title} ` : '';
-  const title = `${titlePrefix}${member.name} | KHZIOS`;
+  const titlePrefix = translation?.academicTitle
+    ? `${translation.academicTitle} `
+    : '';
+  const title = `${titlePrefix}${member.employee.firstName} ${member.employee.lastName} | KHZIOS`;
 
   return { title };
 }
@@ -56,7 +61,7 @@ export default async function MemberPage({ params }: Props) {
 
   const t = await getTranslations('MemberProfile');
   const { translation: memberTranslation } = resolveTranslation(
-    member.translations,
+    member.employee.translations,
     locale
   );
   const { translation: teamTranslation } = resolveTranslation(
@@ -64,9 +69,9 @@ export default async function MemberPage({ params }: Props) {
     locale
   );
 
-  const title = memberTranslation?.title ?? '';
+  const title = memberTranslation?.academicTitle ?? '';
   const teamName = teamTranslation?.name || member.team.slug;
-  const hasContact = member.email || member.phone;
+  const hasContact = member.employee.email || member.employee.phone;
 
   return (
     <div className={style.page}>
@@ -85,10 +90,10 @@ export default async function MemberPage({ params }: Props) {
       <AnimateOnce>
         <div className={style.heroCard}>
           <div className={style.avatarContainer}>
-            {member.photoUrl ? (
+            {member.employee.photoUrl ? (
               <Image
-                src={member.photoUrl}
-                alt={member.name}
+                src={member.employee.photoUrl}
+                alt={`${member.employee.firstName} ${member.employee.lastName}`}
                 fill
                 className={style.avatar}
                 sizes="120px"
@@ -101,7 +106,9 @@ export default async function MemberPage({ params }: Props) {
           </div>
           <div className={style.heroInfo}>
             {title && <span className={style.heroTitle}>{title}</span>}
-            <h1 className={style.heroName}>{member.name}</h1>
+            <h1
+              className={style.heroName}
+            >{`${member.employee.firstName} ${member.employee.lastName}`}</h1>
             <div className={style.teamBadge}>
               <Users size={16} />
               <span>{t('teamLabel')}:</span>
@@ -132,7 +139,7 @@ export default async function MemberPage({ params }: Props) {
 
             {hasContact ? (
               <ul className={style.contactList}>
-                {member.email && (
+                {member.employee.email && (
                   <li className={style.contactItem}>
                     <div className={style.contactIconWrapper}>
                       <Mail size={18} />
@@ -143,16 +150,16 @@ export default async function MemberPage({ params }: Props) {
                       </div>
                       <div className={style.contactValue}>
                         <a
-                          href={`mailto:${member.email}`}
+                          href={`mailto:${member.employee.email}`}
                           className={style.contactLink}
                         >
-                          {member.email}
+                          {member.employee.email}
                         </a>
                       </div>
                     </div>
                   </li>
                 )}
-                {member.phone && (
+                {member.employee.phone && (
                   <li className={style.contactItem}>
                     <div className={style.contactIconWrapper}>
                       <Phone size={18} />
@@ -163,10 +170,10 @@ export default async function MemberPage({ params }: Props) {
                       </div>
                       <div className={style.contactValue}>
                         <a
-                          href={`tel:${member.phone.replace(/\s/g, '')}`}
+                          href={`tel:${member.employee.phone.replace(/\s/g, '')}`}
                           className={style.contactLink}
                         >
-                          {member.phone}
+                          {member.employee.phone}
                         </a>
                       </div>
                     </div>
@@ -179,7 +186,7 @@ export default async function MemberPage({ params }: Props) {
           </div>
 
           {/* ORCID Card */}
-          {member.orcid && (
+          {member.employee.orcid && (
             <div className={style.infoCard}>
               <div className={style.cardHeader}>
                 <div className={style.cardIcon}>
@@ -192,10 +199,10 @@ export default async function MemberPage({ params }: Props) {
                 <p className={style.orcidDesc}>{t('orcidDesc')}</p>
                 <div className={style.orcidId}>
                   <OrcidIcon className={style.orcidLogo} />
-                  <span>{member.orcid}</span>
+                  <span>{member.employee.orcid}</span>
                 </div>
                 <a
-                  href={`https://orcid.org/${member.orcid}`}
+                  href={`https://orcid.org/${member.employee.orcid}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={style.orcidLink}

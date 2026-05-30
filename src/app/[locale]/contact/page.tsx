@@ -4,6 +4,8 @@ import { Briefcase } from 'lucide-react';
 import { Metadata } from 'next';
 import ContactProfile from '@/components/ContactProfile';
 import LocationMap from '@/components/LocationMap';
+import BackLink from '@/components/BackLink';
+import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
 import { getSecretariat } from '@/lib/secretariat-queries';
 import { resolveTranslation } from '@/lib/translations';
@@ -62,6 +64,9 @@ export default async function ContactPage({ params }: Props) {
 
   return (
     <div className={style.page}>
+      <AnimateOnce>
+        <BackLink href="/">{tStruct('backToHome')}</BackLink>
+      </AnimateOnce>
       <ContactProfile
         name={secTranslation?.title || tNav('contact')}
         title=""

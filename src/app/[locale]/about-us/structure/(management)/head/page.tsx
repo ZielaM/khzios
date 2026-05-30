@@ -7,7 +7,6 @@ import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
 import { getDepartmentHead } from '@/lib/head-queries';
 import { resolveTranslation } from '@/lib/translations';
-import { mapWorkingHours } from '@/lib/working-hours';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -27,15 +26,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations('Navbar');
   const head = await getDepartmentHead();
 
-  if (head) {
+  if (head && head.employee) {
     const headTranslation =
-      head.translations.find((tr) => tr.languageCode === locale) ||
-      head.translations[0];
+      head.employee.translations.find((tr) => tr.languageCode === locale) ||
+      head.employee.translations[0];
     const prefix = headTranslation?.academicTitle
       ? `${headTranslation.academicTitle} `
       : '';
     return {
-      title: `${prefix}${head.name} - ${t('headOfDepartment')} | KHZIOS`,
+      title: `${prefix}${head.employee.firstName} ${head.employee.lastName} - ${t('headOfDepartment')} | KHZIOS`,
     };
   }
 
@@ -54,7 +53,7 @@ export default async function HeadPage({ params }: Props) {
   const head = await getDepartmentHead();
 
   // Handle case where head is not yet configured in DB
-  if (!head) {
+  if (!head || !head.employee) {
     return (
       <div className={style.page}>
         <AnimateOnce>
@@ -68,18 +67,15 @@ export default async function HeadPage({ params }: Props) {
   }
 
   const { translation: headTranslation } = resolveTranslation(
-    head.translations,
+    head.employee.translations,
     locale
   );
 
-  const workingHours = mapWorkingHours(head.workingHours, locale, {
-    monday: tMember('monday'),
-    tuesday: tMember('tuesday'),
-    wednesday: tMember('wednesday'),
-    thursday: tMember('thursday'),
-    friday: tMember('friday'),
-    saturday: tMember('saturday'),
-    sunday: tMember('sunday'),
+  const workingHours = head.employee.consultations.map((c) => {
+    const tr =
+      c.translations.find((t) => t.languageCode === locale) ||
+      c.translations[0];
+    return { day: tr?.day || '', hours: tr?.time || '' };
   });
 
   return (
@@ -93,15 +89,16 @@ export default async function HeadPage({ params }: Props) {
       <ContactProfile
         name={
           headTranslation?.academicTitle
-            ? `${headTranslation.academicTitle} ${head.name}`
-            : head.name
+            ? `${headTranslation.academicTitle} ${head.employee.firstName} ${head.employee.lastName}`
+            : `${head.employee.firstName} ${head.employee.lastName}`
         }
-        title={headTranslation?.title || tNav('headOfDepartment')}
-        email={head.email || ''}
-        phone={head.phone || ''}
-        officeLocation={head.officeLocation || ''}
+        title={tNav('headOfDepartment')}
+        email={head.employee.email || ''}
+        phone={head.employee.phone || ''}
+        officeLocation={head.employee.officeLocation || ''}
         workingHours={workingHours}
-        photoUrl={head.photoUrl || undefined}
+        hoursTitle={tMember('consultationsLabel')}
+        photoUrl={head.employee.photoUrl || undefined}
       />
     </div>
   );

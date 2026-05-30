@@ -1,0 +1,145 @@
+@use '@/styles/variables' as *;
+
+.page {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  @include section-title;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+  }
+
+  @media (max-width: 768px) {
+    border: none;
+    border-radius: 0;
+
+    :global(.wcag-high-contrast) & {
+      border: none;
+    }
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th,
+  td {
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    vertical-align: top;
+  }
+
+  th {
+    background-color: rgba(0, 0, 0, 0.02);
+    font-weight: 700;
+    font-size: 0.95em;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+
+    :global(.wcag-high-contrast) & {
+      background-color: transparent;
+      color: var(--foreground);
+      border-bottom: 2px solid var(--foreground);
+    }
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.01);
+  }
+
+  td {
+    font-size: 1.05em;
+    color: #222;
+
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+      border-bottom: 1px solid var(--foreground);
+    }
+  }
+
+  .employeeName {
+    font-weight: 600;
+    color: var(--color-primary);
+
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+    }
+  }
+
+  .consultationBlock {
+    margin-bottom: 8px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    thead {
+      display: none;
+    }
+
+    tr {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      background-color: var(--background);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      :global(.wcag-high-contrast) & {
+        border: 2px solid var(--foreground);
+      }
+    }
+
+    td {
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 12px 16px;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &::before {
+        content: attr(data-label);
+        font-size: 0.8em;
+        text-transform: uppercase;
+        color: #666;
+        font-weight: 700;
+        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+
+        :global(.wcag-high-contrast) & {
+          color: var(--foreground);
+        }
+      }
+    }
+  }
+}

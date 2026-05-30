@@ -23,8 +23,15 @@ export const getTeamBySlug = cache(async (slug: string) => {
         orderBy: { displayOrder: 'asc' },
       },
       members: {
-        include: { translations: true },
-        orderBy: { displayOrder: 'asc' },
+        include: {
+          employee: {
+            include: { translations: true },
+          },
+        },
+        orderBy: [
+          { employee: { lastName: 'asc' } },
+          { employee: { firstName: 'asc' } },
+        ],
       },
       courses: {
         include: { translations: true },
@@ -78,10 +85,12 @@ export type TeamWithRelations = NonNullable<
  * and the parent team info for breadcrumbs / context.
  */
 export const getMemberBySlug = cache(async (profileSlug: string) => {
-  return prisma.teamMember.findUnique({
-    where: { profileSlug },
+  return prisma.teamMember.findFirst({
+    where: { employee: { profileSlug } },
     include: {
-      translations: true,
+      employee: {
+        include: { translations: true },
+      },
       team: {
         include: {
           translations: true,
@@ -97,9 +106,9 @@ export const getMemberBySlug = cache(async (profileSlug: string) => {
  */
 export async function getAllMemberSlugs() {
   return prisma.teamMember.findMany({
-    where: { profileSlug: { not: null } },
+    where: { employee: { profileSlug: { not: null } } },
     select: {
-      profileSlug: true,
+      employee: { select: { profileSlug: true } },
       team: { select: { slug: true } },
     },
   });

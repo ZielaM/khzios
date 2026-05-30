@@ -31,19 +31,10 @@ const Footer = () => {
           <h4 className={styles.colTitle}>{t('quickLinks')}</h4>
           <ul className={styles.linksList}>
             <li>
-              <a href="#">{t('upPoznan')}</a>
+              <a href="https://www.up.poznan.pl/">{t('upPoznan')}</a>
             </li>
             <li>
-              <a href="#">{t('facultyLink')}</a>
-            </li>
-            <li>
-              <a href="#">{t('knowledgeBase')}</a>
-            </li>
-            <li>
-              <a href="#">Facebook</a>
-            </li>
-            <li>
-              <a href="#">LinkedIn</a>
+              <a href="https://wwz.up.poznan.pl/">{t('facultyLink')}</a>
             </li>
             <li>
               {/* Dynamic RSS Feed link depending on the current locale */}

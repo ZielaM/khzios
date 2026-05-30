@@ -544,22 +544,63 @@ export async function seedTeams() {
           })),
         },
         members: {
-          create: t.members.map((m, i) => ({
-            name: m.name,
-            category: m.cat,
-            photoUrl: m.photo,
-            profileSlug: slugify(m.name),
-            displayOrder: i,
-            email: m.email,
-            phone: m.phone,
-            orcid: m.orcid,
-            translations: {
-              create: (['pl', 'en', 'uk', 'ru'] as const).map((lc) => ({
-                languageCode: lc,
-                title: m.titles[lc],
-              })),
-            },
-          })),
+          create: t.members.map((m) => {
+            const [firstName, ...rest] = m.name.split(' ');
+            const lastName = rest.join(' ');
+            return {
+              category: m.cat,
+              employee: {
+                create: {
+                  firstName,
+                  lastName,
+                  photoUrl: m.photo,
+                  profileSlug: slugify(m.name),
+                  email: m.email,
+                  phone: m.phone,
+                  orcid: m.orcid,
+                  officeLocation:
+                    'pok. ' + Math.floor(Math.random() * 50 + 100),
+                  translations: {
+                    create: (['pl', 'en', 'uk', 'ru'] as const).map((lc) => ({
+                      languageCode: lc,
+                      academicTitle: m.titles[lc],
+                    })),
+                  },
+                  consultations: {
+                    create: [
+                      {
+                        room: 'pok. ' + Math.floor(Math.random() * 50 + 100),
+                        translations: {
+                          create: [
+                            {
+                              languageCode: 'pl',
+                              day: 'Środa',
+                              time: '10:00 - 12:00',
+                            },
+                            {
+                              languageCode: 'en',
+                              day: 'Wednesday',
+                              time: '10:00 - 12:00',
+                            },
+                            {
+                              languageCode: 'uk',
+                              day: 'Середа',
+                              time: '10:00 - 12:00',
+                            },
+                            {
+                              languageCode: 'ru',
+                              day: 'Среда',
+                              time: '10:00 - 12:00',
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            };
+          }),
         },
         publications: {
           create: t.publications.map((p) => ({

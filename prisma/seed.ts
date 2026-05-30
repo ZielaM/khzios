@@ -22,8 +22,11 @@ async function main() {
   await prisma.researchProject.deleteMany();
   await prisma.publicationTranslation.deleteMany();
   await prisma.publication.deleteMany();
-  await prisma.teamMemberTranslation.deleteMany();
+  await prisma.employeeTranslation.deleteMany();
+  await prisma.consultationTranslation.deleteMany();
+  await prisma.consultation.deleteMany();
   await prisma.teamMember.deleteMany();
+  await prisma.employee.deleteMany();
   await prisma.teamTranslation.deleteMany();
   await prisma.team.deleteMany();
   // News-related cleanup

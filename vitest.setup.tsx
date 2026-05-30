@@ -9,13 +9,17 @@ import React from 'react';
 
 vi.mock('next-intl', () => ({
   useTranslations: () => {
-    // Returns a function that echoes the key (with params appended if any)
-    const t = (key: string, params?: Record<string, unknown>) => {
+    interface TranslationFn {
+      (key: string, params?: Record<string, unknown>): string;
+      rich: (key: string, params?: Record<string, unknown>) => string;
+    }
+    const t = ((key: string, params?: Record<string, unknown>) => {
       if (params) {
         return `${key}:${JSON.stringify(params)}`;
       }
       return key;
-    };
+    }) as TranslationFn;
+    t.rich = t;
     return t;
   },
 }));

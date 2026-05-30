@@ -46,7 +46,7 @@ export async function seedTeams() {
           orcid: '0000-0002-1825-0097',
           titles: {
             pl: 'prof. dr hab.',
-            en: 'Full Professor',
+            en: 'Professor',
             uk: 'проф. д-р габ.',
             ru: 'проф. д-р габ.',
           },
@@ -60,7 +60,7 @@ export async function seedTeams() {
           orcid: '0000-0003-4567-1234',
           titles: {
             pl: 'dr hab.',
-            en: 'Associate Professor',
+            en: 'dr hab.',
             uk: 'д-р габ.',
             ru: 'д-р габ.',
           },
@@ -168,7 +168,7 @@ export async function seedTeams() {
           },
           coordinators: {
             pl: 'dr hab. Tomasz Nowak',
-            en: 'Assoc. Prof. Tomasz Nowak',
+            en: 'dr hab. Tomasz Nowak',
             uk: 'д-р Томаш Новак',
             ru: 'д-р Томаш Новак',
           },
@@ -206,7 +206,7 @@ export async function seedTeams() {
           orcid: '0000-0002-3456-7890',
           titles: {
             pl: 'prof. dr hab.',
-            en: 'Full Professor',
+            en: 'Professor',
             uk: 'проф.',
             ru: 'проф.',
           },
@@ -315,7 +315,7 @@ export async function seedTeams() {
           orcid: '0000-0003-8765-4321',
           titles: {
             pl: 'dr hab.',
-            en: 'Associate Professor',
+            en: 'dr hab.',
             uk: 'д-р габ.',
             ru: 'д-р габ.',
           },
@@ -386,7 +386,7 @@ export async function seedTeams() {
           },
           coordinators: {
             pl: 'dr hab. Zbigniew Wójcik',
-            en: 'Assoc. Prof. Zbigniew Wójcik',
+            en: 'dr hab. Zbigniew Wójcik',
             uk: 'д-р Збіґнєв Вуйцік',
             ru: 'д-р Збигнев Вуйцик',
           },
@@ -444,7 +444,7 @@ export async function seedTeams() {
           orcid: '0000-0001-7654-3210',
           titles: {
             pl: 'prof. dr hab.',
-            en: 'Full Professor',
+            en: 'Professor',
             uk: 'проф.',
             ru: 'проф.',
           },

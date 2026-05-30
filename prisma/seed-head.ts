@@ -25,7 +25,7 @@ export async function seedHead() {
           {
             languageCode: 'en',
             title: 'Head of Department',
-            academicTitle: 'Full Professor',
+            academicTitle: 'Professor',
           },
           {
             languageCode: 'uk',

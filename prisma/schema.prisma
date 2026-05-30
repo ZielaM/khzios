@@ -157,7 +157,7 @@ model TeamMember {
 model TeamMemberTranslation {
   memberId     String
   languageCode LanguageCode
-  title        String        // Academic title (e.g. "dr hab." / "Associate Prof.")
+  title        String        // Academic title (e.g. "dr hab." / "Professor")
 
   member TeamMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
 

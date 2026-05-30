@@ -198,7 +198,7 @@ export default function NewsSearchForm({
     >
       <div className={style.inputGroup}>
         <div className={style.searchInput}>
-          <Search className={style.icon} size={20} aria-hidden="true" />
+          <Search aria-hidden="true" className={style.icon} size={20} />
           <input
             data-testid={isSkeleton ? 'search-input-skeleton' : 'search-input'}
             type="text"

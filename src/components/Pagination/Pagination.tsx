@@ -109,7 +109,7 @@ export default function Pagination({
         disabled={currentPage === totalPages}
         aria-label={t('next')}
       >
-        <ChevronRight size={20} aria-hidden="true" />
+        <ChevronRight aria-hidden="true" size={20} />
       </button>
     </nav>
   );

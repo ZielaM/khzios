@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import { ArrowRight, Crown, Briefcase } from 'lucide-react';
 import BackLink from '@/components/BackLink';
 import AnimateOnce from '@/components/AnimateOnce';
+import SpotlightGrid from '@/components/SpotlightGrid';
 import { getAllTeams } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import style from './page.module.scss';
@@ -53,35 +54,41 @@ export default async function StructurePage({ params }: Props) {
         <h2 className={style.sectionTitle}>{t('managementTitle')}</h2>
       </AnimateOnce>
 
-      <div className={style.managementGrid}>
-        <AnimateOnce>
+      <AnimateOnce>
+        <SpotlightGrid className={style.managementGrid}>
           <Link href="/about-us/structure/head" className={style.card}>
-            <div className={style.cardIconWrapper}>
-              <Crown size={26} />
+            <div className={style.cardIconWrapper} aria-hidden="true">
+              <Crown aria-hidden="true" size={26} />
             </div>
             <h3 className={style.cardTitle}>{t('headCard')}</h3>
             <p className={style.cardDesc}>{t('headDesc')}</p>
             <span className={style.cardFooter}>
               {t('viewDetails')}
-              <ArrowRight size={16} className={style.cardArrow} />
+              <ArrowRight
+                aria-hidden="true"
+                size={16}
+                className={style.cardArrow}
+              />
             </span>
           </Link>
-        </AnimateOnce>
 
-        <AnimateOnce>
           <Link href="/about-us/structure/secretariat" className={style.card}>
-            <div className={style.cardIconWrapper}>
-              <Briefcase size={26} />
+            <div className={style.cardIconWrapper} aria-hidden="true">
+              <Briefcase aria-hidden="true" size={26} />
             </div>
             <h3 className={style.cardTitle}>{t('secretariatCard')}</h3>
             <p className={style.cardDesc}>{t('secretariatDesc')}</p>
             <span className={style.cardFooter}>
               {t('viewDetails')}
-              <ArrowRight size={16} className={style.cardArrow} />
+              <ArrowRight
+                aria-hidden="true"
+                size={16}
+                className={style.cardArrow}
+              />
             </span>
           </Link>
-        </AnimateOnce>
-      </div>
+        </SpotlightGrid>
+      </AnimateOnce>
 
       {/* ── Teams ─────────────────────────────────────────────── */}
       <AnimateOnce>
@@ -89,31 +96,35 @@ export default async function StructurePage({ params }: Props) {
       </AnimateOnce>
 
       <div className={style.teamsSection}>
-        <div className={style.teamsGrid}>
-          {teams.map((team) => {
-            const { translation } = resolveTranslation(
-              team.translations,
-              locale
-            );
-            if (!translation) return null;
+        <AnimateOnce>
+          <SpotlightGrid className={style.teamsGrid}>
+            {teams.map((team) => {
+              const { translation } = resolveTranslation(
+                team.translations,
+                locale
+              );
+              if (!translation) return null;
 
-            // Build the href using the team slug as a typed route
-            const href =
-              `/about-us/structure/${team.slug}` as `/about-us/structure/ruminants`;
+              // Build the href using the team slug as a typed route
+              const href =
+                `/about-us/structure/${team.slug}` as `/about-us/structure/ruminants`;
 
-            return (
-              <AnimateOnce key={team.id}>
-                <Link href={href} className={style.card}>
+              return (
+                <Link key={team.id} href={href} className={style.card}>
                   <h3 className={style.cardTitle}>{translation.name}</h3>
                   <span className={style.cardFooter}>
                     {t('viewDetails')}
-                    <ArrowRight size={16} className={style.cardArrow} />
+                    <ArrowRight
+                      aria-hidden="true"
+                      size={16}
+                      className={style.cardArrow}
+                    />
                   </span>
                 </Link>
-              </AnimateOnce>
-            );
-          })}
-        </div>
+              );
+            })}
+          </SpotlightGrid>
+        </AnimateOnce>
       </div>
     </div>
   );

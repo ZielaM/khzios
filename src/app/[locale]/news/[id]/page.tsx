@@ -160,8 +160,8 @@ export default async function NewsDetailsPage({
             <div className={style.metadata}>
               <div className={style.dateWrapper}>
                 <Calendar
-                  size={18}
                   aria-hidden="true"
+                  size={18}
                   className={style.metaIcon}
                 />
                 <time
@@ -173,8 +173,8 @@ export default async function NewsDetailsPage({
               </div>
               <div className={style.readingTimeWrapper}>
                 <Clock
-                  size={18}
                   aria-hidden="true"
+                  size={18}
                   className={style.metaIcon}
                 />
                 <span className={style.readingTime}>

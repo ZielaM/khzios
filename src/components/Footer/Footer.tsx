@@ -51,7 +51,7 @@ const Footer = () => {
                 }}
                 title="RSS Feed"
               >
-                <Rss size={14} /> RSS
+                <Rss aria-hidden="true" size={14} /> RSS
               </a>
             </li>
           </ul>
@@ -65,11 +65,11 @@ const Footer = () => {
             <h4 className={styles.colTitle}>{t('contactTitle')}</h4>
             <ul className={styles.contactList}>
               <li>
-                <Phone className={styles.icon} size={20} />
+                <Phone aria-hidden="true" className={styles.icon} size={20} />
                 <span>+48 61 848 72 45</span>
               </li>
               <li>
-                <Mail className={styles.icon} size={20} />
+                <Mail aria-hidden="true" className={styles.icon} size={20} />
                 <span>khz@up.poznan.pl</span>
               </li>
             </ul>

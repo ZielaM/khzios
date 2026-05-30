@@ -13,7 +13,7 @@ interface BackLinkProps {
 export default function BackLink({ href, children, className }: BackLinkProps) {
   return (
     <Link href={href} className={clsx(style.backLink, className)}>
-      <ChevronLeft size={20} aria-hidden="true" />
+      <ChevronLeft aria-hidden="true" size={20} />
       <span>{children}</span>
     </Link>
   );

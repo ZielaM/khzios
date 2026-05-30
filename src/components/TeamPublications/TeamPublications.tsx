@@ -54,7 +54,7 @@ export default function TeamPublications({
             })}
             onClick={() => setActiveTab('publications')}
           >
-            <FileText size={18} />
+            <FileText aria-hidden="true" size={18} />
             {t('publicationsTab')}
           </button>
         )}
@@ -65,7 +65,7 @@ export default function TeamPublications({
             })}
             onClick={() => setActiveTab('projects')}
           >
-            <Briefcase size={18} />
+            <Briefcase aria-hidden="true" size={18} />
             {t('projectsTab')}
           </button>
         )}
@@ -101,7 +101,7 @@ export default function TeamPublications({
                           rel="noopener noreferrer"
                           className={style.doiLink}
                         >
-                          DOI <ExternalLink size={14} />
+                          DOI <ExternalLink aria-hidden="true" size={14} />
                         </a>
                       )}
                     </div>

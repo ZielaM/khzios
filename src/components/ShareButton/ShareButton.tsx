@@ -58,12 +58,12 @@ export default function ShareButton({ title }: ShareButtonProps) {
     >
       {copied ? (
         <>
-          <Check size={18} aria-hidden="true" />
+          <Check aria-hidden="true" size={18} />
           <span>{t('linkCopied')}</span>
         </>
       ) : (
         <>
-          <Share2 size={18} aria-hidden="true" />
+          <Share2 aria-hidden="true" size={18} />
           <span>{t('share')}</span>
         </>
       )}

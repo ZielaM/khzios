@@ -40,9 +40,9 @@ export default async function NewsGridServer({
         {data.length === 0 ? (
           <div className={style.noResults}>
             <SearchX
+              aria-hidden="true"
               className={style.noResultsIcon}
               size={48}
-              aria-hidden="true"
             />
             <p>{t('noResults')}</p>
           </div>

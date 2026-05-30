@@ -35,7 +35,7 @@ export default function ScrollToTop() {
       aria-label={t('scrollToTop')}
       title={t('scrollToTop')}
     >
-      <ArrowUp size={24} aria-hidden="true" />
+      <ArrowUp aria-hidden="true" size={24} />
     </button>
   );
 }

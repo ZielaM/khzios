@@ -100,7 +100,7 @@ export default async function MemberPage({ params }: Props) {
               />
             ) : (
               <div className={style.avatarFallback}>
-                <User size={48} />
+                <User aria-hidden="true" size={48} />
               </div>
             )}
           </div>
@@ -110,7 +110,7 @@ export default async function MemberPage({ params }: Props) {
               className={style.heroName}
             >{`${member.employee.firstName} ${member.employee.lastName}`}</h1>
             <div className={style.teamBadge}>
-              <Users size={16} />
+              <Users aria-hidden="true" size={16} />
               <span>{t('teamLabel')}:</span>
               <Link
                 href={
@@ -132,7 +132,7 @@ export default async function MemberPage({ params }: Props) {
           <div className={style.infoCard}>
             <div className={style.cardHeader}>
               <div className={style.cardIcon}>
-                <Mail size={20} />
+                <Mail aria-hidden="true" size={20} />
               </div>
               <h2 className={style.cardTitle}>{t('contactTitle')}</h2>
             </div>
@@ -142,7 +142,7 @@ export default async function MemberPage({ params }: Props) {
                 {member.employee.email && (
                   <li className={style.contactItem}>
                     <div className={style.contactIconWrapper}>
-                      <Mail size={18} />
+                      <Mail aria-hidden="true" size={18} />
                     </div>
                     <div>
                       <div className={style.contactLabel}>
@@ -162,7 +162,7 @@ export default async function MemberPage({ params }: Props) {
                 {member.employee.phone && (
                   <li className={style.contactItem}>
                     <div className={style.contactIconWrapper}>
-                      <Phone size={18} />
+                      <Phone aria-hidden="true" size={18} />
                     </div>
                     <div>
                       <div className={style.contactLabel}>
@@ -207,7 +207,7 @@ export default async function MemberPage({ params }: Props) {
                   rel="noopener noreferrer"
                   className={style.orcidLink}
                 >
-                  {t('viewOrcid')} <ExternalLink size={14} />
+                  {t('viewOrcid')} <ExternalLink aria-hidden="true" size={14} />
                 </a>
               </div>
             </div>

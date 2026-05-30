@@ -57,7 +57,7 @@ export default function ContactProfile({
               />
             ) : (
               <div className={style.avatarFallback}>
-                {fallbackIcon || <User size={64} />}
+                {fallbackIcon || <User aria-hidden="true" size={64} />}
               </div>
             )}
           </div>
@@ -75,7 +75,7 @@ export default function ContactProfile({
           <div className={style.infoCard}>
             <div className={style.cardHeader}>
               <div className={style.cardIcon}>
-                <Mail size={20} />
+                <Mail aria-hidden="true" size={20} />
               </div>
               <h2 className={style.cardTitle}>{contactLabel}</h2>
             </div>
@@ -84,7 +84,7 @@ export default function ContactProfile({
                 {safeEmail && (
                   <li className={style.contactItem}>
                     <div className={style.contactIconWrapper}>
-                      <Mail size={18} />
+                      <Mail aria-hidden="true" size={18} />
                     </div>
                     <div>
                       <div className={style.contactLabel}>{emailLabel}</div>
@@ -102,7 +102,7 @@ export default function ContactProfile({
                 {phone && (
                   <li className={style.contactItem}>
                     <div className={style.contactIconWrapper}>
-                      <Phone size={18} />
+                      <Phone aria-hidden="true" size={18} />
                     </div>
                     <div>
                       <div className={style.contactLabel}>{phoneLabel}</div>
@@ -127,7 +127,7 @@ export default function ContactProfile({
           <div className={clsx(style.infoCard, style.hoursCard)}>
             <div className={style.cardHeader}>
               <div className={style.cardIcon}>
-                <Clock size={20} />
+                <Clock aria-hidden="true" size={20} />
               </div>
               <h2 className={style.cardTitle}>{hoursLabel}</h2>
             </div>
@@ -149,7 +149,7 @@ export default function ContactProfile({
           <div className={style.infoCard}>
             <div className={style.cardHeader}>
               <div className={style.cardIcon}>
-                <MapPin size={20} />
+                <MapPin aria-hidden="true" size={20} />
               </div>
               <h2 className={style.cardTitle}>{locationLabel}</h2>
             </div>

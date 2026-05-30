@@ -72,7 +72,7 @@ export default async function RelatedNews({
                   <h3 className={style.cardTitle}>{cleanTitle}</h3>
                   <span className={style.cardLink}>
                     {t('readArticle')}
-                    <ArrowRight size={16} aria-hidden="true" />
+                    <ArrowRight aria-hidden="true" size={16} />
                   </span>
                 </div>
               </Link>

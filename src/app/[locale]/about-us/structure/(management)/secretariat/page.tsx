@@ -84,7 +84,9 @@ export default async function SecretariatPage({ params }: Props) {
         officeLocation={secretariat.officeLocation || ''}
         workingHours={workingHours}
         photoUrl={secretariat.photoUrl || undefined}
-        fallbackIcon={<Briefcase size={64} strokeWidth={1.5} />}
+        fallbackIcon={
+          <Briefcase aria-hidden="true" size={64} strokeWidth={1.5} />
+        }
       />
     </div>
   );

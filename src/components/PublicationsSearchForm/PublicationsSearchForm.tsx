@@ -69,7 +69,7 @@ export default function PublicationsSearchForm({
     <div className={style.form}>
       <div className={style.searchBox}>
         <div className={style.inputWrapper}>
-          <Search className={style.searchIcon} size={20} />
+          <Search aria-hidden="true" className={style.searchIcon} size={20} />
           <input
             type="text"
             className={style.input}

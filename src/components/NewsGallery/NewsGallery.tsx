@@ -131,7 +131,7 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
             onClick={closeLightbox}
             aria-label={t('closeGallery')}
           >
-            <X size={32} />
+            <X aria-hidden="true" size={32} />
           </button>
 
           {photos.length > 1 && (
@@ -143,7 +143,7 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
               }}
               aria-label={t('prevImage')}
             >
-              <ChevronLeft size={48} />
+              <ChevronLeft aria-hidden="true" size={48} />
             </button>
           )}
 
@@ -176,7 +176,7 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
               }}
               aria-label={t('nextImage')}
             >
-              <ChevronRight size={48} />
+              <ChevronRight aria-hidden="true" size={48} />
             </button>
           )}
         </div>

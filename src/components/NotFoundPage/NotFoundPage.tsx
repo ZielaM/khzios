@@ -11,12 +11,12 @@ export default function NotFoundPage() {
   return (
     <div className={style.notFoundContainer}>
       <div className={style.errorIcon}>
-        <FileQuestion size={120} strokeWidth={1.5} aria-hidden="true" />
+        <FileQuestion aria-hidden="true" size={120} strokeWidth={1.5} />
       </div>
       <h1 className={style.title}>{t('title')}</h1>
       <p className={style.description}>{t('description')}</p>
       <Link href="/" className={style.homeButton}>
-        <Home size={20} aria-hidden="true" />
+        <Home aria-hidden="true" size={20} />
         {t('backHome')}
       </Link>
     </div>

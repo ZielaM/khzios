@@ -36,9 +36,9 @@ export default async function PublicationsListServer({
         {data.length === 0 ? (
           <div className={style.noResults}>
             <SearchX
+              aria-hidden="true"
               className={style.noResultsIcon}
               size={48}
-              aria-hidden="true"
             />
             <p>{t('noResults')}</p>
           </div>
@@ -80,7 +80,7 @@ export default async function PublicationsListServer({
                           rel="noopener noreferrer"
                           className={style.doiLink}
                         >
-                          DOI <ExternalLink size={14} />
+                          DOI <ExternalLink aria-hidden="true" size={14} />
                         </a>
                       )}
 
@@ -90,7 +90,8 @@ export default async function PublicationsListServer({
                           href={`/about-us/structure/${pub.team.slug}` as any}
                           className={style.teamLink}
                         >
-                          {teamTranslation.name} <ArrowRight size={14} />
+                          {teamTranslation.name}{' '}
+                          <ArrowRight aria-hidden="true" size={14} />
                         </Link>
                       )}
                     </div>

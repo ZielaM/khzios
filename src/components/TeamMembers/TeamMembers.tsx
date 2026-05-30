@@ -95,7 +95,7 @@ function MemberCard({
             />
           ) : (
             <div className={style.avatarFallback}>
-              <User size={32} />
+              <User aria-hidden="true" size={32} />
             </div>
           )}
         </div>
@@ -112,7 +112,7 @@ function MemberCard({
               }}
               className={style.profileLink}
             >
-              {t('viewProfile')} <ChevronRight size={14} />
+              {t('viewProfile')} <ChevronRight aria-hidden="true" size={14} />
             </Link>
           )}
         </div>

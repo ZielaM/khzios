@@ -18,14 +18,46 @@ const inter = Inter({
   subsets: ['latin', 'latin-ext'],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(
-    // to be changed
-    process.env.NEXT_PUBLIC_APP_URL || 'https://khzios.up.poznan.pl'
-  ),
-  title: 'Katedra Hodowli Zwierząt i Oceny Surowców',
-  description: 'Katedra Hodowli Zwierząt i Oceny Surowców',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'HomePage' });
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL || 'https://khzios.up.poznan.pl';
+
+  return {
+    metadataBase: new URL(appUrl),
+    title: {
+      template: `%s | ${t('heroTitle')}`,
+      default: t('heroTitle'),
+    },
+    description: t('heroSubtitle'),
+    openGraph: {
+      title: t('heroTitle'),
+      description: t('heroSubtitle'),
+      url: appUrl,
+      siteName: t('heroTitle'),
+      images: [
+        {
+          url: '/openGraph.png',
+          width: 1200,
+          height: 630,
+        },
+      ],
+      locale: locale,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('heroTitle'),
+      description: t('heroSubtitle'),
+      images: ['/openGraph.png'],
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

@@ -61,7 +61,11 @@ export default function ExternalTeamPage({
               >
                 <Icon className={style.icon} size={20} />
                 <span>{translation.label}</span>
-                <ExternalLink className={style.externalIcon} size={16} />
+                <ExternalLink
+                  aria-hidden="true"
+                  className={style.externalIcon}
+                  size={16}
+                />
               </a>
             );
           })}

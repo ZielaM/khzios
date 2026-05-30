@@ -9,7 +9,7 @@ neonConfig.webSocketConstructor = ws;
 const connectionString = `${process.env.DATABASE_URL}`;
 
 const prismaClientSingleton = () => {
-  if (connectionString.includes('localhost')) {
+  if (!connectionString.includes('neon.tech')) {
     const adapter = new PrismaPg({ connectionString });
     return new PrismaClient({ adapter });
   }

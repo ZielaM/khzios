@@ -26,6 +26,16 @@ async function main() {
   await prisma.consultationTranslation.deleteMany();
   await prisma.consultation.deleteMany();
   await prisma.teamMember.deleteMany();
+  
+  // Head and Secretariat cleanup
+  await prisma.departmentHeadHourTranslation.deleteMany();
+  await prisma.departmentHeadHour.deleteMany();
+  await prisma.departmentHead.deleteMany();
+  await prisma.secretariatHourTranslation.deleteMany();
+  await prisma.secretariatHour.deleteMany();
+  await prisma.secretariatTranslation.deleteMany();
+  await prisma.secretariat.deleteMany();
+
   await prisma.employee.deleteMany();
   await prisma.teamTranslation.deleteMany();
   await prisma.team.deleteMany();

@@ -3,7 +3,21 @@
     "title": "Aktualności",
     "readMore": "Czytaj dalej",
     "noNews": "Brak aktualności.",
-    "translationUnavailable": "Wyświetlono w języku: {language}"
+    "translationUnavailable": "Wyświetlono w języku: {language}",
+    "heroSubtitle": "Prowadzimy badania naukowe, działalność dydaktyczną oraz innowacyjne projekty w dziedzinie hodowli zwierząt.",
+    "btnAboutUs": "Poznaj naszą katedrę",
+    "btnStudent": "Strefa Studenta",
+    "quickLinksTitle": "Szybki dostęp",
+    "linkStudentsDesc": "Sprawdź harmonogramy konsultacji naszych pracowników.",
+    "linkStructureDesc": "Poznaj nasze zespoły badawcze i dydaktyczne oraz ich profil działalności.",
+    "linkPublicationsDesc": "Przeglądaj dorobek naukowy i projekty naszych badaczy.",
+    "linkContactDesc": "Dane teleadresowe i lokalizacja sekretariatu.",
+    "recentNewsTitle": "Ostatnie wydarzenia",
+    "linkStructureTitle": "Struktura",
+    "linkPublicationsTitle": "Publikacje",
+    "linkContactTitle": "Kontakt",
+    "heroTitle": "Katedra Hodowli Zwierząt i Oceny Surowców",
+    "viewAllNews": "Zobacz wszystkie aktualności"
   },
   "Navbar": {
     "logoAlt": "Logo",

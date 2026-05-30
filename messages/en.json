@@ -3,7 +3,21 @@
     "title": "News",
     "readMore": "Read more",
     "noNews": "No news found.",
-    "translationUnavailable": "Shown in {language}"
+    "translationUnavailable": "Shown in {language}",
+    "heroSubtitle": "We conduct scientific research, educational activities, and innovative projects in the field of animal breeding.",
+    "btnAboutUs": "Discover our department",
+    "btnStudent": "Student Zone",
+    "quickLinksTitle": "Quick access",
+    "linkStudentsDesc": "Check the consultation schedules of our staff.",
+    "linkStructureDesc": "Get to know our research and teaching teams and their profiles.",
+    "linkPublicationsDesc": "Browse the scientific achievements and projects of our researchers.",
+    "linkContactDesc": "Contact information and secretariat location.",
+    "recentNewsTitle": "Recent events",
+    "linkStructureTitle": "Structure",
+    "linkPublicationsTitle": "Publications",
+    "linkContactTitle": "Contact",
+    "heroTitle": "Department of Animal Breeding and Product Evaluation",
+    "viewAllNews": "View all news"
   },
   "Navbar": {
     "logoAlt": "Logo",

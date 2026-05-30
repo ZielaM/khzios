@@ -3,7 +3,21 @@
     "title": "Новости",
     "readMore": "Читать далее",
     "noNews": "Новостей не найдено.",
-    "translationUnavailable": "Показано на: {language}"
+    "translationUnavailable": "Показано на: {language}",
+    "heroSubtitle": "Мы проводим научные исследования, образовательную деятельность и инновационные проекты в области животноводства.",
+    "btnAboutUs": "Узнайте о нашей кафедре",
+    "btnStudent": "Зона студента",
+    "quickLinksTitle": "Быстрый доступ",
+    "linkStudentsDesc": "Проверьте расписание консультаций наших сотрудников.",
+    "linkStructureDesc": "Познакомьтесь с нашими исследовательскими и учебными командами.",
+    "linkPublicationsDesc": "Просматривайте научные достижения и проекты наших исследователей.",
+    "linkContactDesc": "Контактная информация и расположение секретариата.",
+    "recentNewsTitle": "Последние события",
+    "linkStructureTitle": "Структура",
+    "linkPublicationsTitle": "Публикации",
+    "linkContactTitle": "Контакты",
+    "heroTitle": "Кафедра животноводства и оценки сырья",
+    "viewAllNews": "Все новости"
   },
   "Navbar": {
     "logoAlt": "Логотип",

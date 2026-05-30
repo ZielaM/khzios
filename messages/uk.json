@@ -3,7 +3,21 @@
     "title": "Новини",
     "readMore": "Читати далі",
     "noNews": "Новин не знайдено.",
-    "translationUnavailable": "Показано мовою: {language}"
+    "translationUnavailable": "Показано мовою: {language}",
+    "heroSubtitle": "Ми проводимо наукові дослідження, навчальну діяльність та інноваційні проекти у галузі тваринництва.",
+    "btnAboutUs": "Дізнайтеся про нашу кафедру",
+    "btnStudent": "Зона студента",
+    "quickLinksTitle": "Швидкий доступ",
+    "linkStudentsDesc": "Перевірте розклади консультацій наших співробітників.",
+    "linkStructureDesc": "Познайомтеся з нашими дослідницькими та навчальними командами.",
+    "linkPublicationsDesc": "Переглядайте наукові досягнення та проекти наших дослідників.",
+    "linkContactDesc": "Контактна інформація та розташування секретаріату.",
+    "recentNewsTitle": "Останні події",
+    "linkStructureTitle": "Структура",
+    "linkPublicationsTitle": "Публікації",
+    "linkContactTitle": "Контакти",
+    "heroTitle": "Кафедра тваринництва та оцінки сировини",
+    "viewAllNews": "Всі новини"
   },
   "Navbar": {
     "logoAlt": "Логотип",

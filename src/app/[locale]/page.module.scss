@@ -1,34 +1,257 @@
 @use '@/styles/variables' as *;
 
-// Main landing page content wrapper
 .main {
-  padding: 2rem 1rem;
+  @include page-container;
+}
 
-  h1 {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2.5em;
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--background);
+  border-radius: 1.5rem;
+  margin-bottom: 4rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+  }
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+
+  :global(.wcag-high-contrast) & {
     color: var(--foreground);
+  }
+}
 
-    @media (max-width: $breakpoint-tablet) {
-      font-size: 2em;
+.heroSubtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  max-width: 800px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.heroActions {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  .primaryBtn {
+    background: var(--color-primary);
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--color-secondary);
+      transform: translateY(-2px);
+    }
+
+    :global(.wcag-high-contrast) & {
+      background: var(--foreground);
+      color: var(--background);
+      border-radius: 0;
+    }
+  }
+
+  .secondaryBtn {
+    background: transparent;
+    color: var(--color-primary);
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid var(--color-primary);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba($color-primary, 0.05);
+      transform: translateY(-2px);
+    }
+
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+      border-color: var(--foreground);
+      border-radius: 0;
     }
   }
 }
 
-// Global max-width container to prevent content from stretching too wide on large screens
-.container {
-  max-width: $max-width-content;
-  margin: 0 auto;
-  width: 100%;
+.sectionTitle {
+  @include section-title;
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
-// Responsive CSS Grid for landing page tiles
-// Uses auto-fill and minmax to automatically wrap items into new rows
-// when the screen width shrinks, without needing explicit media queries.
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 5rem;
+
+  > * {
+    height: 100%;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   justify-content: center;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bentoCard {
+  height: 100%;
+  background: var(--background);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition:
+    transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+    border-color 0.25s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    border-color: rgba($color-primary, 0.2);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+    border-color: transparent;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+    box-shadow: none;
+
+    &:hover {
+      transform: none;
+      box-shadow: 0 0 12px var(--foreground);
+    }
+
+    &:focus-visible {
+      outline-color: var(--foreground);
+    }
+  }
+}
+
+.cardIconWrapper {
+  width: 56px;
+  height: 56px;
+  background: rgba(var(--color-primary-rgb), 0.05);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    border: 2px solid var(--foreground);
+    color: var(--foreground);
+    border-radius: 0;
+  }
+}
+
+.cardTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.cardDesc {
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+  flex-grow: 1;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.cardArrow {
+  color: var(--color-primary);
+  margin-top: auto;
+  align-self: flex-end;
+  transition: transform 0.2s ease;
+
+  .bentoCard:hover & {
+    transform: translateX(4px);
+  }
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.newsSection {
+  margin-bottom: 5rem;
+}
+
+.newsFooter {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 2rem;
+    background: transparent;
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid var(--color-primary);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba($color-primary, 0.05);
+      transform: translateY(-2px);
+    }
+
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+      border-color: var(--foreground);
+      border-radius: 0;
+    }
+  }
 }

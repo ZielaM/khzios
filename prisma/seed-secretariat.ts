@@ -13,7 +13,7 @@ export async function seedSecretariat() {
     data: {
       email: 'khzios@up.poznan.pl',
       phone: '+48 61 848 72 23',
-      officeLocation: 'ul. Wołyńska 33, 60-637 Poznań, pok. 110',
+      officeLocation: 'ul. Szydłowska 50, 60-656 Poznań, pok. 110',
       translations: {
         create: [
           { languageCode: 'pl', title: 'Sekretariat Katedry' },

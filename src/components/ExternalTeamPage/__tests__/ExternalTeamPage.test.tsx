@@ -37,4 +37,42 @@ describe('ExternalTeamPage', () => {
     const link = screen.getByRole('link', { name: /Website/i });
     expect(link).toHaveAttribute('href', 'https://example.com');
   });
+
+  it('handles missing translations and unknown icons gracefully', () => {
+    const mockTeamEmpty = {
+      id: '2',
+      slug: 'fallback-slug',
+      type: 'EXTERNAL',
+      translations: [], // No translation
+      links: [
+        {
+          id: 'link1',
+          url: 'https://example.com',
+          icon: 'unknown-icon', // Not in ICONS
+          translations: [{ languageCode: 'en', label: 'Website' }],
+        },
+        {
+          id: 'link2',
+          url: 'https://example.org',
+          icon: 'globe',
+          translations: [], // No link translation
+        },
+      ],
+    };
+
+    render(
+      <ExternalTeamPage
+        team={mockTeamEmpty as unknown as TeamWithRelations}
+        locale="en"
+      />
+    );
+
+    // Should fall back to team.slug
+    expect(screen.getByText('fallback-slug')).toBeInTheDocument();
+
+    // Link2 should not be rendered because translation is missing
+    const links = screen.getAllByRole('link');
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveAttribute('href', 'https://example.com');
+  });
 });

@@ -17,8 +17,14 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: ['src/lib/**'],
-      exclude: ['src/**/*.test.ts', 'src/generated/**', 'src/lib/prisma.ts'],
+      include: ['src/lib/**', 'src/components/**'],
+      exclude: [
+        'src/**/*.test.ts',
+        'src/generated/**',
+        'src/lib/prisma.ts',
+        '**/index.ts',
+        '**/*.module.scss',
+      ],
     },
     css: {
       // CSS modules are mocked — we don't need actual class names in unit tests

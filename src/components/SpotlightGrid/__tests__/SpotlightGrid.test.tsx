@@ -60,4 +60,17 @@ describe('SpotlightGrid', () => {
     const child = screen.getByText('Child');
     expect(child.parentElement).toHaveClass('custom-grid');
   });
+
+  it('handles non-HTMLElement children and missing ref gracefully', () => {
+    render(
+      <SpotlightGrid className="mixed-grid">
+        <svg data-testid="svg-child" />
+        Text node
+      </SpotlightGrid>
+    );
+
+    const container = screen.getByTestId('svg-child').parentElement!;
+    // MouseMove should not throw when encountering SVGElement or text nodes
+    fireEvent.mouseMove(container, { clientX: 50, clientY: 50 });
+  });
 });

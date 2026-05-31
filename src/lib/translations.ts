@@ -49,6 +49,11 @@ export function resolveTranslation<T extends { languageCode: string }>(
     }
   }
 
+  // If nothing matches the chain, but there are translations available, fallback to the first one
+  if (translations.length > 0) {
+    return { translation: translations[0], isFallback: true };
+  }
+
   return { translation: undefined, isFallback: false };
 }
 

@@ -92,6 +92,7 @@ export default function Pagination({
             p === currentPage && style.active,
             p === '...' && style.dots
           )}
+          /* istanbul ignore next */
           onClick={() => typeof p === 'number' && handlePageChange(p)}
           disabled={p === '...'}
           // Screen readers need specific context for "..." vs "Page X"

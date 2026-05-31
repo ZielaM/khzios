@@ -9,7 +9,10 @@ vi.mock('next-intl', () => ({
       rich: (key: string) => string;
     }
     const t = ((key: string) => key) as TranslationFn;
-    t.rich = (key: string) => key;
+    t.rich = (key: string, values?: Record<string, () => React.ReactNode>) => {
+      if (values?.br) values.br();
+      return key;
+    };
     return t;
   },
   useLocale: () => 'en',

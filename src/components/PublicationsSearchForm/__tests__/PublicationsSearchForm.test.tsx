@@ -129,4 +129,67 @@ describe('PublicationsSearchForm', () => {
     // Skeleton shouldn't have aria-label since placeholder handles it differently in skeleton mode
     expect(input).not.toHaveAttribute('aria-label');
   });
+
+  it('updates query state when initialQuery prop changes', () => {
+    const { rerender } = render(
+      <PublicationsSearchForm {...defaultProps} initialQuery="test1" />
+    );
+    expect(screen.getByRole('textbox')).toHaveValue('test1');
+
+    rerender(<PublicationsSearchForm {...defaultProps} initialQuery="test2" />);
+    expect(screen.getByRole('textbox')).toHaveValue('test2');
+  });
+
+  it('does not push if query is the same as currentQuery', () => {
+    vi.mocked(useSearchParams).mockReturnValue(
+      new URLSearchParams('query=same') as unknown as ReturnType<
+        typeof useSearchParams
+      >
+    );
+    render(<PublicationsSearchForm {...defaultProps} initialQuery="same" />);
+    const input = screen.getByRole('textbox');
+
+    // Type something that trims to 'same'
+    fireEvent.change(input, { target: { value: 'same ' } });
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
+  it('does not update query state when initialQuery prop changes if isSkeleton is true', () => {
+    const { rerender } = render(
+      <PublicationsSearchForm
+        {...defaultProps}
+        initialQuery="test1"
+        isSkeleton={true}
+      />
+    );
+    expect(screen.getByRole('textbox')).toHaveValue('test1');
+
+    rerender(
+      <PublicationsSearchForm
+        {...defaultProps}
+        initialQuery="test2"
+        isSkeleton={true}
+      />
+    );
+    expect(screen.getByRole('textbox')).toHaveValue('test1');
+  });
+
+  it('clears timeout on component unmount', () => {
+    const { unmount } = render(<PublicationsSearchForm {...defaultProps} />);
+    const input = screen.getByRole('textbox', { name: 'searchPlaceholder' });
+
+    fireEvent.change(input, { target: { value: 'cleanup test' } });
+
+    unmount();
+
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+
+    expect(mockPush).not.toHaveBeenCalled();
+  });
 });

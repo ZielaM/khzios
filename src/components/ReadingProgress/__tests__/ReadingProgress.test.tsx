@@ -57,4 +57,26 @@ describe('ReadingProgress', () => {
     expect(bar).toHaveAttribute('aria-valuenow', '50');
     expect(fill).toHaveStyle({ width: '50%' });
   });
+
+  it('should handle zero scrollable area gracefully', () => {
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 1000,
+      configurable: true,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+      value: 1000,
+      configurable: true,
+    });
+
+    render(<ReadingProgress />);
+
+    Object.defineProperty(window, 'scrollY', {
+      value: 500,
+      configurable: true,
+    });
+    fireEvent.scroll(window);
+
+    const bar = screen.getByRole('progressbar');
+    expect(bar).toHaveAttribute('aria-valuenow', '0');
+  });
 });

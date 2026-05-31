@@ -1,6 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Pagination from '../Pagination';
+import { useRouter } from 'next/navigation';
+import { vi } from 'vitest';
+
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(),
+  usePathname: vi.fn(() => '/news'),
+  useSearchParams: vi.fn(() => new URLSearchParams()),
+}));
 
 describe('Pagination', () => {
   // ─── Visibility ────────────────────────────────────────────────────
@@ -115,6 +123,60 @@ describe('Pagination', () => {
       dots.forEach((dot) => {
         expect(dot).toBeDisabled();
       });
+    });
+  });
+
+  describe('interaction', () => {
+    it('pushes router with new page parameter', () => {
+      const mockPush = vi.fn();
+      vi.mocked(useRouter).mockReturnValue({
+        push: mockPush,
+      } as unknown as ReturnType<typeof useRouter>);
+
+      render(<Pagination currentPage={2} totalPages={5} />);
+      fireEvent.click(screen.getByLabelText('next'));
+
+      expect(mockPush).toHaveBeenCalledWith('/news?page=3', { scroll: true });
+    });
+
+    it('deletes page parameter when going to page 1', () => {
+      const mockPush = vi.fn();
+      vi.mocked(useRouter).mockReturnValue({
+        push: mockPush,
+      } as unknown as ReturnType<typeof useRouter>);
+
+      render(<Pagination currentPage={2} totalPages={5} />);
+      fireEvent.click(screen.getByLabelText('prev'));
+
+      expect(mockPush).toHaveBeenCalledWith('/news?', { scroll: true });
+    });
+
+    it('ignores clicks for out-of-bounds pages (page < 1)', () => {
+      const mockPush = vi.fn();
+      vi.mocked(useRouter).mockReturnValue({
+        push: mockPush,
+      } as unknown as ReturnType<typeof useRouter>);
+
+      // Rendering with currentPage=0 means prev button is not disabled (0 !== 1)
+      // Clicking prev calls handlePageChange(-1), triggering the `page < 1` early return
+      render(<Pagination currentPage={0} totalPages={5} />);
+      fireEvent.click(screen.getByLabelText('prev'));
+
+      expect(mockPush).not.toHaveBeenCalled();
+    });
+
+    it('ignores clicks for out-of-bounds pages (page > totalPages)', () => {
+      const mockPush = vi.fn();
+      vi.mocked(useRouter).mockReturnValue({
+        push: mockPush,
+      } as unknown as ReturnType<typeof useRouter>);
+
+      // Rendering with currentPage=6 means next button is not disabled (6 !== 5)
+      // Clicking next calls handlePageChange(7), triggering the `page > totalPages` early return
+      render(<Pagination currentPage={6} totalPages={5} />);
+      fireEvent.click(screen.getByLabelText('next'));
+
+      expect(mockPush).not.toHaveBeenCalled();
     });
   });
 });

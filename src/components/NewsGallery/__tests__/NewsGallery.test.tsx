@@ -162,6 +162,58 @@ describe('NewsGallery', () => {
     });
   });
 
+  // ─── Swipe Gestures ───────────────────────────────────────────────
+
+  describe('swipe gestures', () => {
+    it('should navigate to next image on swipe left', () => {
+      render(<NewsGallery photos={mockPhotos(3)} />);
+      fireEvent.click(screen.getAllByRole('button')[0]);
+
+      fireEvent.touchStart(document, { touches: [{ clientX: 100 }] });
+      fireEvent.touchEnd(document, { changedTouches: [{ clientX: 30 }] }); // delta = -70
+
+      expect(
+        screen.getByText('imageCounter:{"current":2,"total":3}')
+      ).toBeInTheDocument();
+    });
+
+    it('should navigate to prev image on swipe right', () => {
+      render(<NewsGallery photos={mockPhotos(3)} />);
+      fireEvent.click(screen.getAllByRole('button')[1]);
+
+      fireEvent.touchStart(document, { touches: [{ clientX: 100 }] });
+      fireEvent.touchEnd(document, { changedTouches: [{ clientX: 170 }] }); // delta = 70
+
+      expect(
+        screen.getByText('imageCounter:{"current":1,"total":3}')
+      ).toBeInTheDocument();
+    });
+
+    it('should ignore short swipes', () => {
+      render(<NewsGallery photos={mockPhotos(3)} />);
+      fireEvent.click(screen.getAllByRole('button')[0]);
+
+      fireEvent.touchStart(document, { touches: [{ clientX: 100 }] });
+      fireEvent.touchEnd(document, { changedTouches: [{ clientX: 90 }] }); // delta = -10 (threshold 50)
+
+      expect(
+        screen.getByText('imageCounter:{"current":1,"total":3}')
+      ).toBeInTheDocument();
+    });
+
+    it('should do nothing on touchEnd if touchStart was not fired', () => {
+      render(<NewsGallery photos={mockPhotos(3)} />);
+      fireEvent.click(screen.getAllByRole('button')[0]);
+
+      fireEvent.touchEnd(document, { changedTouches: [{ clientX: 30 }] });
+
+      // Should still be on the first image
+      expect(
+        screen.getByText('imageCounter:{"current":1,"total":3}')
+      ).toBeInTheDocument();
+    });
+  });
+
   // ─── Scroll Locking ───────────────────────────────────────────────
 
   describe('scroll locking', () => {

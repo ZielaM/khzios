@@ -58,4 +58,26 @@ describe('FullTeamPage', () => {
     expect(screen.getByTestId('team-publications')).toBeInTheDocument();
     expect(screen.getByTestId('team-teaching')).toBeInTheDocument();
   });
+
+  it('falls back to slug when name translation is missing', () => {
+    const mockTeamEmpty = {
+      id: '2',
+      slug: 'fallback-slug',
+      type: 'INTERNAL',
+      translations: [],
+      members: [],
+      publications: [],
+      projects: [],
+      courses: [],
+    };
+
+    render(
+      <FullTeamPage
+        team={mockTeamEmpty as unknown as TeamWithRelations}
+        locale="en"
+      />
+    );
+
+    expect(screen.getByTestId('team-hero')).toHaveTextContent('fallback-slug');
+  });
 });

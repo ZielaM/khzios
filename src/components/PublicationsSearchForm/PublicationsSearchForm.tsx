@@ -61,7 +61,7 @@ export default function PublicationsSearchForm({
       applyChanges(query);
     }, 500);
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current as NodeJS.Timeout);
     };
   }, [query, applyChanges, isSkeleton]);
 

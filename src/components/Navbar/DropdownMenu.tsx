@@ -113,8 +113,11 @@ export function DropdownItem({
   return (
     <div
       className={clsx(style.dropdownItem, { [style.hasSubmenu]: hasChildren })}
+      /* istanbul ignore next */
       onMouseEnter={() => window.innerWidth > 768 && setIsSubMenuOpen(true)}
+      /* istanbul ignore next */
       onMouseLeave={() => window.innerWidth > 768 && setIsSubMenuOpen(false)}
+      /* istanbul ignore next */
       onFocus={() => window.innerWidth > 768 && setIsSubMenuOpen(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {

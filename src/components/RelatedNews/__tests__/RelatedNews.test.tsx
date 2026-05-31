@@ -157,4 +157,21 @@ describe('RelatedNews Server Component', () => {
     const img = screen.getByRole('img');
     expect(img).toHaveAttribute('src', '/custom-photo.jpg');
   });
+
+  it('should render article with no translations gracefully', async () => {
+    vi.mocked(getRelatedNews).mockResolvedValue([
+      mockArticle('4', { translations: [] }),
+    ]);
+
+    const jsx = await RelatedNews({
+      newsId: '1',
+      tagIds: ['tag1'],
+      locale: 'en',
+    });
+    render(jsx);
+
+    // Should render an empty title
+    const headings = screen.getAllByRole('heading', { level: 3 });
+    expect(headings[0]).toHaveTextContent('');
+  });
 });

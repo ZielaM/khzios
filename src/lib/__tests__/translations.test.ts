@@ -101,11 +101,15 @@ describe('resolveTranslation', () => {
       expect(isFallback).toBe(false);
     });
 
-    it('should return undefined when no language in the chain matches', () => {
+    it('should return first available translation when no language in the chain matches', () => {
       const translations = [tr('de', 'Deutscher Titel')];
-      const { translation } = resolveTranslation(translations, 'en');
+      const { translation, isFallback } = resolveTranslation(
+        translations,
+        'en'
+      );
 
-      expect(translation).toBeUndefined();
+      expect(translation?.title).toBe('Deutscher Titel');
+      expect(isFallback).toBe(true);
     });
 
     it('should handle unknown locale by generating dynamic chain [locale, "en", "pl"]', () => {
@@ -175,9 +179,9 @@ describe('resolveTagName', () => {
     {
       locale: 'en',
       tagObj: tag('zwierzęta', [{ languageCode: 'de', name: 'Tiere' }]),
-      expected: 'zwierzęta',
+      expected: 'Tiere',
       scenario:
-        'native name when translations array has no matching language in chain',
+        'first available translation when translations array has no matching language in chain',
     },
   ])('should return $scenario', ({ locale, tagObj, expected }) => {
     expect(resolveTagName(tagObj, locale)).toBe(expected);

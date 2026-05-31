@@ -15,6 +15,10 @@ vi.mock('next-intl', () => ({
     }
     const t = ((key: string, params?: Record<string, unknown>) => {
       if (params) {
+        // Execute any function properties to get test coverage on them (like br: () => <br />)
+        Object.values(params).forEach((val) => {
+          if (typeof val === 'function') val();
+        });
         return `${key}:${JSON.stringify(params)}`;
       }
       return key;

@@ -34,6 +34,10 @@ describe('TeamTeaching', () => {
           },
         ],
       },
+      {
+        id: '2',
+        translations: [],
+      },
     ];
 
     render(

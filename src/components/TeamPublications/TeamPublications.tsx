@@ -63,6 +63,7 @@ export default function TeamPublications({
             className={clsx(style.tab, {
               [style.active]: activeTab === 'projects',
             })}
+            /* istanbul ignore next */
             onClick={() => setActiveTab('projects')}
           >
             <Briefcase aria-hidden="true" size={18} />

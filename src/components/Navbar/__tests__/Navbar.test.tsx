@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Navbar from '../Navbar';
 
@@ -38,6 +38,11 @@ vi.mock('@/components/LanguageSwitcher', () => ({
   default: () => <div data-testid="language-switcher" />,
 }));
 
+// Removed static mock, replaced by the dynamic one below
+
+// Provide a way to override pathname for specific test
+let mockPathname = '/news';
+
 vi.mock('@/i18n/routing', () => ({
   Link: ({
     children,
@@ -52,7 +57,7 @@ vi.mock('@/i18n/routing', () => ({
       {children}
     </a>
   ),
-  usePathname: () => '/news',
+  usePathname: () => mockPathname,
 }));
 
 vi.mock('../WcagControls', () => ({
@@ -111,5 +116,27 @@ describe('Navbar', () => {
     fireEvent.click(newsItem);
 
     expect(hamburger).not.toHaveClass('active');
+  });
+
+  it('closes mobile menu when pathname changes', async () => {
+    vi.useFakeTimers();
+    const { rerender } = render(<Navbar />);
+    const hamburger = screen.getByLabelText('toggleMenu');
+
+    fireEvent.click(hamburger);
+    expect(hamburger).toHaveClass('active');
+
+    // Simulate pathname change
+    mockPathname = '/new-path';
+
+    rerender(<Navbar />);
+
+    // Fast-forward timeout inside useEffect wrapped in act
+    act(() => {
+      vi.runAllTimers();
+    });
+
+    expect(hamburger).not.toHaveClass('active');
+    vi.useRealTimers();
   });
 });

@@ -53,6 +53,24 @@ describe('TeamMembers Logic', () => {
         ],
       },
     },
+    {
+      id: 'member3',
+      teamId: 'team1',
+      employeeId: 'emp3',
+      category: 'TECHNICAL',
+      employee: {
+        id: 'emp3',
+        firstName: 'Brak',
+        lastName: 'Tlumaczenia',
+        email: null,
+        phone: null,
+        officeLocation: null,
+        photoUrl: null,
+        orcid: null,
+        profileSlug: null,
+        translations: [],
+      },
+    },
   ];
 
   it('renders nothing when members list is empty', () => {
@@ -84,6 +102,8 @@ describe('TeamMembers Logic', () => {
 
     expect(screen.getByText('Anna Nowak')).toBeInTheDocument();
     expect(screen.getByText('mgr inż.')).toBeInTheDocument();
+
+    expect(screen.getByText('Brak Tlumaczenia')).toBeInTheDocument();
   });
 
   it('renders profile link only if profileSlug is present', () => {
@@ -111,6 +131,6 @@ describe('TeamMembers Logic', () => {
     // Anna has no photo, she gets fallback icon
     // We cannot easily query by lucide-react icon, but we can query by fallback class
     const fallbacks = container.querySelectorAll('.avatarFallback');
-    expect(fallbacks.length).toBe(1);
+    expect(fallbacks.length).toBe(2);
   });
 });

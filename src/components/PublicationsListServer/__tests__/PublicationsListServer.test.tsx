@@ -92,4 +92,131 @@ describe('PublicationsListServer', () => {
     const teamLink = screen.getByRole('link', { name: /Team A/i });
     expect(teamLink).toHaveAttribute('href', '/about-us/structure/team-a');
   });
+
+  it('requests sort by relevance when query is provided', async () => {
+    vi.mocked(searchPublications).mockResolvedValue({
+      data: [],
+      total: 0,
+      totalPages: 0,
+      page: 1,
+    });
+
+    const jsx = await PublicationsListServer({
+      query: 'test query',
+      locale: 'en',
+      page: 1,
+      limit: 10,
+    });
+    render(jsx);
+
+    expect(searchPublications).toHaveBeenCalledWith({
+      query: 'test query',
+      language: 'en',
+      page: 1,
+      limit: 10,
+      sortBy: 'relevance',
+    });
+  });
+
+  it('skips rendering publication if missing translation for locale', async () => {
+    vi.mocked(searchPublications).mockResolvedValue({
+      data: [
+        {
+          id: 'pub-no-trans',
+          year: 2023,
+          authors: 'John Doe',
+          journal: 'Nature',
+          translations: [], // No translations
+        } as unknown as NonNullable<
+          Awaited<ReturnType<typeof searchPublications>>['data']
+        >[0],
+      ],
+      total: 1,
+      totalPages: 1,
+      page: 1,
+    });
+
+    const jsx = await PublicationsListServer({
+      locale: 'en',
+      page: 1,
+      limit: 10,
+    });
+
+    const { container } = render(jsx);
+    expect(container.querySelector('.publicationItem')).not.toBeInTheDocument();
+  });
+
+  it('renders publication without team and handles http DOI', async () => {
+    vi.mocked(searchPublications).mockResolvedValue({
+      data: [
+        {
+          id: 'pub-2',
+          year: 2024,
+          authors: 'Jane Smith',
+          journal: 'Science',
+          doi: 'https://doi.org/10.9999/8888',
+          translations: [{ languageCode: 'en', title: 'HTTP DOI Paper' }],
+          // No team
+        } as unknown as NonNullable<
+          Awaited<ReturnType<typeof searchPublications>>['data']
+        >[0],
+      ],
+      total: 1,
+      totalPages: 1,
+      page: 1,
+    });
+
+    const jsx = await PublicationsListServer({
+      locale: 'en',
+      page: 1,
+      limit: 10,
+    });
+
+    render(jsx);
+
+    expect(screen.getByText('HTTP DOI Paper')).toBeInTheDocument();
+
+    const doiLink = screen.getByRole('link', { name: /DOI/i });
+    expect(doiLink).toHaveAttribute('href', 'https://doi.org/10.9999/8888');
+
+    // Should not render team link
+    const links = screen.queryAllByRole('link');
+    expect(links.length).toBe(1); // Only DOI link
+  });
+
+  it('renders publication with team but missing team translation', async () => {
+    vi.mocked(searchPublications).mockResolvedValue({
+      data: [
+        {
+          id: 'pub-3',
+          year: 2024,
+          authors: 'Jane Smith',
+          journal: 'Science',
+          translations: [{ languageCode: 'en', title: 'Team No Trans' }],
+          team: {
+            slug: 'team-no-trans',
+            translations: [], // Missing team translation
+          },
+        } as unknown as NonNullable<
+          Awaited<ReturnType<typeof searchPublications>>['data']
+        >[0],
+      ],
+      total: 1,
+      totalPages: 1,
+      page: 1,
+    });
+
+    const jsx = await PublicationsListServer({
+      locale: 'en',
+      page: 1,
+      limit: 10,
+    });
+
+    render(jsx);
+
+    expect(screen.getByText('Team No Trans')).toBeInTheDocument();
+    // team link should not be rendered
+    const links = screen.queryAllByRole('link');
+    expect(links.length).toBe(0); // No DOI, no team
+  });
 });

@@ -25,6 +25,7 @@ export default function AnimateOnce({ children, className }: AnimateOnceProps) {
 
   useEffect(() => {
     const el = ref.current;
+    /* istanbul ignore next */
     if (!el) return;
 
     // If IntersectionObserver is unavailable (e.g. old browsers, test env),

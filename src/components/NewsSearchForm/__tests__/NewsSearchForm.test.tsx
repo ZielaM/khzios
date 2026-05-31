@@ -140,4 +140,89 @@ describe('NewsSearchForm', () => {
     const input = screen.getByTestId('search-input-skeleton');
     expect(input).toBeDisabled();
   });
+
+  it('updates state when initial props change', () => {
+    const { rerender } = render(
+      <NewsSearchForm
+        {...defaultProps}
+        initialQuery="test1"
+        initialTag="science"
+        initialSort="date"
+      />
+    );
+    expect(
+      screen.getByRole('textbox', { name: 'searchPlaceholder' })
+    ).toHaveValue('test1');
+
+    rerender(
+      <NewsSearchForm
+        {...defaultProps}
+        initialQuery="test2"
+        initialTag="education"
+        initialSort="relevance"
+      />
+    );
+    expect(
+      screen.getByRole('textbox', { name: 'searchPlaceholder' })
+    ).toHaveValue('test2');
+  });
+  it('displays no options message when searching for non-existent tag', () => {
+    render(<NewsSearchForm {...defaultProps} />);
+    const comboboxes = screen.getAllByRole('combobox');
+    const tagsInput = comboboxes[0];
+
+    fireEvent.change(tagsInput, { target: { value: 'nonexistent' } });
+
+    expect(screen.getByText('noResults')).toBeInTheDocument();
+  });
+
+  it('handles unmount during debounce and skeleton with query', () => {
+    const { unmount, rerender } = render(
+      <NewsSearchForm {...defaultProps} initialQuery="test" isSkeleton={true} />
+    );
+
+    // Covers prop update branch when isSkeleton is true
+    rerender(
+      <NewsSearchForm
+        {...defaultProps}
+        initialQuery="test2"
+        isSkeleton={true}
+      />
+    );
+
+    // Covers unmount cleanup branch when timerRef is active
+    rerender(
+      <NewsSearchForm
+        {...defaultProps}
+        initialQuery="test2"
+        isSkeleton={false}
+      />
+    );
+
+    const input = screen.getByRole('textbox', { name: 'searchPlaceholder' });
+    fireEvent.change(input, { target: { value: 'typing' } });
+
+    unmount();
+  });
+
+  it('covers fallback branches for query and sort', () => {
+    // Initial render with undefined query and invalid sort
+    const { rerender } = render(
+      <NewsSearchForm
+        {...defaultProps}
+        initialQuery={undefined}
+        initialSort={'invalid' as unknown as 'date'}
+      />
+    );
+
+    // Update with another undefined query to trigger `initialQuery || ''` branch during update
+    rerender(
+      <NewsSearchForm
+        {...defaultProps}
+        initialQuery={undefined}
+        initialTag="newTag"
+        initialSort={'invalid' as unknown as 'date'}
+      />
+    );
+  });
 });

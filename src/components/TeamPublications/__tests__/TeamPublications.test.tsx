@@ -105,11 +105,71 @@ describe('TeamPublications', () => {
       screen.queryByRole('button', { name: 'projectsTab' })
     ).not.toBeInTheDocument();
 
-    // The publication content should be visible
     expect(
       screen.getByText('A Study of Mocking in React Tests')
     ).toBeInTheDocument();
     expect(screen.getByText('John Doe, Jane Doe')).toBeInTheDocument();
+  });
+
+  it('skips publication and project with empty translations', () => {
+    render(
+      <TeamPublications
+        publications={[
+          { ...mockPublications[0], id: 'empty-pub', translations: [] },
+        ]}
+        projects={[{ ...mockProjects[0], id: 'empty-proj', translations: [] }]}
+        locale="en"
+      />
+    );
+    // Neither should throw, and neither title should be rendered
+    expect(
+      screen.queryByText('A Study of Mocking in React Tests')
+    ).not.toBeInTheDocument();
+
+    // Switch to projects tab to trigger the translation check for projects
+    fireEvent.click(screen.getByRole('button', { name: 'projectsTab' }));
+    expect(screen.queryByText('Advanced AI Project')).not.toBeInTheDocument();
+  });
+
+  it('switches to publications tab if projects become empty', () => {
+    const { rerender } = render(
+      <TeamPublications
+        publications={mockPublications}
+        projects={mockProjects}
+        locale="en"
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'projectsTab' }));
+    expect(screen.getByText('Advanced AI Project')).toBeVisible();
+
+    rerender(
+      <TeamPublications
+        publications={mockPublications}
+        projects={[]}
+        locale="en"
+      />
+    );
+    expect(screen.queryByText('Advanced AI Project')).not.toBeInTheDocument();
+    expect(screen.getByText('A Study of Mocking in React Tests')).toBeVisible();
+  });
+
+  it('switches to projects tab if publications become empty', () => {
+    const { rerender } = render(
+      <TeamPublications
+        publications={mockPublications}
+        projects={mockProjects}
+        locale="en"
+      />
+    );
+    expect(screen.getByText('A Study of Mocking in React Tests')).toBeVisible();
+
+    rerender(
+      <TeamPublications publications={[]} projects={mockProjects} locale="en" />
+    );
+    expect(
+      screen.queryByText('A Study of Mocking in React Tests')
+    ).not.toBeInTheDocument();
+    expect(screen.getByText('Advanced AI Project')).toBeVisible();
   });
 
   it('renders only projects tab when publications is empty', () => {

@@ -98,4 +98,83 @@ describe('WcagControls', () => {
       document.documentElement.style.getPropertyValue('--wcag-font-scale')
     ).toBe('1.2');
   });
+
+  it('handles window resize events to update compact classes', () => {
+    render(
+      <WcagControls
+        groupLabel="WCAG"
+        decreaseFont="A-"
+        increaseFont="A+"
+        toggleContrast="Contrast"
+      />
+    );
+
+    // Mock getComputedStyle to return a scale
+    const originalGetComputedStyle = window.getComputedStyle;
+    window.getComputedStyle = () =>
+      ({
+        getPropertyValue: (prop: string) =>
+          prop === '--wcag-font-scale' ? '2.0' : '',
+      }) as unknown as CSSStyleDeclaration;
+
+    // Change width to force compact layout evaluation
+    Object.defineProperty(window, 'innerWidth', {
+      value: 500, // 500 / 2.0 = 250 effective width -> triggers mobile classes
+      configurable: true,
+    });
+
+    fireEvent(window, new Event('resize'));
+
+    expect(document.documentElement.classList.contains('compact-layout')).toBe(
+      true
+    );
+    expect(
+      document.documentElement.classList.contains('compact-layout-sm')
+    ).toBe(true);
+
+    // Cleanup
+    window.getComputedStyle = originalGetComputedStyle;
+  });
+
+  it('handles invalid font offset in localStorage gracefully', () => {
+    localStorage.setItem('wcag-font-offset', 'invalid');
+    render(
+      <WcagControls
+        groupLabel="WCAG"
+        decreaseFont="A-"
+        increaseFont="A+"
+        toggleContrast="Contrast"
+      />
+    );
+    // Since it's invalid, it should fall back to 0 offset, meaning no --wcag-font-scale property
+    expect(
+      document.documentElement.style.getPropertyValue('--wcag-font-scale')
+    ).toBe('');
+  });
+
+  it('handles window resize when no font scale is set', () => {
+    render(
+      <WcagControls
+        groupLabel="WCAG"
+        decreaseFont="A-"
+        increaseFont="A+"
+        toggleContrast="Contrast"
+      />
+    );
+
+    // Change width to force compact layout evaluation
+    Object.defineProperty(window, 'innerWidth', {
+      value: 500, // 500 / 1.0 = 500 effective width -> triggers mobile classes
+      configurable: true,
+    });
+
+    fireEvent(window, new Event('resize'));
+
+    expect(document.documentElement.classList.contains('compact-layout')).toBe(
+      true
+    );
+    expect(
+      document.documentElement.classList.contains('compact-layout-sm')
+    ).toBe(true);
+  });
 });

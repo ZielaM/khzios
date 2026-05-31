@@ -138,6 +138,24 @@ describe('NewsTile', () => {
       ).not.toBeInTheDocument();
     });
 
+    it('should render unknown language code gracefully', () => {
+      const news = mockNewsData({
+        translations: [
+          {
+            newsId: 'test-id-1',
+            languageCode: 'unknown' as unknown as LanguageCode,
+            title: 'Unknown Fallback',
+            content: 'Content',
+          },
+        ],
+      });
+      // Requesting 'uk' but only 'unknown' exists -> fallback
+      render(<NewsTile news={news} locale="uk" />);
+
+      const badge = screen.getByTestId('news-fallback-badge');
+      expect(badge).toHaveTextContent('unknown');
+    });
+
     it('should show "Translation missing" when no translations exist', () => {
       const news = mockNewsData({ translations: [] });
       render(<NewsTile news={news} locale="en" />);

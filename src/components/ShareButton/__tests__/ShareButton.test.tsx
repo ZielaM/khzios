@@ -1,5 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import ShareButton from '../ShareButton';
 
 describe('ShareButton', () => {
@@ -87,5 +93,64 @@ describe('ShareButton', () => {
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalled();
     });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('should reset "copied" state after 2 seconds', async () => {
+    vi.useFakeTimers();
+    render(<ShareButton title="Test Article" />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button'));
+      for (let i = 0; i < 5; i++) await Promise.resolve();
+    });
+
+    expect(screen.getByText('linkCopied')).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+
+    expect(screen.getByText('share')).toBeInTheDocument();
+  });
+
+  it('should clean up timeout on unmount', async () => {
+    vi.useFakeTimers();
+    const spy = vi.spyOn(global, 'clearTimeout');
+    const { unmount } = render(<ShareButton title="Test Article" />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button'));
+      for (let i = 0; i < 5; i++) await Promise.resolve();
+    });
+
+    expect(screen.getByText('linkCopied')).toBeInTheDocument();
+
+    unmount();
+    expect(spy).toHaveBeenCalled();
+
+    spy.mockRestore();
+  });
+
+  it('should handle clipboard error gracefully', async () => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
+        writeText: vi.fn().mockRejectedValue(new Error('Clipboard error')),
+      },
+      writable: true,
+      configurable: true,
+    });
+
+    render(<ShareButton title="Test Article" />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button'));
+      for (let i = 0; i < 5; i++) await Promise.resolve();
+    });
+
+    expect(screen.getByText('share')).toBeInTheDocument();
   });
 });

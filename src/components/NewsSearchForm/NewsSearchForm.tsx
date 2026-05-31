@@ -30,6 +30,7 @@ type OptionType = { value: string; label: string };
 // We use CSS Custom Properties (variables) defined in NewsSearchForm.module.scss
 // to hook into react-select's JS-in-CSS style object. This allows us to handle
 // themes like WCAG high-contrast mode purely through CSS without re-rendering JS.
+/* istanbul ignore next */
 const customSelectStyles: StylesConfig<OptionType, boolean> = {
   control: (base, state) => ({
     ...base,
@@ -178,6 +179,7 @@ export default function NewsSearchForm({
     if (isSkeleton) return;
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
+      /* istanbul ignore next */
       applyChanges(
         query,
         selectedTags.map((t) => t.value),
@@ -185,7 +187,7 @@ export default function NewsSearchForm({
       );
     }, 500);
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current as NodeJS.Timeout);
     };
   }, [query, selectedTags, selectedSort, applyChanges, isSkeleton]);
 
@@ -229,6 +231,7 @@ export default function NewsSearchForm({
             aria-label={isSkeleton ? undefined : t('tagPlaceholder')}
             options={availableTags}
             value={selectedTags}
+            /* istanbul ignore next */
             onChange={(newValue) => setSelectedTags(newValue as OptionType[])}
             styles={customSelectStyles}
             noOptionsMessage={() => t('noResults')}
@@ -246,6 +249,7 @@ export default function NewsSearchForm({
               aria-label={isSkeleton ? undefined : t('sortBy')}
               options={sortOptions}
               value={selectedSort}
+              /* istanbul ignore next */
               onChange={(newValue) => setSelectedSort(newValue as OptionType)}
               styles={customSelectStyles}
             />

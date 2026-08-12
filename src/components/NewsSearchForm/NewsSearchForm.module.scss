@@ -2,8 +2,15 @@
 
 .searchContainer {
   display: flex;
-  justify-content: center;
-  width: 100%;
+  justify-content: flex-end;
+
+  &.expandedContainer {
+    width: 100%;
+  }
+
+  &.collapsedContainer {
+    width: auto;
+  }
 }
 
 .searchForm {
@@ -14,7 +21,6 @@
   z-index: 10;
   box-sizing: border-box;
   max-width: 100%;
-  margin-bottom: 3rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
   // React-Select Custom Property Overrides.
@@ -37,6 +43,7 @@
     border-radius: 0 0 16px 16px;
     padding: 2rem;
     overflow: visible;
+    margin-bottom: 3rem;
 
     &:hover {
       box-shadow: 0 20px 40px -10px rgba(36, 113, 81, 0.18);
@@ -61,7 +68,9 @@
     .inputGroup {
       opacity: 1;
       visibility: visible;
-      transition: opacity 0.3s ease 0.2s, visibility 0s ease 0.2s;
+      transition:
+        opacity 0.3s ease 0.2s,
+        visibility 0s ease 0.2s;
     }
 
     .collapsedButton {
@@ -73,9 +82,9 @@
   }
 
   &.collapsed {
-    width: 64px;
-    max-height: 64px;
-    border-radius: 32px;
+    width: 48px;
+    max-height: 48px;
+    border-radius: 24px;
     padding: 0;
     cursor: pointer;
     overflow: hidden;
@@ -90,13 +99,17 @@
       visibility: hidden;
       position: absolute;
       pointer-events: none;
-      transition: opacity 0.2s ease, visibility 0s ease 0.2s;
+      transition:
+        opacity 0.2s ease,
+        visibility 0s ease 0.2s;
     }
 
     .collapsedButton {
       opacity: 1;
       visibility: visible;
-      transition: opacity 0.3s ease 0.2s, visibility 0s ease 0.2s;
+      transition:
+        opacity 0.3s ease 0.2s,
+        visibility 0s ease 0.2s;
     }
 
     &::before {
@@ -129,8 +142,8 @@
 }
 
 .collapsedButton {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   background: transparent;
   border: none;
   color: var(--color-primary);
@@ -140,7 +153,7 @@
   cursor: pointer;
   padding: 0;
   margin: 0;
-  
+
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
   }

@@ -214,7 +214,11 @@ export default function NewsSearchForm({
   }, [query, selectedTags, selectedSort, applyChanges, isSkeleton]);
 
   return (
-    <div className={style.searchContainer}>
+    <div
+      className={`${style.searchContainer} ${
+        isExpanded ? style.expandedContainer : style.collapsedContainer
+      }`}
+    >
       <div
         ref={containerRef}
         className={`${style.searchForm} ${
@@ -242,7 +246,9 @@ export default function NewsSearchForm({
           <div className={style.searchInput}>
             <Search aria-hidden="true" className={style.icon} size={20} />
             <input
-              data-testid={isSkeleton ? 'search-input-skeleton' : 'search-input'}
+              data-testid={
+                isSkeleton ? 'search-input-skeleton' : 'search-input'
+              }
               type="text"
               placeholder={t('searchPlaceholder')}
               aria-label={isSkeleton ? undefined : t('searchPlaceholder')}

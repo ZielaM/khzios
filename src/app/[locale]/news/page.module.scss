@@ -16,57 +16,19 @@
   }
 }
 
-// Header section containing the title and RSS button
-.header {
+// Top bar containing BackLink and NewsSearchForm
+.topBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
   margin-bottom: 2rem;
-
-  @media (max-width: $breakpoint-tablet) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  :global(.compact-layout-sm) & {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
+  gap: 2rem;
 }
 
-// Page title styling
-.title {
-  font-size: 2.5em;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-// RSS Feed link styled as a button
-.rssButton {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: var(--surface);
-  color: #f26522; // Distinct RSS brand orange
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md, 8px);
-  font-weight: 600;
-  text-decoration: none;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-
-  // Invert colors on hover for a filled look
-  &:hover {
-    background: #f26522;
-    color: white;
-    border-color: #f26522;
-  }
+.backButton {
+  margin-bottom: 0 !important;
 }
 
 // CSS Grid for displaying News Tiles

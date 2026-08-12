@@ -68,7 +68,6 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
     label: resolveTagName(t, locale),
   }));
 
-  const t = await getTranslations('NewsPage');
   const tStruct = await getTranslations('StructurePage');
 
   // Key for Suspense to trigger re-render on param change
@@ -76,20 +75,20 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
 
   return (
     <div className={style.main}>
-      <AnimateOnce>
-        <BackLink href="/">{tStruct('backToHome')}</BackLink>
-      </AnimateOnce>
+      <div className={style.topBar}>
+        <AnimateOnce>
+          <BackLink href="/" className={style.backButton}>
+            {tStruct('backToHome')}
+          </BackLink>
+        </AnimateOnce>
 
-      <div className={style.header}>
-        <h1 className={style.title}>{t('title')}</h1>
+        <NewsSearchForm
+          initialQuery={query}
+          initialTag={tag}
+          initialSort={sortBy}
+          availableTags={availableTags}
+        />
       </div>
-
-      <NewsSearchForm
-        initialQuery={query}
-        initialTag={tag}
-        initialSort={sortBy}
-        availableTags={availableTags}
-      />
 
       <Suspense key={suspenseKey} fallback={<NewsGridSkeleton />}>
         <NewsGridServer

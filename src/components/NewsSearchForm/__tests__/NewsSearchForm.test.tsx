@@ -232,7 +232,9 @@ describe('NewsSearchForm', () => {
     const container = screen.getByTestId('news-search-form');
     expect(container.className).toContain('collapsed');
 
-    const expandButton = screen.getByRole('button', { name: 'searchPlaceholder' });
+    const expandButton = screen.getByRole('button', {
+      name: 'searchPlaceholder',
+    });
     fireEvent.click(expandButton);
 
     expect(container.className).toContain('expanded');

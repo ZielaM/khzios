@@ -5,9 +5,9 @@
   bottom: 32px;
   right: 32px;
   z-index: 9000;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-md;
   border: none;
   background: var(--color-primary);
   color: white;
@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   opacity: 0;
   visibility: hidden;
   transform: translateY(12px);
@@ -35,7 +35,7 @@
   &:focus-visible {
     background: var(--color-secondary);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
   }
 
   &:focus-visible {
@@ -57,7 +57,7 @@
   @media (max-width: $breakpoint-tablet) {
     bottom: 20px;
     right: 20px;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
   }
 }

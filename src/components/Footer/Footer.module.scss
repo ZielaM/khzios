@@ -1,15 +1,17 @@
 @use '@/styles/variables' as *;
 
-// Main footer wrapping element
+// Main footer wrapping element – dark academic footer
 .footer {
-  background-color: #f7f9f7;
+  background-color: #1a2e23;
   padding: 4rem 2rem;
   font-family: var(--font-inter), sans-serif;
-  border-top: 1px solid #eaeaea;
+  border-top: 3px solid var(--color-primary);
+  color: rgba(255, 255, 255, 0.85);
 
   :global(.wcag-high-contrast) & {
     background-color: var(--background);
     border-top: 1px solid var(--foreground);
+    color: var(--foreground);
   }
 }
 
@@ -48,7 +50,7 @@
 
 // Brand title styling
 .brandTitle {
-  color: var(--color-primary);
+  color: rgba(255, 255, 255, 0.95);
   font-size: 1.25em;
   font-weight: 700;
   line-height: 1.4;
@@ -61,7 +63,7 @@
 
 // Address paragraph styling
 .addressInfo {
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.875em;
   line-height: 2;
   font-weight: 500;
@@ -77,7 +79,7 @@
 
 // Title header for individual columns (e.g., "Links", "Contact")
 .colTitle {
-  color: var(--color-tertiary);
+  color: rgba(255, 255, 255, 0.5);
   font-size: 0.85em;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -99,7 +101,7 @@
   gap: 1.1rem;
 
   li a {
-    color: #6b7280;
+    color: rgba(255, 255, 255, 0.65);
     text-decoration: none;
     font-size: 0.875em;
     font-weight: 500;
@@ -112,7 +114,7 @@
     // Add underline for accessibility on hover/focus
     &:hover,
     &:focus {
-      color: var(--color-primary);
+      color: rgba(255, 255, 255, 0.95);
       text-decoration: underline;
 
       :global(.wcag-high-contrast) & {
@@ -135,7 +137,7 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: #6b7280;
+    color: rgba(255, 255, 255, 0.65);
     font-size: 0.875em;
     font-weight: 600;
 
@@ -147,9 +149,9 @@
 
 // Shared icon styling for contact list
 .icon {
-  color: var(--color-primary);
+  color: rgba(255, 255, 255, 0.5);
   flex-shrink: 0; // Prevents icon from squishing if text wraps
-  fill: var(--color-primary);
+  fill: none;
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -160,7 +162,7 @@
 // Copyright text positioned at the bottom of the first column
 .copyright {
   margin-top: 3rem;
-  color: #9ca3af;
+  color: rgba(255, 255, 255, 0.35);
   font-size: 0.65em;
   text-transform: uppercase;
   letter-spacing: 0.05em;

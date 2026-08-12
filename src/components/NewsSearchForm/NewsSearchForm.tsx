@@ -134,7 +134,7 @@ export default function NewsSearchForm({
   const [prevInitialSort, setPrevInitialSort] = useState(initialSort);
 
   const [isExpanded, setIsExpanded] = useState(
-    isSkeleton || Boolean(initialQuery || initialTagsList.length > 0)
+    Boolean(initialQuery || initialTagsList.length > 0)
   );
   const containerRef = useRef<HTMLDivElement>(null);
 

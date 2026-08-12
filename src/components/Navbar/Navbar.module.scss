@@ -16,6 +16,8 @@
   align-items: center;
   padding: 0 1rem;
   transform: translateZ(0);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 
   // On tablet/mobile, we switch to column layout to stack logo and mobile menu toggle
   @media (max-width: $breakpoint-tablet) {

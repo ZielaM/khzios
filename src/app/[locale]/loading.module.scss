@@ -2,7 +2,7 @@
 
 .skeleton {
   @include skeleton-shimmer;
-  border-radius: 1.5rem;
+  border-radius: $radius-xl;
 }
 
 .heroSkeleton {

@@ -34,7 +34,7 @@
   width: 100%;
   padding: 1rem 1.5rem 1rem 3rem;
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: $radius-lg;
   background-color: var(--bg-secondary);
   color: var(--foreground);
   font-family: inherit;

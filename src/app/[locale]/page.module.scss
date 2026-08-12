@@ -6,22 +6,22 @@
 
 .hero {
   text-align: center;
-  padding: 4rem 2rem;
-  background: var(--background);
-  border-radius: 1.5rem;
+  padding: 3.5rem 2rem;
+  background: var(--surface-muted);
+  border-radius: $radius-xl;
   margin-bottom: 4rem;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border-subtle);
 
   :global(.wcag-high-contrast) & {
+    background: transparent;
     border: 2px solid var(--foreground);
     border-radius: 0;
   }
 }
 
 .heroTitle {
-  font-size: clamp(2em, 5vw, 3.5em);
-  font-weight: 800;
+  font-size: clamp(2em, 5vw, 3.2em);
+  font-weight: 700;
   color: var(--color-primary);
   margin-bottom: 1.5rem;
   line-height: 1.2;
@@ -32,11 +32,11 @@
 }
 
 .heroSubtitle {
-  font-size: 1.2em;
+  font-size: 1.15em;
   color: var(--text-muted);
   max-width: 800px;
   margin: 0 auto 2.5rem;
-  line-height: 1.6;
+  line-height: 1.7;
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -45,22 +45,23 @@
 
 .heroActions {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
 
   .primaryBtn {
     background: var(--color-primary);
     color: #fff;
-    padding: 1rem 2rem;
-    border-radius: 2rem;
+    padding: 0.9rem 2rem;
+    border-radius: $radius-md;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
 
     &:hover {
       background: var(--color-secondary);
-      transform: translateY(-2px);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(27, 94, 59, 0.25);
     }
 
     :global(.wcag-high-contrast) & {
@@ -73,16 +74,16 @@
   .secondaryBtn {
     background: transparent;
     color: var(--color-primary);
-    padding: 1rem 2rem;
-    border-radius: 2rem;
+    padding: 0.9rem 2rem;
+    border-radius: $radius-md;
     font-weight: 600;
     text-decoration: none;
     border: 2px solid var(--color-primary);
     transition: all 0.2s ease;
 
     &:hover {
-      background: rgba($color-primary, 0.05);
-      transform: translateY(-2px);
+      background: rgba($color-primary, 0.06);
+      transform: translateY(-1px);
     }
 
     :global(.wcag-high-contrast) & {
@@ -96,13 +97,13 @@
 .sectionTitle {
   @include section-title;
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
 }
 
 .bentoGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
   margin-bottom: 5rem;
 
   > * {
@@ -128,52 +129,23 @@
 .bentoCard {
   height: 100%;
   background: var(--background);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 1.5rem;
-  padding: 2.5rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: $radius-lg;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  box-shadow: $shadow-card;
   transition:
-    transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
-    box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
-    border-color 0.25s ease;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      500px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-      rgba($color-primary, 0.08),
-      transparent 40%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  &:hover::before {
-    opacity: 1;
-  }
-
-  > * {
-    position: relative;
-    z-index: 1;
-  }
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 
   &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    transform: translateY($hover-lift);
+    box-shadow: $shadow-card-hover;
     border-color: rgba($color-primary, 0.2);
   }
 
@@ -200,10 +172,10 @@
 }
 
 .cardIconWrapper {
-  width: 56px;
-  height: 56px;
-  background: rgba($color-primary, 0.05);
-  border-radius: 1rem;
+  width: 48px;
+  height: 48px;
+  background: rgba($color-primary, 0.08);
+  border-radius: $radius-md;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,7 +190,7 @@
 }
 
 .cardTitle {
-  font-size: 1.4em;
+  font-size: 1.25em;
   font-weight: 700;
   color: var(--foreground);
   margin: 0;
@@ -264,7 +236,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.8rem 1.5rem;
-    border-radius: 2rem;
+    border-radius: $radius-md;
     background: transparent;
     color: var(--color-primary);
     font-weight: 600;
@@ -273,8 +245,8 @@
     transition: all 0.2s ease;
 
     &:hover {
-      background: rgba($color-primary, 0.05);
-      transform: translateY(-2px);
+      background: rgba($color-primary, 0.06);
+      transform: translateY(-1px);
     }
 
     :global(.wcag-high-contrast) & {

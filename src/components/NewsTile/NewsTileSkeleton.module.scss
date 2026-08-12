@@ -4,7 +4,7 @@
 // and border-radius of the real NewsTile to prevent layout shifts.
 .skeleton {
   background: var(--background);
-  border-radius: 16px;
+  border-radius: $radius-lg;
   overflow: hidden;
   height: 100%;
   display: flex;

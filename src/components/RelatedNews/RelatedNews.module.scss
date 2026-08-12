@@ -29,7 +29,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-radius: 16px;
+  border-radius: $radius-lg;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.02);
   text-decoration: none;
@@ -40,8 +40,8 @@
 
   &:hover,
   &:focus-visible {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    transform: translateY($hover-lift);
+    box-shadow: $shadow-card-hover;
     outline: none;
   }
 
@@ -100,7 +100,7 @@
 }
 
 .cardTitle {
-  font-family: var(--font-heading);
+  font-family: var(--font-inter), sans-serif;
   font-size: 1.05em;
   font-weight: 700;
   line-height: 1.35;

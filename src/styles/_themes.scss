@@ -13,6 +13,11 @@
   --color-tertiary: #{$color-tertiary};
   --color-neutral: #{$color-neutral};
 
+  // Semantic surface & text tokens for professional design consistency
+  --surface-muted: #f4f6f5;
+  --text-muted: #5a6a60;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+
   // Multiplier for accessible font scaling, easily modified by JS
   // when a user requests larger text.
   --wcag-font-scale: 1;

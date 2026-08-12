@@ -35,25 +35,21 @@
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(15px);
+  transform: translateX(-50%) translateY(10px);
   min-width: 320px;
   background-color: var(--background);
-  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
-  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: $radius-lg;
   padding: 0.5rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
   // Hidden by default using opacity/visibility rather than display: none
   // to allow CSS transitions to run smoothly.
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
   pointer-events: none; // Prevent accidental clicks when invisible
   z-index: 10;
-
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  }
 
   &.show {
     opacity: 1;
@@ -84,7 +80,7 @@
 
 // Individual clickable item within a dropdown menu
 .dropdownItem {
-  border-radius: 8px;
+  border-radius: $radius-sm;
   transition: background-color 0.2s ease;
   position: relative; // Needed for absolute positioning of nested submenus
 
@@ -151,19 +147,15 @@
   transform: translateX(10px);
   min-width: 260px;
   background-color: var(--background);
-  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
-  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: $radius-lg;
   padding: 0.5rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
   pointer-events: none;
   z-index: 20;
-
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  }
 
   &.show {
     opacity: 1;
@@ -239,6 +231,6 @@
 
   &:hover {
     background-color: color-mix(in srgb, var(--foreground) 5%, transparent);
-    border-radius: 6px;
+    border-radius: $radius-sm;
   }
 }

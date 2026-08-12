@@ -6,13 +6,13 @@
 
 .card {
   height: 200px;
-  border-radius: 20px;
+  border-radius: $radius-lg;
 }
 
 .backLinkSkeleton {
   width: 180px;
   height: 38px;
-  border-radius: 20px;
+  border-radius: $radius-lg;
   margin-bottom: 24px;
 }
 

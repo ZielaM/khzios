@@ -2,14 +2,24 @@
 // for static values like breakpoints and initial color definitions.
 // NOTE: For runtime theming, these colors are mapped to CSS variables in _themes.scss.
 
-$color-primary: #247151;
-$color-secondary: #367c2b;
-$color-tertiary: #5d8a66;
-$color-neutral: #171717;
+$color-primary: #1b5e3b;
+$color-secondary: #2d7d46;
+$color-tertiary: #4a7c59;
+$color-neutral: #1a1a2e;
 
 $color-bg: #ffffff;
 $color-text: $color-neutral;
 $accent-color: $color-primary;
+
+// Academic design tokens – tighter radii and subtler motion
+$radius-sm: 6px;
+$radius-md: 8px;
+$radius-lg: 10px;
+$radius-xl: 12px;
+
+$hover-lift: -3px;
+$shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+$shadow-card-hover: 0 6px 20px rgba(0, 0, 0, 0.1);
 
 // Media query breakpoints. Used heavily across component modules
 // to ensure responsive design consistency.
@@ -44,10 +54,10 @@ $page-padding-top-mobile: 12px;
   gap: 4px;
   font-size: 1.05em;
   font-weight: 600;
-  color: #666;
+  color: #555;
   text-decoration: none;
   padding: 8px 16px 8px 8px;
-  border-radius: 20px;
+  border-radius: $radius-md;
   transition: all 0.2s ease;
   background: transparent;
 
@@ -70,9 +80,9 @@ $page-padding-top-mobile: 12px;
 
 // Wspólny mixin dla tytułów sekcji (np. TeamResearch, TeamTeaching, RelatedNews)
 @mixin section-title {
-  font-family: var(--font-heading);
-  font-size: 1.8em;
-  font-weight: 800;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 1.7em;
+  font-weight: 700;
   color: var(--foreground);
   margin: 0;
   letter-spacing: -0.01em;

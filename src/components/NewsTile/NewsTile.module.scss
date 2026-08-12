@@ -3,17 +3,17 @@
 // Main wrapper for a single news article card
 .newsTile {
   background: var(--background);
-  border-radius: 16px;
+  border-radius: $radius-lg;
   overflow: hidden; // Ensures children (like the image zoom) don't escape the rounded corners
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: $shadow-card;
   transition:
-    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
-    box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
-    border-color 0.3s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
   height: 100%; // Fill the grid cell vertically
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-subtle);
   position: relative;
 
   :global(.wcag-high-contrast) & {
@@ -23,8 +23,8 @@
 
   // Float up and cast a deeper shadow when hovered
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transform: translateY($hover-lift);
+    box-shadow: $shadow-card-hover;
     border-color: rgba($color-primary, 0.2);
 
     :global(.wcag-high-contrast) & {
@@ -34,7 +34,7 @@
 
     // Trigger inner image zoom effect
     .image {
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
 
     // Emphasize the "Read More" call to action
@@ -49,7 +49,7 @@
 
       // Slide the arrow icon to the right
       svg {
-        transform: translateX(6px);
+        transform: translateX(4px);
       }
     }
   }
@@ -89,24 +89,23 @@
 // The thumbnail image itself, set to cover the container
 .image {
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: transform 0.4s ease;
 }
 
 // Absolute positioned date pill overlaying the image
 .dateBadge {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px); // Glassmorphism effect
-  padding: 6px 14px;
-  border-radius: 20px;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 5px 12px;
+  border-radius: $radius-sm;
   font-size: 0.8em;
   font-weight: 700;
   color: var(--color-primary);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 2;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 
   :global(.wcag-high-contrast) & {
     background: var(--background);
@@ -122,7 +121,7 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  background: linear-gradient(to bottom, #ffffff, #fdfdfd);
+  background: var(--background);
 
   :global(.wcag-high-contrast) & {
     background: var(--background);
@@ -142,7 +141,7 @@
   background: rgba($color-primary, 0.08);
   color: var(--color-primary);
   padding: 4px 10px;
-  border-radius: 8px;
+  border-radius: $radius-sm;
   font-size: 0.7em;
   font-weight: 700;
   text-transform: uppercase;
@@ -163,7 +162,7 @@
   background: rgba(255, 170, 0, 0.1);
   color: #b38600; // Warning orange
   padding: 3px 10px;
-  border-radius: 6px;
+  border-radius: $radius-sm;
   font-size: 0.7em;
   font-style: italic;
   font-weight: 600;
@@ -180,8 +179,8 @@
 
 // Article title with multi-line truncation
 .title {
-  font-size: 1.35em;
-  font-weight: 800;
+  font-size: 1.3em;
+  font-weight: 700;
   margin-bottom: 14px;
   line-height: 1.4;
   color: var(--foreground);
@@ -211,7 +210,7 @@
 // Article excerpt/summary with multi-line truncation
 .description {
   font-size: 0.95em;
-  color: #555;
+  color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 24px;
 
@@ -258,7 +257,7 @@
   font-size: 0.9em;
   color: var(--color-tertiary);
   margin-top: auto; // Force to bottom
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
@@ -269,6 +268,6 @@
   svg {
     width: 18px;
     height: 18px;
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: transform 0.2s ease;
   }
 }

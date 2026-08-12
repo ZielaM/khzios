@@ -133,6 +133,28 @@ export default function NewsSearchForm({
   );
   const [prevInitialSort, setPrevInitialSort] = useState(initialSort);
 
+  const [isExpanded, setIsExpanded] = useState(
+    isSkeleton || Boolean(initialQuery || initialTagsList.length > 0)
+  );
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        if (!query && selectedTags.length === 0) {
+          setIsExpanded(false);
+        }
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [query, selectedTags]);
+
   if (
     initialQuery !== prevInitialQuery ||
     initialTag !== prevInitialTag ||
@@ -192,69 +214,91 @@ export default function NewsSearchForm({
   }, [query, selectedTags, selectedSort, applyChanges, isSkeleton]);
 
   return (
-    <div
-      className={style.searchForm}
-      data-testid={
-        isSkeleton ? 'news-search-form-skeleton' : 'news-search-form'
-      }
-    >
-      <div className={style.inputGroup}>
-        <div className={style.searchInput}>
-          <Search aria-hidden="true" className={style.icon} size={20} />
-          <input
-            data-testid={isSkeleton ? 'search-input-skeleton' : 'search-input'}
-            type="text"
-            placeholder={t('searchPlaceholder')}
-            aria-label={isSkeleton ? undefined : t('searchPlaceholder')}
-            value={query}
-            maxLength={256}
-            disabled={isSkeleton}
-            onChange={(e) => {
-              const val = e.target.value;
-              // Quality of life feature: if the user starts typing a query,
-              // automatically switch sort method to relevance for better initial results.
-              if (!query && val) {
-                setSelectedSort(sortOptions[0]);
-              }
-              setQuery(val);
-            }}
-          />
-        </div>
+    <div className={style.searchContainer}>
+      <div
+        ref={containerRef}
+        className={`${style.searchForm} ${
+          isExpanded ? style.expanded : style.collapsed
+        }`}
+        data-testid={
+          isSkeleton ? 'news-search-form-skeleton' : 'news-search-form'
+        }
+        onClick={() => {
+          if (!isExpanded && !isSkeleton) {
+            setIsExpanded(true);
+          }
+        }}
+      >
+        <button
+          className={style.collapsedButton}
+          aria-label={t('searchPlaceholder')}
+          type="button"
+          tabIndex={isExpanded ? -1 : 0}
+        >
+          <Search aria-hidden="true" size={24} />
+        </button>
 
-        <div className={style.selectWrapper}>
-          <Select
-            instanceId="news-tags-select"
-            isMulti
-            isSearchable={!isSkeleton}
-            isDisabled={isSkeleton}
-            placeholder={t('tagPlaceholder')}
-            aria-label={isSkeleton ? undefined : t('tagPlaceholder')}
-            options={availableTags}
-            value={selectedTags}
-            /* istanbul ignore next */
-            onChange={(newValue) => setSelectedTags(newValue as OptionType[])}
-            styles={customSelectStyles}
-            noOptionsMessage={() => t('noResults')}
-          />
-        </div>
-
-        {/* Sorting is only revealed if there is an active search query 
-            to avoid confusing the user with useless relevance sorts. */}
-        {query && (
-          <div className={style.selectWrapper}>
-            <Select
-              instanceId="news-sort-select"
-              isSearchable={false}
-              isDisabled={isSkeleton}
-              aria-label={isSkeleton ? undefined : t('sortBy')}
-              options={sortOptions}
-              value={selectedSort}
-              /* istanbul ignore next */
-              onChange={(newValue) => setSelectedSort(newValue as OptionType)}
-              styles={customSelectStyles}
+        <div className={style.inputGroup}>
+          <div className={style.searchInput}>
+            <Search aria-hidden="true" className={style.icon} size={20} />
+            <input
+              data-testid={isSkeleton ? 'search-input-skeleton' : 'search-input'}
+              type="text"
+              placeholder={t('searchPlaceholder')}
+              aria-label={isSkeleton ? undefined : t('searchPlaceholder')}
+              value={query}
+              maxLength={256}
+              disabled={isSkeleton}
+              tabIndex={!isExpanded ? -1 : 0}
+              onChange={(e) => {
+                const val = e.target.value;
+                // Quality of life feature: if the user starts typing a query,
+                // automatically switch sort method to relevance for better initial results.
+                if (!query && val) {
+                  setSelectedSort(sortOptions[0]);
+                }
+                setQuery(val);
+              }}
             />
           </div>
-        )}
+
+          <div className={style.selectWrapper}>
+            <Select
+              instanceId="news-tags-select"
+              isMulti
+              isSearchable={!isSkeleton}
+              isDisabled={isSkeleton}
+              placeholder={t('tagPlaceholder')}
+              aria-label={isSkeleton ? undefined : t('tagPlaceholder')}
+              options={availableTags}
+              value={selectedTags}
+              /* istanbul ignore next */
+              onChange={(newValue) => setSelectedTags(newValue as OptionType[])}
+              styles={customSelectStyles}
+              noOptionsMessage={() => t('noResults')}
+              tabIndex={!isExpanded ? -1 : 0}
+            />
+          </div>
+
+          {/* Sorting is only revealed if there is an active search query 
+              to avoid confusing the user with useless relevance sorts. */}
+          {query && (
+            <div className={style.selectWrapper}>
+              <Select
+                instanceId="news-sort-select"
+                isSearchable={false}
+                isDisabled={isSkeleton}
+                aria-label={isSkeleton ? undefined : t('sortBy')}
+                options={sortOptions}
+                value={selectedSort}
+                /* istanbul ignore next */
+                onChange={(newValue) => setSelectedSort(newValue as OptionType)}
+                styles={customSelectStyles}
+                tabIndex={!isExpanded ? -1 : 0}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

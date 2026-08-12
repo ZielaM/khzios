@@ -1,25 +1,23 @@
 @use '@/styles/variables' as *;
 
-// Main container for the search form.
-// Uses a slight overlap/negative margin strategy (margin-bottom) combined with shadow
-// to appear "floating" or attached to the content above it depending on the layout.
+.searchContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .searchForm {
   background: var(--background, #ffffff);
   border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 0 0 16px 16px;
-  padding: 2rem;
-  margin-bottom: 3rem;
   box-shadow: 0 15px 35px -10px rgba(36, 113, 81, 0.12);
   position: relative;
   z-index: 10;
   box-sizing: border-box;
   max-width: 100%;
-  overflow: visible;
-  transition: box-shadow 0.3s ease;
+  margin-bottom: 3rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
   // React-Select Custom Property Overrides.
-  // We use these custom CSS variables to globally theme the
-  // third-party `react-select` component without writing overly complex CSS selectors.
   --rs-bg: var(--background, #ffffff);
   --rs-text: var(--text-primary);
   --rs-border: var(--border-dark, #d1d5db);
@@ -33,34 +31,86 @@
   --rs-multi-bg: rgba(36, 113, 81, 0.1);
   --rs-multi-text: var(--color-primary);
 
-  &:hover {
-    box-shadow: 0 20px 40px -10px rgba(36, 113, 81, 0.18);
+  &.expanded {
+    width: 100%;
+    max-height: 800px;
+    border-radius: 0 0 16px 16px;
+    padding: 2rem;
+    overflow: visible;
+
+    &:hover {
+      box-shadow: 0 20px 40px -10px rgba(36, 113, 81, 0.18);
+    }
+
+    // Decorative top gradient border
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: linear-gradient(
+        90deg,
+        var(--color-primary),
+        var(--color-tertiary, #5d8a66)
+      );
+      border-radius: 16px 16px 0 0;
+    }
+
+    .inputGroup {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s ease 0.2s, visibility 0s ease 0.2s;
+    }
+
+    .collapsedButton {
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      pointer-events: none;
+    }
   }
 
-  // Decorative top gradient border
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 8px;
-    background: linear-gradient(
-      90deg,
-      var(--color-primary),
-      var(--color-tertiary, #5d8a66)
-    );
-    border-radius: 16px 16px 0 0;
+  &.collapsed {
+    width: 64px;
+    max-height: 64px;
+    border-radius: 32px;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+
+    &:hover {
+      box-shadow: 0 20px 40px -10px rgba(36, 113, 81, 0.18);
+      transform: scale(1.05);
+    }
+
+    .inputGroup {
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      pointer-events: none;
+      transition: opacity 0.2s ease, visibility 0s ease 0.2s;
+    }
+
+    .collapsedButton {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s ease 0.2s, visibility 0s ease 0.2s;
+    }
+
+    &::before {
+      display: none; // Remove decorative gradient on collapsed state
+    }
   }
 
   // High contrast mode overrides.
-  // This resets all subtle shades to stark foreground/background colors.
   :global(.wcag-high-contrast) & {
     border: 2px solid var(--foreground);
     box-shadow: none;
 
     &::before {
-      display: none; // Remove decorative gradients
+      display: none;
     }
 
     --rs-bg: var(--background);
@@ -78,12 +128,31 @@
   }
 }
 
+.collapsedButton {
+  width: 64px;
+  height: 64px;
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
 // Layout wrapper for the input fields
 .inputGroup {
   display: flex;
   flex-wrap: wrap; // Allows inputs to wrap onto new lines if container shrinks
   gap: 1rem;
   align-items: center;
+  width: 100%;
 
   // On mobile or compact layout, force elements to stack vertically and stretch to full width
   @media (max-width: $breakpoint-tablet) {

@@ -225,4 +225,29 @@ describe('NewsSearchForm', () => {
       />
     );
   });
+
+  it('expands and collapses correctly', () => {
+    render(<NewsSearchForm {...defaultProps} />);
+
+    const container = screen.getByTestId('news-search-form');
+    expect(container.className).toContain('collapsed');
+
+    const expandButton = screen.getByRole('button', { name: 'searchPlaceholder' });
+    fireEvent.click(expandButton);
+
+    expect(container.className).toContain('expanded');
+
+    // Clicking outside collapses it
+    fireEvent.mouseDown(document.body);
+    expect(container.className).toContain('collapsed');
+
+    // Expand again, then type something
+    fireEvent.click(expandButton);
+    const input = screen.getByRole('textbox', { name: 'searchPlaceholder' });
+    fireEvent.change(input, { target: { value: 'test query' } });
+
+    // Clicking outside should NOT collapse it when query is present
+    fireEvent.mouseDown(document.body);
+    expect(container.className).toContain('expanded');
+  });
 });

@@ -24,9 +24,9 @@ test.describe('Navbar Navigation Spec', () => {
       // 3. Verify path transitions to /en/news
       await expect(page).toHaveURL(/\/en\/news/);
 
-      // 4. Verify we loaded the News page (check heading)
-      const heading = page.getByRole('heading', { name: 'News', exact: true });
-      await expect(heading).toBeVisible({ timeout: 30000 });
+      // 4. Verify we loaded the News page (check search form)
+      const searchForm = page.getByTestId('news-search-form');
+      await expect(searchForm).toBeVisible({ timeout: 30000 });
 
       // 5. Locate the Home logo link in the navbar using its robust test-id
       const homeLink = page.getByTestId('logo-link');

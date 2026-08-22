@@ -1,5 +1,5 @@
 import NewsTileSkeleton from '@/components/NewsTile/NewsTileSkeleton';
-import style from '@/app/[locale]/news/page.module.scss';
+import style from './NewsGrid.module.scss';
 
 export default function NewsGridSkeleton() {
   const skeletons = Array.from({ length: 12 }, (_, i) => i);

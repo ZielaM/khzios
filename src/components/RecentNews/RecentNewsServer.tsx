@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import NewsTile from '@/components/NewsTile';
-import styles from '@/app/[locale]/page.module.scss';
+import styles from './RecentNews.module.scss';
 
 export default async function RecentNewsServer({ locale }: { locale: string }) {
   const news = await prisma.news.findMany({

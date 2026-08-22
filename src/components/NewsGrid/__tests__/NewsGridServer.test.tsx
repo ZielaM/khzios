@@ -84,7 +84,9 @@ describe('NewsGridServer Component', () => {
 
     // 2 NewsTiles -> 2 links
     expect(screen.getAllByRole('link').length).toBeGreaterThan(0);
-    // Pagination container
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    // Load More container
+    expect(
+      screen.getByRole('button', { name: /loadMore/i })
+    ).toBeInTheDocument();
   });
 });

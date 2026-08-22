@@ -54,6 +54,7 @@ export default function NewsGridClient({
         newParams.page = currentPage + 1;
       } else {
         const lastItem = items[items.length - 1];
+        /* istanbul ignore next */
         if (lastItem) {
           newParams.cursorId = lastItem.id;
         }

@@ -166,6 +166,27 @@ describe('NewsSearchForm', () => {
       screen.getByRole('textbox', { name: 'searchPlaceholder' })
     ).toHaveValue('test2');
   });
+
+  it('handles input focus and blur correctly', () => {
+    const { rerender } = render(
+      <NewsSearchForm {...defaultProps} initialQuery="initial" />
+    );
+    const input = screen.getByRole('textbox', { name: 'searchPlaceholder' });
+
+    // Focus on input
+    fireEvent.focus(input);
+
+    // While focused, simulate initial props change (should not override typed value)
+    rerender(
+      <NewsSearchForm {...defaultProps} initialQuery="new props query" />
+    );
+
+    // The value should still be what the user typed/had, which was 'initial'
+    expect(input).toHaveValue('initial');
+
+    // Unfocus
+    fireEvent.blur(input);
+  });
   it('displays no options message when searching for non-existent tag', () => {
     render(<NewsSearchForm {...defaultProps} />);
     const comboboxes = screen.getAllByRole('combobox');
@@ -239,17 +260,80 @@ describe('NewsSearchForm', () => {
 
     expect(container.className).toContain('expanded');
 
+    // Click on the container when already expanded (covers line 269 false branch)
+    fireEvent.click(container);
+    expect(container.className).toContain('expanded');
+
+    // Clicking inside the container should not collapse it (covers line 155 false branch)
+    const input = screen.getByRole('textbox', { name: 'searchPlaceholder' });
+    fireEvent.mouseDown(input);
+    expect(container.className).toContain('expanded');
+
     // Clicking outside collapses it
     fireEvent.mouseDown(document.body);
     expect(container.className).toContain('collapsed');
 
     // Expand again, then type something
     fireEvent.click(expandButton);
-    const input = screen.getByRole('textbox', { name: 'searchPlaceholder' });
     fireEvent.change(input, { target: { value: 'test query' } });
 
     // Clicking outside should NOT collapse it when query is present
     fireEvent.mouseDown(document.body);
     expect(container.className).toContain('expanded');
+  });
+
+  it('handles date filters', () => {
+    render(
+      <NewsSearchForm
+        {...defaultProps}
+        initialDateFrom="2026-01-01"
+        initialDateTo="2026-12-31"
+      />
+    );
+
+    // Expand search form
+    const expandButton = screen.getByRole('button', {
+      name: 'searchPlaceholder',
+    });
+    fireEvent.click(expandButton);
+
+    const inputs = screen
+      .getAllByRole('textbox')
+      .filter(
+        (i) => (i as HTMLInputElement).type === 'date'
+      ) as HTMLInputElement[];
+    if (inputs.length === 0) {
+      // Fallback if jsdom doesn't support input[type="date"] mapping to textbox
+      const allInputs = document.querySelectorAll('.dateInput');
+      expect(allInputs.length).toBe(2);
+
+      fireEvent.change(allInputs[0], { target: { value: '2026-02-01' } });
+      fireEvent.focus(allInputs[0]);
+      fireEvent.blur(allInputs[0]);
+
+      fireEvent.change(allInputs[1], { target: { value: '2026-11-30' } });
+      fireEvent.focus(allInputs[1]);
+      fireEvent.blur(allInputs[1]);
+    } else {
+      expect(inputs[0].value).toBe('2026-01-01');
+      expect(inputs[1].value).toBe('2026-12-31');
+
+      fireEvent.change(inputs[0], { target: { value: '2026-02-01' } });
+      fireEvent.focus(inputs[0]);
+      fireEvent.blur(inputs[0]);
+
+      fireEvent.change(inputs[1], { target: { value: '2026-11-30' } });
+      fireEvent.focus(inputs[1]);
+      fireEvent.blur(inputs[1]);
+    }
+
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+
+    expect(mockPush).toHaveBeenCalledTimes(1);
+    const pushedUrl = mockPush.mock.calls[0][0];
+    expect(pushedUrl).toContain('dateFrom=2026-02-01');
+    expect(pushedUrl).toContain('dateTo=2026-11-30');
   });
 });

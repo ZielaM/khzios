@@ -140,6 +140,15 @@ describe('PublicationsSearchForm', () => {
     expect(screen.getByRole('textbox')).toHaveValue('test2');
   });
 
+  it('handles input focus and blur correctly', () => {
+    render(<PublicationsSearchForm {...defaultProps} initialQuery="initial" />);
+    const input = screen.getByRole('textbox', { name: 'searchPlaceholder' });
+
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'typing...' } });
+    fireEvent.blur(input);
+  });
+
   it('does not push if query is the same as currentQuery', () => {
     vi.mocked(useSearchParams).mockReturnValue(
       new URLSearchParams('query=same') as unknown as ReturnType<

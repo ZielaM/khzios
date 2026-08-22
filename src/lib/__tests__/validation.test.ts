@@ -249,6 +249,36 @@ describe('validateSearchParams', () => {
     });
   });
 
+  describe('cursorId and dates', () => {
+    it('should parse valid dates and cursorId', () => {
+      const result = validateSearchParams({
+        language: 'en',
+        cursorId: 'uuid-1234',
+        dateFrom: '2026-01-01T00:00:00Z',
+        dateTo: '2026-12-31T23:59:59Z',
+      });
+      expect(result.safeCursorId).toBe('uuid-1234');
+      expect(result.safeDateFrom?.getTime()).toBe(
+        new Date('2026-01-01T00:00:00Z').getTime()
+      );
+      expect(result.safeDateTo?.getTime()).toBe(
+        new Date('2026-12-31T23:59:59Z').getTime()
+      );
+    });
+
+    it('should handle invalid dates and missing cursorId gracefully', () => {
+      const result = validateSearchParams({
+        language: 'en',
+        cursorId: 123 as unknown as string,
+        dateFrom: 'not-a-date',
+        dateTo: { invalid: true } as unknown as string,
+      });
+      expect(result.safeCursorId).toBeUndefined();
+      expect(result.safeDateFrom).toBeUndefined();
+      expect(result.safeDateTo).toBeUndefined();
+    });
+  });
+
   describe('pages and limits', () => {
     describe('logic checks', () => {
       it('should floor floating-point page and limit numbers', () => {

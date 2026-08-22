@@ -146,5 +146,46 @@ describe('computeNextSearchParams', () => {
       expect(result?.has('sort')).toBe(false);
       expect(result?.has('page')).toBe(false);
     });
+
+    it('should add dateFrom and dateTo', () => {
+      const params = new URLSearchParams('');
+      const result = computeNextSearchParams(
+        params,
+        '',
+        [],
+        'date',
+        '2026-01-01',
+        '2026-12-31'
+      );
+
+      expect(result).not.toBeNull();
+      expect(result?.get('dateFrom')).toBe('2026-01-01');
+      expect(result?.get('dateTo')).toBe('2026-12-31');
+    });
+
+    it('should update and remove dateFrom and dateTo', () => {
+      const params = new URLSearchParams('dateFrom=old&dateTo=old');
+      const result = computeNextSearchParams(params, '', [], 'date', 'new', '');
+
+      expect(result).not.toBeNull();
+      expect(result?.get('dateFrom')).toBe('new');
+      expect(result?.has('dateTo')).toBe(false);
+    });
+
+    it('should remove dateFrom when empty', () => {
+      const params = new URLSearchParams('dateFrom=old');
+      const result = computeNextSearchParams(
+        params,
+        '',
+        [],
+        'date',
+        '',
+        'newTo'
+      );
+
+      expect(result).not.toBeNull();
+      expect(result?.has('dateFrom')).toBe(false);
+      expect(result?.get('dateTo')).toBe('newTo');
+    });
   });
 });

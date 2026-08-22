@@ -4,8 +4,8 @@ test.describe('Search Pagination Spec', () => {
   test.beforeEach(async ({ page }) => {
     // Set a large desktop viewport to keep controls fully visible by default
     await page.setViewportSize({ width: 1280, height: 800 });
-    // Start on the English news list (has plenty of seeded items, 12 items per page)
-    await page.goto('/en/news');
+    // Start on the English publications list since it natively uses standard pagination
+    await page.goto('/en/about-us/publications');
     await page.waitForLoadState('load');
   });
 
@@ -50,7 +50,7 @@ test.describe('Search Pagination Spec', () => {
     page,
   }) => {
     // 1. Start on page 2 directly
-    await page.goto('/en/news?page=2&sort=date');
+    await page.goto('/en/about-us/publications?page=2');
     await page.waitForLoadState('load');
 
     // Wait for page load state to stabilize

@@ -1,5 +1,5 @@
 import NewsTileSkeleton from '@/components/NewsTile/NewsTileSkeleton';
-import styles from '@/app/[locale]/page.module.scss';
+import styles from './RecentNews.module.scss';
 
 export default function RecentNewsSkeleton() {
   return (

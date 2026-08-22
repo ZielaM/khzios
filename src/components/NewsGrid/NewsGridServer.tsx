@@ -1,7 +1,7 @@
 import { searchPublishedNews } from '@/actions/search';
 import NewsTile from '@/components/NewsTile';
 import Pagination from '@/components/Pagination';
-import style from '@/app/[locale]/news/page.module.scss';
+import style from './NewsGrid.module.scss';
 import { SearchX } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { LanguageCode, SortBy } from '@/types/search-types';

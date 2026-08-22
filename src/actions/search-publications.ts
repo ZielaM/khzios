@@ -27,7 +27,7 @@ export async function searchPublications(params: SearchParams) {
       );
       const langArray = Prisma.sql`ARRAY[${Prisma.join(langTextArray, ', ')}]`;
 
-      const cteSelectPart = Prisma.sql`WITH RankedMatches AS ( SELECT DISTINCT ON (p.id) p.id, pt."languageCode", ts_headline(${dictionary}::regconfig, pt.title, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxFragments=0') AS highlighted_title, ts_rank(to_tsvector(${dictionary}::regconfig, p.authors || ' ' || p.journal || ' ' || pt.title), websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) AS rank, p.year`;
+      const cteSelectPart = Prisma.sql`WITH RankedMatches AS ( SELECT DISTINCT ON (p.id) p.id, pt."languageCode", ts_headline(${dictionary}::regconfig, pt.title, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxFragments=0') AS highlighted_title, ts_rank(pt."searchVector", websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) AS rank, p.year`;
       const selectCountPart = Prisma.sql`SELECT CAST(COUNT(DISTINCT p.id) AS INTEGER) as total`;
 
       const fromPart = Prisma.sql`FROM "Publication" p JOIN "PublicationTranslation" pt ON pt."publicationId" = p.id`;
@@ -44,7 +44,7 @@ export async function searchPublications(params: SearchParams) {
 
       // Full-text search match condition
       whereParts.push(
-        Prisma.sql`to_tsvector(${dictionary}::regconfig, p.authors || ' ' || p.journal || ' ' || pt.title) @@ websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})`
+        Prisma.sql`pt."searchVector" @@ websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})`
       );
 
       const whereClause = Prisma.sql`WHERE ${Prisma.join(whereParts, ' AND ')}`;
@@ -52,7 +52,7 @@ export async function searchPublications(params: SearchParams) {
       countParts.push(whereClause);
 
       // Order By in CTE for DISTINCT ON
-      const cteOrderBy = Prisma.sql`ORDER BY p.id, array_position(${langArray}, CAST(pt."languageCode" AS text)) ASC, ts_rank(to_tsvector(${dictionary}::regconfig, p.authors || ' ' || p.journal || ' ' || pt.title), websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) DESC )`;
+      const cteOrderBy = Prisma.sql`ORDER BY p.id, array_position(${langArray}, CAST(pt."languageCode" AS text)) ASC, ts_rank(pt."searchVector", websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) DESC )`;
       sqlParts.push(cteOrderBy);
 
       // Main query

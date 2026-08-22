@@ -43,7 +43,7 @@ export async function searchPublishedNews(params: SearchParams) {
       );
       const langArray = Prisma.sql`ARRAY[${Prisma.join(langTextArray, ', ')}]`;
 
-      const cteSelectPart = Prisma.sql`WITH RankedMatches AS ( SELECT DISTINCT ON (n.id) n.id, nt."languageCode", ts_headline(${dictionary}::regconfig, nt.title, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxFragments=0') AS highlighted_title, ts_headline(${dictionary}::regconfig, nt.content, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content, ts_rank(to_tsvector(${dictionary}::regconfig, nt.title || ' ' || nt.content), websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) AS rank, n."createdAt"`;
+      const cteSelectPart = Prisma.sql`WITH RankedMatches AS ( SELECT DISTINCT ON (n.id) n.id, nt."languageCode", ts_headline(${dictionary}::regconfig, nt.title, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxFragments=0') AS highlighted_title, ts_headline(${dictionary}::regconfig, nt.content, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content, ts_rank(nt."searchVector", websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) AS rank, n."createdAt"`;
       const selectCountPart = Prisma.sql`SELECT CAST(COUNT(DISTINCT n.id) AS INTEGER) as total`;
 
       const fromPart = Prisma.sql`FROM "News" n JOIN "NewsTranslation" nt ON nt."newsId" = n.id`;
@@ -60,7 +60,7 @@ export async function searchPublishedNews(params: SearchParams) {
       whereParts.push(Prisma.sql`(${Prisma.join(langConditions, ' OR ')})`);
       whereParts.push(Prisma.sql`n.published = true`);
       whereParts.push(
-        Prisma.sql`to_tsvector(${dictionary}::regconfig, nt.title || ' ' || nt.content) @@ websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})`
+        Prisma.sql`nt."searchVector" @@ websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})`
       );
 
       if (safeTags) {
@@ -78,7 +78,7 @@ export async function searchPublishedNews(params: SearchParams) {
       countParts.push(whereClause);
 
       // Order By in the CTE to satisfy DISTINCT ON, deduplicating by best fallback translation first, then rank
-      const cteOrderBy = Prisma.sql`ORDER BY n.id, array_position(${langArray}, CAST(nt."languageCode" AS text)) ASC, ts_rank(to_tsvector(${dictionary}::regconfig, nt.title || ' ' || nt.content), websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) DESC )`;
+      const cteOrderBy = Prisma.sql`ORDER BY n.id, array_position(${langArray}, CAST(nt."languageCode" AS text)) ASC, ts_rank(nt."searchVector", websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) DESC )`;
       sqlParts.push(cteOrderBy);
 
       // Main query selecting from CTE and paginating properly

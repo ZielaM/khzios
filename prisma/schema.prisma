@@ -221,7 +221,12 @@ model PublicationTranslation {
 
   publication Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
 
+  // Search vector for full-text search
+  searchVector Unsupported("tsvector")?
+
   @@id([publicationId, languageCode])
+  // Index for full-text search
+  @@index([searchVector])
 }
 
 // ──── Research Projects ───────────────────────────────────────────────

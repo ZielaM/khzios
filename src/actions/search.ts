@@ -16,6 +16,9 @@ export async function searchPublishedNews(params: SearchParams) {
     fallbackLanguages,
     dictionary,
     safeSortBy,
+    safeCursorId,
+    safeDateFrom,
+    safeDateTo,
   } = validateSearchParams(params);
 
   try {
@@ -71,6 +74,13 @@ export async function searchPublishedNews(params: SearchParams) {
         whereParts.push(
           Prisma.sql`n.id IN (SELECT "A" FROM "_NewsToTag" rel JOIN "Tag" t ON t.id = rel."B" LEFT JOIN "TagTranslation" tt ON tt."tagId" = t.id WHERE ${Prisma.join(tagConditions, ' OR ')})`
         );
+      }
+
+      if (safeDateFrom) {
+        whereParts.push(Prisma.sql`n."createdAt" >= ${safeDateFrom}`);
+      }
+      if (safeDateTo) {
+        whereParts.push(Prisma.sql`n."createdAt" <= ${safeDateTo}`);
       }
 
       const whereClause = Prisma.sql`WHERE ${Prisma.join(whereParts, ' AND ')}`;
@@ -134,11 +144,18 @@ export async function searchPublishedNews(params: SearchParams) {
         };
       }
 
+      if (safeDateFrom || safeDateTo) {
+        whereCondition.createdAt = {};
+        if (safeDateFrom) whereCondition.createdAt.gte = safeDateFrom;
+        if (safeDateTo) whereCondition.createdAt.lte = safeDateTo;
+      }
+
       const [newsData, count] = await Promise.all([
         prisma.news.findMany({
           where: whereCondition,
           orderBy: { createdAt: 'desc' },
-          skip: offset,
+          cursor: safeCursorId ? { id: safeCursorId } : undefined,
+          skip: safeCursorId ? 1 : offset,
           take: safeLimit,
           select: { id: true },
         }),

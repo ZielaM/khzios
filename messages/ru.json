@@ -77,7 +77,8 @@
     "sortDate": "Новейшие",
     "sortRelevance": "Релевантность",
     "noResults": "Ничего не найдено.",
-    "rss": "RSS канал"
+    "rss": "RSS канал",
+    "loadMore": "Загрузить еще"
   },
   "PublicationsPage": {
     "title": "Научные публикации",

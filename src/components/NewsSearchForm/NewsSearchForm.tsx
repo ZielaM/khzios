@@ -20,6 +20,8 @@ interface NewsSearchFormProps {
   initialQuery?: string;
   initialTag?: string;
   initialSort: SortBy;
+  initialDateFrom?: string;
+  initialDateTo?: string;
   availableTags: { value: string; label: string }[];
   isSkeleton?: boolean;
 }
@@ -96,6 +98,8 @@ export default function NewsSearchForm({
   initialQuery,
   initialTag,
   initialSort,
+  initialDateFrom,
+  initialDateTo,
   availableTags,
   isSkeleton = false,
 }: NewsSearchFormProps) {
@@ -133,6 +137,13 @@ export default function NewsSearchForm({
   );
   const [prevInitialSort, setPrevInitialSort] = useState(initialSort);
 
+  const [dateFrom, setDateFrom] = useState(initialDateFrom || '');
+  const [prevInitialDateFrom, setPrevInitialDateFrom] =
+    useState(initialDateFrom);
+
+  const [dateTo, setDateTo] = useState(initialDateTo || '');
+  const [prevInitialDateTo, setPrevInitialDateTo] = useState(initialDateTo);
+
   const [isExpanded, setIsExpanded] = useState(
     Boolean(initialQuery || initialTagsList.length > 0)
   );
@@ -145,7 +156,7 @@ export default function NewsSearchForm({
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
       ) {
-        if (!query && selectedTags.length === 0) {
+        if (!query && selectedTags.length === 0 && !dateFrom && !dateTo) {
           setIsExpanded(false);
         }
       }
@@ -154,20 +165,26 @@ export default function NewsSearchForm({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [query, selectedTags]);
+  }, [query, selectedTags, dateFrom, dateTo]);
 
   if (
     initialQuery !== prevInitialQuery ||
     initialTag !== prevInitialTag ||
-    initialSort !== prevInitialSort
+    initialSort !== prevInitialSort ||
+    initialDateFrom !== prevInitialDateFrom ||
+    initialDateTo !== prevInitialDateTo
   ) {
     setPrevInitialQuery(initialQuery);
     setPrevInitialTag(initialTag);
     setPrevInitialSort(initialSort);
+    setPrevInitialDateFrom(initialDateFrom);
+    setPrevInitialDateTo(initialDateTo);
 
     if (!isSkeleton) {
       if (!isInputFocused) {
         setQuery(initialQuery || '');
+        setDateFrom(initialDateFrom || '');
+        setDateTo(initialDateTo || '');
       }
       setSelectedTags(
         availableTags.filter((t) => initialTagsList.includes(t.value))
@@ -181,12 +198,20 @@ export default function NewsSearchForm({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const applyChanges = useCallback(
-    (newQuery: string, newTags: string[], newSort: string) => {
+    (
+      newQuery: string,
+      newTags: string[],
+      newSort: string,
+      newDateFrom: string,
+      newDateTo: string
+    ) => {
       const nextParams = computeNextSearchParams(
         new URLSearchParams(searchParams.toString()),
         newQuery,
         newTags,
-        newSort
+        newSort,
+        newDateFrom,
+        newDateTo
       );
 
       // Only push router state if a param was actually modified.
@@ -208,13 +233,23 @@ export default function NewsSearchForm({
       applyChanges(
         query,
         selectedTags.map((t) => t.value),
-        selectedSort.value
+        selectedSort.value,
+        dateFrom,
+        dateTo
       );
     }, 500);
     return () => {
       clearTimeout(timerRef.current as NodeJS.Timeout);
     };
-  }, [query, selectedTags, selectedSort, applyChanges, isSkeleton]);
+  }, [
+    query,
+    selectedTags,
+    selectedSort,
+    dateFrom,
+    dateTo,
+    applyChanges,
+    isSkeleton,
+  ]);
 
   return (
     <div
@@ -309,6 +344,30 @@ export default function NewsSearchForm({
               />
             </div>
           )}
+
+          <div className={style.dateFilter}>
+            <input
+              type="date"
+              className={style.dateInput}
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              disabled={isSkeleton}
+              tabIndex={!isExpanded ? -1 : 0}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+            />
+            <span className={style.dateSeparator}>-</span>
+            <input
+              type="date"
+              className={style.dateInput}
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              disabled={isSkeleton}
+              tabIndex={!isExpanded ? -1 : 0}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -236,3 +236,59 @@
     min-width: 100%;
   }
 }
+
+.dateFilter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 1 auto;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+.dateInput {
+  flex: 1;
+  min-width: 130px;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--rs-border);
+  border-radius: var(--radius-md, 8px);
+  background: var(--rs-bg);
+  color: var(--rs-text);
+  font-family: inherit;
+  font-size: 0.95em;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: var(--rs-shadow);
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: var(--rs-border-focus);
+    box-shadow: var(--rs-shadow-focus);
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    filter: invert(0);
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  :global(.wcag-high-contrast) & {
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  }
+}
+
+.dateSeparator {
+  color: var(--rs-text);
+  font-weight: 500;
+  opacity: 0.7;
+}

@@ -59,6 +59,16 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
       ? (resolvedSearchParams.sort as SortBy)
       : 'relevance';
 
+  const dateFrom =
+    typeof resolvedSearchParams.dateFrom === 'string'
+      ? resolvedSearchParams.dateFrom
+      : undefined;
+
+  const dateTo =
+    typeof resolvedSearchParams.dateTo === 'string'
+      ? resolvedSearchParams.dateTo
+      : undefined;
+
   const limit = 12;
 
   // Fetch all tags for the dropdown (z fallbackiem per-tag)
@@ -71,7 +81,14 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
   const tStruct = await getTranslations('StructurePage');
 
   // Key for Suspense to trigger re-render on param change
-  const suspenseKey = JSON.stringify({ query, tag, page, sortBy });
+  const suspenseKey = JSON.stringify({
+    query,
+    tag,
+    page,
+    sortBy,
+    dateFrom,
+    dateTo,
+  });
 
   return (
     <div className={style.main}>
@@ -86,6 +103,8 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
           initialQuery={query}
           initialTag={tag}
           initialSort={sortBy}
+          initialDateFrom={dateFrom}
+          initialDateTo={dateTo}
           availableTags={availableTags}
         />
       </div>
@@ -98,6 +117,8 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
           page={page}
           limit={limit}
           sortBy={sortBy}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
         />
       </Suspense>
     </div>

@@ -77,7 +77,8 @@
     "sortDate": "Newest",
     "sortRelevance": "Relevance",
     "noResults": "No results found.",
-    "rss": "RSS Feed"
+    "rss": "RSS Feed",
+    "loadMore": "Load more"
   },
   "PublicationsPage": {
     "title": "Scientific Publications",

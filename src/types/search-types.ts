@@ -9,6 +9,9 @@ export interface SearchParams {
   page?: number;
   limit?: number;
   sortBy?: SortBy;
+  cursorId?: string;
+  dateFrom?: string;
+  dateTo?: string;
 }
 
 export interface ValidatedSearchParams {
@@ -20,4 +23,7 @@ export interface ValidatedSearchParams {
   fallbackLanguages: readonly LanguageCode[];
   dictionary: string;
   safeSortBy: SortBy;
+  safeCursorId?: string;
+  safeDateFrom?: Date;
+  safeDateTo?: Date;
 }

@@ -11,6 +11,9 @@ export function validateSearchParams(
     page = 1,
     limit = 12,
     sortBy = 'date',
+    cursorId,
+    dateFrom,
+    dateTo,
   } = params;
 
   // Runtime type guards — Server Actions can be called directly via POST,
@@ -19,6 +22,7 @@ export function validateSearchParams(
   const rawLimit = typeof limit === 'number' ? limit : Number(limit);
   const rawQuery = typeof query === 'string' ? query : undefined;
   const rawTag = typeof tag === 'string' ? tag : undefined;
+  const safeCursorId = typeof cursorId === 'string' ? cursorId : undefined;
 
   // Max 1000 pages to prevent extreme OFFSET
   // Guard against NaN — Math.max/min propagate NaN instead of clamping it
@@ -66,6 +70,12 @@ export function validateSearchParams(
     }
   })();
 
+  const parseDate = (d: unknown) => {
+    if (!d || typeof d !== 'string') return undefined;
+    const parsed = new Date(d);
+    return isNaN(parsed.getTime()) ? undefined : parsed;
+  };
+
   return {
     safePage,
     safeLimit,
@@ -75,5 +85,8 @@ export function validateSearchParams(
     fallbackLanguages,
     dictionary,
     safeSortBy: sortBy === 'relevance' ? 'relevance' : 'date',
+    safeCursorId,
+    safeDateFrom: parseDate(dateFrom),
+    safeDateTo: parseDate(dateTo),
   };
 }

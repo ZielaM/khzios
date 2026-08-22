@@ -72,12 +72,13 @@
     "title": "Новини",
     "searchPlaceholder": "Пошук новин...",
     "searchButton": "Пошук",
-    "tagPlaceholder": "Тег",
+    "tagPlaceholder": "Тег (напр. освіта)",
     "sortBy": "Сортувати за",
     "sortDate": "Найновіші",
     "sortRelevance": "Релевантність",
-    "noResults": "Нічого не знайдено.",
-    "rss": "RSS стрічка"
+    "noResults": "Результатів не знайдено.",
+    "rss": "RSS стрічка",
+    "loadMore": "Завантажити ще"
   },
   "PublicationsPage": {
     "title": "Наукові публікації",

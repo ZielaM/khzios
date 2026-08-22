@@ -77,7 +77,8 @@
     "sortDate": "Najnowsze",
     "sortRelevance": "Trafność",
     "noResults": "Nie znaleziono wyników.",
-    "rss": "Kanał RSS"
+    "rss": "Kanał RSS",
+    "loadMore": "Pokaż więcej"
   },
   "PublicationsPage": {
     "title": "Publikacje naukowe",

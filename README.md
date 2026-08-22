@@ -34,3 +34,19 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Formatowanie Artykułów (Predefiniowane Style HTML)
+
+W aplikacji zaimplementowaliśmy zautomatyzowane formatowanie artykułów. Pisząc artykuł w edytorze WYSIWYG, nie musisz martwić się o dodawanie klas CSS – standardowe znaczniki HTML otrzymują profesjonalny, akademicki wygląd z pudełka. Obsługiwany jest również tryb wysokiego kontrastu (WCAG).
+
+Poniższe znaczniki HTML posiadają dedykowane, predefiniowane style w widoku artykułu:
+
+- `<p>` - standardowe akapity z odpowiednim światłem i kolorem ułatwiającym czytanie. Pierwszy akapit w artykule jest automatycznie traktowany jako tzw. "lead" (powiększony, z kolorem głównym aplikacji).
+- `<h2>` - główne śródtytuły, z wyraźnym powiększeniem i marginesem odcinającym nową sekcję.
+- `<h3>` - mniejsze śródtytuły do tworzenia podsekcji.
+- `<ul>` oraz `<ol>` - listy nieuporządkowane i uporządkowane (automatyczne wcięcia i marginesy).
+- `<li>` - elementy list z zachowaniem odstępów.
+- `<a>` - odnośniki w tekście (podkreślenia, reakcja na najechanie kursorem).
+- `<blockquote>` - wyróżnione cytaty z wyraźnym lewym obramowaniem, subtelnym tłem oraz dekoracyjnym znakiem cudzysłowu.
+
+Wszystkie powyższe znaczniki automatycznie dostosowują swój wygląd (kolory, tła, krawędzie), gdy użytkownik włączy tryb wysokiego kontrastu (WCAG), zachowując przy tym pełną dostępność.

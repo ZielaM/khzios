@@ -30,7 +30,12 @@ export function stripHtml(html: string): string {
   if (typeof html !== 'string') {
     return '';
   }
-  return DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
+  // Pass 1: Forbid tags entirely (removes content)
+  const cleanHtml = DOMPurify.sanitize(html, {
+    FORBID_TAGS: ['style', 'script'],
+  });
+  // Pass 2: Strip all remaining HTML tags
+  return DOMPurify.sanitize(cleanHtml, { ALLOWED_TAGS: [] });
 }
 
 /**

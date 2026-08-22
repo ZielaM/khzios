@@ -212,7 +212,11 @@ export default async function NewsDetailsPage({
 
           <article
             className={style.articleContent}
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(content, {
+                FORBID_TAGS: ['style', 'script'],
+              }),
+            }}
           />
 
           {galleryPhotos.length > 0 && (

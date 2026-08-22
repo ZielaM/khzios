@@ -194,9 +194,6 @@ async function main() {
       <p>Zapraszamy do zapoznania się z pełną publikacją w naszym repozytorium.</p>
     `,
     (topic: string) => `
-      <style>
-        .highlight-box { background: rgba(36, 113, 81, 0.1); border-left: 4px solid #247151; padding: 16px; margin: 20px 0; border-radius: 4px; }
-      </style>
       <p>Katedra Hodowli Zwierząt i Oceny Surowców ma zaszczyt przedstawić najnowsze wytyczne dotyczące <em>${topic}</em>.</p>
       <div class="highlight-box">
         <strong>Ważne:</strong> Nowe protokoły obowiązują od początku nadchodzącego semestru dla wszystkich studentów i pracowników.
@@ -228,21 +225,21 @@ async function main() {
       if (idx % htmlTemplates.length === 0)
         return `<p>In today's article, we discuss: <strong>${topic}</strong>. The research conducted by our Department brings promising results.</p><h2>Main objectives</h2><ul><li>Increased herd immunity</li><li>Optimization of raw material evaluation</li><li>Implementation of animal welfare standards</li></ul><blockquote>"This is a breakthrough in our field." - Prof. Jan Kowalski</blockquote>`;
       if (idx % htmlTemplates.length === 1)
-        return `<style>.highlight-box { background: rgba(36, 113, 81, 0.1); border-left: 4px solid #247151; padding: 16px; margin: 20px 0; border-radius: 4px; }</style><p>The Department of Animal Breeding and Product Evaluation presents guidelines on <em>${topic}</em>.</p><div class="highlight-box"><strong>Important:</strong> New protocols apply from next semester.</div><h3>Technical details</h3><ol><li>Sterile sampling</li><li>Spectrometric analysis</li><li>Correlation with genetic data</li></ol>`;
+        return `<p>The Department of Animal Breeding and Product Evaluation presents guidelines on <em>${topic}</em>.</p><div class="highlight-box"><strong>Important:</strong> New protocols apply from next semester.</div><h3>Technical details</h3><ol><li>Sterile sampling</li><li>Spectrometric analysis</li><li>Correlation with genetic data</li></ol>`;
       return `<p>Our research teams are not slowing down. Focusing on <strong>${topic}</strong>, we set new educational and scientific standards.</p><h2>International Conference</h2><p>We will soon present our achievements internationally.</p><blockquote>Continuous development is the basis of 21st-century breeding.</blockquote>`;
     },
     uk: (topic: string, idx: number) => {
       if (idx % htmlTemplates.length === 0)
         return `<p>Сьогодні ми обговорюємо: <strong>${topic}</strong>. Дослідження, проведені нашою кафедрою, дають багатообіцяючі результати.</p><h2>Основні цілі</h2><ul><li>Підвищення імунітету стада</li><li>Оптимізація оцінки сировини</li><li>Впровадження стандартів добробуту тварин</li></ul><blockquote>"Це прорив у нашій галузі." - проф. Ян Ковальський</blockquote>`;
       if (idx % htmlTemplates.length === 1)
-        return `<style>.highlight-box { background: rgba(36, 113, 81, 0.1); border-left: 4px solid #247151; padding: 16px; margin: 20px 0; border-radius: 4px; }</style><p>Кафедра представляє рекомендації щодо <em>${topic}</em>.</p><div class="highlight-box"><strong>Важливо:</strong> Нові протоколи діють з наступного семестру.</div><h3>Технічні деталі</h3><ol><li>Стерильний відбір проб</li><li>Спектрометричний аналіз</li><li>Кореляція з генетичними даними</li></ol>`;
+        return `<p>Кафедра представляє рекомендації щодо <em>${topic}</em>.</p><div class="highlight-box"><strong>Важливо:</strong> Нові протоколи діють з наступного семестру.</div><h3>Технічні деталі</h3><ol><li>Стерильний відбір проб</li><li>Спектрометричний аналіз</li><li>Кореляція з генетичними даними</li></ol>`;
       return `<p>Наші дослідницькі групи не збавляють темпів. Зосереджуючись на <strong>${topic}</strong>, ми встановлюємо нові стандарти.</p><h2>Міжнародна конференція</h2><p>Незабаром ми представимо наші досягнення на міжнародному рівні.</p><blockquote>Постійний розвиток - основа селекції 21 століття.</blockquote>`;
     },
     ru: (topic: string, idx: number) => {
       if (idx % htmlTemplates.length === 0)
         return `<p>Сегодня мы обсуждаем: <strong>${topic}</strong>. Исследования, проведенные нашей кафедрой, приносят многообещающие результаты.</p><h2>Основные цели</h2><ul><li>Повышение иммунитета стада</li><li>Оптимизация оценки сырья</li><li>Внедрение стандартов благополучия животных</li></ul><blockquote>"Это прорыв в нашей области." - проф. Ян Ковальский</blockquote>`;
       if (idx % htmlTemplates.length === 1)
-        return `<style>.highlight-box { background: rgba(36, 113, 81, 0.1); border-left: 4px solid #247151; padding: 16px; margin: 20px 0; border-radius: 4px; }</style><p>Кафедра представляет рекомендации по <em>${topic}</em>.</p><div class="highlight-box"><strong>Важно:</strong> Новые протоколы действуют со следующего семестра.</div><h3>Технические детали</h3><ol><li>Стерильный отбор проб</li><li>Спектрометрический анализ</li><li>Корреляция с генетическими данными</li></ol>`;
+        return `<p>Кафедра представляет рекомендации по <em>${topic}</em>.</p><div class="highlight-box"><strong>Важно:</strong> Новые протоколы действуют со следующего семестра.</div><h3>Технические детали</h3><ol><li>Стерильный отбор проб</li><li>Спектрометрический анализ</li><li>Корреляция с генетическими данными</li></ol>`;
       return `<p>Наши исследовательские группы не сбавляют темп. Ориентируясь на <strong>${topic}</strong>, мы устанавливаем новые стандарты.</p><h2>Международная конференция</h2><p>Вскоре мы представим наши достижения на международном уровне.</p><blockquote>Постоянное развитие - основа селекции 21 века.</blockquote>`;
     },
   };

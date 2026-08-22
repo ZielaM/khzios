@@ -58,6 +58,19 @@ export default function NewsTile({
   const title = translation?.title ?? 'Translation missing';
   const content = translation?.content ?? '...';
 
+  // 2-pass sanitization to safely remove <style>/<script> contents without regex:
+  // Pass 1: Remove forbidden tags completely (including their text content).
+  // Pass 2: Strip all remaining HTML tags except <mark>.
+  const cleanTitle = DOMPurify.sanitize(
+    DOMPurify.sanitize(title, { FORBID_TAGS: ['style', 'script'] }),
+    { ALLOWED_TAGS: ['mark'] }
+  );
+
+  const cleanContent = DOMPurify.sanitize(
+    DOMPurify.sanitize(content, { FORBID_TAGS: ['style', 'script'] }),
+    { ALLOWED_TAGS: ['mark'] }
+  );
+
   // Re-use standard fallback logic for each individual tag
   const getTagName = (tag: Tag & { translations: TagTranslation[] }) =>
     resolveTagName(tag, locale);
@@ -119,18 +132,14 @@ export default function NewsTile({
             <h3
               className={style.title}
               data-testid="news-title"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(title, { ALLOWED_TAGS: ['mark'] }),
-              }}
+              dangerouslySetInnerHTML={{ __html: cleanTitle }}
             />
 
             <p
               className={clsx(style.description, {
-                [style.highlighted]: content.includes('<mark>'),
+                [style.highlighted]: cleanContent.includes('<mark>'),
               })}
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(content, { ALLOWED_TAGS: ['mark'] }),
-              }}
+              dangerouslySetInnerHTML={{ __html: cleanContent }}
             />
 
             <div className={style.readMore}>

@@ -23,10 +23,11 @@ export default function PublicationsSearchForm({
   const [query, setQuery] = useState(initialQuery);
   const [prevInitialQuery, setPrevInitialQuery] = useState(initialQuery);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   if (initialQuery !== prevInitialQuery) {
     setPrevInitialQuery(initialQuery);
-    if (!isSkeleton) {
+    if (!isSkeleton && !isInputFocused) {
       setQuery(initialQuery);
     }
   }
@@ -77,6 +78,8 @@ export default function PublicationsSearchForm({
             aria-label={isSkeleton ? undefined : t('searchPlaceholder')}
             value={query}
             disabled={isSkeleton}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>

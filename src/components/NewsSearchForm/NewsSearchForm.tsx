@@ -137,6 +137,7 @@ export default function NewsSearchForm({
     Boolean(initialQuery || initialTagsList.length > 0)
   );
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -165,7 +166,9 @@ export default function NewsSearchForm({
     setPrevInitialSort(initialSort);
 
     if (!isSkeleton) {
-      setQuery(initialQuery || '');
+      if (!isInputFocused) {
+        setQuery(initialQuery || '');
+      }
       setSelectedTags(
         availableTags.filter((t) => initialTagsList.includes(t.value))
       );
@@ -265,6 +268,8 @@ export default function NewsSearchForm({
                 }
                 setQuery(val);
               }}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
             />
           </div>
 

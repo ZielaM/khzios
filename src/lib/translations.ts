@@ -12,14 +12,16 @@ import { LanguageCode } from '@/types/search-types';
  * Fallback language chain order.
  * E.g. for locale='uk': search uk -> en -> pl
  */
+const EN_FALLBACK: readonly LanguageCode[] = ['en', 'pl'];
+
 export const FALLBACK_CHAIN: Record<LanguageCode, readonly LanguageCode[]> = {
   pl: ['pl'],
-  en: ['en', 'pl'],
-  uk: ['uk', 'en', 'pl'],
-  ru: ['ru', 'en', 'pl'],
+  en: EN_FALLBACK,
+  uk: ['uk', ...EN_FALLBACK],
+  ru: ['ru', ...EN_FALLBACK],
 };
 
-export const LANGUAGE_NAMES: Record<string, string> = {
+export const LANGUAGE_NAMES: Record<LanguageCode, string> = {
   pl: 'polski',
   en: 'English',
   uk: 'українська',
@@ -37,7 +39,10 @@ export function resolveTranslation<T extends { languageCode: string }>(
   translations: T[],
   locale: string
 ): { translation: T | undefined; isFallback: boolean } {
-  const chain = FALLBACK_CHAIN[locale as LanguageCode] ?? [locale, 'en', 'pl'];
+  const chain = FALLBACK_CHAIN[locale as LanguageCode] ?? [
+    locale,
+    ...FALLBACK_CHAIN.en,
+  ];
 
   for (const lang of chain) {
     const found = translations.find((t) => t.languageCode === lang);

@@ -1,5 +1,9 @@
 import { SearchParams, ValidatedSearchParams } from '@/types/search-types';
 import { FALLBACK_CHAIN } from './translations';
+import { createLogger } from '@/lib/logger';
+import { auditInput, auditId } from '@/lib/security';
+
+const log = createLogger('validation');
 
 export function validateSearchParams(
   params: SearchParams
@@ -34,6 +38,48 @@ export function validateSearchParams(
     60,
     Math.max(1, Math.floor(isNaN(rawLimit) ? 1 : rawLimit))
   );
+
+  // ── Security audits ────────────────────────────────────────────────────
+
+  // Log suspicious parameter clamping (potential abuse or buggy clients)
+  if (safePage !== rawPage || safeLimit !== rawLimit) {
+    log.warn(
+      { rawPage, safePage, rawLimit, safeLimit },
+      'Search parameters were clamped — possible abuse'
+    );
+  }
+
+  // Scan search query for injection / XSS patterns
+  if (rawQuery) {
+    auditInput('search_query', rawQuery, { language });
+  }
+
+  // Scan tag filter for injection patterns
+  if (rawTag) {
+    auditInput('tag_filter', rawTag, { language });
+  }
+
+  // Validate cursor ID format (should be a UUID — anything else is suspicious)
+  if (safeCursorId) {
+    auditId('cursor_id', safeCursorId, { language });
+  }
+
+  // Detect non-string types passed to string params (Server Action abuse)
+  if (query !== undefined && typeof query !== 'string') {
+    log.warn(
+      { receivedType: typeof query },
+      '⚠ Non-string query parameter received — possible Server Action abuse'
+    );
+  }
+  if (tag !== undefined && typeof tag !== 'string') {
+    log.warn(
+      { receivedType: typeof tag },
+      '⚠ Non-string tag parameter received — possible Server Action abuse'
+    );
+  }
+
+  // ── Sanitisation ───────────────────────────────────────────────────────
+
   // Trim, truncate, and treat whitespace-only input as absent (undefined)
   const safeQuery = rawQuery?.trim().substring(0, 256) || undefined;
   const trimmedTag = rawTag?.trim();
@@ -56,6 +102,14 @@ export function validateSearchParams(
 
   const allowedLanguages = ['pl', 'en', 'uk', 'ru'];
   const safeLanguage = allowedLanguages.includes(language) ? language : 'en';
+
+  // Log when an invalid language is received (scanning / fuzzing indicator)
+  if (!allowedLanguages.includes(language)) {
+    log.warn(
+      { receivedLanguage: String(language).substring(0, 20) },
+      '⚠ Invalid language code received — possible fuzzing'
+    );
+  }
 
   const fallbackLanguages = FALLBACK_CHAIN[safeLanguage];
 

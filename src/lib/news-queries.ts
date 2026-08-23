@@ -8,13 +8,18 @@
 
 import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
+import { createLogger } from '@/lib/logger';
+
+const log = createLogger('news-queries');
 
 /**
  * Fetches a single published news article by ID with all relations.
  * Result is cached per-request via React.cache().
  */
 export const getNewsById = cache(async (id: string) => {
-  return prisma.news.findUnique({
+  log.debug({ newsId: id }, 'Fetching news by ID');
+
+  const news = await prisma.news.findUnique({
     where: { id, published: true },
     include: {
       translations: true,
@@ -26,6 +31,12 @@ export const getNewsById = cache(async (id: string) => {
       photos: true,
     },
   });
+
+  if (!news) {
+    log.warn({ newsId: id }, 'News article not found or unpublished');
+  }
+
+  return news;
 });
 
 /**

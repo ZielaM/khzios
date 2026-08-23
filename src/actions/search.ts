@@ -6,6 +6,9 @@ import { Prisma } from '@/generated/prisma/client';
 import { validateSearchParams } from '@/lib/validation';
 
 import { SearchParams } from '@/types/search-types';
+import { createLogger } from '@/lib/logger';
+
+const log = createLogger('search');
 
 export async function searchPublishedNews(params: SearchParams) {
   const {
@@ -22,6 +25,7 @@ export async function searchPublishedNews(params: SearchParams) {
   } = validateSearchParams(params);
 
   try {
+    const start = performance.now();
     const offset = (safePage - 1) * safeLimit;
 
     // We will build the where conditions for Prisma to get IDs
@@ -197,6 +201,20 @@ export async function searchPublishedNews(params: SearchParams) {
       return item;
     });
 
+    const durationMs = Math.round(performance.now() - start);
+    log.info(
+      {
+        hasQuery: !!safeQuery,
+        hasTags: !!safeTags,
+        page: safePage,
+        limit: safeLimit,
+        resultCount: sortedNewsItems.length,
+        totalCount,
+        durationMs,
+      },
+      'News search completed'
+    );
+
     return {
       data: sortedNewsItems,
       total: totalCount,
@@ -204,7 +222,10 @@ export async function searchPublishedNews(params: SearchParams) {
       totalPages: Math.ceil(totalCount / safeLimit),
     };
   } catch (error) {
-    console.error('Search error:', error);
+    log.error(
+      { err: error, hasQuery: !!safeQuery, page: safePage, limit: safeLimit },
+      'News search failed'
+    );
     return { data: [], total: 0, page: safePage ?? 1, totalPages: 0 };
   }
 }

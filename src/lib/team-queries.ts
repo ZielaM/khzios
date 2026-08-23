@@ -7,6 +7,9 @@
 
 import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
+import { createLogger } from '@/lib/logger';
+
+const log = createLogger('team-queries');
 
 /**
  * Fetches a single team by its canonical slug with all relations.
@@ -14,7 +17,9 @@ import { prisma } from '@/lib/prisma';
  * projects, courses, and external links — each with translations.
  */
 export const getTeamBySlug = cache(async (slug: string) => {
-  return prisma.team.findUnique({
+  log.debug({ slug }, 'Fetching team by slug');
+
+  const team = await prisma.team.findUnique({
     where: { slug },
     include: {
       translations: true,
@@ -47,6 +52,12 @@ export const getTeamBySlug = cache(async (slug: string) => {
       },
     },
   });
+
+  if (!team) {
+    log.warn({ slug }, 'Team not found');
+  }
+
+  return team;
 });
 
 /**
@@ -85,7 +96,9 @@ export type TeamWithRelations = NonNullable<
  * and the parent team info for breadcrumbs / context.
  */
 export const getMemberBySlug = cache(async (profileSlug: string) => {
-  return prisma.teamMember.findFirst({
+  log.debug({ profileSlug }, 'Fetching member by profile slug');
+
+  const member = await prisma.teamMember.findFirst({
     where: { employee: { profileSlug } },
     include: {
       employee: {
@@ -98,6 +111,12 @@ export const getMemberBySlug = cache(async (profileSlug: string) => {
       },
     },
   });
+
+  if (!member) {
+    log.warn({ profileSlug }, 'Member not found');
+  }
+
+  return member;
 });
 
 /**

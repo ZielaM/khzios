@@ -167,7 +167,6 @@ describe('NewsGridClient Component', () => {
     vi.mocked(searchPublishedNews).mockRejectedValue(
       new Error('Network error')
     );
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const searchParams: SearchParams = {
       language: 'en',
@@ -188,8 +187,12 @@ describe('NewsGridClient Component', () => {
       fireEvent.click(loadMoreBtn);
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
-    consoleSpy.mockRestore();
+    // Component should recover gracefully — existing items remain visible
+    expect(screen.getAllByRole('link').length).toBe(1);
+    // Load more button should still be present (error doesn't disable it)
+    expect(
+      screen.getByRole('button', { name: /loadMore/i })
+    ).toBeInTheDocument();
   });
 
   it('covers branches for loading, hasMore, lastItem, limit fallback, and translation fallback', async () => {

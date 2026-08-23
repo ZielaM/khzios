@@ -19,6 +19,19 @@ const eslintConfig = defineConfig([
     'node_modules/**',
   ]),
   prettier,
+  // Enforce structured logger usage — no raw console calls
+  {
+    rules: {
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+    },
+  },
+  // Allow console in the logger module itself and seed scripts
+  {
+    files: ['src/lib/logger.ts', 'prisma/seed*.ts'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
 ]);
 
 export default eslintConfig;

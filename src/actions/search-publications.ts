@@ -4,12 +4,16 @@ import { prisma } from '@/lib/prisma';
 import { Prisma } from '@/generated/prisma/client';
 import { validateSearchParams } from '@/lib/validation';
 import { SearchParams } from '@/types/search-types';
+import { createLogger } from '@/lib/logger';
+
+const log = createLogger('search-publications');
 
 export async function searchPublications(params: SearchParams) {
   const { safePage, safeLimit, safeQuery, fallbackLanguages, dictionary } =
     validateSearchParams(params);
 
   try {
+    const start = performance.now();
     const offset = (safePage - 1) * safeLimit;
     let pubIds: string[] = [];
     const highlightedMap: Record<
@@ -129,6 +133,19 @@ export async function searchPublications(params: SearchParams) {
       return item;
     });
 
+    const durationMs = Math.round(performance.now() - start);
+    log.info(
+      {
+        hasQuery: !!safeQuery,
+        page: safePage,
+        limit: safeLimit,
+        resultCount: sortedPublications.length,
+        totalCount,
+        durationMs,
+      },
+      'Publications search completed'
+    );
+
     return {
       data: sortedPublications,
       total: totalCount,
@@ -136,7 +153,10 @@ export async function searchPublications(params: SearchParams) {
       totalPages: Math.ceil(totalCount / safeLimit),
     };
   } catch (error) {
-    console.error('Search Publications error:', error);
+    log.error(
+      { err: error, hasQuery: !!safeQuery, page: safePage, limit: safeLimit },
+      'Publications search failed'
+    );
     return { data: [], total: 0, page: safePage ?? 1, totalPages: 0 };
   }
 }

@@ -7,6 +7,7 @@ import style from './NewsGrid.module.scss';
 import { SearchX, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { SearchParams } from '@/types/search-types';
+import { createLogger } from '@/lib/logger';
 import {
   News,
   Tag,
@@ -20,6 +21,8 @@ type NewsItem = News & {
   photos: Photo[];
   translations: NewsTranslation[];
 };
+
+const log = createLogger('news-grid');
 
 interface NewsGridClientProps {
   initialData: NewsItem[];
@@ -82,7 +85,7 @@ export default function NewsGridClient({
         setHasMore(false);
       }
     } catch (error) {
-      console.error(error);
+      log.error({ err: error }, 'Failed to load more news items');
     } finally {
       setLoading(false);
     }

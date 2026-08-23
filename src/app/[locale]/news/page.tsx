@@ -69,8 +69,6 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
       ? resolvedSearchParams.dateTo
       : undefined;
 
-  const limit = 12;
-
   // Fetch all tags for the dropdown (z fallbackiem per-tag)
   const dbTags = await prisma.tag.findMany({ include: { translations: true } });
   const availableTags = dbTags.map((t) => ({
@@ -115,7 +113,6 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
           locale={locale}
           tag={tag}
           page={page}
-          limit={limit}
           sortBy={sortBy}
           dateFrom={dateFrom}
           dateTo={dateTo}

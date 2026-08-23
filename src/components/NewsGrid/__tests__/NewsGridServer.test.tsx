@@ -57,7 +57,6 @@ describe('NewsGridServer Component', () => {
       query: 'NotFound',
       locale: 'en',
       page: 1,
-      limit: 10,
       sortBy: 'date',
     });
     render(jsx);
@@ -77,7 +76,6 @@ describe('NewsGridServer Component', () => {
     const jsx = await NewsGridServer({
       locale: 'en',
       page: 1,
-      limit: 10,
       sortBy: 'date',
     });
     render(jsx);

@@ -11,20 +11,17 @@ interface PublicationsListServerProps {
   query?: string;
   locale: LanguageCode;
   page: number;
-  limit: number;
 }
 
 export default async function PublicationsListServer({
   query,
   locale,
   page,
-  limit,
 }: PublicationsListServerProps) {
   const { data, totalPages } = await searchPublications({
     query,
     language: locale,
     page,
-    limit,
     sortBy: query ? 'relevance' : 'date', // Dynamic sorting
   });
 

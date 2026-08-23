@@ -7,7 +7,6 @@ interface NewsGridServerProps {
   locale: LanguageCode;
   tag?: string;
   page: number;
-  limit: number;
   sortBy: SortBy;
   dateFrom?: string;
   dateTo?: string;
@@ -18,7 +17,6 @@ export default async function NewsGridServer({
   locale,
   tag,
   page,
-  limit,
   sortBy,
   dateFrom,
   dateTo,
@@ -28,7 +26,6 @@ export default async function NewsGridServer({
     language: locale,
     tag,
     page,
-    limit,
     sortBy,
     dateFrom,
     dateTo,
@@ -43,7 +40,6 @@ export default async function NewsGridServer({
         language: locale,
         tag,
         page,
-        limit,
         sortBy,
         dateFrom,
         dateTo,

@@ -41,7 +41,6 @@ describe('PublicationsListServer', () => {
     const jsx = await PublicationsListServer({
       locale: 'en',
       page: 1,
-      limit: 10,
     });
 
     render(jsx);
@@ -74,7 +73,6 @@ describe('PublicationsListServer', () => {
     const jsx = await PublicationsListServer({
       locale: 'en',
       page: 1,
-      limit: 10,
     });
 
     render(jsx);
@@ -105,7 +103,6 @@ describe('PublicationsListServer', () => {
       query: 'test query',
       locale: 'en',
       page: 1,
-      limit: 10,
     });
     render(jsx);
 
@@ -113,7 +110,6 @@ describe('PublicationsListServer', () => {
       query: 'test query',
       language: 'en',
       page: 1,
-      limit: 10,
       sortBy: 'relevance',
     });
   });
@@ -139,7 +135,6 @@ describe('PublicationsListServer', () => {
     const jsx = await PublicationsListServer({
       locale: 'en',
       page: 1,
-      limit: 10,
     });
 
     const { container } = render(jsx);
@@ -169,7 +164,6 @@ describe('PublicationsListServer', () => {
     const jsx = await PublicationsListServer({
       locale: 'en',
       page: 1,
-      limit: 10,
     });
 
     render(jsx);
@@ -209,7 +203,6 @@ describe('PublicationsListServer', () => {
     const jsx = await PublicationsListServer({
       locale: 'en',
       page: 1,
-      limit: 10,
     });
 
     render(jsx);

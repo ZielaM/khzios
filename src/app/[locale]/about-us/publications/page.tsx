@@ -52,8 +52,6 @@ export default async function PublicationsPage({
       : NaN;
   const page = Number.isFinite(parsedPage) ? parsedPage : 1;
 
-  const limit = 12;
-
   const t = await getTranslations('PublicationsPage');
   const tStruct = await getTranslations('StructurePage');
 
@@ -73,12 +71,7 @@ export default async function PublicationsPage({
       <PublicationsSearchForm initialQuery={query} />
 
       <Suspense key={suspenseKey} fallback={<PublicationsListSkeleton />}>
-        <PublicationsListServer
-          query={query}
-          locale={locale}
-          page={page}
-          limit={limit}
-        />
+        <PublicationsListServer query={query} locale={locale} page={page} />
       </Suspense>
     </div>
   );

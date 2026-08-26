@@ -37,7 +37,7 @@ describe('student-queries', () => {
         include: {
           translations: true,
           consultations: {
-            include: { translations: true },
+            orderBy: { date: 'asc' },
           },
         },
         orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],

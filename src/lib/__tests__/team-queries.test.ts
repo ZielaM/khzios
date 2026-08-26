@@ -115,7 +115,6 @@ describe('team-queries', () => {
       const result = await getAllMemberSlugs();
 
       expect(prisma.teamMember.findMany).toHaveBeenCalledWith({
-        where: { employee: { profileSlug: { not: null } } },
         select: expect.any(Object),
       });
       expect(result).toEqual(mockData);

@@ -9,6 +9,81 @@ export async function seedHead() {
 
   await prisma.departmentHead.create({
     data: {
+      workingHours: {
+        create: [
+          {
+            displayOrder: 1,
+            translations: {
+              create: [
+                {
+                  languageCode: 'pl',
+                  day: 'Poniedziałek',
+                  hours: '08:00 - 16:00',
+                },
+                { languageCode: 'en', day: 'Monday', hours: '08:00 - 16:00' },
+                {
+                  languageCode: 'uk',
+                  day: 'Понеділок',
+                  hours: '08:00 - 16:00',
+                },
+                {
+                  languageCode: 'ru',
+                  day: 'Понедельник',
+                  hours: '08:00 - 16:00',
+                },
+              ],
+            },
+          },
+          {
+            displayOrder: 2,
+            translations: {
+              create: [
+                { languageCode: 'pl', day: 'Wtorek', hours: '08:00 - 16:00' },
+                { languageCode: 'en', day: 'Tuesday', hours: '08:00 - 16:00' },
+                { languageCode: 'uk', day: 'Вівторок', hours: '08:00 - 16:00' },
+                { languageCode: 'ru', day: 'Вторник', hours: '08:00 - 16:00' },
+              ],
+            },
+          },
+          {
+            displayOrder: 3,
+            translations: {
+              create: [
+                { languageCode: 'pl', day: 'Środa', hours: '08:00 - 16:00' },
+                {
+                  languageCode: 'en',
+                  day: 'Wednesday',
+                  hours: '08:00 - 16:00',
+                },
+                { languageCode: 'uk', day: 'Середа', hours: '08:00 - 16:00' },
+                { languageCode: 'ru', day: 'Среда', hours: '08:00 - 16:00' },
+              ],
+            },
+          },
+          {
+            displayOrder: 4,
+            translations: {
+              create: [
+                { languageCode: 'pl', day: 'Czwartek', hours: '08:00 - 16:00' },
+                { languageCode: 'en', day: 'Thursday', hours: '08:00 - 16:00' },
+                { languageCode: 'uk', day: 'Четвер', hours: '08:00 - 16:00' },
+                { languageCode: 'ru', day: 'Четверг', hours: '08:00 - 16:00' },
+              ],
+            },
+          },
+          {
+            displayOrder: 5,
+            translations: {
+              create: [
+                { languageCode: 'pl', day: 'Piątek', hours: '08:00 - 16:00' },
+                { languageCode: 'en', day: 'Friday', hours: '08:00 - 16:00' },
+                { languageCode: 'uk', day: "П'ятниця", hours: '08:00 - 16:00' },
+                { languageCode: 'ru', day: 'Пятница', hours: '08:00 - 16:00' },
+              ],
+            },
+          },
+        ],
+      },
       employee: {
         create: {
           firstName: 'Piotr',
@@ -41,57 +116,13 @@ export async function seedHead() {
             create: [
               {
                 room: 'pok. 112',
-                translations: {
-                  create: [
-                    {
-                      languageCode: 'pl',
-                      day: 'Poniedziałek',
-                      time: '10:00 - 12:00',
-                    },
-                    {
-                      languageCode: 'en',
-                      day: 'Monday',
-                      time: '10:00 - 12:00',
-                    },
-                    {
-                      languageCode: 'uk',
-                      day: 'Понеділок',
-                      time: '10:00 - 12:00',
-                    },
-                    {
-                      languageCode: 'ru',
-                      day: 'Понедельник',
-                      time: '10:00 - 12:00',
-                    },
-                  ],
-                },
+                date: new Date('2026-10-12T00:00:00Z'),
+                time: '10:00 - 12:00',
               },
               {
                 room: 'pok. 112',
-                translations: {
-                  create: [
-                    {
-                      languageCode: 'pl',
-                      day: 'Wtorek',
-                      time: '08:00 - 10:00',
-                    },
-                    {
-                      languageCode: 'en',
-                      day: 'Tuesday',
-                      time: '08:00 - 10:00',
-                    },
-                    {
-                      languageCode: 'uk',
-                      day: 'Вівторок',
-                      time: '08:00 - 10:00',
-                    },
-                    {
-                      languageCode: 'ru',
-                      day: 'Вторник',
-                      time: '08:00 - 10:00',
-                    },
-                  ],
-                },
+                date: new Date('2026-10-13T00:00:00Z'),
+                time: '08:00 - 10:00',
               },
             ],
           },

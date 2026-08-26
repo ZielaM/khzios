@@ -140,8 +140,8 @@ model Employee {
   email          String?
   phone          String?
   photoUrl       String?
-  profileSlug    String?  @unique
-  orcid          String?
+  profileSlug    String   @unique
+  orcid          String?  @unique
   officeLocation String?
 
   translations   EmployeeTranslation[]
@@ -162,25 +162,15 @@ model EmployeeTranslation {
 }
 
 model Consultation {
-  id           String @id @default(uuid(7))
+  id           String   @id @default(uuid(7))
   employeeId   String
   room         String?
+  date         DateTime
+  time         String              // e.g. "10:00 - 12:00"
 
   employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  translations ConsultationTranslation[]
 
   @@index([employeeId])
-}
-
-model ConsultationTranslation {
-  consultationId String
-  languageCode   LanguageCode
-  day            String
-  time           String
-
-  consultation   Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
-
-  @@id([consultationId, languageCode])
 }
 
 // ──── Team Members ────────────────────────────────────────────────────
@@ -196,6 +186,7 @@ model TeamMember {
 
   @@index([teamId])
   @@index([employeeId])
+  @@unique([teamId, employeeId])
 }
 
 // ──── Publications ────────────────────────────────────────────────────
@@ -204,7 +195,7 @@ model Publication {
   id      String @id @default(uuid(7))
   teamId  String?
   year    Int    @db.SmallInt
-  doi     String?
+  doi     String?                @unique
   authors String                  // Not translated
   journal String                  // Not translated
 

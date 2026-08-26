@@ -35,6 +35,12 @@ export default async function ForStudentsPage({ params }: Props) {
 
   const tStruct = await getTranslations('StructurePage');
 
+  const dateFormatter = new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   return (
     <div className={style.page}>
       <AnimateOnce>
@@ -80,30 +86,18 @@ export default async function ForStudentsPage({ params }: Props) {
                         {fullName}
                       </td>
                       <td data-label={t('consultationDay')}>
-                        {employee.consultations.map((c) => {
-                          const { translation: cTr } = resolveTranslation(
-                            c.translations,
-                            locale
-                          );
-                          return (
-                            <div key={c.id} className={style.consultationBlock}>
-                              {cTr?.day}
-                            </div>
-                          );
-                        })}
+                        {employee.consultations.map((c) => (
+                          <div key={c.id} className={style.consultationBlock}>
+                            {dateFormatter.format(new Date(c.date))}
+                          </div>
+                        ))}
                       </td>
                       <td data-label={t('consultationTime')}>
-                        {employee.consultations.map((c) => {
-                          const { translation: cTr } = resolveTranslation(
-                            c.translations,
-                            locale
-                          );
-                          return (
-                            <div key={c.id} className={style.consultationBlock}>
-                              {cTr?.time}
-                            </div>
-                          );
-                        })}
+                        {employee.consultations.map((c) => (
+                          <div key={c.id} className={style.consultationBlock}>
+                            {c.time}
+                          </div>
+                        ))}
                       </td>
                       <td data-label={t('consultationRoom')}>
                         {employee.consultations.map((c) => (

@@ -7,6 +7,7 @@ import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
 import { getDepartmentHead } from '@/lib/head-queries';
 import { resolveTranslation } from '@/lib/translations';
+import { mapWorkingHours } from '@/lib/working-hours';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -71,11 +72,14 @@ export default async function HeadPage({ params }: Props) {
     locale
   );
 
-  const workingHours = head.employee.consultations.map((c) => {
-    const tr =
-      c.translations.find((t) => t.languageCode === locale) ||
-      c.translations[0];
-    return { day: tr?.day || '', hours: tr?.time || '' };
+  const workingHours = mapWorkingHours(head.workingHours, locale, {
+    monday: tMember('monday'),
+    tuesday: tMember('tuesday'),
+    wednesday: tMember('wednesday'),
+    thursday: tMember('thursday'),
+    friday: tMember('friday'),
+    saturday: tMember('saturday'),
+    sunday: tMember('sunday'),
   });
 
   return (

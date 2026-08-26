@@ -23,7 +23,6 @@ async function main() {
   await prisma.publicationTranslation.deleteMany();
   await prisma.publication.deleteMany();
   await prisma.employeeTranslation.deleteMany();
-  await prisma.consultationTranslation.deleteMany();
   await prisma.consultation.deleteMany();
   await prisma.teamMember.deleteMany();
 

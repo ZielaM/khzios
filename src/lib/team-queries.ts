@@ -125,7 +125,6 @@ export const getMemberBySlug = cache(async (profileSlug: string) => {
  */
 export async function getAllMemberSlugs() {
   return prisma.teamMember.findMany({
-    where: { employee: { profileSlug: { not: null } } },
     select: {
       employee: { select: { profileSlug: true } },
       team: { select: { slug: true } },

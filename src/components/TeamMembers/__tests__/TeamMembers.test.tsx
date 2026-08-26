@@ -43,7 +43,7 @@ describe('TeamMembers Logic', () => {
         officeLocation: null,
         photoUrl: null,
         orcid: null,
-        profileSlug: null,
+        profileSlug: 'anna-nowak',
         translations: [
           {
             employeeId: 'emp2',
@@ -67,7 +67,7 @@ describe('TeamMembers Logic', () => {
         officeLocation: null,
         photoUrl: null,
         orcid: null,
-        profileSlug: null,
+        profileSlug: 'brak-tlumaczenia',
         translations: [],
       },
     },
@@ -111,9 +111,9 @@ describe('TeamMembers Logic', () => {
       <TeamMembers members={mockMembers} locale="pl" teamSlug="test-team" />
     );
 
-    // Jan Kowalski has profileSlug
+    // All mock employees have a profileSlug now
     const profileLinks = screen.getAllByText(/viewProfile/i);
-    expect(profileLinks.length).toBe(1);
+    expect(profileLinks.length).toBe(3);
 
     // Check if the link exists
     expect(profileLinks[0].closest('a')).toBeInTheDocument();

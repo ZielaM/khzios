@@ -544,7 +544,7 @@ export async function seedTeams() {
           })),
         },
         members: {
-          create: t.members.map((m) => {
+          create: t.members.map((m, i) => {
             const [firstName, ...rest] = m.name.split(' ');
             const lastName = rest.join(' ');
             return {
@@ -570,30 +570,8 @@ export async function seedTeams() {
                     create: [
                       {
                         room: 'pok. ' + Math.floor(Math.random() * 50 + 100),
-                        translations: {
-                          create: [
-                            {
-                              languageCode: 'pl',
-                              day: 'Środa',
-                              time: '10:00 - 12:00',
-                            },
-                            {
-                              languageCode: 'en',
-                              day: 'Wednesday',
-                              time: '10:00 - 12:00',
-                            },
-                            {
-                              languageCode: 'uk',
-                              day: 'Середа',
-                              time: '10:00 - 12:00',
-                            },
-                            {
-                              languageCode: 'ru',
-                              day: 'Среда',
-                              time: '10:00 - 12:00',
-                            },
-                          ],
-                        },
+                        date: new Date(`2026-10-${14 + i}T00:00:00Z`),
+                        time: '10:00 - 12:00',
                       },
                     ],
                   },

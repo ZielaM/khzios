@@ -186,6 +186,10 @@
     "consultationDay": "Date",
     "consultationTime": "Hours",
     "consultationRoom": "Location",
-    "noConsultations": "No consultations declared"
+    "noConsultations": "No consultations declared",
+    "announcementsTitle": "Student Announcements",
+    "showPastAnnouncements": "Show past announcements",
+    "urgent": "Urgent",
+    "noAnnouncementsToShow": "No current announcements for students."
   }
 }

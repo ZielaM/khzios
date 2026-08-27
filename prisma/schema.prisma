@@ -1,7 +1,7 @@
 generator client {
   provider        = "prisma-client"
   output          = "../src/generated/prisma"
-  previewFeatures = ["fullTextSearchPostgres"] 
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -16,11 +16,11 @@ enum LanguageCode {
 }
 
 model News {
-  id           String            @id @default(uuid(7))
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
-  published    Boolean           @default(false)
-  
+  id        String   @id @default(uuid(7))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+
   tags         Tag[]
   photos       Photo[]
   translations NewsTranslation[]
@@ -34,10 +34,10 @@ model NewsTranslation {
   title        String
   content      String
 
-  news         News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
-  
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
   // Search vector for full-text search
-  searchVector Unsupported("tsvector")? 
+  searchVector Unsupported("tsvector")?
 
   @@id([newsId, languageCode])
   // Index for full-text search
@@ -56,7 +56,7 @@ model TagTranslation {
   languageCode LanguageCode
   name         String
 
-  tag          Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tag Tag @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([tagId, languageCode])
 }
@@ -78,15 +78,15 @@ enum TeamType {
 }
 
 enum MemberCategory {
-  ACADEMIC    // Pracownicy naukowo-dydaktyczni
-  TECHNICAL   // Pracownicy inżynieryjno-techniczni
+  ACADEMIC // Pracownicy naukowo-dydaktyczni
+  TECHNICAL // Pracownicy inżynieryjno-techniczni
 }
 
 model Team {
-  id           String       @id @default(uuid(7))
-  slug         String       @unique       // Canonical key ("ruminants", "poultry", etc.)
+  id           String   @id @default(uuid(7))
+  slug         String   @unique // Canonical key ("ruminants", "poultry", etc.)
   type         TeamType
-  displayOrder Int          @db.SmallInt  @default(0)
+  displayOrder Int      @default(0) @db.SmallInt
 
   translations TeamTranslation[]
   members      TeamMember[]
@@ -99,9 +99,9 @@ model Team {
 model TeamTranslation {
   teamId              String
   languageCode        LanguageCode
-  name                String          // Team name
-  researchDescription String?         // Research directions paragraph
-  teachingDescription String?         // Teaching paragraph
+  name                String // Team name
+  researchDescription String? // Research directions paragraph
+  teachingDescription String? // Teaching paragraph
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
@@ -112,10 +112,10 @@ model TeamLink {
   id           String @id @default(uuid(7))
   teamId       String
   url          String
-  icon         String           // Icon identifier: "globe", "facebook", "instagram", etc.
-  displayOrder Int    @db.SmallInt  @default(0)
+  icon         String // Icon identifier: "globe", "facebook", "instagram", etc.
+  displayOrder Int    @default(0) @db.SmallInt
 
-  team         Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team         Team                  @relation(fields: [teamId], references: [id], onDelete: Cascade)
   translations TeamLinkTranslation[]
 
   @@index([teamId])
@@ -124,7 +124,7 @@ model TeamLink {
 model TeamLinkTranslation {
   linkId       String
   languageCode LanguageCode
-  label        String       // e.g. "Visit website", "Facebook"
+  label        String // e.g. "Visit website", "Facebook"
 
   link TeamLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
 
@@ -134,18 +134,18 @@ model TeamLinkTranslation {
 // ──── Employee (Centralized Staff Profile) ──────────────────────────────
 
 model Employee {
-  id             String   @id @default(uuid(7))
+  id             String  @id @default(uuid(7))
   firstName      String
   lastName       String
   email          String?
   phone          String?
   photoUrl       String?
-  profileSlug    String   @unique
-  orcid          String?  @unique
+  profileSlug    String  @unique
+  orcid          String? @unique
   officeLocation String?
 
-  translations   EmployeeTranslation[]
-  consultations  Consultation[]
+  translations  EmployeeTranslation[]
+  consultations Consultation[]
 
   teamMembers    TeamMember[]
   departmentHead DepartmentHead?
@@ -156,19 +156,19 @@ model EmployeeTranslation {
   languageCode  LanguageCode
   academicTitle String?
 
-  employee      Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   @@id([employeeId, languageCode])
 }
 
 model Consultation {
-  id           String   @id @default(uuid(7))
-  employeeId   String
-  room         String?
-  date         DateTime
-  time         String              // e.g. "10:00 - 12:00"
+  id         String   @id @default(uuid(7))
+  employeeId String
+  room       String?
+  date       DateTime
+  time       String // e.g. "10:00 - 12:00"
 
-  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   @@index([employeeId])
 }
@@ -176,30 +176,30 @@ model Consultation {
 // ──── Team Members ────────────────────────────────────────────────────
 
 model TeamMember {
-  id           String         @id @default(uuid(7))
-  teamId       String
-  employeeId   String
-  category     MemberCategory
+  id         String         @id @default(uuid(7))
+  teamId     String
+  employeeId String
+  category   MemberCategory
 
-  team         Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  employee     Employee       @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  team     Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Restrict)
 
+  @@unique([teamId, employeeId])
   @@index([teamId])
   @@index([employeeId])
-  @@unique([teamId, employeeId])
 }
 
 // ──── Publications ────────────────────────────────────────────────────
 
 model Publication {
-  id      String @id @default(uuid(7))
+  id      String  @id @default(uuid(7))
   teamId  String?
-  year    Int    @db.SmallInt
-  doi     String?                @unique
-  authors String                  // Not translated
-  journal String                  // Not translated
+  year    Int     @db.SmallInt
+  doi     String? @unique
+  authors String // Not translated
+  journal String // Not translated
 
-  team         Team? @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  team         Team?                    @relation(fields: [teamId], references: [id], onDelete: SetNull)
   translations PublicationTranslation[]
 
   @@index([teamId, year(sort: Desc)])
@@ -208,7 +208,7 @@ model Publication {
 model PublicationTranslation {
   publicationId String
   languageCode  LanguageCode
-  title         String        // Publication title (translated)
+  title         String // Publication title (translated)
 
   publication Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
 
@@ -225,9 +225,9 @@ model PublicationTranslation {
 model ResearchProject {
   id     String @id @default(uuid(7))
   teamId String
-  years  String              // e.g. "2022–2025"
+  years  String // e.g. "2022–2025"
 
-  team         Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team         Team                         @relation(fields: [teamId], references: [id], onDelete: Cascade)
   translations ResearchProjectTranslation[]
 
   @@index([teamId])
@@ -250,18 +250,18 @@ model TeachingCourse {
   id     String @id @default(uuid(7))
   teamId String
 
-  team         Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team         Team                        @relation(fields: [teamId], references: [id], onDelete: Cascade)
   translations TeachingCourseTranslation[]
 
   @@index([teamId])
 }
 
 model TeachingCourseTranslation {
-  courseId      String
-  languageCode  LanguageCode
-  name          String          // Course name
-  program       String          // Study program & degree level
-  coordinator   String          // Course coordinator
+  courseId     String
+  languageCode LanguageCode
+  name         String // Course name
+  program      String // Study program & degree level
+  coordinator  String // Course coordinator
 
   course TeachingCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
@@ -271,19 +271,19 @@ model TeachingCourseTranslation {
 // ──── Department Head ─────────────────────────────────────────────────
 
 model DepartmentHead {
-  id             String @id @default(uuid(7))
-  employeeId     String @unique
+  id         String @id @default(uuid(7))
+  employeeId String @unique
 
-  employee       Employee @relation(fields: [employeeId], references: [id], onDelete: Restrict)
-  workingHours   DepartmentHeadHour[]
+  employee     Employee             @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  workingHours DepartmentHeadHour[]
 }
 
 model DepartmentHeadHour {
   id           String @id @default(uuid(7))
   headId       String
-  displayOrder Int    @db.SmallInt @default(0)
+  displayOrder Int    @default(0) @db.SmallInt
 
-  head         DepartmentHead @relation(fields: [headId], references: [id], onDelete: Cascade)
+  head         DepartmentHead                  @relation(fields: [headId], references: [id], onDelete: Cascade)
   translations DepartmentHeadHourTranslation[]
 
   @@index([headId])
@@ -303,14 +303,14 @@ model DepartmentHeadHourTranslation {
 // ──── Secretariat ─────────────────────────────────────────────────
 
 model Secretariat {
-  id             String @id @default(uuid(7))
+  id             String  @id @default(uuid(7))
   email          String?
   phone          String?
   photoUrl       String?
   officeLocation String?
 
-  translations   SecretariatTranslation[]
-  workingHours   SecretariatHour[]
+  translations SecretariatTranslation[]
+  workingHours SecretariatHour[]
 }
 
 model SecretariatTranslation {
@@ -326,9 +326,9 @@ model SecretariatTranslation {
 model SecretariatHour {
   id            String @id @default(uuid(7))
   secretariatId String
-  displayOrder  Int    @db.SmallInt @default(0)
+  displayOrder  Int    @default(0) @db.SmallInt
 
-  secretariat  Secretariat @relation(fields: [secretariatId], references: [id], onDelete: Cascade)
+  secretariat  Secretariat                  @relation(fields: [secretariatId], references: [id], onDelete: Cascade)
   translations SecretariatHourTranslation[]
 
   @@index([secretariatId])
@@ -343,4 +343,28 @@ model SecretariatHourTranslation {
   hour SecretariatHour @relation(fields: [hourId], references: [id], onDelete: Cascade)
 
   @@id([hourId, languageCode])
+}
+
+// ──── Student Announcements ─────────────────────────────────────────────
+
+model StudentAnnouncement {
+  id        String   @id @default(uuid(7))
+  date      DateTime // Data powiązana z ogłoszeniem
+  important Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  translations StudentAnnouncementTranslation[]
+
+  @@index([date(sort: Desc)])
+}
+
+model StudentAnnouncementTranslation {
+  announcementId String
+  languageCode   LanguageCode
+  title          String       @db.VarChar(100)
+  content        String       @db.VarChar(256)
+
+  announcement StudentAnnouncement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+
+  @@id([announcementId, languageCode])
 }

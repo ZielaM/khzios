@@ -186,6 +186,10 @@
     "consultationDay": "Дата",
     "consultationTime": "Години",
     "consultationRoom": "Місце",
-    "noConsultations": "Немає заявлених консультацій"
+    "noConsultations": "Немає заявлених консультацій",
+    "announcementsTitle": "Оголошення для студентів",
+    "showPastAnnouncements": "Показати минулі оголошення",
+    "urgent": "Терміново",
+    "noAnnouncementsToShow": "Наразі немає оголошень для студентів."
   }
 }

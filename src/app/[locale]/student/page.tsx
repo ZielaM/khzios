@@ -4,8 +4,12 @@ import { Metadata } from 'next';
 import AnimateOnce from '@/components/AnimateOnce';
 import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
-import { getEmployeesWithConsultations } from '@/lib/student-queries';
+import {
+  getEmployeesWithConsultations,
+  getStudentAnnouncements,
+} from '@/lib/student-queries';
 import { resolveTranslation } from '@/lib/translations';
+import StudentAnnouncements from '@/components/StudentAnnouncements';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -32,6 +36,7 @@ export default async function ForStudentsPage({ params }: Props) {
 
   const t = await getTranslations('StudentsPage');
   const employees = await getEmployeesWithConsultations();
+  const announcements = await getStudentAnnouncements();
 
   const tStruct = await getTranslations('StructurePage');
 
@@ -45,6 +50,10 @@ export default async function ForStudentsPage({ params }: Props) {
     <div className={style.page}>
       <AnimateOnce>
         <BackLink href="/">{tStruct('backToHome')}</BackLink>
+      </AnimateOnce>
+
+      <AnimateOnce>
+        <StudentAnnouncements announcements={announcements} locale={locale} />
       </AnimateOnce>
 
       <AnimateOnce>

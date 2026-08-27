@@ -186,6 +186,10 @@
     "consultationDay": "Data",
     "consultationTime": "Godziny",
     "consultationRoom": "Miejsce",
-    "noConsultations": "Brak zadeklarowanych konsultacji"
+    "noConsultations": "Brak zadeklarowanych konsultacji",
+    "announcementsTitle": "Ogłoszenia dla studentów",
+    "showPastAnnouncements": "Wyświetl przeszłe ogłoszenia",
+    "urgent": "Pilne",
+    "noAnnouncementsToShow": "Brak aktualnych ogłoszeń dla studentów."
   }
 }

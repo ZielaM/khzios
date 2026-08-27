@@ -71,22 +71,6 @@ export default async function StructurePage({ params }: Props) {
               />
             </span>
           </Link>
-
-          <Link href="/about-us/structure/secretariat" className={style.card}>
-            <div className={style.cardIconWrapper} aria-hidden="true">
-              <Briefcase aria-hidden="true" size={26} />
-            </div>
-            <h3 className={style.cardTitle}>{t('secretariatCard')}</h3>
-            <p className={style.cardDesc}>{t('secretariatDesc')}</p>
-            <span className={style.cardFooter}>
-              {t('viewDetails')}
-              <ArrowRight
-                aria-hidden="true"
-                size={16}
-                className={style.cardArrow}
-              />
-            </span>
-          </Link>
         </SpotlightGrid>
       </AnimateOnce>
 
@@ -98,6 +82,7 @@ export default async function StructurePage({ params }: Props) {
       <div className={style.teamsSection}>
         <AnimateOnce>
           <SpotlightGrid className={style.teamsGrid}>
+
             {teams.map((team) => {
               const { translation } = resolveTranslation(
                 team.translations,

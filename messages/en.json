@@ -31,7 +31,6 @@
     "structure": "Department Structure",
     "structureDesc": "Management and research teams of the department",
     "headOfDepartment": "Head of Department",
-    "secretariat": "Secretariat",
     "ruminants": "Ruminant Breeding and Milk Evaluation Team",
     "poultry": "Poultry and Ornamental Bird Breeding Team",
     "swine": "Swine Breeding Team",
@@ -139,17 +138,15 @@
   "StructurePage": {
     "title": "Department Structure",
     "description": "Explore the organisational units, research teams and administration of our department.",
-    "managementTitle": "Management & Administration",
-    "teamsTitle": "Research & Teaching Teams",
     "headCard": "Head of Department",
     "headDesc": "Contact information and working hours of the head.",
-    "secretariatCard": "Secretariat",
-    "secretariatDesc": "Working hours, contact details and office location.",
     "viewDetails": "View details",
     "backToHome": "Back to homepage",
     "backToAboutUs": "Back to About us",
     "headNotConfigured": "The head of department has not been added to the system yet.",
-    "secretariatNotConfigured": "The secretariat has not been added to the system yet."
+    "secretariatNotConfigured": "The secretariat has not been added to the system yet.",
+    "managementTitle": "Management",
+    "teamsTitle": "Research & Teaching Teams"
   },
   "MemberProfile": {
     "backToTeam": "Back to team",
@@ -177,7 +174,7 @@
     "title": "About Us",
     "description": "Learn more about the Department of Animal Breeding and Product Evaluation. Explore our organizational structure, research teams, and scientific publications.",
     "structureCardTitle": "Department Structure",
-    "structureCardDesc": "Get to know the management, secretariat, and specialized research teams operating within the Department.",
+    "structureCardDesc": "Get to know the management and specialized research teams operating within the Department.",
     "publicationsCardTitle": "Scientific Publications",
     "publicationsCardDesc": "Browse our repository of scientific articles, research papers, and monographs published by our staff.",
     "viewDetails": "Explore"

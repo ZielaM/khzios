@@ -64,13 +64,6 @@ test.describe('About Us Navigation Spec', () => {
       .filter({ hasText: /Head of Department/i })
       .first();
     await expect(headCard).toBeVisible();
-
-    const secretariatCard = page
-      .locator('main')
-      .getByRole('link')
-      .filter({ hasText: /Secretariat/i })
-      .first();
-    await expect(secretariatCard).toBeVisible();
   });
 
   test('should navigate to Head of Department page', async ({ page }) => {
@@ -87,23 +80,6 @@ test.describe('About Us Navigation Spec', () => {
     await expect(page).toHaveURL(/\/en\/about-us\/structure\/head/);
 
     // Check if back link is there
-    const backLink = page.getByRole('link', { name: /Back to structure/i });
-    await expect(backLink).toBeVisible();
-  });
-
-  test('should navigate to Secretariat page', async ({ page }) => {
-    await page.goto('/en/about-us/structure');
-    await page.waitForLoadState('load');
-
-    const secretariatCard = page
-      .locator('main')
-      .getByRole('link')
-      .filter({ hasText: /Secretariat/i })
-      .first();
-    await secretariatCard.click();
-
-    await expect(page).toHaveURL(/\/en\/about-us\/structure\/secretariat/);
-
     const backLink = page.getByRole('link', { name: /Back to structure/i });
     await expect(backLink).toBeVisible();
   });

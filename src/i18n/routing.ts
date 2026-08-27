@@ -42,12 +42,6 @@ export const routing = defineRouting({
       uk: '/pro-nas/struktura/kerivnyk',
       ru: '/o-nas/struktura/rukovoditel',
     },
-    '/about-us/structure/secretariat': {
-      pl: '/o-nas/struktura/sekretariat',
-      en: '/about-us/structure/secretariat',
-      uk: '/pro-nas/struktura/sekretariat',
-      ru: '/o-nas/struktura/sekretariat',
-    },
     '/about-us/structure/ruminants': {
       pl: '/o-nas/struktura/przezuwajace',
       en: '/about-us/structure/ruminants',

@@ -31,7 +31,6 @@
     "structure": "Struktura katedry",
     "structureDesc": "Kierownictwo i zespoły pracujące w katedrze",
     "headOfDepartment": "Kierownik katedry",
-    "secretariat": "Sekretariat katedry",
     "ruminants": "Zespół chowu i hodowli zw. przeżuwających i oceny mleka",
     "poultry": "Zespół chowu i hodowli drobiu i ptaków ozdobnych",
     "swine": "Zespół chowu i hodowli trzody chlewnej",
@@ -139,17 +138,15 @@
   "StructurePage": {
     "title": "Struktura katedry",
     "description": "Poznaj jednostki organizacyjne, zespoły badawcze i administrację naszej katedry.",
-    "managementTitle": "Zarządzanie i Administracja",
-    "teamsTitle": "Zespoły Badawcze i Dydaktyczne",
     "headCard": "Kierownik katedry",
     "headDesc": "Informacje kontaktowe i godziny pracy kierownika.",
-    "secretariatCard": "Sekretariat katedry",
-    "secretariatDesc": "Godziny pracy, dane kontaktowe i lokalizacja sekretariatu.",
     "viewDetails": "Zobacz szczegóły",
     "backToHome": "Wróć do strony głównej",
     "backToAboutUs": "Wróć do zakładki O nas",
     "headNotConfigured": "Kierownik katedry nie został jeszcze dodany w systemie.",
-    "secretariatNotConfigured": "Sekretariat nie został jeszcze dodany w systemie."
+    "secretariatNotConfigured": "Sekretariat nie został jeszcze dodany w systemie.",
+    "managementTitle": "Kierownictwo",
+    "teamsTitle": "Zespoły Badawcze i Dydaktyczne"
   },
   "MemberProfile": {
     "backToTeam": "Wróć do zespołu",
@@ -177,7 +174,7 @@
     "title": "O nas",
     "description": "Dowiedz się więcej o Zakładzie Hodowli Zwierząt i Ocenie Produktów. Poznaj naszą strukturę organizacyjną, zespoły badawcze oraz publikacje naukowe.",
     "structureCardTitle": "Struktura Zakładu",
-    "structureCardDesc": "Poznaj kierownictwo, sekretariat oraz specjalistyczne zespoły badawcze działające w ramach Zakładu.",
+    "structureCardDesc": "Poznaj kierownictwo oraz specjalistyczne zespoły badawcze działające w ramach Zakładu.",
     "publicationsCardTitle": "Publikacje Naukowe",
     "publicationsCardDesc": "Przeglądaj repozytorium artykułów naukowych i monografii opublikowanych przez naszych pracowników.",
     "viewDetails": "Zobacz szczegóły"

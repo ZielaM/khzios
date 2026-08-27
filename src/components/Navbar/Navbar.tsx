@@ -102,10 +102,6 @@ export default function Navbar() {
                 href="/about-us/structure/head"
               />
               <DropdownItem
-                label={t('secretariat')}
-                href="/about-us/structure/secretariat"
-              />
-              <DropdownItem
                 label={t('ruminants')}
                 href="/about-us/structure/ruminants"
               />

@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, routing } from '@/i18n/routing';
 import { Metadata } from 'next';
-import { ArrowRight, Crown, Briefcase } from 'lucide-react';
+import { ArrowRight, Crown } from 'lucide-react';
 import BackLink from '@/components/BackLink';
 import AnimateOnce from '@/components/AnimateOnce';
 import SpotlightGrid from '@/components/SpotlightGrid';

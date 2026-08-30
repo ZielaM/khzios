@@ -1,7 +1,6 @@
-import 'dotenv/config';
-import { prisma } from '../src/lib/prisma';
+import { prisma } from '@/lib/prisma';
 
-async function main() {
+export async function seedAnnouncements() {
   const today = new Date();
 
   // Future announcement
@@ -101,9 +100,5 @@ async function main() {
     },
   });
 
-  console.log('Seed done');
+  console.log('Seed announcements done');
 }
-
-main()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect());

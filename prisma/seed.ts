@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { seedTeams } from './seed-teams';
 import { seedHead } from './seed-head';
 import { seedSecretariat } from './seed-secretariat';
+import { seedAnnouncements } from './seed-announcements';
 
 // Helper to get random elements
 const getRandomMultiple = <T>(arr: T[], count: number) => {
@@ -44,6 +45,9 @@ async function main() {
   await prisma.photo.deleteMany();
   await prisma.news.deleteMany();
   await prisma.tag.deleteMany();
+  
+  await prisma.studentAnnouncementTranslation.deleteMany();
+  await prisma.studentAnnouncement.deleteMany();
 
   console.log('Tworzenie tagów...');
   const tagsData = [
@@ -331,6 +335,9 @@ async function main() {
 
   // ──── Secretariat Seeding ─────────────────────────────────────────
   await seedSecretariat();
+
+  // ──── Announcements Seeding ───────────────────────────────────────
+  await seedAnnouncements();
 
   console.log('Generowanie dodatkowych 50 publikacji naukowych...');
   await prisma.$transaction(

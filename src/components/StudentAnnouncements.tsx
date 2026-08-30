@@ -79,6 +79,7 @@ export default function StudentAnnouncements({ announcements, locale }: Props) {
             return (
               <div
                 key={ann.id}
+                data-testid="announcement"
                 className={`${style.announcement} ${ann.important ? style.important : ''}`}
               >
                 <div className={style.announcementHeader}>

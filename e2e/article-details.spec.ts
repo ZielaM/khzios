@@ -99,11 +99,10 @@ test.describe('News Article Detail Page', () => {
   // (Fallback/native share logic is covered by ShareButton component tests)
 
   test('should copy link to clipboard on share click', async ({ page }) => {
-    await navigateToArticle(page, 1);
-
     // Mock clipboard API for cross-browser compatibility
     // (grantPermissions('clipboard-write') is only supported in Chromium)
-    await page.evaluate(() => {
+    // We use addInitScript to ensure it's available before the page loads.
+    await page.addInitScript(() => {
       Object.defineProperty(navigator, 'clipboard', {
         value: { writeText: () => Promise.resolve() },
         writable: true,
@@ -116,6 +115,8 @@ test.describe('News Article Detail Page', () => {
         configurable: true,
       });
     });
+
+    await navigateToArticle(page, 1);
 
     await page.getByRole('button', { name: 'Share' }).click();
     await expect(page.getByText('Link copied')).toBeVisible();

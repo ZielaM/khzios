@@ -86,9 +86,7 @@ test.describe('For Students Page', () => {
     // Check initial state (should show current/future announcements)
     // The exact count depends on the seed data, but there should be at least one
     // announcement displayed since we seeded current ones.
-    const announcements = page.locator(
-      'div[class*="StudentAnnouncements_announcement__"]'
-    );
+    const announcements = page.getByTestId('announcement');
 
     // We check if the toggle is present
     const toggleLabel = page.locator('label', {
@@ -96,18 +94,24 @@ test.describe('For Students Page', () => {
     });
     await expect(toggleLabel).toBeVisible();
 
+    // Wait a brief moment to ensure hydration has finished
+    await page.waitForTimeout(500);
+
     // Get the initial number of announcements
     const initialCount = await announcements.count();
 
-    // Click the toggle to show past announcements
-    await toggleLabel.click();
+    // Check the toggle to show past announcements
+    const toggleInput = page
+      .locator(
+        '.StudentAnnouncements_toggleContainer__input, input[type="checkbox"]'
+      )
+      .first();
+    await toggleInput.check({ force: true });
 
     // The count of announcements should increase or at least stay the same (if no past announcements existed)
     // We know from the seed that there is 1 past announcement, so the count must increase.
     await expect(async () => {
-      const newCount = await page
-        .locator('div[class*="StudentAnnouncements_announcement__"]')
-        .count();
+      const newCount = await page.getByTestId('announcement').count();
       expect(newCount).toBeGreaterThan(initialCount);
     }).toPass();
   });

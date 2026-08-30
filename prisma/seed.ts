@@ -45,7 +45,7 @@ async function main() {
   await prisma.photo.deleteMany();
   await prisma.news.deleteMany();
   await prisma.tag.deleteMany();
-  
+
   await prisma.studentAnnouncementTranslation.deleteMany();
   await prisma.studentAnnouncement.deleteMany();
 

@@ -71,4 +71,44 @@ test.describe('For Students Page', () => {
     // Assert redirect
     await expect(page).toHaveURL(/.*\/pl$/);
   });
+
+  test('should display student announcements and toggle past ones', async ({
+    page,
+  }) => {
+    await page.goto('/pl/student');
+
+    // Wait for the announcements section to be visible
+    const announcementsHeader = page.locator('h2', {
+      hasText: 'Ogłoszenia dla studentów',
+    });
+    await expect(announcementsHeader).toBeVisible();
+
+    // Check initial state (should show current/future announcements)
+    // The exact count depends on the seed data, but there should be at least one
+    // announcement displayed since we seeded current ones.
+    const announcements = page.locator(
+      'div[class*="StudentAnnouncements_announcement__"]'
+    );
+
+    // We check if the toggle is present
+    const toggleLabel = page.locator('label', {
+      hasText: 'Wyświetl przeszłe ogłoszenia',
+    });
+    await expect(toggleLabel).toBeVisible();
+
+    // Get the initial number of announcements
+    const initialCount = await announcements.count();
+
+    // Click the toggle to show past announcements
+    await toggleLabel.click();
+
+    // The count of announcements should increase or at least stay the same (if no past announcements existed)
+    // We know from the seed that there is 1 past announcement, so the count must increase.
+    await expect(async () => {
+      const newCount = await page
+        .locator('div[class*="StudentAnnouncements_announcement__"]')
+        .count();
+      expect(newCount).toBeGreaterThan(initialCount);
+    }).toPass();
+  });
 });

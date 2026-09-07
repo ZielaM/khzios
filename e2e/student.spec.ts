@@ -100,13 +100,8 @@ test.describe('For Students Page', () => {
     // Get the initial number of announcements
     const initialCount = await announcements.count();
 
-    // Check the toggle to show past announcements
-    const toggleInput = page
-      .locator(
-        '.StudentAnnouncements_toggleContainer__input, input[type="checkbox"]'
-      )
-      .first();
-    await toggleInput.check({ force: true });
+    // Check the toggle to show past announcements by clicking its visible label
+    await toggleLabel.click();
 
     // The count of announcements should increase or at least stay the same (if no past announcements existed)
     // We know from the seed that there is 1 past announcement, so the count must increase.

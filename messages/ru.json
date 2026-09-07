@@ -186,6 +186,10 @@
     "consultationDay": "Дата",
     "consultationTime": "Часы",
     "consultationRoom": "Место",
-    "noConsultations": "Нет заявленных консультаций"
+    "noConsultations": "Нет заявленных консультаций",
+    "announcementsTitle": "Объявления для студентов",
+    "showPastAnnouncements": "Показать прошедшие объявления",
+    "urgent": "Срочно",
+    "noAnnouncementsToShow": "Нет текущих объявлений для студентов."
   }
 }

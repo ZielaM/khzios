@@ -44,12 +44,12 @@ test.describe('For Students Page', () => {
     await page.goto('/pl/student');
 
     // Make sure we have the table wrapper
-    const tableContainer = page.locator('table');
+    const tableContainer = page.locator('table').first();
     await expect(tableContainer).toBeVisible();
 
     // Verify headers on desktop (on mobile they are visually hidden but exist in DOM)
     // We can just verify table cells or rows are present
-    const rows = page.locator('tbody tr');
+    const rows = tableContainer.locator('tbody tr');
     // Ensure we have at least one employee seeded
     await expect(rows.first()).toBeVisible();
 

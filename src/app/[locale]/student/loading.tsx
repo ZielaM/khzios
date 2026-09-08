@@ -5,6 +5,7 @@ import clsx from 'clsx';
 export default function Loading() {
   const rowSkeletons = Array.from({ length: 5 });
   const announcementSkeletons = Array.from({ length: 2 });
+  const docRowSkeletons = Array.from({ length: 5 });
 
   return (
     <div className={style.page}>
@@ -54,6 +55,23 @@ export default function Loading() {
               skeletonStyle.tableRowSkeleton
             )}
             style={{ animationDelay: `${i * 100}ms` }}
+          />
+        ))}
+      </div>
+
+      <div
+        className={clsx(skeletonStyle.skeleton, skeletonStyle.titleSkeleton)}
+      />
+
+      <div className={skeletonStyle.tableContainerSkeleton}>
+        {docRowSkeletons.map((_, i) => (
+          <div
+            key={i}
+            className={clsx(
+              skeletonStyle.skeleton,
+              skeletonStyle.tableRowSkeleton
+            )}
+            style={{ animationDelay: `${(i + 5) * 100}ms` }}
           />
         ))}
       </div>

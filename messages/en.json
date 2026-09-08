@@ -190,6 +190,12 @@
     "announcementsTitle": "Student Announcements",
     "showPastAnnouncements": "Show past announcements",
     "urgent": "Urgent",
-    "noAnnouncementsToShow": "No current announcements for students."
+    "noAnnouncementsToShow": "No current announcements for students.",
+    "documentsTitle": "Statutes & Syllabi",
+    "subjectName": "Subject",
+    "statute": "Statute",
+    "syllabus": "Syllabus",
+    "download": "Download PDF",
+    "noDocuments": "No documents available."
   }
 }

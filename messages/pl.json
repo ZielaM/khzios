@@ -190,6 +190,12 @@
     "announcementsTitle": "Ogłoszenia dla studentów",
     "showPastAnnouncements": "Wyświetl przeszłe ogłoszenia",
     "urgent": "Pilne",
-    "noAnnouncementsToShow": "Brak aktualnych ogłoszeń dla studentów."
+    "noAnnouncementsToShow": "Brak aktualnych ogłoszeń dla studentów.",
+    "documentsTitle": "Statuty i sylabusy",
+    "subjectName": "Przedmiot",
+    "statute": "Statut",
+    "syllabus": "Sylabus",
+    "download": "Pobierz PDF",
+    "noDocuments": "Brak dostępnych dokumentów."
   }
 }

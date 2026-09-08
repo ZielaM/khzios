@@ -40,3 +40,14 @@ export const getStudentAnnouncements = cache(async () => {
     },
   });
 });
+
+export const getStudentDocuments = cache(async () => {
+  return prisma.studentDocument.findMany({
+    include: {
+      translations: true,
+    },
+    orderBy: {
+      displayOrder: 'asc',
+    },
+  });
+});

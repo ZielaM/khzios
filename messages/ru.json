@@ -190,6 +190,12 @@
     "announcementsTitle": "Объявления для студентов",
     "showPastAnnouncements": "Показать прошедшие объявления",
     "urgent": "Срочно",
-    "noAnnouncementsToShow": "Нет текущих объявлений для студентов."
+    "noAnnouncementsToShow": "Нет текущих объявлений для студентов.",
+    "documentsTitle": "Уставы и силлабусы",
+    "subjectName": "Предмет",
+    "statute": "Устав",
+    "syllabus": "Силлабус",
+    "download": "Скачать PDF",
+    "noDocuments": "Нет доступных документов."
   }
 }

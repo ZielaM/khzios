@@ -368,3 +368,27 @@ model StudentAnnouncementTranslation {
 
   @@id([announcementId, languageCode])
 }
+
+// ──── Student Documents (Statutes & Syllabi) ────────────────────────────
+
+model StudentDocument {
+  id           String @id @default(uuid(7))
+  slug         String @unique // e.g. "cattle-breeding"
+  displayOrder Int    @default(0) @db.SmallInt
+  statutePath  String // e.g. "/documents/hodowla-bydla_statut.pdf"
+  syllabusPath String // e.g. "/documents/hodowla-bydla_sylabus.pdf"
+
+  translations StudentDocumentTranslation[]
+
+  @@index([displayOrder])
+}
+
+model StudentDocumentTranslation {
+  documentId   String
+  languageCode LanguageCode
+  subjectName  String
+
+  document StudentDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@id([documentId, languageCode])
+}

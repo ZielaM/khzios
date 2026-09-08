@@ -95,6 +95,50 @@
     }
   }
 
+  .subjectName {
+    font-weight: 600;
+    color: var(--color-primary);
+
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+    }
+  }
+
+  .downloadLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-primary);
+    font-weight: 500;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: $radius-md;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+      text-decoration: underline;
+    }
+
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+      text-decoration: underline;
+
+      &:hover {
+        background-color: var(--foreground);
+        color: var(--background);
+      }
+    }
+  }
+
+  .downloadIcon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
   @media (max-width: 768px) {
     thead {
       display: none;

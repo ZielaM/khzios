@@ -7,6 +7,7 @@ import style from './page.module.scss';
 import {
   getEmployeesWithConsultations,
   getStudentAnnouncements,
+  getStudentDocuments,
 } from '@/lib/student-queries';
 import { resolveTranslation } from '@/lib/translations';
 import StudentAnnouncements from '@/components/StudentAnnouncements';
@@ -37,6 +38,7 @@ export default async function ForStudentsPage({ params }: Props) {
   const t = await getTranslations('StudentsPage');
   const employees = await getEmployeesWithConsultations();
   const announcements = await getStudentAnnouncements();
+  const documents = await getStudentDocuments();
 
   const tStruct = await getTranslations('StructurePage');
 
@@ -114,6 +116,97 @@ export default async function ForStudentsPage({ params }: Props) {
                             {c.room || employee.officeLocation}
                           </div>
                         ))}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </AnimateOnce>
+
+      <AnimateOnce>
+        <h2 className={style.title}>{t('documentsTitle')}</h2>
+      </AnimateOnce>
+
+      <AnimateOnce>
+        <div className={style.tableContainer}>
+          {documents.length === 0 ? (
+            <p>{t('noDocuments')}</p>
+          ) : (
+            <table className={style.table} id="documents-table">
+              <thead>
+                <tr>
+                  <th>{t('subjectName')}</th>
+                  <th>{t('statute')}</th>
+                  <th>{t('syllabus')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {documents.map((doc) => {
+                  const { translation } = resolveTranslation(
+                    doc.translations,
+                    locale
+                  );
+
+                  const subjectName = translation?.subjectName ?? doc.slug;
+
+                  return (
+                    <tr key={doc.id}>
+                      <td
+                        className={style.subjectName}
+                        data-label={t('subjectName')}
+                      >
+                        {subjectName}
+                      </td>
+                      <td data-label={t('statute')}>
+                        <a
+                          href={doc.statutePath}
+                          download
+                          className={style.downloadLink}
+                          aria-label={`${t('statute')} – ${subjectName}`}
+                        >
+                          <svg
+                            className={style.downloadIcon}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                          </svg>
+                          {t('download')}
+                        </a>
+                      </td>
+                      <td data-label={t('syllabus')}>
+                        <a
+                          href={doc.syllabusPath}
+                          download
+                          className={style.downloadLink}
+                          aria-label={`${t('syllabus')} – ${subjectName}`}
+                        >
+                          <svg
+                            className={style.downloadIcon}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                          </svg>
+                          {t('download')}
+                        </a>
                       </td>
                     </tr>
                   );

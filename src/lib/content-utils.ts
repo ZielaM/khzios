@@ -49,6 +49,18 @@ export function stripHtml(html: string): string {
   return (fragment.textContent ?? '').replace(/\s+/g, ' ').trim();
 }
 
+/**
+ * Sanitises short inline HTML such as a publication title: keeps search
+ * highlights and the formatting scientific titles use (italic species names,
+ * sub/superscripts) and removes everything else.
+ */
+export function sanitizeInlineHtml(html: string): string {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['mark', 'i', 'em', 'b', 'strong', 'sub', 'sup'],
+    ALLOWED_ATTR: [],
+  });
+}
+
 /** Shortens plain text to at most `maxLength` characters on a word boundary. */
 export function excerpt(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;

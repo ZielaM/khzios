@@ -31,9 +31,9 @@ const SQL_INJECTION_PATTERNS: RegExp[] = [
   /WAITFOR\s+DELAY/i,
   /SLEEP\s*\(\s*\d/i,
   /BENCHMARK\s*\(/i,
-  // Comment-based evasion after a quote
-  /['"].*--/,
-  /['"].*\/\*/,
+  // A comment right after a closing quote (' -- or '/*); a quote anywhere
+  // earlier in the text is normal in phrase searches such as "mleko" -krowy
+  /['"]\s*(--|\/\*)/,
   // System table enumeration
   /INFORMATION_SCHEMA/i,
   /pg_catalog/i,

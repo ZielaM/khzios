@@ -30,6 +30,7 @@ import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
 import AnimateOnce from '@/components/AnimateOnce';
 import RelatedNewsSkeleton from '@/components/RelatedNews/RelatedNewsSkeleton';
 import { renderOnFirstRequest } from '@/lib/static-params';
+import JsonLd from '@/components/JsonLd';
 
 // Articles are cached after their first view and refreshed daily, so an edit
 // or unpublication shows up within a day without hitting the database on
@@ -148,10 +149,7 @@ export default async function NewsDetailsPage({
   return (
     <>
       <ReadingProgress />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <main className={style.pageWrapper}>
         <AnimateOnce className={style.container}>
           <header className={style.header}>

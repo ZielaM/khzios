@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { BookOpen, GraduationCap, Network, Phone } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
+import JsonLd from '@/components/JsonLd';
 
 // The latest news on this page should not trail the articles by more than a
 // day; everything else here changes far less often.
@@ -51,10 +52,7 @@ export default async function Home({
 
   return (
     <div className={styles.main}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       {/* ── Hero Section ──────────────────────────────────────────────── */}
       <AnimateOnce>
         <section

@@ -4,6 +4,7 @@ import {
   getPhotoAlt,
   stripHtml,
   excerpt,
+  sanitizeInlineHtml,
   estimateReadingTime,
 } from '../content-utils';
 import type { Photo } from '@/generated/prisma/client';
@@ -142,5 +143,26 @@ describe('excerpt', () => {
 
   it('does not leave trailing punctuation before the ellipsis', () => {
     expect(excerpt('Jeden, dwa, trzy cztery', 11)).toBe('Jeden, dwa…');
+  });
+});
+
+// ─── sanitizeInlineHtml ─────────────────────────────────────────────────
+
+describe('sanitizeInlineHtml', () => {
+  it('keeps highlights and scientific formatting', () => {
+    expect(
+      sanitizeInlineHtml('<mark>Mleko</mark> <i>Bos taurus</i> CO<sub>2</sub>')
+    ).toBe('<mark>Mleko</mark> <i>Bos taurus</i> CO<sub>2</sub>');
+  });
+
+  it('removes scripts, event handlers and other markup', () => {
+    expect(
+      sanitizeInlineHtml(
+        '<img src=x onerror="alert(1)"><a href="javascript:x">Tytuł</a><script>x()</script>'
+      )
+    ).toBe('Tytuł');
+    expect(sanitizeInlineHtml('<i onclick="x()">Gatunek</i>')).toBe(
+      '<i>Gatunek</i>'
+    );
   });
 });

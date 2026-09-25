@@ -7,6 +7,7 @@ import { LanguageCode } from '@/types/search-types';
 import { resolveTranslation } from '@/lib/translations';
 import { Link } from '@/i18n/routing';
 import { teamHref } from '@/lib/team-routes';
+import { sanitizeInlineHtml } from '@/lib/content-utils';
 
 interface PublicationsListServerProps {
   query?: string;
@@ -62,7 +63,9 @@ export default async function PublicationsListServer({
                   <div className={style.itemContent}>
                     <h3
                       className={style.itemTitle}
-                      dangerouslySetInnerHTML={{ __html: translation.title }}
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeInlineHtml(translation.title),
+                      }}
                     />
                     <div className={style.itemMeta}>
                       <span className={style.authors}>{pub.authors}</span>

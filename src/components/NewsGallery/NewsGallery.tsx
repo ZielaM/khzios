@@ -2,22 +2,32 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
-import { Photo } from '@/generated/prisma/client';
+import type { NewsPhoto } from '@/lib/news-queries';
+import { getPhotoAlt } from '@/lib/content-utils';
 import { useTranslations } from 'next-intl';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import style from './NewsGallery.module.scss';
 import clsx from 'clsx';
 
 interface NewsGalleryProps {
-  photos: Photo[];
-  /** Article title (plain text) — used to build descriptive alt texts */
+  photos: NewsPhoto[];
+  /** Article title (plain text), used for photos without their own alt text */
   title: string;
+  locale: string;
 }
 
-export default function NewsGallery({ photos, title }: NewsGalleryProps) {
+export default function NewsGallery({
+  photos,
+  title,
+  locale,
+}: NewsGalleryProps) {
   const t = useTranslations('NewsDetails');
   const altFor = (index: number) =>
-    t('galleryImageAlt', { title, current: index + 1, total: photos.length });
+    getPhotoAlt(
+      photos[index],
+      locale,
+      t('galleryImageAlt', { title, current: index + 1, total: photos.length })
+    );
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const openLightbox = (index: number) => {

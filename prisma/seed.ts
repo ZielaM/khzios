@@ -263,12 +263,53 @@ async function main() {
     },
   };
 
+  // Placeholder photos with alternative text in every language
   const images = [
-    '/image1.png',
-    '/image2.png',
-    '/image3.png',
-    '/image4.png',
-    '/image5.png',
+    {
+      url: '/image1.png',
+      alt: {
+        pl: 'Łąka i góry o zachodzie słońca',
+        en: 'A meadow and mountains at sunset',
+        uk: 'Луг і гори на заході сонця',
+        ru: 'Луг и горы на закате',
+      },
+    },
+    {
+      url: '/image2.png',
+      alt: {
+        pl: 'Wodospad w górskim wąwozie',
+        en: 'A waterfall in a mountain gorge',
+        uk: 'Водоспад у гірській ущелині',
+        ru: 'Водопад в горном ущелье',
+      },
+    },
+    {
+      url: '/image3.png',
+      alt: {
+        pl: 'Dolina rzeki u podnóża gór',
+        en: 'A river valley below the mountains',
+        uk: 'Долина річки біля підніжжя гір',
+        ru: 'Долина реки у подножия гор',
+      },
+    },
+    {
+      url: '/image4.png',
+      alt: {
+        pl: 'Leśny strumień wśród omszałych kamieni',
+        en: 'A forest stream among mossy stones',
+        uk: 'Лісовий струмок серед замшілих каменів',
+        ru: 'Лесной ручей среди замшелых камней',
+      },
+    },
+    {
+      url: '/image5.png',
+      alt: {
+        pl: 'Postać w kapeluszu na tle okna',
+        en: 'A figure in a hat against a window',
+        uk: 'Постать у капелюсі на тлі вікна',
+        ru: 'Фигура в шляпе на фоне окна',
+      },
+    },
   ];
 
   await prisma.$transaction(
@@ -308,9 +349,18 @@ async function main() {
 
         // Photos
         const photoCount = i % 6; // 0 to 5 photos per gallery
-        const photos = Array.from({ length: photoCount }).map((_, pIdx) => ({
-          url: images[pIdx % images.length],
-        }));
+        const photos = Array.from({ length: photoCount }).map((_, pIdx) => {
+          const image = images[pIdx % images.length];
+          return {
+            url: image.url,
+            translations: {
+              create: (['pl', 'en', 'uk', 'ru'] as const).map((lc) => ({
+                languageCode: lc,
+                alt: image.alt[lc],
+              })),
+            },
+          };
+        });
 
         // Date spread over the last year
         const date = new Date();
@@ -320,6 +370,7 @@ async function main() {
           data: {
             published: isPublished,
             createdAt: date,
+            publishedAt: date,
             tags: {
               connect: articleTags.map((t) => ({ id: t.id })),
             },

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import RelatedNews from '../RelatedNews';
 import { getRelatedNews } from '@/lib/news-queries';
+import { makePhoto } from '@/test/fixtures';
 
 // Mocking the server query
 vi.mock('@/lib/news-queries', () => ({
@@ -24,6 +25,7 @@ function mockArticle(
     id,
     createdAt: new Date('2026-01-01'),
     updatedAt: new Date('2026-01-01'),
+    publishedAt: new Date('2026-01-01'),
     published: true,
     tags: [],
     photos: [],
@@ -143,7 +145,7 @@ describe('RelatedNews Server Component', () => {
   it('should render actual photo URL when article has photos', async () => {
     vi.mocked(getRelatedNews).mockResolvedValue([
       mockArticle('2', {
-        photos: [{ id: 'p1', newsId: '2', url: '/custom-photo.jpg' }],
+        photos: [makePhoto('p1', '/custom-photo.jpg')],
       }),
     ]);
 

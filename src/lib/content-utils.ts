@@ -8,6 +8,7 @@
 
 import { Photo } from '@/generated/prisma/client';
 import DOMPurify from 'isomorphic-dompurify';
+import { resolveTranslation } from '@/lib/translations';
 
 /** Static fallback image for articles without uploaded photos */
 const PLACEHOLDER_IMAGE = '/placeholder-image.png';
@@ -18,6 +19,19 @@ const PLACEHOLDER_IMAGE = '/placeholder-image.png';
  */
 export function getPhotoUrl(photos: Photo[] | null | undefined): string {
   return photos && photos?.length > 0 ? photos[0].url : PLACEHOLDER_IMAGE;
+}
+
+/**
+ * Alternative text of a photo in the requested language (following the usual
+ * translation fallback chain), or `fallback` when the photo has none.
+ */
+export function getPhotoAlt(
+  photo: { translations?: { languageCode: string; alt: string }[] } | undefined,
+  locale: string,
+  fallback: string
+): string {
+  const { translation } = resolveTranslation(photo?.translations ?? [], locale);
+  return translation?.alt.trim() || fallback;
 }
 
 /**

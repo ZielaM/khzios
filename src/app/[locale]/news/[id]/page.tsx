@@ -13,10 +13,12 @@ import {
   LANGUAGE_NAMES,
 } from '@/lib/translations';
 import {
+  getPhotoAlt,
   getPhotoUrl,
   stripHtml,
   estimateReadingTime,
 } from '@/lib/content-utils';
+import { formatDate } from '@/lib/dates';
 import { getNewsById } from '@/lib/news-queries';
 import { DEFAULT_OG_IMAGE, getAppUrl, toAbsoluteUrl } from '@/lib/seo';
 import NewsGallery from '@/components/NewsGallery/NewsGallery';
@@ -113,13 +115,10 @@ export default async function NewsDetailsPage({
   const content = translation?.content ?? t('notFoundDesc');
   const cleanTitle = stripHtml(title);
 
-  const formattedDate = new Intl.DateTimeFormat(locale, {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(news.createdAt));
+  const formattedDate = formatDate(news.publishedAt, locale);
 
   const mainPhoto = getPhotoUrl(news.photos);
+  const mainPhotoAlt = getPhotoAlt(news.photos[0], locale, cleanTitle);
   const readingTime = estimateReadingTime(content);
 
   // Tag IDs for the Suspense-wrapped RelatedNews component
@@ -133,7 +132,7 @@ export default async function NewsDetailsPage({
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: cleanTitle,
-    datePublished: news.createdAt.toISOString(),
+    datePublished: news.publishedAt.toISOString(),
     dateModified: news.updatedAt.toISOString(),
     image: toAbsoluteUrl(
       news.photos.length > 0 ? news.photos[0].url : DEFAULT_OG_IMAGE
@@ -185,7 +184,7 @@ export default async function NewsDetailsPage({
                 />
                 <time
                   className={style.date}
-                  dateTime={news.createdAt.toISOString()}
+                  dateTime={news.publishedAt.toISOString()}
                 >
                   {t('publishedOn', { date: formattedDate })}
                 </time>
@@ -220,7 +219,7 @@ export default async function NewsDetailsPage({
           <section className={style.heroImageContainer}>
             <Image
               src={mainPhoto}
-              alt={cleanTitle}
+              alt={mainPhotoAlt}
               fill
               priority
               className={style.heroImage}
@@ -241,7 +240,11 @@ export default async function NewsDetailsPage({
           {galleryPhotos.length > 0 && (
             <section className={style.gallerySection}>
               <h2 className={style.gallerySectionTitle}>{t('gallery')}</h2>
-              <NewsGallery photos={galleryPhotos} title={cleanTitle} />
+              <NewsGallery
+                photos={galleryPhotos}
+                title={cleanTitle}
+                locale={locale}
+              />
             </section>
           )}
 

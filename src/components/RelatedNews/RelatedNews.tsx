@@ -2,7 +2,8 @@ import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
 import { resolveTranslation } from '@/lib/translations';
-import { getPhotoUrl, stripHtml } from '@/lib/content-utils';
+import { getPhotoAlt, getPhotoUrl, stripHtml } from '@/lib/content-utils';
+import { formatDate } from '@/lib/dates';
 import { getRelatedNews } from '@/lib/news-queries';
 import { ArrowRight } from 'lucide-react';
 import AnimateOnce from '@/components/AnimateOnce';
@@ -46,11 +47,7 @@ export default async function RelatedNews({
           const cleanTitle = stripHtml(title);
           const photoUrl = getPhotoUrl(article.photos);
 
-          const formattedDate = new Intl.DateTimeFormat(locale, {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          }).format(new Date(article.createdAt));
+          const formattedDate = formatDate(article.publishedAt, locale);
 
           return (
             <AnimateOnce key={article.id}>
@@ -61,7 +58,7 @@ export default async function RelatedNews({
                 <div className={style.cardImage}>
                   <Image
                     src={photoUrl}
-                    alt={cleanTitle}
+                    alt={getPhotoAlt(article.photos[0], locale, cleanTitle)}
                     fill
                     className={style.image}
                     sizes="(max-width: 768px) 100vw, 33vw"

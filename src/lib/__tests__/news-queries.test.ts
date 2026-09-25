@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { getNewsById, getRelatedNews } from '../news-queries';
+import { getNewsById, getRelatedNews, newsInclude } from '../news-queries';
 import { prisma } from '@/lib/prisma';
 
 vi.mock('@/lib/prisma', () => ({
@@ -34,15 +34,7 @@ describe('news-queries', () => {
 
       expect(prisma.news.findUnique).toHaveBeenCalledWith({
         where: { id: '1', published: true },
-        include: {
-          translations: true,
-          tags: {
-            include: {
-              translations: true,
-            },
-          },
-          photos: true,
-        },
+        include: newsInclude,
       });
       expect(result).toEqual(mockNews);
     });
@@ -65,7 +57,7 @@ describe('news-queries', () => {
           published: true,
         },
         include: expect.any(Object),
-        orderBy: { createdAt: 'desc' },
+        orderBy: { publishedAt: 'desc' },
         take: 2,
       });
       expect(result).toEqual(mockNewsList);
@@ -92,10 +84,26 @@ describe('news-queries', () => {
           },
         },
         include: expect.any(Object),
-        orderBy: { createdAt: 'desc' },
+        orderBy: { publishedAt: 'desc' },
         take: 3,
       });
       expect(result).toEqual(mockNewsList);
+    });
+  });
+});
+
+describe('getRecentNews', () => {
+  it('returns the latest published articles by publication date', async () => {
+    const { getRecentNews } = await import('../news-queries');
+    vi.mocked(prisma.news.findMany).mockResolvedValue([]);
+
+    await getRecentNews(3);
+
+    expect(prisma.news.findMany).toHaveBeenCalledWith({
+      where: { published: true },
+      include: newsInclude,
+      orderBy: { publishedAt: 'desc' },
+      take: 3,
     });
   });
 });

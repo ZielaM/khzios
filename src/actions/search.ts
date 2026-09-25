@@ -7,6 +7,7 @@ import { validateSearchParams } from '@/lib/validation';
 
 import { SearchParams } from '@/types/search-types';
 import { createLogger } from '@/lib/logger';
+import { newsInclude } from '@/lib/news-queries';
 
 const log = createLogger('search');
 
@@ -50,7 +51,7 @@ export async function searchPublishedNews(params: SearchParams) {
       );
       const langArray = Prisma.sql`ARRAY[${Prisma.join(langTextArray, ', ')}]`;
 
-      const cteSelectPart = Prisma.sql`WITH RankedMatches AS ( SELECT DISTINCT ON (n.id) n.id, nt."languageCode", ts_headline(${dictionary}::regconfig, nt.title, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxFragments=0') AS highlighted_title, ts_headline(${dictionary}::regconfig, nt.content, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content, ts_rank(nt."searchVector", websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) AS rank, n."createdAt"`;
+      const cteSelectPart = Prisma.sql`WITH RankedMatches AS ( SELECT DISTINCT ON (n.id) n.id, nt."languageCode", ts_headline(${dictionary}::regconfig, nt.title, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxFragments=0') AS highlighted_title, ts_headline(${dictionary}::regconfig, nt.content, websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery}), 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content, ts_rank(nt."searchVector", websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})) AS rank, n."publishedAt"`;
       const selectCountPart = Prisma.sql`SELECT CAST(COUNT(DISTINCT n.id) AS INTEGER) as total`;
 
       const fromPart = Prisma.sql`FROM "News" n JOIN "NewsTranslation" nt ON nt."newsId" = n.id`;
@@ -81,10 +82,10 @@ export async function searchPublishedNews(params: SearchParams) {
       }
 
       if (safeDateFrom) {
-        whereParts.push(Prisma.sql`n."createdAt" >= ${safeDateFrom}`);
+        whereParts.push(Prisma.sql`n."publishedAt" >= ${safeDateFrom}`);
       }
       if (safeDateTo) {
-        whereParts.push(Prisma.sql`n."createdAt" <= ${safeDateTo}`);
+        whereParts.push(Prisma.sql`n."publishedAt" <= ${safeDateTo}`);
       }
 
       const whereClause = Prisma.sql`WHERE ${Prisma.join(whereParts, ' AND ')}`;
@@ -101,8 +102,8 @@ export async function searchPublishedNews(params: SearchParams) {
 
       const orderBy =
         safeSortBy === 'relevance'
-          ? Prisma.sql`ORDER BY rank DESC, "createdAt" DESC`
-          : Prisma.sql`ORDER BY "createdAt" DESC`;
+          ? Prisma.sql`ORDER BY rank DESC, "publishedAt" DESC`
+          : Prisma.sql`ORDER BY "publishedAt" DESC`;
 
       sqlParts.push(orderBy);
       sqlParts.push(Prisma.sql`LIMIT ${safeLimit} OFFSET ${offset}`);
@@ -149,15 +150,15 @@ export async function searchPublishedNews(params: SearchParams) {
       }
 
       if (safeDateFrom || safeDateTo) {
-        whereCondition.createdAt = {};
-        if (safeDateFrom) whereCondition.createdAt.gte = safeDateFrom;
-        if (safeDateTo) whereCondition.createdAt.lte = safeDateTo;
+        whereCondition.publishedAt = {};
+        if (safeDateFrom) whereCondition.publishedAt.gte = safeDateFrom;
+        if (safeDateTo) whereCondition.publishedAt.lte = safeDateTo;
       }
 
       const [newsData, count] = await Promise.all([
         prisma.news.findMany({
           where: whereCondition,
-          orderBy: { createdAt: 'desc' },
+          orderBy: { publishedAt: 'desc' },
           cursor: safeCursorId ? { id: safeCursorId } : undefined,
           skip: safeCursorId ? 1 : offset,
           take: safeLimit,
@@ -177,11 +178,7 @@ export async function searchPublishedNews(params: SearchParams) {
     // 3. Fetch full data for the fetched IDs
     const newsItems = await prisma.news.findMany({
       where: { id: { in: newsIds } },
-      include: {
-        tags: { include: { translations: true } },
-        photos: true,
-        translations: true,
-      },
+      include: newsInclude,
     });
 
     // 4. Sort the Prisma results based on the original IDs array order (which handles relevance sorting)

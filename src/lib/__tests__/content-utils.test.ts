@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { getPhotoUrl, stripHtml, estimateReadingTime } from '../content-utils';
+import {
+  getPhotoUrl,
+  getPhotoAlt,
+  stripHtml,
+  estimateReadingTime,
+} from '../content-utils';
 import type { Photo } from '@/generated/prisma/client';
 
 // ─── getPhotoUrl ────────────────────────────────────────────────────────
@@ -71,5 +76,36 @@ describe('estimateReadingTime', () => {
     // 200 words inside 2 <p> tags with extra spaces
     const html = `<p> ${Array(200).fill('word').join(' ')} </p>`;
     expect(estimateReadingTime(html)).toBe(1);
+  });
+});
+
+// ─── getPhotoAlt ────────────────────────────────────────────────────────
+
+describe('getPhotoAlt', () => {
+  const photo = {
+    translations: [
+      { languageCode: 'pl', alt: 'Krowy na pastwisku' },
+      { languageCode: 'en', alt: 'Cows on a pasture' },
+    ],
+  };
+
+  it('returns the alt text in the requested language', () => {
+    expect(getPhotoAlt(photo, 'pl', 'x')).toBe('Krowy na pastwisku');
+  });
+
+  it('follows the translation fallback chain', () => {
+    expect(getPhotoAlt(photo, 'uk', 'x')).toBe('Cows on a pasture');
+  });
+
+  it('uses the fallback for photos without alt text', () => {
+    expect(getPhotoAlt({ translations: [] }, 'pl', 'Tytuł')).toBe('Tytuł');
+    expect(getPhotoAlt(undefined, 'pl', 'Tytuł')).toBe('Tytuł');
+    expect(
+      getPhotoAlt(
+        { translations: [{ languageCode: 'pl', alt: ' ' }] },
+        'pl',
+        'T'
+      )
+    ).toBe('T');
   });
 });

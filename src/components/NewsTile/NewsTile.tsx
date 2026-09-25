@@ -9,13 +9,7 @@ import { Link } from '@/i18n/routing';
 import style from './NewsTile.module.scss';
 import clsx from 'clsx';
 import DOMPurify from 'isomorphic-dompurify';
-import {
-  News,
-  Tag,
-  Photo,
-  NewsTranslation,
-  TagTranslation,
-} from '@/generated/prisma/client';
+import type { NewsWithRelations } from '@/lib/news-queries';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import {
@@ -23,15 +17,12 @@ import {
   resolveTagName,
   LANGUAGE_NAMES,
 } from '@/lib/translations';
-import { getPhotoUrl } from '@/lib/content-utils';
+import { getPhotoAlt, getPhotoUrl, stripHtml } from '@/lib/content-utils';
+import { formatDate } from '@/lib/dates';
 import AnimateOnce from '@/components/AnimateOnce';
 
 export interface NewsTileProps {
-  news: News & {
-    tags: (Tag & { translations: TagTranslation[] })[];
-    photos: Photo[];
-    translations: NewsTranslation[];
-  };
+  news: NewsWithRelations;
   locale: string;
   priority?: boolean;
 }
@@ -72,15 +63,12 @@ export default function NewsTile({
   );
 
   // Re-use standard fallback logic for each individual tag
-  const getTagName = (tag: Tag & { translations: TagTranslation[] }) =>
+  const getTagName = (tag: NewsWithRelations['tags'][number]) =>
     resolveTagName(tag, locale);
 
-  // Use the native Intl API to format dates consistently according to locale rules
-  const formattedDate = new Intl.DateTimeFormat(locale, {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(news.createdAt));
+  const formattedDate = formatDate(news.publishedAt, locale);
+  // Search results highlight matches with <mark>, which must not leak into alt
+  const imageAlt = getPhotoAlt(news.photos[0], locale, stripHtml(title));
 
   return (
     <AnimateOnce>
@@ -92,7 +80,7 @@ export default function NewsTile({
           <div className={style.imageContainer}>
             <Image
               src={thumbnail}
-              alt={title}
+              alt={imageAlt}
               fill
               priority={priority}
               className={style.image}

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import NewsGridServer from '../NewsGridServer';
 import { searchPublishedNews } from '@/actions/search';
-import type { Prisma } from '@/generated/prisma/client';
+import { makeNews } from '@/test/fixtures';
 
 vi.mock('@/actions/search', () => ({
   searchPublishedNews: vi.fn(),
@@ -12,23 +12,8 @@ vi.mock('next-intl/server', () => ({
   getTranslations: vi.fn().mockResolvedValue((key: string) => key),
 }));
 
-// Mock returned items
-type SearchResultItem = Prisma.NewsGetPayload<{
-  include: {
-    translations: true;
-    photos: true;
-    tags: { include: { translations: true } };
-  };
-}>;
-
-function mockSearchResult(id: string): SearchResultItem {
-  return {
-    id,
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
-    published: true,
-    tags: [],
-    photos: [],
+function mockSearchResult(id: string) {
+  return makeNews(id, {
     translations: [
       {
         newsId: id,
@@ -37,7 +22,7 @@ function mockSearchResult(id: string): SearchResultItem {
         content: `Content ${id}`,
       },
     ],
-  };
+  });
 }
 
 describe('NewsGridServer Component', () => {

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import type { Tag, TagTranslation, Photo } from '@/generated/prisma/client';
+import type { Tag, TagTranslation } from '@/generated/prisma/client';
+import { makePhoto } from '@/test/fixtures';
 import NewsTile from '../NewsTile';
 import { LanguageCode } from '@/types/search-types';
 
@@ -13,6 +14,7 @@ function mockNewsData(
     id: 'test-id-1',
     createdAt: new Date('2025-06-15T10:00:00Z'),
     updatedAt: new Date('2025-06-15T10:00:00Z'),
+    publishedAt: new Date('2025-06-15T10:00:00Z'),
     published: true,
     tags: [],
     photos: [],
@@ -92,14 +94,13 @@ describe('NewsTile', () => {
 
     it('should use first photo as thumbnail when photos exist', () => {
       const news = mockNewsData({
-        photos: [
-          { id: 'p1', newsId: 'test-id-1', url: '/photo1.jpg', altText: null },
-        ] as unknown as Photo[],
+        photos: [makePhoto('p1', '/photo1.jpg', { en: 'A barn' })],
       });
       render(<NewsTile news={news} locale="en" />);
 
       const img = screen.getByRole('img');
       expect(img).toHaveAttribute('src', '/photo1.jpg');
+      expect(img).toHaveAttribute('alt', 'A barn');
     });
 
     it('should render a link to the article detail page', () => {

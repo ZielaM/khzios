@@ -1,35 +1,36 @@
 /**
- * Cached Prisma queries for news articles.
+ * Prisma queries for news articles.
  *
- * Wrapping queries in React's cache() ensures that when Next.js calls
- * both generateMetadata() and the page component in the same request,
- * the database is only hit ONCE instead of twice.
+ * Per-request functions are wrapped in React's cache() so generateMetadata()
+ * and the page component share one database round trip.
  */
 
 import { cache } from 'react';
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { createLogger } from '@/lib/logger';
 
 const log = createLogger('news-queries');
 
-/**
- * Fetches a single published news article by ID with all relations.
- * Result is cached per-request via React.cache().
- */
-export const getNewsById = cache(async (id: string) => {
-  log.debug({ newsId: id }, 'Fetching news by ID');
+/** Relations needed to render an article card or page. */
+export const newsInclude = {
+  translations: true,
+  tags: { include: { translations: true } },
+  // The first photo is the article's main image, so the order must be stable
+  photos: { include: { translations: true }, orderBy: { id: 'asc' } },
+} satisfies Prisma.NewsInclude;
 
+export type NewsWithRelations = Prisma.NewsGetPayload<{
+  include: typeof newsInclude;
+}>;
+
+export type NewsPhoto = NewsWithRelations['photos'][number];
+
+/** A single published article, or null when it does not exist or is a draft. */
+export const getNewsById = cache(async (id: string) => {
   const news = await prisma.news.findUnique({
     where: { id, published: true },
-    include: {
-      translations: true,
-      tags: {
-        include: {
-          translations: true,
-        },
-      },
-      photos: true,
-    },
+    include: newsInclude,
   });
 
   if (!news) {
@@ -39,65 +40,44 @@ export const getNewsById = cache(async (id: string) => {
   return news;
 });
 
+/** The most recently published articles. */
+export async function getRecentNews(limit = 3) {
+  return prisma.news.findMany({
+    where: { published: true },
+    include: newsInclude,
+    orderBy: { publishedAt: 'desc' },
+    take: limit,
+  });
+}
+
 /**
- * Fetches related news articles that share at least one tag with
- * the given article. Excludes the current article from results.
- *
- * @param newsId - The current article ID to exclude
- * @param tagIds - Tag IDs to match against
- * @param limit - Maximum number of related articles to return
+ * Latest articles sharing at least one tag with the current one, or simply
+ * the latest articles when it has no tags.
  */
 export const getRelatedNews = cache(
   async (newsId: string, tagIds: string[], limit: number = 3) => {
-    if (tagIds.length === 0) {
-      // If no tags, fall back to the most recent articles
-      return prisma.news.findMany({
-        where: {
-          id: { not: newsId },
-          published: true,
-        },
-        include: {
-          translations: true,
-          tags: { include: { translations: true } },
-          photos: true,
-        },
-        orderBy: { createdAt: 'desc' },
-        take: limit,
-      });
-    }
-
     return prisma.news.findMany({
       where: {
         id: { not: newsId },
         published: true,
-        tags: {
-          some: {
-            id: { in: tagIds },
-          },
-        },
+        ...(tagIds.length > 0 && { tags: { some: { id: { in: tagIds } } } }),
       },
-      include: {
-        translations: true,
-        tags: { include: { translations: true } },
-        photos: true,
-      },
-      orderBy: { createdAt: 'desc' },
+      include: newsInclude,
+      orderBy: { publishedAt: 'desc' },
       take: limit,
     });
   }
 );
 
-/**
- * Lists every published article with its photos for sitemap.xml.
- */
+/** Every published article with its photos, for sitemap.xml. */
 export async function getPublishedNewsForSitemap() {
   return prisma.news.findMany({
     where: { published: true },
     select: {
       id: true,
       updatedAt: true,
-      photos: { select: { url: true } },
+      photos: { select: { url: true }, orderBy: { id: 'asc' } },
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { publishedAt: 'desc' },
   });
 }

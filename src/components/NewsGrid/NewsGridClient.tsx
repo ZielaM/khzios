@@ -8,19 +8,9 @@ import { SearchX, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { SearchParams } from '@/types/search-types';
 import { createLogger } from '@/lib/logger';
-import {
-  News,
-  Tag,
-  Photo,
-  NewsTranslation,
-  TagTranslation,
-} from '@/generated/prisma/client';
+import type { NewsWithRelations } from '@/lib/news-queries';
 
-type NewsItem = News & {
-  tags: (Tag & { translations: TagTranslation[] })[];
-  photos: Photo[];
-  translations: NewsTranslation[];
-};
+type NewsItem = NewsWithRelations;
 
 const log = createLogger('news-grid');
 

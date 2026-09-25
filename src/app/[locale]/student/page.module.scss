@@ -1,4 +1,5 @@
 @use '@/styles/variables' as *;
+@use '@/styles/data-table' as *;
 
 .page {
   padding: 40px 20px;
@@ -15,6 +16,12 @@
   }
 }
 
+.pageTitle {
+  @include section-title;
+  font-size: clamp(1.9em, 4vw, 2.4em);
+  margin: 16px 0 24px;
+}
+
 .title {
   @include section-title;
   margin-top: 48px;
@@ -23,95 +30,14 @@
 }
 
 .tableContainer {
-  width: 100%;
-  overflow-x: auto;
-  border-radius: $radius-lg;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-
-  :global(.wcag-high-contrast) & {
-    border: 2px solid var(--foreground);
-    border-radius: 0;
-  }
-
-  @media (max-width: 768px) {
-    border: none;
-    border-radius: 0;
-
-    :global(.wcag-high-contrast) & {
-      border: none;
-    }
-  }
+  @include table-container;
 }
 
 .table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-
-  th,
-  td {
-    padding: 16px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    vertical-align: top;
-  }
-
-  th {
-    background-color: rgba(0, 0, 0, 0.02);
-    font-weight: 700;
-    font-size: 0.95em;
-    color: #555;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-
-    :global(.wcag-high-contrast) & {
-      background-color: transparent;
-      color: var(--foreground);
-      border-bottom: 2px solid var(--foreground);
-    }
-  }
-
-  tr:last-child td {
-    border-bottom: none;
-  }
-
-  tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.01);
-  }
-
-  td {
-    font-size: 1.05em;
-    color: #222;
-
-    :global(.wcag-high-contrast) & {
-      color: var(--foreground);
-      border-bottom: 1px solid var(--foreground);
-    }
-  }
-
-  .employeeName {
-    font-weight: 600;
-    color: var(--color-primary);
-
-    :global(.wcag-high-contrast) & {
-      color: var(--foreground);
-    }
-  }
-
-  .consultationBlock {
-    margin-bottom: 8px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+  @include data-table;
 
   .subjectName {
-    font-weight: 600;
-    color: var(--color-primary);
-
-    :global(.wcag-high-contrast) & {
-      color: var(--foreground);
-    }
+    @include table-key-cell;
   }
 
   .downloadLink {
@@ -147,53 +73,5 @@
     width: 18px;
     height: 18px;
     flex-shrink: 0;
-  }
-
-  @media (max-width: 768px) {
-    thead {
-      display: none;
-    }
-
-    tr {
-      display: flex;
-      flex-direction: column;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: $radius-md;
-      margin-bottom: 16px;
-      background-color: var(--background);
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      :global(.wcag-high-contrast) & {
-        border: 2px solid var(--foreground);
-      }
-    }
-
-    td {
-      display: flex;
-      flex-direction: column;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      padding: 12px 16px;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &::before {
-        content: attr(data-label);
-        font-size: 0.8em;
-        text-transform: uppercase;
-        color: #666;
-        font-weight: 700;
-        margin-bottom: 4px;
-        letter-spacing: 0.5px;
-
-        :global(.wcag-high-contrast) & {
-          color: var(--foreground);
-        }
-      }
-    }
   }
 }

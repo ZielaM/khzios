@@ -197,7 +197,11 @@
     "statute": "Statut",
     "syllabus": "Sylabus",
     "download": "Pobierz PDF",
-    "noDocuments": "Brak dostępnych dokumentów."
+    "noDocuments": "Brak dostępnych dokumentów.",
+    "scheduleLoading": "Wczytywanie ogłoszeń i konsultacji…",
+    "scheduleError": "Nie udało się wczytać ogłoszeń i terminów konsultacji.",
+    "retry": "Spróbuj ponownie",
+    "scheduleNoScript": "Ogłoszenia i terminy konsultacji wymagają włączonej obsługi JavaScriptu."
   },
   "HeroSlideshow": {
     "pause": "Wstrzymaj pokaz zdjęć",

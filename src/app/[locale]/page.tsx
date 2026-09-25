@@ -10,8 +10,14 @@ import HeroSlideshow from '@/components/HeroSlideshow';
 import { getSectionImages, IMAGE_SECTIONS } from '@/lib/site-images';
 import { getAppUrl, LOGO_IMAGE, toAbsoluteUrl } from '@/lib/seo';
 import clsx from 'clsx';
+import { renderOnFirstRequest } from '@/lib/static-params';
 import { BookOpen, GraduationCap, Network, Phone } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
+
+// The latest news on this page should not trail the articles by more than a
+// day; everything else here changes far less often.
+export const revalidate = 86400;
+export const generateStaticParams = renderOnFirstRequest;
 
 export default async function Home({
   params,

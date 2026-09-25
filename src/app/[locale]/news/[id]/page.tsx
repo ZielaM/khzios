@@ -26,6 +26,13 @@ import ReadingProgress from '@/components/ReadingProgress/ReadingProgress';
 import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
 import AnimateOnce from '@/components/AnimateOnce';
 import RelatedNewsSkeleton from '@/components/RelatedNews/RelatedNewsSkeleton';
+import { renderOnFirstRequest } from '@/lib/static-params';
+
+// Articles are cached after their first view and refreshed daily, so an edit
+// or unpublication shows up within a day without hitting the database on
+// every request.
+export const revalidate = 86400;
+export const generateStaticParams = renderOnFirstRequest;
 
 // For Next.js dynamic routes, define the expected params interface
 interface NewsDetailsPageProps {
@@ -87,6 +94,7 @@ export default async function NewsDetailsPage({
 }: NewsDetailsPageProps) {
   const resolvedParams = await params;
   const { locale, id } = resolvedParams;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'NewsDetails' });
 
   // Uses React.cache() — deduplicated with generateMetadata's call

@@ -1,0 +1,27 @@
+@use '@/styles/data-table' as *;
+
+.tableContainer {
+  @include table-container;
+}
+
+.table {
+  @include data-table;
+
+  // Row headers reuse the cell look instead of the column-header style
+  tbody th {
+    @include table-key-cell;
+    font-size: 1.05em;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: normal;
+    background: none;
+  }
+}
+
+.slot + .slot {
+  margin-top: 8px;
+}
+
+.empty {
+  color: var(--text-muted);
+}

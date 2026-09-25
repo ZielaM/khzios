@@ -1,4 +1,43 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+const DAY = 24 * 60 * 60 * 1000;
+
+/**
+ * Serves a deterministic schedule so the announcement tests do not depend on
+ * the dates the database was seeded with.
+ */
+async function mockSchedule(page: Page) {
+  const at = (days: number) => new Date(Date.now() + days * DAY).toISOString();
+  const announcement = (id: string, days: number, title: string) => ({
+    id,
+    date: at(days),
+    important: false,
+    translations: [{ languageCode: 'pl', title, content: `${title} – treść` }],
+  });
+
+  await page.route('**/api/student-schedule', (route) =>
+    route.fulfill({
+      json: {
+        announcements: [
+          announcement('past', -3, 'Ogłoszenie sprzed trzech dni'),
+          announcement('soon', 2, 'Ogłoszenie za dwa dni'),
+        ],
+        consultations: [
+          {
+            id: 'e1',
+            firstName: 'Anna',
+            lastName: 'Kowalska',
+            officeLocation: 'pok. 110',
+            translations: [{ languageCode: 'pl', academicTitle: 'dr' }],
+            consultations: [
+              { id: 'c1', date: at(5), time: '10:00 - 12:00', room: 'pok. 12' },
+            ],
+          },
+        ],
+      },
+    })
+  );
+}
 
 test.describe('For Students Page', () => {
   test('should navigate to the student consultations page via desktop navbar', async ({
@@ -16,7 +55,7 @@ test.describe('For Students Page', () => {
     await expect(page).toHaveURL(/.*\/student/);
 
     // Verify the page title
-    await expect(page.locator('h1')).toHaveText('Konsultacje dla studentów');
+    await expect(page.locator('h1')).toHaveText('Dla studentów');
   });
 
   test('should navigate to the student consultations page via mobile menu', async ({
@@ -37,25 +76,22 @@ test.describe('For Students Page', () => {
     await expect(page).toHaveURL(/.*\/student/);
 
     // Verify the page title
-    await expect(page.locator('h1')).toHaveText('Konsultacje dla studentów');
+    await expect(page.locator('h1')).toHaveText('Dla studentów');
   });
 
-  test('should display the responsive consultation table', async ({ page }) => {
+  test('should display the consultation table from the live schedule', async ({
+    page,
+  }) => {
+    await mockSchedule(page);
     await page.goto('/pl/student');
 
-    // Make sure we have the table wrapper
-    const tableContainer = page.locator('table').first();
-    await expect(tableContainer).toBeVisible();
-
-    // Verify headers on desktop (on mobile they are visually hidden but exist in DOM)
-    // We can just verify table cells or rows are present
-    const rows = tableContainer.locator('tbody tr');
-    // Ensure we have at least one employee seeded
-    await expect(rows.first()).toBeVisible();
-
-    // The first row should have cell texts
-    const firstRowName = rows.first().locator('td').first();
-    await expect(firstRowName).not.toBeEmpty();
+    const consultations = page.locator('section', {
+      has: page.locator('h2', { hasText: 'Konsultacje dla studentów' }),
+    });
+    const row = consultations.locator('tbody tr').first();
+    await expect(row.locator('th')).toHaveText('dr Anna Kowalska');
+    await expect(row).toContainText('10:00 - 12:00');
+    await expect(row).toContainText('pok. 12');
   });
 
   test('BackLink should redirect to home page', async ({ page }) => {
@@ -75,39 +111,30 @@ test.describe('For Students Page', () => {
   test('should display student announcements and toggle past ones', async ({
     page,
   }) => {
+    await mockSchedule(page);
     await page.goto('/pl/student');
 
-    // Wait for the announcements section to be visible
-    const announcementsHeader = page.locator('h2', {
-      hasText: 'Ogłoszenia dla studentów',
-    });
-    await expect(announcementsHeader).toBeVisible();
+    await expect(
+      page.locator('h2', { hasText: 'Ogłoszenia dla studentów' })
+    ).toBeVisible();
 
-    // Check initial state (should show current/future announcements)
-    // The exact count depends on the seed data, but there should be at least one
-    // announcement displayed since we seeded current ones.
     const announcements = page.getByTestId('announcement');
+    await expect(announcements).toHaveCount(1);
+    await expect(announcements).toHaveText(/Ogłoszenie za dwa dni/);
 
-    // We check if the toggle is present
-    const toggleLabel = page.locator('label', {
-      hasText: 'Wyświetl przeszłe ogłoszenia',
+    const toggle = page.getByRole('switch', {
+      name: 'Wyświetl przeszłe ogłoszenia',
     });
-    await expect(toggleLabel).toBeVisible();
+    await expect(toggle).not.toBeChecked();
+    // The visual switch is the label; the native checkbox is visually hidden
+    await page
+      .locator('label', { hasText: 'Wyświetl przeszłe ogłoszenia' })
+      .click();
+    await expect(toggle).toBeChecked();
 
-    // Wait a brief moment to ensure hydration has finished
-    await page.waitForTimeout(500);
-
-    // Get the initial number of announcements
-    const initialCount = await announcements.count();
-
-    // Check the toggle to show past announcements by clicking its visible label
-    await toggleLabel.click();
-
-    // The count of announcements should increase or at least stay the same (if no past announcements existed)
-    // We know from the seed that there is 1 past announcement, so the count must increase.
-    await expect(async () => {
-      const newCount = await page.getByTestId('announcement').count();
-      expect(newCount).toBeGreaterThan(initialCount);
-    }).toPass();
+    await expect(announcements).toHaveCount(2);
+    await expect(announcements.first()).toContainText(
+      'Ogłoszenie sprzed trzech dni'
+    );
   });
 });

@@ -1,0 +1,66 @@
+@use '@/styles/variables' as *;
+
+.title {
+  @include section-title;
+  margin: 48px 0 32px;
+  text-align: center;
+}
+
+// Keeps the layout from jumping when the announcements card appears
+.announcementsPlaceholder {
+  min-height: 180px;
+  margin-bottom: 2rem;
+  border-radius: $radius-lg;
+  @include skeleton-pulse;
+}
+
+.skeleton {
+  min-height: 240px;
+  border-radius: $radius-lg;
+  @include skeleton-pulse;
+}
+
+.error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: $radius-lg;
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+.retry {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--color-primary);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-primary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+    color: var(--foreground);
+    border-radius: 0;
+  }
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcementsPlaceholder,
+  .skeleton {
+    animation: none;
+  }
+}

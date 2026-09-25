@@ -197,7 +197,11 @@
     "statute": "Statute",
     "syllabus": "Syllabus",
     "download": "Download PDF",
-    "noDocuments": "No documents available."
+    "noDocuments": "No documents available.",
+    "scheduleLoading": "Loading announcements and consultation hours…",
+    "scheduleError": "Announcements and consultation hours could not be loaded.",
+    "retry": "Try again",
+    "scheduleNoScript": "Announcements and consultation hours require JavaScript."
   },
   "HeroSlideshow": {
     "pause": "Pause photo slideshow",

@@ -59,26 +59,19 @@ test.describe('News Search & Filtering Spec', () => {
     await expect(page).toHaveURL(/sort=relevance/);
   });
 
-  test('should allow filtering by tags using react-select and update the URL', async ({
-    page,
-  }) => {
+  test('should filter by a tag chip and update the URL', async ({ page }) => {
     await page.goto('/en/news');
     await page.waitForLoadState('load');
 
     await page.getByRole('button', { name: 'Search news...' }).click();
 
-    // Locate react-select by its standard accessible aria-label defined in en.json
-    const tagSelectInput = page.getByLabel('Tag (e.g. education)');
-    await expect(tagSelectInput).toBeVisible();
+    const tags = page.getByRole('group', { name: 'Topics' });
+    const firstTag = tags.getByRole('button').first();
+    await expect(firstTag).toHaveAttribute('aria-pressed', 'false');
 
-    // 1. Click on react-select input
-    await tagSelectInput.click();
+    await firstTag.click();
 
-    // 2. Press ArrowDown to show the dropdown list and press Enter to select the first tag
-    await tagSelectInput.press('ArrowDown');
-    await tagSelectInput.press('Enter');
-
-    // 3. Verify that URL has updated with the tag parameter
+    await expect(firstTag).toHaveAttribute('aria-pressed', 'true');
     await expect(page).toHaveURL(/tag=[A-Za-z]+/);
   });
 

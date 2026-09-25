@@ -65,7 +65,6 @@
     "title": "Новости",
     "searchPlaceholder": "Поиск новостей...",
     "searchButton": "Поиск",
-    "tagPlaceholder": "Тег",
     "sortBy": "Сортировать по",
     "sortDate": "Новейшие",
     "sortRelevance": "Релевантность",
@@ -73,7 +72,8 @@
     "loadMore": "Загрузить еще",
     "metaDescription": "Новости кафедры: события, результаты исследований, конференции и объявления.",
     "dateFrom": "С даты",
-    "dateTo": "По дату"
+    "dateTo": "По дату",
+    "tagsLabel": "Темы"
   },
   "PublicationsPage": {
     "title": "Научные публикации",

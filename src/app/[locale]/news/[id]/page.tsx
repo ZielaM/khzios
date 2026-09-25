@@ -12,13 +12,8 @@ import {
   resolveTagName,
   LANGUAGE_NAMES,
 } from '@/lib/translations';
-import {
-  excerpt,
-  getPhotoAlt,
-  getPhotoUrl,
-  stripHtml,
-  estimateReadingTime,
-} from '@/lib/content-utils';
+import { excerpt, stripHtml, estimateReadingTime } from '@/lib/content-utils';
+import { getPhotoAlt, getPhotoUrl } from '@/lib/photos';
 import { formatDate } from '@/lib/dates';
 import { getNewsById } from '@/lib/news-queries';
 import {
@@ -218,7 +213,7 @@ export default async function NewsDetailsPage({
               src={mainPhoto}
               alt={mainPhotoAlt}
               fill
-              priority
+              preload
               className={style.heroImage}
               sizes="(max-width: 1200px) 100vw, 1200px"
             />

@@ -187,14 +187,37 @@ describe('NewsSearchForm', () => {
     // Unfocus
     fireEvent.blur(input);
   });
-  it('displays no options message when searching for non-existent tag', () => {
+  it('toggles tag chips and writes the selection to the URL', () => {
     render(<NewsSearchForm {...defaultProps} />);
-    const comboboxes = screen.getAllByRole('combobox');
-    const tagsInput = comboboxes[0];
+    const chip = screen.getByRole('button', {
+      name: defaultProps.availableTags[0].label,
+    });
+    expect(chip).toHaveAttribute('aria-pressed', 'false');
 
-    fireEvent.change(tagsInput, { target: { value: 'nonexistent' } });
+    fireEvent.click(chip);
+    expect(chip).toHaveAttribute('aria-pressed', 'true');
 
-    expect(screen.getByText('noResults')).toBeInTheDocument();
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+    expect(mockReplace.mock.calls.at(-1)?.[0]).toContain(
+      `tag=${encodeURIComponent(defaultProps.availableTags[0].value)}`
+    );
+
+    fireEvent.click(chip);
+    expect(chip).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('marks tags from the URL as selected and ignores unknown ones', () => {
+    render(
+      <NewsSearchForm
+        {...defaultProps}
+        initialTag={`${defaultProps.availableTags[0].value},nieistniejacy`}
+      />
+    );
+    expect(
+      screen.getByRole('button', { name: defaultProps.availableTags[0].label })
+    ).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('handles unmount during debounce and skeleton with query', () => {

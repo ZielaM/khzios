@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import type { NewsPhoto } from '@/lib/news-queries';
-import { getPhotoAlt } from '@/lib/content-utils';
+import { getPhotoAlt } from '@/lib/photos';
 import { useTranslations } from 'next-intl';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import style from './NewsGallery.module.scss';

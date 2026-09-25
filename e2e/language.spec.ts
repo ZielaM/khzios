@@ -26,7 +26,7 @@ test.describe('Language Switching & State Preservation Spec', () => {
     await expect(searchInput).toHaveAttribute('placeholder', 'Search news...');
 
     // 3. Locate and click the Polish (PL) switcher button using its inner text content
-    const plButton = page.locator('button', { hasText: 'PL' });
+    const plButton = page.getByRole('button', { name: / PL$/ });
     await expect(plButton).toBeVisible();
     await plButton.click();
 
@@ -48,8 +48,8 @@ test.describe('Language Switching & State Preservation Spec', () => {
     }
 
     // 6. Verify that the "PL" button is now disabled (active state) and "EN" is enabled
-    await expect(page.locator('button', { hasText: 'PL' })).toBeDisabled();
-    await expect(page.locator('button', { hasText: 'EN' })).toBeEnabled();
+    await expect(page.getByRole('button', { name: / PL$/ })).toBeDisabled();
+    await expect(page.getByRole('button', { name: / EN$/ })).toBeEnabled();
   });
 
   test('should strictly preserve active search, tag, page, and sort parameters during switch', async ({
@@ -73,7 +73,7 @@ test.describe('Language Switching & State Preservation Spec', () => {
     }
 
     // 2. Click the Polish switcher button (hasText: 'PL')
-    const plButton = page.locator('button', { hasText: 'PL' });
+    const plButton = page.getByRole('button', { name: / PL$/ });
     await expect(plButton).toBeVisible();
     await plButton.click();
 

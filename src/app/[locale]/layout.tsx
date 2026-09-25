@@ -14,6 +14,7 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { DEFAULT_OG_IMAGE, getAppUrl } from '@/lib/seo';
 import { getNavigationTeams } from '@/lib/team-queries';
+import { pickClientMessages } from '@/i18n/client-messages';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -106,7 +107,7 @@ export default async function RootLayout({
         />
       </head>
       <body className={inter.variable}>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider messages={pickClientMessages(messages)}>
           <ScrollRestoration />
           <a href="#main-content" className="skip-link">
             {tWcag('skipToMain')}

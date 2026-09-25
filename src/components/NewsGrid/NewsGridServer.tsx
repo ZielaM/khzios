@@ -54,12 +54,14 @@ export default async function NewsGridServer({
             <p>{t('noResults')}</p>
           </div>
         ) : (
-          data.map((item) => (
+          data.map((item, index) => (
             <NewsTile
               key={item.id}
               news={item}
               locale={locale}
               headingLevel={2}
+              // The first tile's image is the listing's largest paint
+              preload={index === 0}
             />
           ))
         )}

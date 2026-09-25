@@ -17,12 +17,8 @@ import {
   resolveTagName,
   LANGUAGE_NAMES,
 } from '@/lib/translations';
-import {
-  excerpt,
-  getPhotoAlt,
-  getPhotoUrl,
-  stripHtml,
-} from '@/lib/content-utils';
+import { excerpt, stripHtml } from '@/lib/content-utils';
+import { getPhotoAlt, getPhotoUrl } from '@/lib/photos';
 import { formatDate } from '@/lib/dates';
 import AnimateOnce from '@/components/AnimateOnce';
 

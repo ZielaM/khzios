@@ -7,12 +7,12 @@
 // This ensures that the URL always represents the exact view, making searches
 // shareable and bookmarkable, while triggering server-side data fetching.
 
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import style from './NewsSearchForm.module.scss';
 import { useTranslations } from 'next-intl';
 import { Search } from 'lucide-react';
-import Select, { StylesConfig } from 'react-select';
+import clsx from 'clsx';
 import { computeNextSearchParams } from '@/lib/url-utils';
 import { SortBy } from '@/types/search-types';
 
@@ -22,77 +22,11 @@ interface NewsSearchFormProps {
   initialSort: SortBy;
   initialDateFrom?: string;
   initialDateTo?: string;
-  availableTags: { value: string; label: string }[];
+  availableTags: TagOption[];
   isSkeleton?: boolean;
 }
 
-type OptionType = { value: string; label: string };
-
-// React-Select Custom Styling Configuration:
-// We use CSS Custom Properties (variables) defined in NewsSearchForm.module.scss
-// to hook into react-select's JS-in-CSS style object. This allows us to handle
-// themes like WCAG high-contrast mode purely through CSS without re-rendering JS.
-/* istanbul ignore next */
-const customSelectStyles: StylesConfig<OptionType, boolean> = {
-  control: (base, state) => ({
-    ...base,
-    padding: '0.2rem 0.5rem',
-    borderRadius: '8px',
-    borderColor: state.isFocused
-      ? 'var(--rs-border-focus)'
-      : 'var(--rs-border)',
-    boxShadow: state.isFocused ? 'var(--rs-shadow-focus)' : 'var(--rs-shadow)',
-    '&:hover': {
-      borderColor: 'var(--rs-border-focus)',
-    },
-    background: 'var(--rs-bg)',
-    cursor: 'pointer',
-    fontSize: '1rem',
-  }),
-  menu: (base) => ({
-    ...base,
-    zIndex: 50,
-    background: 'var(--rs-bg)',
-    border: '1px solid var(--rs-border)',
-  }),
-  option: (base, state) => ({
-    ...base,
-    backgroundColor: state.isSelected
-      ? 'var(--rs-option-selected)'
-      : state.isFocused
-        ? 'var(--rs-option-hover)'
-        : 'transparent',
-    color: state.isSelected
-      ? 'var(--rs-option-selected-text)'
-      : state.isFocused
-        ? 'var(--rs-option-hover-text)'
-        : 'var(--rs-text)',
-    cursor: 'pointer',
-  }),
-  singleValue: (base) => ({
-    ...base,
-    color: 'var(--rs-text)',
-  }),
-  multiValue: (base) => ({
-    ...base,
-    backgroundColor: 'var(--rs-multi-bg)',
-    borderRadius: '4px',
-    border: '1px solid var(--rs-border)',
-  }),
-  multiValueLabel: (base) => ({
-    ...base,
-    color: 'var(--rs-multi-text)',
-    fontWeight: 500,
-  }),
-  multiValueRemove: (base) => ({
-    ...base,
-    color: 'var(--rs-multi-text)',
-    '&:hover': {
-      backgroundColor: 'var(--rs-option-selected)',
-      color: 'var(--rs-option-selected-text)',
-    },
-  }),
-};
+type TagOption = { value: string; label: string };
 
 export default function NewsSearchForm({
   initialQuery,
@@ -119,22 +53,12 @@ export default function NewsSearchForm({
   const [query, setQuery] = useState(initialQuery || '');
   const [prevInitialQuery, setPrevInitialQuery] = useState(initialQuery);
 
-  const [selectedTags, setSelectedTags] = useState<OptionType[]>(
-    availableTags.filter((t) => initialTagsList.includes(t.value))
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    initialTagsList.filter((tag) => availableTags.some((t) => t.value === tag))
   );
   const [prevInitialTag, setPrevInitialTag] = useState(initialTag);
 
-  const sortOptions: OptionType[] = useMemo(
-    () => [
-      { value: 'relevance', label: t('sortRelevance') },
-      { value: 'date', label: t('sortDate') },
-    ],
-    [t]
-  );
-
-  const [selectedSort, setSelectedSort] = useState<OptionType>(
-    sortOptions.find((o) => o.value === initialSort) || sortOptions[0]
-  );
+  const [selectedSort, setSelectedSort] = useState<SortBy>(initialSort);
   const [prevInitialSort, setPrevInitialSort] = useState(initialSort);
 
   const [dateFrom, setDateFrom] = useState(initialDateFrom || '');
@@ -187,11 +111,11 @@ export default function NewsSearchForm({
         setDateTo(initialDateTo || '');
       }
       setSelectedTags(
-        availableTags.filter((t) => initialTagsList.includes(t.value))
+        initialTagsList.filter((tag) =>
+          availableTags.some((t) => t.value === tag)
+        )
       );
-      setSelectedSort(
-        sortOptions.find((o) => o.value === initialSort) || sortOptions[0]
-      );
+      setSelectedSort(initialSort);
     }
   }
 
@@ -233,13 +157,7 @@ export default function NewsSearchForm({
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       /* istanbul ignore next */
-      applyChanges(
-        query,
-        selectedTags.map((t) => t.value),
-        selectedSort.value,
-        dateFrom,
-        dateTo
-      );
+      applyChanges(query, selectedTags, selectedSort, dateFrom, dateTo);
     }, 500);
     return () => {
       clearTimeout(timerRef.current as NodeJS.Timeout);
@@ -302,7 +220,7 @@ export default function NewsSearchForm({
                 // Quality of life feature: if the user starts typing a query,
                 // automatically switch sort method to relevance for better initial results.
                 if (!query && val) {
-                  setSelectedSort(sortOptions[0]);
+                  setSelectedSort('relevance');
                 }
                 setQuery(val);
               }}
@@ -311,41 +229,44 @@ export default function NewsSearchForm({
             />
           </div>
 
-          <div className={style.selectWrapper}>
-            <Select
-              instanceId="news-tags-select"
-              isMulti
-              isSearchable={!isSkeleton}
-              isDisabled={isSkeleton}
-              placeholder={t('tagPlaceholder')}
-              aria-label={isSkeleton ? undefined : t('tagPlaceholder')}
-              options={availableTags}
-              value={selectedTags}
-              /* istanbul ignore next */
-              onChange={(newValue) => setSelectedTags(newValue as OptionType[])}
-              styles={customSelectStyles}
-              noOptionsMessage={() => t('noResults')}
-              tabIndex={!isExpanded ? -1 : 0}
-            />
-          </div>
+          <fieldset className={style.tagFilter} disabled={isSkeleton}>
+            <legend className={style.visuallyHidden}>{t('tagsLabel')}</legend>
+            {availableTags.map((tag) => {
+              const selected = selectedTags.includes(tag.value);
+              return (
+                <button
+                  key={tag.value}
+                  type="button"
+                  aria-pressed={selected}
+                  tabIndex={!isExpanded ? -1 : 0}
+                  className={clsx(style.tagChip, selected && style.selected)}
+                  onClick={() =>
+                    setSelectedTags((current) =>
+                      selected
+                        ? current.filter((v) => v !== tag.value)
+                        : [...current, tag.value]
+                    )
+                  }
+                >
+                  {tag.label}
+                </button>
+              );
+            })}
+          </fieldset>
 
-          {/* Sorting is only revealed if there is an active search query 
-              to avoid confusing the user with useless relevance sorts. */}
+          {/* Relevance only makes sense for a text query */}
           {query && (
-            <div className={style.selectWrapper}>
-              <Select
-                instanceId="news-sort-select"
-                isSearchable={false}
-                isDisabled={isSkeleton}
-                aria-label={isSkeleton ? undefined : t('sortBy')}
-                options={sortOptions}
-                value={selectedSort}
-                /* istanbul ignore next */
-                onChange={(newValue) => setSelectedSort(newValue as OptionType)}
-                styles={customSelectStyles}
-                tabIndex={!isExpanded ? -1 : 0}
-              />
-            </div>
+            <select
+              className={style.sortSelect}
+              aria-label={t('sortBy')}
+              value={selectedSort}
+              disabled={isSkeleton}
+              tabIndex={!isExpanded ? -1 : 0}
+              onChange={(e) => setSelectedSort(e.target.value as SortBy)}
+            >
+              <option value="relevance">{t('sortRelevance')}</option>
+              <option value="date">{t('sortDate')}</option>
+            </select>
           )}
 
           <div className={style.dateFilter}>

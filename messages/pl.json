@@ -65,7 +65,6 @@
     "title": "Aktualności",
     "searchPlaceholder": "Szukaj aktualności...",
     "searchButton": "Szukaj",
-    "tagPlaceholder": "Tag (np. edukacja)",
     "sortBy": "Sortuj według",
     "sortDate": "Najnowsze",
     "sortRelevance": "Trafność",
@@ -73,7 +72,8 @@
     "loadMore": "Pokaż więcej",
     "metaDescription": "Aktualności Katedry Hodowli Zwierząt i Oceny Surowców: wydarzenia, wyniki badań, konferencje i komunikaty.",
     "dateFrom": "Od dnia",
-    "dateTo": "Do dnia"
+    "dateTo": "Do dnia",
+    "tagsLabel": "Tematy"
   },
   "PublicationsPage": {
     "title": "Publikacje naukowe",

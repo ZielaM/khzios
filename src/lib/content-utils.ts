@@ -35,21 +35,26 @@ export function getPhotoAlt(
 }
 
 /**
- * Strips all HTML tags from a string using DOMPurify with no allowed tags.
- * More robust than regex — correctly handles nested tags, HTML entities
- * (&amp;, &lt;), and malformed markup.
- * Useful for generating clean alt text and meta descriptions.
+ * Plain text of an HTML fragment: tags removed, <script>/<style> contents
+ * dropped and entities decoded. Render the result as text, never as HTML.
  */
 export function stripHtml(html: string): string {
   if (typeof html !== 'string') {
     return '';
   }
-  // Pass 1: Forbid tags entirely (removes content)
-  const cleanHtml = DOMPurify.sanitize(html, {
+  const fragment = DOMPurify.sanitize(html, {
     FORBID_TAGS: ['style', 'script'],
+    RETURN_DOM_FRAGMENT: true,
   });
-  // Pass 2: Strip all remaining HTML tags
-  return DOMPurify.sanitize(cleanHtml, { ALLOWED_TAGS: [] });
+  return (fragment.textContent ?? '').replace(/\s+/g, ' ').trim();
+}
+
+/** Shortens plain text to at most `maxLength` characters on a word boundary. */
+export function excerpt(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text;
+  const cut = text.slice(0, maxLength);
+  const lastSpace = cut.lastIndexOf(' ');
+  return `${(lastSpace > maxLength * 0.6 ? cut.slice(0, lastSpace) : cut).replace(/[\s,.;:–-]+$/, '')}…`;
 }
 
 /**

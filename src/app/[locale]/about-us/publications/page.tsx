@@ -6,6 +6,7 @@ import PublicationsSearchForm from '@/components/PublicationsSearchForm';
 import PublicationsListServer from '@/components/PublicationsListServer';
 import PublicationsListSkeleton from '@/components/PublicationsListSkeleton';
 import { LanguageCode } from '@/types/search-types';
+import { getPathname } from '@/i18n/routing';
 import style from './page.module.scss';
 
 import { Metadata } from 'next';
@@ -71,7 +72,12 @@ export default async function PublicationsPage({
       <PublicationsSearchForm initialQuery={query} />
 
       <Suspense key={suspenseKey} fallback={<PublicationsListSkeleton />}>
-        <PublicationsListServer query={query} locale={locale} page={page} />
+        <PublicationsListServer
+          query={query}
+          locale={locale}
+          page={page}
+          pathname={getPathname({ locale, href: '/about-us/publications' })}
+        />
       </Suspense>
     </div>
   );

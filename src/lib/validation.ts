@@ -1,7 +1,8 @@
 import { SearchParams, ValidatedSearchParams } from '@/types/search-types';
 import { FALLBACK_CHAIN } from './translations';
 import { createLogger } from '@/lib/logger';
-import { auditInput, auditId } from '@/lib/security';
+import { auditInput } from '@/lib/security';
+import { parseDateInput, startOfDayOffset } from '@/lib/dates';
 
 const log = createLogger('validation');
 
@@ -15,18 +16,16 @@ export function validateSearchParams(
     page = 1,
     limit = 12,
     sortBy = 'date',
-    cursorId,
     dateFrom,
     dateTo,
   } = params;
 
-  // Runtime type guards — Server Actions can be called directly via POST,
-  // bypassing TypeScript entirely. Any param could be any type.
+  // Values come from the URL, so anything may arrive here (arrays for
+  // repeated keys, garbage from crawlers); coerce defensively.
   const rawPage = typeof page === 'number' ? page : Number(page);
   const rawLimit = typeof limit === 'number' ? limit : Number(limit);
   const rawQuery = typeof query === 'string' ? query : undefined;
   const rawTag = typeof tag === 'string' ? tag : undefined;
-  const safeCursorId = typeof cursorId === 'string' ? cursorId : undefined;
 
   // Max 1000 pages to prevent extreme OFFSET
   // Guard against NaN — Math.max/min propagate NaN instead of clamping it
@@ -57,25 +56,6 @@ export function validateSearchParams(
   // Scan tag filter for injection patterns
   if (rawTag) {
     auditInput('tag_filter', rawTag, { language });
-  }
-
-  // Validate cursor ID format (should be a UUID — anything else is suspicious)
-  if (safeCursorId) {
-    auditId('cursor_id', safeCursorId, { language });
-  }
-
-  // Detect non-string types passed to string params (Server Action abuse)
-  if (query !== undefined && typeof query !== 'string') {
-    log.warn(
-      { receivedType: typeof query },
-      '⚠ Non-string query parameter received — possible Server Action abuse'
-    );
-  }
-  if (tag !== undefined && typeof tag !== 'string') {
-    log.warn(
-      { receivedType: typeof tag },
-      '⚠ Non-string tag parameter received — possible Server Action abuse'
-    );
   }
 
   // ── Sanitisation ───────────────────────────────────────────────────────
@@ -124,11 +104,7 @@ export function validateSearchParams(
     }
   })();
 
-  const parseDate = (d: unknown) => {
-    if (!d || typeof d !== 'string') return undefined;
-    const parsed = new Date(d);
-    return isNaN(parsed.getTime()) ? undefined : parsed;
-  };
+  const lastDay = parseDateInput(dateTo);
 
   return {
     safePage,
@@ -139,8 +115,8 @@ export function validateSearchParams(
     fallbackLanguages,
     dictionary,
     safeSortBy: sortBy === 'relevance' ? 'relevance' : 'date',
-    safeCursorId,
-    safeDateFrom: parseDate(dateFrom),
-    safeDateTo: parseDate(dateTo),
+    safeDateFrom: parseDateInput(dateFrom),
+    // The whole `dateTo` day is included in the results
+    safeDateBefore: lastDay && startOfDayOffset(lastDay, 1),
   };
 }

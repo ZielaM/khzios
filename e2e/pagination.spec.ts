@@ -9,115 +9,63 @@ test.describe('Search Pagination Spec', () => {
     await page.waitForLoadState('load');
   });
 
-  test('should disable previous button on page 1 and allow navigating to page 2', async ({
-    page,
-  }) => {
-    // 1. Locate pagination navigation bar
+  test('should link to page 2 and mark the current page', async ({ page }) => {
     const paginationNav = page.getByRole('navigation', { name: 'Pagination' });
     await expect(paginationNav).toBeVisible();
 
-    // 2. "Previous page" button should be disabled on the first page
-    const prevButton = page.getByRole('button', { name: 'Previous page' });
-    await expect(prevButton).toBeVisible();
-    await expect(prevButton).toBeDisabled();
+    // There is no previous page on page 1
+    await expect(
+      paginationNav.getByRole('link', { name: 'Previous page' })
+    ).toHaveCount(0);
+    await expect(
+      paginationNav.getByRole('link', { name: 'Page 1' })
+    ).toHaveAttribute('aria-current', 'page');
 
-    // 3. Current page indicator (Page 1) should have aria-current="page"
-    const page1Indicator = page.getByRole('button', { name: 'Page 1' });
-    await expect(page1Indicator).toHaveAttribute('aria-current', 'page');
+    await paginationNav.getByRole('link', { name: 'Page 2' }).click();
 
-    // 4. Click on Page 2 button
-    const page2Button = page.getByRole('button', { name: 'Page 2' });
-    await expect(page2Button).toBeVisible();
-    await page2Button.click();
-
-    // 5. Expect the URL to update to page=2
     await expect(page).toHaveURL(/page=2/);
-
-    // 6. On Page 2, Page 2 button should now show aria-current="page"
-    await expect(page.getByRole('button', { name: 'Page 2' })).toHaveAttribute(
-      'aria-current',
-      'page'
-    );
-
-    // 7. On Page 2, the "Previous page" button should become active and enabled
-    const activePrevButton = page.getByRole('button', {
-      name: 'Previous page',
-    });
-    await expect(activePrevButton).not.toBeDisabled();
+    await expect(
+      paginationNav.getByRole('link', { name: 'Page 2' })
+    ).toHaveAttribute('aria-current', 'page');
+    await expect(
+      paginationNav.getByRole('link', { name: 'Previous page' })
+    ).toBeVisible();
   });
 
-  test('should navigate using previous and next pagination controls', async ({
-    page,
-  }) => {
-    // 1. Start on page 2 directly
+  test('should navigate using previous and next links', async ({ page }) => {
     await page.goto('/en/about-us/publications?page=2');
-    await page.waitForLoadState('load');
+    const paginationNav = page.getByRole('navigation', { name: 'Pagination' });
 
-    // Wait for page load state to stabilize
-    await expect(page).toHaveURL(/page=2/);
-
-    // 2. Click "Previous page" button
-    const prevButton = page.getByRole('button', { name: 'Previous page' });
-    await prevButton.click();
-
-    // 3. Expect URL to change back to page=1 (removed from url)
+    await paginationNav.getByRole('link', { name: 'Previous page' }).click();
     await expect(page).not.toHaveURL(/page=/);
 
-    // 4. Click "Next page" button
-    const nextButton = page.getByRole('button', { name: 'Next page' });
-    await nextButton.click();
-
-    // 5. Expect URL to go back to page=2
+    await paginationNav.getByRole('link', { name: 'Next page' }).click();
     await expect(page).toHaveURL(/page=2/);
   });
 
-  test('should allow going to last page dynamically and disable next button', async ({
+  test('should reach the last page, which has no next link', async ({
     page,
   }) => {
-    // 1. Wait for the pagination navigation bar to be visible
     const paginationNav = page.getByRole('navigation', { name: 'Pagination' });
-    await expect(paginationNav).toBeVisible();
-
-    // 2. Locate all numbered page buttons inside the pagination (filtering by numeric text)
-    const numberedButtons = paginationNav
-      .getByRole('button')
+    const numbered = paginationNav
+      .getByRole('link')
       .filter({ hasText: /^\d+$/ });
+    await expect(numbered.first()).toBeVisible();
 
-    // Wait for the first button to be visible to ensure DOM is fully hydrated/rendered
-    await expect(numberedButtons.first()).toBeVisible();
-
-    const count = await numberedButtons.count();
-    expect(count).toBeGreaterThan(0);
-
-    // 3. Select the last numbered page button
-    const lastPageButton = numberedButtons.nth(count - 1);
-    await expect(lastPageButton).toBeVisible();
-
-    // 4. Extract the last page number dynamically from its text content
-    const lastPageNumStr = await lastPageButton.textContent();
-    const lastPageNumber = lastPageNumStr?.trim() || '';
+    const lastPageNumber = ((await numbered.last().textContent()) ?? '').trim();
     expect(lastPageNumber).not.toBe('');
 
-    // 5. Click the last page button to navigate
-    await lastPageButton.click();
-
-    // 6. Expect URL to update to the last page number exactly
+    await numbered.last().click();
     await expect(page).toHaveURL(new RegExp(`page=${lastPageNumber}`));
 
-    // 7. On the last page, the "Next page" button should be disabled
-    const nextButton = page.getByRole('button', { name: 'Next page' });
-    await expect(nextButton).toBeDisabled();
+    await expect(
+      paginationNav.getByRole('link', { name: 'Next page' })
+    ).toHaveCount(0);
 
-    // 8. On the last page, the "Previous page" button should be enabled
-    const prevButton = page.getByRole('button', { name: 'Previous page' });
-    await expect(prevButton).toBeEnabled();
-
-    // 9. Click "Previous page" to go back
-    await prevButton.click();
-
-    // 10. Verify we successfully transitioned to the page before the last page
-    const expectedPrevPage = Number(lastPageNumber) - 1;
-    await expect(page).toHaveURL(new RegExp(`page=${expectedPrevPage}`));
+    await paginationNav.getByRole('link', { name: 'Previous page' }).click();
+    await expect(page).toHaveURL(
+      new RegExp(`page=${Number(lastPageNumber) - 1}`)
+    );
   });
 
   test('should not overflow on mobile viewports', async ({ page }) => {

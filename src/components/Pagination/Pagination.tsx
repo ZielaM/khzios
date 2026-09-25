@@ -1,117 +1,121 @@
-'use client';
-
-// Pagination Component Architecture:
-// This is a client-side component that modifies the `page` URL search parameter.
-// It relies on Next.js `useRouter` to push state changes. The actual data fetching
-// and mathematical slicing happens on the server (e.g. in NewsGridServer),
-// which reads the updated `page` parameter from the URL.
-
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import clsx from 'clsx';
-import style from './Pagination.module.scss';
+import { getTranslations } from 'next-intl/server';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import style from './Pagination.module.scss';
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  /** Localized path of the listing, e.g. `/pl/aktualnosci` */
+  pathname: string;
+  /** Current search parameters; kept on every page link */
+  params: Record<string, string | undefined>;
 }
 
-export default function Pagination({
+type PageItem = number | 'gap';
+
+/** First, last, current and its neighbours, with gaps in between. */
+export function pageItems(currentPage: number, totalPages: number): PageItem[] {
+  const pages = new Set([
+    1,
+    totalPages,
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+  ]);
+  const sorted = [...pages]
+    .filter((p) => p >= 1 && p <= totalPages)
+    .sort((a, b) => a - b);
+
+  const items: PageItem[] = [];
+  sorted.forEach((page, i) => {
+    const previous = sorted[i - 1];
+    if (previous !== undefined && page - previous === 2) items.push(page - 1);
+    else if (previous !== undefined && page - previous > 2) items.push('gap');
+    items.push(page);
+  });
+  return items;
+}
+
+/**
+ * Page links for server-rendered listings. Real links (rather than buttons)
+ * let crawlers reach every page and keep each page bookmarkable.
+ */
+export default async function Pagination({
   currentPage,
   totalPages,
+  pathname,
+  params,
 }: PaginationProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const t = useTranslations('Pagination');
+  if (totalPages <= 1) return null;
 
-  // URL State Mutation:
-  // We extract the current search params, modify only the 'page' value,
-  // and push the new URL. This preserves active filters or sort methods.
-  // `scroll: true` brings the user back to the top of the page when changing pages.
-  const handlePageChange = (page: number) => {
-    if (page < 1 || page > totalPages) return;
+  const t = await getTranslations('Pagination');
 
-    const params = new URLSearchParams(searchParams.toString());
-    if (page === 1) {
-      params.delete('page');
-    } else {
-      params.set('page', page.toString());
+  const hrefFor = (page: number) => {
+    const query = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+      if (value && key !== 'page') query.set(key, value);
     }
-
-    router.push(`${pathname}?${params.toString()}`, { scroll: true });
+    if (page > 1) query.set('page', String(page));
+    const qs = query.toString();
+    return qs ? `${pathname}?${qs}` : pathname;
   };
 
-  // Smart Page Range Generation Logic:
-  // Instead of listing 50 buttons for 50 pages, we calculate a window.
-  // We always show the first page, the last page, the current page,
-  // and the immediate left/right neighbors.
-  const pages = [];
-  for (let i = 1; i <= totalPages; i++) {
-    if (
-      i === 1 ||
-      i === totalPages ||
-      (i >= currentPage - 1 && i <= currentPage + 1)
-    ) {
-      pages.push(i);
-    } else if (i === currentPage - 2 || i === currentPage + 2) {
-      // If a gap exists, insert a placeholder "..."
-      pages.push('...');
-    }
-  }
-
-  // Deduplication:
-  // If the gap between pages is very small, the loop might insert multiple
-  // "..." indicators consecutively. This filter removes duplicates.
-  const filteredPages = pages.filter(
-    (p, i, arr) => p !== '...' || arr[i - 1] !== '...'
-  );
-
-  // If there is only 1 page, pagination is meaningless, so hide the component entirely.
-  if (totalPages <= 1) return null;
+  const edge = (page: number, label: string, icon: React.ReactNode) =>
+    page < 1 || page > totalPages ? (
+      <span
+        className={clsx(style.navButton, style.disabled)}
+        aria-hidden="true"
+      >
+        {icon}
+      </span>
+    ) : (
+      <Link href={hrefFor(page)} className={style.navButton} aria-label={label}>
+        {icon}
+      </Link>
+    );
 
   return (
     <nav aria-label={t('navLabel')} className={style.pagination}>
-      {/* Previous Button */}
-      <button
-        className={style.navButton}
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        aria-label={t('prev')}
-      >
-        <ChevronLeft size={20} aria-hidden="true" />
-      </button>
+      {edge(
+        currentPage - 1,
+        t('prev'),
+        <ChevronLeft aria-hidden="true" size={20} />
+      )}
 
-      {/* Numbered Page Buttons & Ellipses */}
-      {filteredPages.map((p, i) => (
-        <button
-          key={i}
-          className={clsx(
-            style.pageButton,
-            p === currentPage && style.active,
-            p === '...' && style.dots
-          )}
-          /* istanbul ignore next */
-          onClick={() => typeof p === 'number' && handlePageChange(p)}
-          disabled={p === '...'}
-          // Screen readers need specific context for "..." vs "Page X"
-          aria-label={p === '...' ? t('more') : t('page', { page: p })}
-          aria-current={p === currentPage ? 'page' : undefined}
-        >
-          {p}
-        </button>
-      ))}
+      <ul className={style.pages}>
+        {pageItems(currentPage, totalPages).map((item, i) => (
+          <li key={item === 'gap' ? `gap-${i}` : item}>
+            {item === 'gap' ? (
+              <span
+                className={clsx(style.pageButton, style.dots)}
+                aria-hidden="true"
+              >
+                …
+              </span>
+            ) : (
+              <Link
+                href={hrefFor(item)}
+                className={clsx(
+                  style.pageButton,
+                  item === currentPage && style.active
+                )}
+                aria-label={t('page', { page: item })}
+                aria-current={item === currentPage ? 'page' : undefined}
+              >
+                {item}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
 
-      {/* Next Button */}
-      <button
-        className={style.navButton}
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        aria-label={t('next')}
-      >
+      {edge(
+        currentPage + 1,
+        t('next'),
         <ChevronRight aria-hidden="true" size={20} />
-      </button>
+      )}
     </nav>
   );
 }

@@ -7,6 +7,7 @@ import NewsSearchForm from '@/components/NewsSearchForm';
 import NewsGridServer from '@/components/NewsGrid/NewsGridServer';
 import NewsGridSkeleton from '@/components/NewsGrid/NewsGridSkeleton';
 import { resolveTagName } from '@/lib/translations';
+import { getPathname } from '@/i18n/routing';
 import { LanguageCode, SortBy } from '@/types/search-types';
 import style from './page.module.scss';
 
@@ -53,11 +54,9 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
       ? parseInt(resolvedSearchParams.page, 10)
       : NaN;
   const page = Number.isFinite(parsedPage) ? parsedPage : 1;
-  const sortBy =
-    typeof resolvedSearchParams.sort === 'string' &&
-    ['date', 'relevance'].includes(resolvedSearchParams.sort)
-      ? (resolvedSearchParams.sort as SortBy)
-      : 'relevance';
+  // The search form only writes `sort=relevance`; no parameter means newest first
+  const sortBy: SortBy =
+    resolvedSearchParams.sort === 'relevance' ? 'relevance' : 'date';
 
   const dateFrom =
     typeof resolvedSearchParams.dateFrom === 'string'
@@ -111,6 +110,7 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
         <NewsGridServer
           query={query}
           locale={locale}
+          pathname={getPathname({ locale, href: '/news' })}
           tag={tag}
           page={page}
           sortBy={sortBy}

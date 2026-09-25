@@ -20,12 +20,12 @@ describe('NewsSearchForm', () => {
     ],
   };
 
-  const mockPush = vi.fn();
+  const mockReplace = vi.fn();
 
   beforeEach(() => {
     vi.mocked(useRouter).mockReturnValue({
-      push: mockPush,
-      replace: vi.fn(),
+      push: vi.fn(),
+      replace: mockReplace,
       back: vi.fn(),
       forward: vi.fn(),
       refresh: vi.fn(),
@@ -49,7 +49,7 @@ describe('NewsSearchForm', () => {
     expect(input).toHaveValue('climate change');
   });
 
-  it('debounces the search input and pushes to router after 500ms', () => {
+  it('debounces the search input and replaces the URL after 500ms', () => {
     vi.mocked(useSearchParams).mockReturnValue(
       new URLSearchParams() as unknown as ReturnType<typeof useSearchParams>
     );
@@ -61,14 +61,14 @@ describe('NewsSearchForm', () => {
     // User types "global warming"
     fireEvent.change(input, { target: { value: 'global warming' } });
 
-    // Right after typing, router.push should not be called yet (debouncing)
-    expect(mockPush).not.toHaveBeenCalled();
+    // Right after typing, router.replace should not be called yet (debouncing)
+    expect(mockReplace).not.toHaveBeenCalled();
 
     // Advance time by 300ms
     act(() => {
       vi.advanceTimersByTime(300);
     });
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
 
     // Advance time past 500ms total
     act(() => {
@@ -76,15 +76,15 @@ describe('NewsSearchForm', () => {
     });
 
     // Now it should be called
-    expect(mockPush).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledTimes(1);
 
     // Check if the correct URL with query params is pushed
     // URL will look like: /en/news?query=global+warming&sort=date
-    const pushCallArg = mockPush.mock.calls[0][0];
-    expect(pushCallArg).toContain('query=global+warming');
+    const replaceCallArg = mockReplace.mock.calls[0][0];
+    expect(replaceCallArg).toContain('query=global+warming');
   });
 
-  it('does not trigger router.push if the query has not actually changed after trim', () => {
+  it('does not trigger router.replace if the query has not actually changed after trim', () => {
     // Current URL has query=test
     vi.mocked(useSearchParams).mockReturnValue(
       new URLSearchParams('query=test&sort=date') as unknown as ReturnType<
@@ -103,7 +103,7 @@ describe('NewsSearchForm', () => {
       vi.advanceTimersByTime(500);
     });
 
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 
   it('resets pagination when changing search parameters', () => {
@@ -124,11 +124,11 @@ describe('NewsSearchForm', () => {
       vi.advanceTimersByTime(500);
     });
 
-    expect(mockPush).toHaveBeenCalledTimes(1);
-    const pushedUrl = mockPush.mock.calls[0][0];
+    expect(mockReplace).toHaveBeenCalledTimes(1);
+    const replacedUrl = mockReplace.mock.calls[0][0];
     // Page 3 should be removed
-    expect(pushedUrl).not.toContain('page=3');
-    expect(pushedUrl).toContain('query=new+search');
+    expect(replacedUrl).not.toContain('page=3');
+    expect(replacedUrl).toContain('query=new+search');
   });
 
   it('renders skeleton correctly', () => {
@@ -331,9 +331,9 @@ describe('NewsSearchForm', () => {
       vi.advanceTimersByTime(500);
     });
 
-    expect(mockPush).toHaveBeenCalledTimes(1);
-    const pushedUrl = mockPush.mock.calls[0][0];
-    expect(pushedUrl).toContain('dateFrom=2026-02-01');
-    expect(pushedUrl).toContain('dateTo=2026-11-30');
+    expect(mockReplace).toHaveBeenCalledTimes(1);
+    const replacedUrl = mockReplace.mock.calls[0][0];
+    expect(replacedUrl).toContain('dateFrom=2026-02-01');
+    expect(replacedUrl).toContain('dateTo=2026-11-30');
   });
 });

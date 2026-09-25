@@ -249,33 +249,31 @@ describe('validateSearchParams', () => {
     });
   });
 
-  describe('cursorId and dates', () => {
-    it('should parse valid dates and cursorId', () => {
+  describe('dates', () => {
+    it('should turn a date range into Polish day boundaries, including the whole last day', () => {
       const result = validateSearchParams({
         language: 'en',
-        cursorId: 'uuid-1234',
-        dateFrom: '2026-01-01T00:00:00Z',
-        dateTo: '2026-12-31T23:59:59Z',
+        dateFrom: '2026-09-01',
+        dateTo: '2026-09-05',
       });
-      expect(result.safeCursorId).toBe('uuid-1234');
-      expect(result.safeDateFrom?.getTime()).toBe(
-        new Date('2026-01-01T00:00:00Z').getTime()
+      // Midnight in Poland (UTC+2 in September)
+      expect(result.safeDateFrom?.toISOString()).toBe(
+        '2026-08-31T22:00:00.000Z'
       );
-      expect(result.safeDateTo?.getTime()).toBe(
-        new Date('2026-12-31T23:59:59Z').getTime()
+      // Exclusive bound: the start of 6 September, so all of the 5th matches
+      expect(result.safeDateBefore?.toISOString()).toBe(
+        '2026-09-05T22:00:00.000Z'
       );
     });
 
-    it('should handle invalid dates and missing cursorId gracefully', () => {
+    it('should ignore values that are not YYYY-MM-DD dates', () => {
       const result = validateSearchParams({
         language: 'en',
-        cursorId: 123 as unknown as string,
         dateFrom: 'not-a-date',
         dateTo: { invalid: true } as unknown as string,
       });
-      expect(result.safeCursorId).toBeUndefined();
       expect(result.safeDateFrom).toBeUndefined();
-      expect(result.safeDateTo).toBeUndefined();
+      expect(result.safeDateBefore).toBeUndefined();
     });
   });
 

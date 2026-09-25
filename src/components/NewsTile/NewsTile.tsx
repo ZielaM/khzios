@@ -17,7 +17,12 @@ import {
   resolveTagName,
   LANGUAGE_NAMES,
 } from '@/lib/translations';
-import { getPhotoAlt, getPhotoUrl, stripHtml } from '@/lib/content-utils';
+import {
+  excerpt,
+  getPhotoAlt,
+  getPhotoUrl,
+  stripHtml,
+} from '@/lib/content-utils';
 import { formatDate } from '@/lib/dates';
 import AnimateOnce from '@/components/AnimateOnce';
 
@@ -57,10 +62,15 @@ export default function NewsTile({
     { ALLOWED_TAGS: ['mark'] }
   );
 
-  const cleanContent = DOMPurify.sanitize(
-    DOMPurify.sanitize(content, { FORBID_TAGS: ['style', 'script'] }),
-    { ALLOWED_TAGS: ['mark'] }
-  );
+  // Search results carry a short ts_headline snippet with <mark> highlights;
+  // regular listings get a plain-text excerpt instead of the whole article.
+  const isHighlighted = content.includes('<mark>');
+  const description = isHighlighted
+    ? DOMPurify.sanitize(
+        DOMPurify.sanitize(content, { FORBID_TAGS: ['style', 'script'] }),
+        { ALLOWED_TAGS: ['mark'] }
+      )
+    : excerpt(stripHtml(content), 220);
 
   // Re-use standard fallback logic for each individual tag
   const getTagName = (tag: NewsWithRelations['tags'][number]) =>
@@ -123,12 +133,14 @@ export default function NewsTile({
               dangerouslySetInnerHTML={{ __html: cleanTitle }}
             />
 
-            <p
-              className={clsx(style.description, {
-                [style.highlighted]: cleanContent.includes('<mark>'),
-              })}
-              dangerouslySetInnerHTML={{ __html: cleanContent }}
-            />
+            {isHighlighted ? (
+              <p
+                className={clsx(style.description, style.highlighted)}
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+            ) : (
+              <p className={style.description}>{description}</p>
+            )}
 
             <div className={style.readMore}>
               {t('readMore')}

@@ -216,7 +216,10 @@ export default function NewsSearchForm({
 
       // Only push router state if a param was actually modified.
       if (nextParams) {
-        router.push(`${pathname}?${nextParams.toString()}`, { scroll: false });
+        // replace: intermediate queries typed by the user are not history entries
+        router.replace(`${pathname}?${nextParams.toString()}`, {
+          scroll: false,
+        });
       }
     },
     [searchParams, pathname, router]

@@ -1,4 +1,4 @@
-import { searchPublications } from '@/actions/search-publications';
+import { searchPublications } from '@/lib/search/publications';
 import Pagination from '@/components/Pagination';
 import style from './PublicationsListServer.module.scss';
 import { SearchX, ExternalLink, ArrowRight } from 'lucide-react';
@@ -11,12 +11,15 @@ interface PublicationsListServerProps {
   query?: string;
   locale: LanguageCode;
   page: number;
+  /** Localized path of the listing, used for pagination links */
+  pathname: string;
 }
 
 export default async function PublicationsListServer({
   query,
   locale,
   page,
+  pathname,
 }: PublicationsListServerProps) {
   const { data, totalPages } = await searchPublications({
     query,
@@ -100,7 +103,12 @@ export default async function PublicationsListServer({
         )}
       </div>
 
-      <Pagination currentPage={page} totalPages={totalPages} />
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        pathname={pathname}
+        params={{ query }}
+      />
     </>
   );
 }

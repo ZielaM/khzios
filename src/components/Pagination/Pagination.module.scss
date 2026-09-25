@@ -1,3 +1,5 @@
+@use '@/styles/variables' as *;
+
 // Main pagination container
 .pagination {
   display: flex;
@@ -13,6 +15,13 @@
   }
 }
 
+.pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: inherit;
+  list-style: none;
+}
+
 // Shared styling for both Previous/Next nav buttons and numbered page buttons
 .navButton,
 .pageButton {
@@ -22,10 +31,11 @@
   min-width: 2.5rem; // Ensure single digits look like squares/circles rather than skinny rectangles
   height: 2.5rem;
   padding: 0 0.5rem;
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border: 1px solid var(--border-subtle);
   background: var(--background);
-  color: var(--text-primary);
-  border-radius: var(--radius-md, 8px);
+  color: var(--foreground);
+  border-radius: $radius-md;
+  text-decoration: none;
   cursor: pointer;
   font-weight: 500;
   font-size: 1em;
@@ -42,14 +52,14 @@
     font-size: 0.875em;
   }
 
-  &:hover:not(:disabled) {
-    background: var(--surface-alt, #f8f9fa);
+  &:hover:not(.disabled) {
+    background: var(--surface-muted);
     border-color: var(--color-primary);
   }
 
-  &:disabled {
+  &.disabled {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: default;
   }
 
   outline: none; // Reset native outline
@@ -65,7 +75,7 @@
     background: transparent;
     color: var(--foreground);
 
-    &:hover:not(:disabled) {
+    &:hover:not(.disabled) {
       background: var(--foreground);
       color: var(--background);
     }
@@ -84,7 +94,7 @@
   font-weight: 700;
   box-shadow: 0 2px 6px rgba(27, 94, 59, 0.25);
 
-  &:hover:not(:disabled) {
+  &:hover:not(.disabled) {
     background: var(--color-secondary);
     border-color: var(--color-secondary);
   }
@@ -95,7 +105,7 @@
     border-color: var(--foreground);
     box-shadow: none;
 
-    &:hover:not(:disabled) {
+    &:hover:not(.disabled) {
       background: var(--foreground);
       color: var(--background);
     }

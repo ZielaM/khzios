@@ -1,10 +1,16 @@
-import { searchPublishedNews } from '@/actions/search';
-import NewsGridClient from './NewsGridClient';
-import { LanguageCode, SortBy } from '@/types/search-types';
+import { getTranslations } from 'next-intl/server';
+import { SearchX } from 'lucide-react';
+import { searchNews } from '@/lib/search/news';
+import NewsTile from '@/components/NewsTile';
+import Pagination from '@/components/Pagination';
+import type { LanguageCode, SortBy } from '@/types/search-types';
+import style from './NewsGrid.module.scss';
 
 interface NewsGridServerProps {
-  query?: string;
   locale: LanguageCode;
+  /** Localized path of the news listing, used for pagination links */
+  pathname: string;
+  query?: string;
   tag?: string;
   page: number;
   sortBy: SortBy;
@@ -13,37 +19,60 @@ interface NewsGridServerProps {
 }
 
 export default async function NewsGridServer({
-  query,
   locale,
+  pathname,
+  query,
   tag,
   page,
   sortBy,
   dateFrom,
   dateTo,
 }: NewsGridServerProps) {
-  const { data, totalPages } = await searchPublishedNews({
-    query,
-    language: locale,
-    tag,
-    page,
-    sortBy,
-    dateFrom,
-    dateTo,
-  });
+  const [{ data, totalPages }, t] = await Promise.all([
+    searchNews({
+      query,
+      language: locale,
+      tag,
+      page,
+      sortBy,
+      dateFrom,
+      dateTo,
+    }),
+    getTranslations('NewsPage'),
+  ]);
 
   return (
-    <NewsGridClient
-      initialData={data}
-      totalPages={totalPages}
-      searchParams={{
-        query,
-        language: locale,
-        tag,
-        page,
-        sortBy,
-        dateFrom,
-        dateTo,
-      }}
-    />
+    <>
+      <div className={style.newsGrid}>
+        {data.length === 0 ? (
+          <div className={style.noResults}>
+            <SearchX
+              aria-hidden="true"
+              className={style.noResultsIcon}
+              size={48}
+            />
+            <p>{t('noResults')}</p>
+          </div>
+        ) : (
+          data.map((item) => (
+            <NewsTile key={item.id} news={item} locale={locale} />
+          ))
+        )}
+      </div>
+
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        pathname={pathname}
+        params={{
+          query,
+          tag,
+          // Matches computeNextSearchParams: only relevance is written to the URL
+          sort: sortBy === 'relevance' ? 'relevance' : undefined,
+          dateFrom,
+          dateTo,
+        }}
+      />
+    </>
   );
 }

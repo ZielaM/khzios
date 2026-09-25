@@ -14,12 +14,12 @@ describe('PublicationsSearchForm', () => {
     initialQuery: '',
   };
 
-  const mockPush = vi.fn();
+  const mockReplace = vi.fn();
 
   beforeEach(() => {
     vi.mocked(useRouter).mockReturnValue({
-      push: mockPush,
-      replace: vi.fn(),
+      push: vi.fn(),
+      replace: mockReplace,
       back: vi.fn(),
       forward: vi.fn(),
       refresh: vi.fn(),
@@ -44,7 +44,7 @@ describe('PublicationsSearchForm', () => {
     expect(input).toHaveValue('test query');
   });
 
-  it('debounces the search input and pushes to router after 500ms', () => {
+  it('debounces the search input and replaces the URL after 500ms', () => {
     vi.mocked(useSearchParams).mockReturnValue(
       new URLSearchParams() as unknown as ReturnType<typeof useSearchParams>
     );
@@ -55,21 +55,21 @@ describe('PublicationsSearchForm', () => {
 
     fireEvent.change(input, { target: { value: 'climate publication' } });
 
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
 
     act(() => {
       vi.advanceTimersByTime(300);
     });
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
 
     act(() => {
       vi.advanceTimersByTime(200);
     });
 
-    expect(mockPush).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledTimes(1);
 
-    const pushCallArg = mockPush.mock.calls[0][0];
-    expect(pushCallArg).toContain('query=climate+publication');
+    const replaceCallArg = mockReplace.mock.calls[0][0];
+    expect(replaceCallArg).toContain('query=climate+publication');
   });
 
   it('resets pagination when changing search parameters', () => {
@@ -89,11 +89,11 @@ describe('PublicationsSearchForm', () => {
       vi.advanceTimersByTime(500);
     });
 
-    expect(mockPush).toHaveBeenCalledTimes(1);
-    const pushedUrl = mockPush.mock.calls[0][0];
+    expect(mockReplace).toHaveBeenCalledTimes(1);
+    const replacedUrl = mockReplace.mock.calls[0][0];
     // Page 2 should be removed
-    expect(pushedUrl).not.toContain('page=2');
-    expect(pushedUrl).toContain('query=biology');
+    expect(replacedUrl).not.toContain('page=2');
+    expect(replacedUrl).toContain('query=biology');
   });
 
   it('deletes query param if search is empty', () => {
@@ -115,10 +115,10 @@ describe('PublicationsSearchForm', () => {
       vi.advanceTimersByTime(500);
     });
 
-    expect(mockPush).toHaveBeenCalledTimes(1);
-    const pushedUrl = mockPush.mock.calls[0][0];
-    expect(pushedUrl).not.toContain('query=old+search');
-    expect(pushedUrl).not.toContain('query=');
+    expect(mockReplace).toHaveBeenCalledTimes(1);
+    const replacedUrl = mockReplace.mock.calls[0][0];
+    expect(replacedUrl).not.toContain('query=old+search');
+    expect(replacedUrl).not.toContain('query=');
   });
 
   it('renders skeleton correctly', () => {
@@ -149,7 +149,7 @@ describe('PublicationsSearchForm', () => {
     fireEvent.blur(input);
   });
 
-  it('does not push if query is the same as currentQuery', () => {
+  it('does not update the URL if query is the same as currentQuery', () => {
     vi.mocked(useSearchParams).mockReturnValue(
       new URLSearchParams('query=same') as unknown as ReturnType<
         typeof useSearchParams
@@ -164,7 +164,7 @@ describe('PublicationsSearchForm', () => {
       vi.advanceTimersByTime(500);
     });
 
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 
   it('does not update query state when initialQuery prop changes if isSkeleton is true', () => {
@@ -199,6 +199,6 @@ describe('PublicationsSearchForm', () => {
       vi.advanceTimersByTime(500);
     });
 
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 });

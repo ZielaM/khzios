@@ -159,31 +159,3 @@ export function auditInput(
 
   return result;
 }
-
-/**
- * Checks whether a string looks like a valid UUID v4.
- * Useful for validating IDs before they hit the database —
- * random strings as IDs can indicate enumeration attempts.
- */
-export function isValidUuid(value: string): boolean {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    value
-  );
-}
-
-/**
- * Checks a cursor / news ID for validity and logs a warning
- * if it looks suspicious (e.g. not a UUID → possible enumeration).
- */
-export function auditId(
-  context: string,
-  id: string,
-  metadata?: Record<string, unknown>
-): void {
-  if (!isValidUuid(id)) {
-    log.warn(
-      { context, idPreview: id.substring(0, 50), ...metadata },
-      `⚠ Invalid ID format in ${context} — possible enumeration attempt`
-    );
-  }
-}

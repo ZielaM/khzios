@@ -9,7 +9,6 @@ export interface SearchParams {
   page?: number;
   limit?: number;
   sortBy?: SortBy;
-  cursorId?: string;
   dateFrom?: string;
   dateTo?: string;
 }
@@ -23,7 +22,8 @@ export interface ValidatedSearchParams {
   fallbackLanguages: readonly LanguageCode[];
   dictionary: string;
   safeSortBy: SortBy;
-  safeCursorId?: string;
+  /** Inclusive lower bound: start of the `dateFrom` day */
   safeDateFrom?: Date;
-  safeDateTo?: Date;
+  /** Exclusive upper bound: start of the day after `dateTo` */
+  safeDateBefore?: Date;
 }

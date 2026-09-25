@@ -3,6 +3,7 @@ import {
   getPhotoUrl,
   getPhotoAlt,
   stripHtml,
+  excerpt,
   estimateReadingTime,
 } from '../content-utils';
 import type { Photo } from '@/generated/prisma/client';
@@ -107,5 +108,39 @@ describe('getPhotoAlt', () => {
         'T'
       )
     ).toBe('T');
+  });
+});
+
+// ─── stripHtml (plain text) ─────────────────────────────────────────────
+
+describe('stripHtml plain text output', () => {
+  it('decodes entities and collapses whitespace', () => {
+    expect(stripHtml('\n  <p>Ryby &amp; drób</p>\n  <p>a &lt; b</p>')).toBe(
+      'Ryby & drób a < b'
+    );
+  });
+
+  it('drops script and style contents', () => {
+    expect(
+      stripHtml('<style>p{}</style><p>Tekst</p><script>x()</script>')
+    ).toBe('Tekst');
+  });
+});
+
+// ─── excerpt ────────────────────────────────────────────────────────────
+
+describe('excerpt', () => {
+  it('returns short text unchanged', () => {
+    expect(excerpt('Krótki tekst', 50)).toBe('Krótki tekst');
+  });
+
+  it('cuts on a word boundary and adds an ellipsis', () => {
+    expect(excerpt('Hodowla bydła mlecznego w Polsce', 20)).toBe(
+      'Hodowla bydła…'
+    );
+  });
+
+  it('does not leave trailing punctuation before the ellipsis', () => {
+    expect(excerpt('Jeden, dwa, trzy cztery', 11)).toBe('Jeden, dwa…');
   });
 });

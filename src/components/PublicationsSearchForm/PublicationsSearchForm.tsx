@@ -50,7 +50,8 @@ export default function PublicationsSearchForm({
       // Reset to page 1 on new search
       params.delete('page');
 
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      // replace: intermediate queries typed by the user are not history entries
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [searchParams, pathname, router]
   );

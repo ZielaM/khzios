@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import PublicationsListServer from '../PublicationsListServer';
-import { searchPublications } from '@/actions/search-publications';
+import { searchPublications } from '@/lib/search/publications';
 
 // Mock server actions
-vi.mock('@/actions/search-publications', () => ({
+vi.mock('@/lib/search/publications', () => ({
   searchPublications: vi.fn(),
 }));
 
@@ -39,6 +39,7 @@ describe('PublicationsListServer', () => {
 
     // Call the async function to get the JSX
     const jsx = await PublicationsListServer({
+      pathname: '/en/about-us/publications',
       locale: 'en',
       page: 1,
     });
@@ -71,6 +72,7 @@ describe('PublicationsListServer', () => {
     });
 
     const jsx = await PublicationsListServer({
+      pathname: '/en/about-us/publications',
       locale: 'en',
       page: 1,
     });
@@ -100,6 +102,7 @@ describe('PublicationsListServer', () => {
     });
 
     const jsx = await PublicationsListServer({
+      pathname: '/en/about-us/publications',
       query: 'test query',
       locale: 'en',
       page: 1,
@@ -133,6 +136,7 @@ describe('PublicationsListServer', () => {
     });
 
     const jsx = await PublicationsListServer({
+      pathname: '/en/about-us/publications',
       locale: 'en',
       page: 1,
     });
@@ -162,6 +166,7 @@ describe('PublicationsListServer', () => {
     });
 
     const jsx = await PublicationsListServer({
+      pathname: '/en/about-us/publications',
       locale: 'en',
       page: 1,
     });
@@ -201,6 +206,7 @@ describe('PublicationsListServer', () => {
     });
 
     const jsx = await PublicationsListServer({
+      pathname: '/en/about-us/publications',
       locale: 'en',
       page: 1,
     });

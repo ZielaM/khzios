@@ -118,23 +118,23 @@ test.describe('News Article Detail Page', () => {
 
     await navigateToArticle(page, 1);
 
-    await page.getByRole('button', { name: 'Share' }).click();
-    await expect(page.getByText('Link copied')).toBeVisible();
+    const share = page.getByRole('button', { name: 'Share' });
+    await share.click();
+    await expect(share).toContainText('Link copied');
+    // Also announced to screen readers
+    await expect(page.getByRole('status')).toHaveText('Link copied');
   });
 
   // ─── Reading Progress (presence check) ───────────────────────────
-  // (Scroll update logic is fully covered by ReadingProgress component tests.
-  //  Cross-browser scroll event handling is unreliable in E2E environments,
-  //  so we only verify the progressbar is rendered with correct initial state.)
+  // (Scroll update logic is covered by the ReadingProgress component tests.)
 
-  test('should render reading progress bar', async ({ page }) => {
+  test('should render a decorative reading progress bar', async ({ page }) => {
     await navigateToArticle(page, 1);
 
-    const progress = page.getByRole('progressbar');
+    const progress = page.locator('[class*="progressBar"]');
     await expect(progress).toBeVisible();
-    await expect(progress).toHaveAttribute('aria-valuenow', '0');
-    await expect(progress).toHaveAttribute('aria-valuemin', '0');
-    await expect(progress).toHaveAttribute('aria-valuemax', '100');
+    // Purely visual: hidden from screen readers
+    await expect(progress).toHaveAttribute('aria-hidden', 'true');
   });
 
   // ─── Related Articles (Suspense streaming) ──────────────────────

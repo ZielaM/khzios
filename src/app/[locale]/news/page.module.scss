@@ -30,3 +30,9 @@
 .backButton {
   margin-bottom: 0 !important;
 }
+
+.title {
+  @include section-title;
+  flex: 1 1 auto;
+  text-align: center;
+}

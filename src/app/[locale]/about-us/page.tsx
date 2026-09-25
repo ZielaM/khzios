@@ -50,15 +50,13 @@ export default async function AboutUsPage({ params }: Props) {
       </AnimateOnce>
 
       {/* ── Hero ──────────────────────────────────────────────── */}
-      <AnimateOnce>
-        <section className={style.hero}>
-          {heroImage && <HeroSlideshow images={[heroImage]} />}
-          <div className={style.heroContent}>
-            <h1 className={style.heroTitle}>{t('title')}</h1>
-            <p className={style.heroDesc}>{t('description')}</p>
-          </div>
-        </section>
-      </AnimateOnce>
+      <section className={style.hero}>
+        {heroImage && <HeroSlideshow images={[heroImage]} />}
+        <div className={style.heroContent}>
+          <h1 className={style.heroTitle}>{t('title')}</h1>
+          <p className={style.heroDesc}>{t('description')}</p>
+        </div>
+      </section>
 
       <AnimateOnce>
         <SpotlightGrid className={style.grid}>
@@ -66,7 +64,7 @@ export default async function AboutUsPage({ params }: Props) {
             <div className={style.cardIconWrapper} aria-hidden="true">
               <Network aria-hidden="true" size={26} />
             </div>
-            <h3 className={style.cardTitle}>{t('structureCardTitle')}</h3>
+            <h2 className={style.cardTitle}>{t('structureCardTitle')}</h2>
             <p className={style.cardDesc}>{t('structureCardDesc')}</p>
             <span className={style.cardFooter}>
               {t('viewDetails')}
@@ -82,7 +80,7 @@ export default async function AboutUsPage({ params }: Props) {
             <div className={style.cardIconWrapper} aria-hidden="true">
               <BookOpen aria-hidden="true" size={26} />
             </div>
-            <h3 className={style.cardTitle}>{t('publicationsCardTitle')}</h3>
+            <h2 className={style.cardTitle}>{t('publicationsCardTitle')}</h2>
             <p className={style.cardDesc}>{t('publicationsCardDesc')}</p>
             <span className={style.cardFooter}>
               {t('viewDetails')}

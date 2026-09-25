@@ -33,7 +33,6 @@ import ShareButton from '@/components/ShareButton/ShareButton';
 import RelatedNews from '@/components/RelatedNews/RelatedNews';
 import ReadingProgress from '@/components/ReadingProgress/ReadingProgress';
 import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
-import AnimateOnce from '@/components/AnimateOnce';
 import RelatedNewsSkeleton from '@/components/RelatedNews/RelatedNewsSkeleton';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import JsonLd from '@/components/JsonLd';
@@ -152,8 +151,9 @@ export default async function NewsDetailsPage({
     <>
       <ReadingProgress />
       <JsonLd data={jsonLd} />
-      <main className={style.pageWrapper}>
-        <AnimateOnce className={style.container}>
+      {/* The layout provides the page's <main> landmark */}
+      <div className={style.pageWrapper}>
+        <div className={style.container}>
           <header className={style.header}>
             <div className={style.headerActions}>
               <BackLink href="/news" className={style.backLink}>
@@ -248,8 +248,8 @@ export default async function NewsDetailsPage({
           <Suspense fallback={<RelatedNewsSkeleton />}>
             <RelatedNews newsId={news.id} tagIds={tagIds} locale={locale} />
           </Suspense>
-        </AnimateOnce>
-      </main>
+        </div>
+      </div>
       <ScrollToTop />
     </>
   );

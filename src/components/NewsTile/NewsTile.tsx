@@ -29,14 +29,19 @@ import AnimateOnce from '@/components/AnimateOnce';
 export interface NewsTileProps {
   news: NewsWithRelations;
   locale: string;
-  priority?: boolean;
+  /** Preload the image: only for a tile that is the page's largest image */
+  preload?: boolean;
+  /** Heading level of the title within the page outline */
+  headingLevel?: 2 | 3;
 }
 
 export default function NewsTile({
   news,
   locale,
-  priority = false,
+  preload = false,
+  headingLevel = 3,
 }: NewsTileProps) {
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
   const t = useTranslations('HomePage');
 
   // Select the first uploaded photo as the thumbnail,
@@ -51,7 +56,7 @@ export default function NewsTile({
     locale
   );
 
-  const title = translation?.title ?? 'Translation missing';
+  const title = translation?.title ?? '';
   const content = translation?.content ?? '...';
 
   // 2-pass sanitization to safely remove <style>/<script> contents without regex:
@@ -83,24 +88,24 @@ export default function NewsTile({
   return (
     <AnimateOnce>
       <article className={style.newsTile} data-testid="news-tile">
-        <Link
-          href={{ pathname: '/news/[id]', params: { id: news.id } }}
-          className={style.linkWrapper}
-        >
-          <div className={style.imageContainer}>
-            <Image
-              src={thumbnail}
-              alt={imageAlt}
-              fill
-              priority={priority}
-              className={style.image}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-            <div className={style.dateBadge}>{formattedDate}</div>
+        <div className={style.imageContainer}>
+          <Image
+            src={thumbnail}
+            alt={imageAlt}
+            fill
+            preload={preload}
+            className={style.image}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+          <div className={style.dateBadge}>
+            <time dateTime={news.publishedAt.toISOString()}>
+              {formattedDate}
+            </time>
           </div>
+        </div>
 
-          <div className={style.content}>
-            {/* Tag Rendering */}
+        <div className={style.content}>
+          {news.tags.length > 0 && (
             <div className={style.tags}>
               {news.tags.map((tag) => (
                 <span key={tag.id} className={style.tag}>
@@ -108,46 +113,46 @@ export default function NewsTile({
                 </span>
               ))}
             </div>
+          )}
 
-            {/* Render an informational badge if the user is seeing fallback content */}
-            {isFallback && translation && (
-              <span
-                className={style.fallbackBadge}
-                data-testid="news-fallback-badge"
-              >
-                {t('translationUnavailable', {
-                  language:
-                    LANGUAGE_NAMES[translation.languageCode] ??
-                    translation.languageCode,
-                })}
-              </span>
-            )}
+          {isFallback && translation && (
+            <span
+              className={style.fallbackBadge}
+              data-testid="news-fallback-badge"
+            >
+              {t('translationUnavailable', {
+                language:
+                  LANGUAGE_NAMES[translation.languageCode] ??
+                  translation.languageCode,
+              })}
+            </span>
+          )}
 
-            {/* Search Result Highlighting Logic:
-                If the database query included a full-text search, the returned content 
-                will contain raw HTML <mark> tags emphasizing the matching query string. 
-                We MUST use dangerouslySetInnerHTML to render these. */}
-            <h3
-              className={style.title}
-              data-testid="news-title"
+          {/* Only the title is the link, so its accessible name stays short;
+              the link's ::after stretches the click area over the card.
+              Search results carry <mark> highlights, hence innerHTML. */}
+          <Heading className={style.title} data-testid="news-title">
+            <Link
+              href={{ pathname: '/news/[id]', params: { id: news.id } }}
+              className={style.titleLink}
               dangerouslySetInnerHTML={{ __html: cleanTitle }}
             />
+          </Heading>
 
-            {isHighlighted ? (
-              <p
-                className={clsx(style.description, style.highlighted)}
-                dangerouslySetInnerHTML={{ __html: description }}
-              />
-            ) : (
-              <p className={style.description}>{description}</p>
-            )}
+          {isHighlighted ? (
+            <p
+              className={clsx(style.description, style.highlighted)}
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
+          ) : (
+            <p className={style.description}>{description}</p>
+          )}
 
-            <div className={style.readMore}>
-              {t('readMore')}
-              <ArrowRight aria-hidden="true" size={18} />
-            </div>
-          </div>
-        </Link>
+          <span className={style.readMore} aria-hidden="true">
+            {t('readMore')}
+            <ArrowRight size={18} />
+          </span>
+        </div>
       </article>
     </AnimateOnce>
   );

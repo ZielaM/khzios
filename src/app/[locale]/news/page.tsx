@@ -79,6 +79,7 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
   }));
 
   const tStruct = await getTranslations('StructurePage');
+  const tNews = await getTranslations('NewsPage');
 
   // Key for Suspense to trigger re-render on param change
   const suspenseKey = JSON.stringify({
@@ -98,6 +99,8 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
             {tStruct('backToHome')}
           </BackLink>
         </AnimateOnce>
+
+        <h1 className={style.title}>{tNews('title')}</h1>
 
         <NewsSearchForm
           initialQuery={query}

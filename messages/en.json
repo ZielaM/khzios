@@ -20,7 +20,6 @@
     "viewAllNews": "View all news"
   },
   "Navbar": {
-    "logoAlt": "Logo",
     "logoText": "Department of Animal Breeding <br></br> and Product Evaluation",
     "toggleMenu": "Toggle menu",
     "news": "News",
@@ -32,7 +31,8 @@
     "structureDesc": "Management and research teams of the department",
     "headOfDepartment": "Head of Department",
     "publications": "Publications",
-    "publicationsDesc": "Staff publications and research"
+    "publicationsDesc": "Staff publications and research",
+    "mainNavLabel": "Main menu"
   },
   "Wcag": {
     "groupLabel": "WCAG Accessibility Tools",
@@ -71,7 +71,9 @@
     "sortRelevance": "Relevance",
     "noResults": "No results found.",
     "loadMore": "Load more",
-    "metaDescription": "News from the Department of Animal Breeding and Raw Material Evaluation: events, research results, conferences and announcements."
+    "metaDescription": "News from the Department of Animal Breeding and Raw Material Evaluation: events, research results, conferences and announcements.",
+    "dateFrom": "From date",
+    "dateTo": "To date"
   },
   "PublicationsPage": {
     "title": "Scientific Publications",
@@ -205,6 +207,7 @@
     "play": "Resume photo slideshow"
   },
   "ContactPage": {
-    "metaDescription": "Contact the department office: address, phone, e-mail and opening hours."
+    "metaDescription": "Contact the department office: address, phone, e-mail and opening hours.",
+    "mapTitle": "Map: department location, Szydłowska 50, Poznań"
   }
 }

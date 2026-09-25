@@ -177,4 +177,19 @@ describe('WcagControls', () => {
       document.documentElement.classList.contains('compact-layout-sm')
     ).toBe(true);
   });
+  it('reports the contrast toggle state to assistive technology', () => {
+    render(
+      <WcagControls
+        groupLabel="group"
+        decreaseFont="decrease"
+        increaseFont="increase"
+        toggleContrast="contrast"
+      />
+    );
+    const toggle = screen.getByRole('button', { name: 'contrast' });
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(toggle);
+  });
 });

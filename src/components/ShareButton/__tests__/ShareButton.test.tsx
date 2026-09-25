@@ -57,7 +57,7 @@ describe('ShareButton', () => {
     fireEvent.click(screen.getByRole('button'));
 
     await waitFor(() => {
-      expect(screen.getByText('linkCopied')).toBeInTheDocument();
+      expect(screen.getByRole('status')).toHaveTextContent('linkCopied');
     });
   });
 
@@ -108,7 +108,7 @@ describe('ShareButton', () => {
       for (let i = 0; i < 5; i++) await Promise.resolve();
     });
 
-    expect(screen.getByText('linkCopied')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('linkCopied');
 
     act(() => {
       vi.advanceTimersByTime(2000);
@@ -127,7 +127,7 @@ describe('ShareButton', () => {
       for (let i = 0; i < 5; i++) await Promise.resolve();
     });
 
-    expect(screen.getByText('linkCopied')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('linkCopied');
 
     unmount();
     expect(spy).toHaveBeenCalled();

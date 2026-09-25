@@ -47,6 +47,19 @@ $page-padding-top-mobile: 12px;
   }
 }
 
+// Collapsed (hamburger) navigation: narrow screens, and wide screens where
+// the WCAG font scaling leaves too little room (`.compact-layout-sm` is set
+// by WcagControls and the inline script in the root layout)
+@mixin compact-nav {
+  @media (max-width: $breakpoint-tablet) {
+    @content;
+  }
+
+  :global(.compact-layout-sm) & {
+    @content;
+  }
+}
+
 // Wspólny mixin dla linków powrotu ("wstecz")
 @mixin back-link {
   display: inline-flex;

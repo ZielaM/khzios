@@ -177,4 +177,28 @@ describe('DropdownMenu and DropdownItem', () => {
       expect(submenu).not.toHaveClass('show');
     });
   });
+  describe('Compact layout from WCAG font scaling', () => {
+    afterEach(() => {
+      document.documentElement.classList.remove('compact-layout-sm');
+    });
+
+    it('acts as an accordion on a wide window when the compact layout is on', () => {
+      // Wide window, but the font is scaled up so the hamburger menu is shown
+      document.documentElement.classList.add('compact-layout-sm');
+      render(
+        <DropdownMenu label="About" href="/about-us">
+          <DropdownItem label="Team" href="/about-us/structure" />
+        </DropdownMenu>
+      );
+
+      const trigger = screen.getByText('About').closest('a')!;
+      // Hover must not open it (touch-style menu)…
+      fireEvent.mouseEnter(trigger.parentElement!);
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      // …a tap toggles it instead of navigating
+      const clicked = fireEvent.click(trigger);
+      expect(clicked).toBe(false); // default prevented
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+  });
 });

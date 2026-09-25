@@ -7,7 +7,7 @@ import style from './page.module.scss';
  */
 export default function Loading() {
   return (
-    <main className={style.pageWrapper}>
+    <div className={style.pageWrapper}>
       <div className={style.container}>
         {/* Header skeleton */}
         <header className={style.header}>
@@ -49,6 +49,6 @@ export default function Loading() {
           <div className={style.skeletonLineShort} />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

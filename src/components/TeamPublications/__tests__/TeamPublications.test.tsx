@@ -97,12 +97,12 @@ describe('TeamPublications', () => {
 
     // "publicationsTab" is the returned value from our next-intl mock
     expect(
-      screen.getByRole('button', { name: 'publicationsTab' })
+      screen.getByRole('tab', { name: 'publicationsTab' })
     ).toBeInTheDocument();
 
     // projects tab shouldn't exist
     expect(
-      screen.queryByRole('button', { name: 'projectsTab' })
+      screen.queryByRole('tab', { name: 'projectsTab' })
     ).not.toBeInTheDocument();
 
     expect(
@@ -127,7 +127,7 @@ describe('TeamPublications', () => {
     ).not.toBeInTheDocument();
 
     // Switch to projects tab to trigger the translation check for projects
-    fireEvent.click(screen.getByRole('button', { name: 'projectsTab' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'projectsTab' }));
     expect(screen.queryByText('Advanced AI Project')).not.toBeInTheDocument();
   });
 
@@ -139,7 +139,7 @@ describe('TeamPublications', () => {
         locale="en"
       />
     );
-    fireEvent.click(screen.getByRole('button', { name: 'projectsTab' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'projectsTab' }));
     expect(screen.getByText('Advanced AI Project')).toBeVisible();
 
     rerender(
@@ -178,10 +178,10 @@ describe('TeamPublications', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: 'projectsTab' })
+      screen.getByRole('tab', { name: 'projectsTab' })
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole('button', { name: 'publicationsTab' })
+      screen.queryByRole('tab', { name: 'publicationsTab' })
     ).not.toBeInTheDocument();
 
     // The project content should be visible
@@ -200,8 +200,8 @@ describe('TeamPublications', () => {
       />
     );
 
-    const pubTab = screen.getByRole('button', { name: 'publicationsTab' });
-    const projTab = screen.getByRole('button', { name: 'projectsTab' });
+    const pubTab = screen.getByRole('tab', { name: 'publicationsTab' });
+    const projTab = screen.getByRole('tab', { name: 'projectsTab' });
 
     expect(pubTab).toBeInTheDocument();
     expect(projTab).toBeInTheDocument();
@@ -255,5 +255,29 @@ describe('TeamPublications', () => {
 
     // The second one already had https:// prefix
     expect(links[1]).toHaveAttribute('href', 'https://doi.org/10.9999/test');
+  });
+  it('switches tabs with the arrow keys', () => {
+    render(
+      <TeamPublications
+        publications={mockPublications}
+        projects={mockProjects}
+        locale="pl"
+      />
+    );
+    const publicationsTab = screen.getByRole('tab', {
+      name: 'publicationsTab',
+    });
+    const projectsTab = screen.getByRole('tab', { name: 'projectsTab' });
+    expect(publicationsTab).toHaveAttribute('aria-selected', 'true');
+    expect(projectsTab).toHaveAttribute('tabindex', '-1');
+
+    fireEvent.keyDown(publicationsTab, { key: 'ArrowRight' });
+
+    expect(projectsTab).toHaveAttribute('aria-selected', 'true');
+    expect(projectsTab).toHaveFocus();
+    expect(screen.getByRole('tabpanel')).toHaveAttribute(
+      'aria-labelledby',
+      'team-tab-projects'
+    );
   });
 });

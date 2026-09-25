@@ -37,16 +37,10 @@
 
 .tabs {
   display: flex;
+  flex-wrap: wrap; // long Ukrainian/Russian labels must not overflow on phones
   gap: 12px;
   margin-bottom: 12px;
-  overflow-x: auto;
   padding-bottom: 4px;
-
-  /* hide scrollbar */
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .tab {
@@ -62,7 +56,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap;
 
   &:hover {
     background: rgba(0, 0, 0, 0.03);

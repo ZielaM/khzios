@@ -9,6 +9,21 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import style from './NewsGallery.module.scss';
 import clsx from 'clsx';
 
+/** Keeps Tab / Shift+Tab cycling through the buttons inside `container`. */
+function trapFocus(e: KeyboardEvent, container: HTMLElement | null) {
+  const controls = container?.querySelectorAll<HTMLElement>('button');
+  if (!controls || controls.length === 0) return;
+  const first = controls[0];
+  const last = controls[controls.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+}
+
 interface NewsGalleryProps {
   photos: NewsPhoto[];
   /** Article title (plain text), used for photos without their own alt text */
@@ -30,7 +45,13 @@ export default function NewsGallery({
     );
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
+  const dialogRef = useRef<HTMLDivElement>(null);
+  // The thumbnail that opened the lightbox gets focus back on close
+  const openerRef = useRef<HTMLElement | null>(null);
+  const isOpen = selectedIndex !== null;
+
   const openLightbox = (index: number) => {
+    openerRef.current = document.activeElement as HTMLElement | null;
     setSelectedIndex(index);
   };
 
@@ -76,6 +97,7 @@ export default function NewsGallery({
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowRight') showNext();
       if (e.key === 'ArrowLeft') showPrev();
+      if (e.key === 'Tab') trapFocus(e, dialogRef.current);
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -100,6 +122,17 @@ export default function NewsGallery({
       document.documentElement.style.overflow = originalHtmlOverflow;
     };
   }, [selectedIndex, showNext, showPrev, handleTouchStart, handleTouchEnd]);
+
+  // Move focus into the dialog when it opens and back to the opener when it
+  // closes, so keyboard and screen reader users stay oriented
+  useEffect(() => {
+    if (isOpen) {
+      dialogRef.current?.querySelector<HTMLElement>('button')?.focus();
+    } else if (openerRef.current) {
+      openerRef.current.focus();
+      openerRef.current = null;
+    }
+  }, [isOpen]);
 
   if (!photos || photos.length === 0) return null;
 
@@ -129,9 +162,11 @@ export default function NewsGallery({
 
       {selectedIndex !== null && (
         <div
+          ref={dialogRef}
           className={style.lightbox}
           role="dialog"
           aria-modal="true"
+          aria-label={t('gallery')}
           onClick={closeLightbox}
         >
           <div className={style.lightboxOverlay} />
@@ -169,7 +204,7 @@ export default function NewsGallery({
               fill
               className={style.lightboxImage}
               sizes="100vw"
-              priority
+              preload
             />
             <div className={style.imageCounter}>
               {t('imageCounter', {

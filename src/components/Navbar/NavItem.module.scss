@@ -18,7 +18,7 @@
   position: relative;
 
   // On mobile, the links are rendered as large, bold items in a vertical list
-  @media (max-width: $breakpoint-tablet) {
+  @include compact-nav {
     width: 100%;
     justify-content: space-between;
     font-size: 1.1em;

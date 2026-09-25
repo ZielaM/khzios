@@ -104,7 +104,7 @@ export default async function ForStudentsPage({ params }: Props) {
                           href={doc.statutePath}
                           download
                           className={style.downloadLink}
-                          aria-label={`${t('statute')} – ${subjectName}`}
+                          aria-label={`${t('download')}: ${t('statute')} – ${subjectName}`}
                         >
                           <svg
                             className={style.downloadIcon}
@@ -128,7 +128,7 @@ export default async function ForStudentsPage({ params }: Props) {
                           href={doc.syllabusPath}
                           download
                           className={style.downloadLink}
-                          aria-label={`${t('syllabus')} – ${subjectName}`}
+                          aria-label={`${t('download')}: ${t('syllabus')} – ${subjectName}`}
                         >
                           <svg
                             className={style.downloadIcon}

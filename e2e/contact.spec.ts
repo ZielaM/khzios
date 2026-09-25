@@ -36,7 +36,7 @@ test.describe('Contact Page Navigation Spec', () => {
     await expect(page.getByText('Office location')).toBeVisible();
 
     // Check if the map iframe is present
-    const mapIframe = page.locator('iframe[title="Map location"]');
+    const mapIframe = page.locator('iframe[title^="Map"]');
     await expect(mapIframe).toBeVisible();
   });
 });

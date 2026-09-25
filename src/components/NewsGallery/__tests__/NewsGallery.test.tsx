@@ -261,4 +261,29 @@ describe('NewsGallery', () => {
       expect(document.body.style.overflow).not.toBe('hidden');
     });
   });
+  describe('focus management', () => {
+    it('moves focus into the dialog, traps Tab and restores focus on close', () => {
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" locale="en" />);
+      const thumbnail = screen.getAllByRole('button')[1];
+      thumbnail.focus();
+      fireEvent.click(thumbnail);
+
+      const dialog = screen.getByRole('dialog');
+      const controls = dialog.querySelectorAll('button');
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      expect(first).toHaveFocus();
+
+      // Shift+Tab from the first control wraps to the last one
+      fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
+      expect(last).toHaveFocus();
+      // Tab from the last control wraps to the first one
+      fireEvent.keyDown(document, { key: 'Tab' });
+      expect(first).toHaveFocus();
+
+      fireEvent.keyDown(document, { key: 'Escape' });
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(thumbnail).toHaveFocus();
+    });
+  });
 });

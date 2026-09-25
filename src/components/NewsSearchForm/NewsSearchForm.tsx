@@ -352,6 +352,7 @@ export default function NewsSearchForm({
             <input
               type="date"
               className={style.dateInput}
+              aria-label={t('dateFrom')}
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
               disabled={isSkeleton}
@@ -359,10 +360,13 @@ export default function NewsSearchForm({
               onFocus={() => setIsInputFocused(true)}
               onBlur={() => setIsInputFocused(false)}
             />
-            <span className={style.dateSeparator}>-</span>
+            <span className={style.dateSeparator} aria-hidden="true">
+              –
+            </span>
             <input
               type="date"
               className={style.dateInput}
+              aria-label={t('dateTo')}
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
               disabled={isSkeleton}

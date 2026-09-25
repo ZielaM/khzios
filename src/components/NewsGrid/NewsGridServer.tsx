@@ -55,7 +55,12 @@ export default async function NewsGridServer({
           </div>
         ) : (
           data.map((item) => (
-            <NewsTile key={item.id} news={item} locale={locale} />
+            <NewsTile
+              key={item.id}
+              news={item}
+              locale={locale}
+              headingLevel={2}
+            />
           ))
         )}
       </div>

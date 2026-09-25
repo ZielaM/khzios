@@ -37,6 +37,20 @@ export default function TeamPublications({
   if (safeProjects.length === 0 && activeTab === 'projects')
     setActiveTab('publications');
 
+  const tabs: Tab[] = [
+    ...(safePublications.length > 0 ? (['publications'] as const) : []),
+    ...(safeProjects.length > 0 ? (['projects'] as const) : []),
+  ];
+
+  const onTabKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const index = tabs.indexOf(activeTab);
+    const step = e.key === 'ArrowRight' ? 1 : -1;
+    const next = tabs[(index + step + tabs.length) % tabs.length];
+    setActiveTab(next);
+    document.getElementById(`team-tab-${next}`)?.focus();
+  };
+
   return (
     <section className={style.section}>
       <div className={style.header}>
@@ -46,33 +60,42 @@ export default function TeamPublications({
         </h2>
       </div>
 
-      <div className={style.tabs}>
-        {publications.length > 0 && (
+      <div
+        className={style.tabs}
+        role="tablist"
+        aria-label={t('publicationsTitle')}
+        onKeyDown={onTabKeyDown}
+      >
+        {tabs.map((tab) => (
           <button
-            className={clsx(style.tab, {
-              [style.active]: activeTab === 'publications',
-            })}
-            onClick={() => setActiveTab('publications')}
+            key={tab}
+            type="button"
+            role="tab"
+            id={`team-tab-${tab}`}
+            aria-selected={activeTab === tab}
+            aria-controls={`team-panel-${tab}`}
+            // Only the selected tab is in the Tab order; arrows move between tabs
+            tabIndex={activeTab === tab ? 0 : -1}
+            className={clsx(style.tab, { [style.active]: activeTab === tab })}
+            onClick={() => setActiveTab(tab)}
           >
-            <FileText aria-hidden="true" size={18} />
-            {t('publicationsTab')}
+            {tab === 'publications' ? (
+              <FileText aria-hidden="true" size={18} />
+            ) : (
+              <Briefcase aria-hidden="true" size={18} />
+            )}
+            {t(tab === 'publications' ? 'publicationsTab' : 'projectsTab')}
           </button>
-        )}
-        {projects.length > 0 && (
-          <button
-            className={clsx(style.tab, {
-              [style.active]: activeTab === 'projects',
-            })}
-            /* istanbul ignore next */
-            onClick={() => setActiveTab('projects')}
-          >
-            <Briefcase aria-hidden="true" size={18} />
-            {t('projectsTab')}
-          </button>
-        )}
+        ))}
       </div>
 
-      <div className={style.content}>
+      <div
+        className={style.content}
+        role="tabpanel"
+        id={`team-panel-${activeTab}`}
+        aria-labelledby={`team-tab-${activeTab}`}
+        tabIndex={0}
+      >
         {activeTab === 'publications' && (
           <div className={style.list}>
             {safePublications.map((pub) => {

@@ -11,7 +11,7 @@
   padding: 1rem 0;
 
   // On mobile, the dropdown shifts from a flyout to an inline accordion.
-  @media (max-width: $breakpoint-tablet) {
+  @include compact-nav {
     flex-direction: column;
     align-items: flex-start;
     padding: 0;
@@ -59,7 +59,7 @@
   }
 
   // Mobile accordion behavior overrides absolute positioning
-  @media (max-width: $breakpoint-tablet) {
+  @include compact-nav {
     position: static;
     transform: none;
     box-shadow: none;
@@ -84,7 +84,7 @@
   transition: background-color 0.2s ease;
   position: relative; // Needed for absolute positioning of nested submenus
 
-  @media (max-width: $breakpoint-tablet) {
+  @include compact-nav {
     width: 100%;
   }
 
@@ -106,18 +106,22 @@
 
 // Typography styling for the dropdown content
 .dropdownItemContent {
-  h4 {
-    font-size: 0.95em;
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-    color: var(--foreground);
-  }
+  display: block;
+}
 
-  p {
-    font-size: 0.825em;
-    color: color-mix(in srgb, var(--foreground) 60%, transparent);
-    line-height: 1.4;
-  }
+.itemLabel {
+  display: block;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.itemDesc {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.825em;
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  line-height: 1.4;
 }
 
 // Icon for items that trigger a level-2 nested submenu
@@ -128,7 +132,7 @@
     transform 0.3s ease,
     opacity 0.3s ease;
 
-  @media (max-width: $breakpoint-tablet) {
+  @include compact-nav {
     transform: rotate(90deg);
   }
 
@@ -178,7 +182,7 @@
   }
 
   // On mobile, force accordion behavior
-  @media (max-width: $breakpoint-tablet) {
+  @include compact-nav {
     position: static;
     transform: none;
     box-shadow: none;
@@ -206,7 +210,7 @@
 .mobileOverviewItem {
   display: none;
 
-  @media (max-width: $breakpoint-tablet) {
+  @include compact-nav {
     display: block;
     margin-bottom: 0.5rem;
     padding-bottom: 0.5rem;

@@ -83,6 +83,20 @@ describe('Navbar', () => {
     ).toBeInTheDocument();
   });
 
+  it('exposes the menu state and closes it with Escape', () => {
+    render(<Navbar teams={teams} />);
+    const toggle = screen.getByRole('button', { name: 'toggleMenu' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(toggle).toHaveAttribute('aria-controls', 'main-menu');
+
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(toggle).toHaveFocus();
+  });
+
   it('toggles mobile menu when hamburger is clicked', () => {
     render(<Navbar teams={teams} />);
     const hamburger = screen.getByLabelText('toggleMenu');

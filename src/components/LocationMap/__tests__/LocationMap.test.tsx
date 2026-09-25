@@ -12,7 +12,7 @@ vi.mock('@/components/AnimateOnce', () => ({
 describe('LocationMap', () => {
   it('renders iframe with correct src and title', () => {
     render(<LocationMap />);
-    const iframe = screen.getByTitle('Map location');
+    const iframe = screen.getByTitle('mapTitle');
 
     expect(iframe).toBeInTheDocument();
     expect(iframe).toHaveAttribute(

@@ -157,12 +157,24 @@ describe('NewsTile', () => {
       expect(badge).toHaveTextContent('unknown');
     });
 
-    it('should show "Translation missing" when no translations exist', () => {
+    it('renders an empty title rather than placeholder text without translations', () => {
       const news = mockNewsData({ translations: [] });
       render(<NewsTile news={news} locale="en" />);
 
-      expect(screen.getByTestId('news-title')).toHaveTextContent(
-        'Translation missing'
+      expect(screen.getByTestId('news-title')).toHaveTextContent('');
+    });
+
+    it('links only the title, keeping the link name short', () => {
+      render(<NewsTile news={mockNewsData()} locale="en" />);
+      expect(screen.getByRole('link')).toHaveAccessibleName(
+        'Test Article Title'
+      );
+    });
+
+    it('uses the requested heading level', () => {
+      render(<NewsTile news={mockNewsData()} locale="en" headingLevel={2} />);
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
+        'Test Article Title'
       );
     });
   });

@@ -46,8 +46,22 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
   // Manual close handler passed down to individual NavItems.
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
+  // Escape closes the open mobile menu and returns focus to its toggle
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isMobileMenuOpen]);
+
   return (
-    <nav className={style.navbar}>
+    <nav className={style.navbar} aria-label={t('mainNavLabel')}>
       <div className={style.navbarHeader}>
         {/* Logo */}
         <div className={style.logo}>
@@ -57,7 +71,8 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
             onClick={closeMobileMenu}
             data-testid="logo-link"
           >
-            <Image src="/logo.png" alt={t('logoAlt')} width={40} height={40} />
+            {/* The department name next to the logo is the link text */}
+            <Image src="/logo.png" alt="" width={40} height={40} />
             <span className={style.logoText}>
               {/* .rich allows rendering injected tags like <br /> from translation strings */}
               {t.rich('logoText', { br: () => <br /> })}
@@ -67,11 +82,15 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
 
         {/* Mobile Hamburger Toggle Button */}
         <button
+          ref={toggleRef}
+          type="button"
           className={clsx(style.hamburger, {
             [style.active]: isMobileMenuOpen,
           })}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label={t('toggleMenu')}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="main-menu"
         >
           <span className={style.hamburgerLine}></span>
           <span className={style.hamburgerLine}></span>
@@ -81,6 +100,7 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
 
       {/* Main Navigation Container (links + actions) */}
       <div
+        id="main-menu"
         className={clsx(style.navMenuContainer, {
           [style.mobileOpen]: isMobileMenuOpen,
         })}

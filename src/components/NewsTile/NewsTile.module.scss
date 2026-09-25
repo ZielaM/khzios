@@ -67,14 +67,19 @@
   }
 }
 
-// Stretches the semantic <a> tag over the entire card layout
-.linkWrapper {
-  text-decoration: none;
+// The title link; its ::after covers the card so the whole tile is clickable
+// while the link's accessible name is just the title
+.titleLink {
   color: inherit;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  outline: none; // Outline is handled by the parent .newsTile
+  text-decoration: none;
+  outline: none; // the card shows the focus ring (see :has(:focus-visible))
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
 }
 
 // Wrapper to enforce an aspect ratio/fixed height for the thumbnail

@@ -25,14 +25,8 @@ export default function ReadingProgress() {
   }, []);
 
   return (
-    <div
-      className={style.progressBar}
-      role="progressbar"
-      aria-valuenow={Math.round(progress)}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-label="Reading progress"
-    >
+    // Purely visual: announcing every scroll step would only be noise
+    <div className={style.progressBar} aria-hidden="true">
       <div className={style.progressFill} style={{ width: `${progress}%` }} />
     </div>
   );

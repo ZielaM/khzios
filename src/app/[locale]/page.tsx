@@ -72,25 +72,23 @@ export default async function Home({
     <div className={styles.main}>
       <JsonLd data={jsonLd} />
       {/* ── Hero Section ──────────────────────────────────────────────── */}
-      <AnimateOnce>
-        <section
-          className={clsx(styles.hero, hasHeroImages && styles.heroWithImages)}
-        >
-          {hasHeroImages && <HeroSlideshow images={heroImages} />}
-          <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
-            <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
-            <div className={styles.heroActions}>
-              <Link href="/about-us" className={styles.primaryBtn}>
-                {t('btnAboutUs')}
-              </Link>
-              <Link href="/student" className={styles.secondaryBtn}>
-                {t('btnStudent')}
-              </Link>
-            </div>
+      <section
+        className={clsx(styles.hero, hasHeroImages && styles.heroWithImages)}
+      >
+        {hasHeroImages && <HeroSlideshow images={heroImages} />}
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
+          <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
+          <div className={styles.heroActions}>
+            <Link href="/about-us" className={styles.primaryBtn}>
+              {t('btnAboutUs')}
+            </Link>
+            <Link href="/student" className={styles.secondaryBtn}>
+              {t('btnStudent')}
+            </Link>
           </div>
-        </section>
-      </AnimateOnce>
+        </div>
+      </section>
 
       {/* ── Recent News ────────────────────────────────────────────────── */}
       <section className={styles.newsSection}>

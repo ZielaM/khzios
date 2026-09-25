@@ -15,6 +15,19 @@ import navItemStyle from './NavItem.module.scss';
 import style from './DropdownMenu.module.scss';
 import { useTranslations } from 'next-intl';
 
+/**
+ * True when the menu is collapsed behind the hamburger button: on narrow
+ * screens, or when WCAG font scaling switched on the compact layout. Must
+ * match the `compact-nav` SCSS mixin.
+ */
+function isCompactNav(): boolean {
+  return (
+    document.documentElement.classList.contains('compact-layout-sm') ||
+    (window.matchMedia?.('(max-width: 768px)').matches ??
+      window.innerWidth <= 768)
+  );
+}
+
 export function DropdownMenu({
   label,
   href,
@@ -30,7 +43,7 @@ export function DropdownMenu({
   // Prevent default navigation ONLY on mobile to allow the first tap to open the accordion.
   // On desktop, the link still works as a top-level navigational element while hovering reveals children.
   const handleLinkClick = (e: React.MouseEvent) => {
-    if (window.innerWidth <= 768) {
+    if (isCompactNav()) {
       e.preventDefault();
       setIsDropdownOpen(!isDropdownOpen);
     }
@@ -39,9 +52,9 @@ export function DropdownMenu({
   return (
     <div
       className={style.dropdownContainer}
-      onMouseEnter={() => window.innerWidth > 768 && setIsDropdownOpen(true)}
-      onMouseLeave={() => window.innerWidth > 768 && setIsDropdownOpen(false)}
-      onFocus={() => window.innerWidth > 768 && setIsDropdownOpen(true)}
+      onMouseEnter={() => !isCompactNav() && setIsDropdownOpen(true)}
+      onMouseLeave={() => !isCompactNav() && setIsDropdownOpen(false)}
+      onFocus={() => !isCompactNav() && setIsDropdownOpen(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           setIsDropdownOpen(false);
@@ -104,7 +117,7 @@ export function DropdownItem({
   const hasChildren = Boolean(children);
 
   const handleLinkClick = (e: React.MouseEvent) => {
-    if (hasChildren && window.innerWidth <= 768) {
+    if (hasChildren && isCompactNav()) {
       e.preventDefault();
       setIsSubMenuOpen(!isSubMenuOpen);
     }
@@ -114,11 +127,11 @@ export function DropdownItem({
     <div
       className={clsx(style.dropdownItem, { [style.hasSubmenu]: hasChildren })}
       /* istanbul ignore next */
-      onMouseEnter={() => window.innerWidth > 768 && setIsSubMenuOpen(true)}
+      onMouseEnter={() => !isCompactNav() && setIsSubMenuOpen(true)}
       /* istanbul ignore next */
-      onMouseLeave={() => window.innerWidth > 768 && setIsSubMenuOpen(false)}
+      onMouseLeave={() => !isCompactNav() && setIsSubMenuOpen(false)}
       /* istanbul ignore next */
-      onFocus={() => window.innerWidth > 768 && setIsSubMenuOpen(true)}
+      onFocus={() => !isCompactNav() && setIsSubMenuOpen(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           setIsSubMenuOpen(false);
@@ -132,10 +145,11 @@ export function DropdownItem({
         aria-expanded={hasChildren ? isSubMenuOpen : undefined}
         aria-haspopup={hasChildren ? 'true' : undefined}
       >
-        <div className={style.dropdownItemContent}>
-          <h4>{label}</h4>
-          <p>{desc}</p>
-        </div>
+        <span className={style.dropdownItemContent}>
+          {/* Not headings: menu entries would pollute the page outline */}
+          <span className={style.itemLabel}>{label}</span>
+          {desc && <span className={style.itemDesc}>{desc}</span>}
+        </span>
         {hasChildren && (
           <svg
             className={clsx(style.subMenuIcon, { [style.open]: isSubMenuOpen })}

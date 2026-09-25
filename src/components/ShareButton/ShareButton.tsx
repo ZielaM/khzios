@@ -56,6 +56,10 @@ export default function ShareButton({ title }: ShareButtonProps) {
       aria-label={t('share')}
       title={t('share')}
     >
+      {/* Announces "link copied" to screen readers */}
+      <span className={style.visuallyHidden} role="status">
+        {copied ? t('linkCopied') : ''}
+      </span>
       {copied ? (
         <>
           <Check aria-hidden="true" size={18} />

@@ -58,12 +58,10 @@ export default async function StructurePage({ params }: Props) {
       </AnimateOnce>
 
       {/* ── Hero ──────────────────────────────────────────────── */}
-      <AnimateOnce>
-        <section className={style.hero}>
-          <h1 className={style.heroTitle}>{t('title')}</h1>
-          <p className={style.heroDesc}>{t('description')}</p>
-        </section>
-      </AnimateOnce>
+      <section className={style.hero}>
+        <h1 className={style.heroTitle}>{t('title')}</h1>
+        <p className={style.heroDesc}>{t('description')}</p>
+      </section>
 
       {/* ── Teams ─────────────────────────────────────────────── */}
       <AnimateOnce>

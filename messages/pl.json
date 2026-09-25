@@ -20,7 +20,6 @@
     "viewAllNews": "Zobacz wszystkie aktualności"
   },
   "Navbar": {
-    "logoAlt": "Logo",
     "logoText": "Katedra Hodowli Zwierząt <br></br> i Oceny Surowców",
     "toggleMenu": "Przełącz menu",
     "news": "Aktualności",
@@ -32,7 +31,8 @@
     "structureDesc": "Kierownictwo i zespoły pracujące w katedrze",
     "headOfDepartment": "Kierownik katedry",
     "publications": "Publikacje",
-    "publicationsDesc": "Publikacje i badania pracowników katedry"
+    "publicationsDesc": "Publikacje i badania pracowników katedry",
+    "mainNavLabel": "Menu główne"
   },
   "Wcag": {
     "groupLabel": "Narzędzia dostępności WCAG",
@@ -71,7 +71,9 @@
     "sortRelevance": "Trafność",
     "noResults": "Nie znaleziono wyników.",
     "loadMore": "Pokaż więcej",
-    "metaDescription": "Aktualności Katedry Hodowli Zwierząt i Oceny Surowców: wydarzenia, wyniki badań, konferencje i komunikaty."
+    "metaDescription": "Aktualności Katedry Hodowli Zwierząt i Oceny Surowców: wydarzenia, wyniki badań, konferencje i komunikaty.",
+    "dateFrom": "Od dnia",
+    "dateTo": "Do dnia"
   },
   "PublicationsPage": {
     "title": "Publikacje naukowe",
@@ -205,6 +207,7 @@
     "play": "Wznów pokaz zdjęć"
   },
   "ContactPage": {
-    "metaDescription": "Kontakt z sekretariatem Katedry Hodowli Zwierząt i Oceny Surowców: adres, telefon, e-mail i godziny pracy."
+    "metaDescription": "Kontakt z sekretariatem Katedry Hodowli Zwierząt i Oceny Surowców: adres, telefon, e-mail i godziny pracy.",
+    "mapTitle": "Mapa: lokalizacja katedry, ul. Szydłowska 50, Poznań"
   }
 }

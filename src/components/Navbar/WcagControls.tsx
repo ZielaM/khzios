@@ -142,6 +142,7 @@ export default function WcagControls({
         onClick={toggleHighContrast}
         className={clsx(style.wcagButton, { [style.active]: highContrast })}
         aria-label={toggleContrast}
+        aria-pressed={highContrast}
         title={toggleContrast}
       >
         <svg

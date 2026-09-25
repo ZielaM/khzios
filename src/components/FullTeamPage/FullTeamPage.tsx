@@ -1,6 +1,5 @@
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
-import AnimateOnce from '@/components/AnimateOnce';
 import TeamHero from '@/components/TeamHero';
 import TeamMembers from '@/components/TeamMembers';
 import TeamResearch from '@/components/TeamResearch';
@@ -26,28 +25,26 @@ export default function FullTeamPage({
   );
 
   return (
-    <AnimateOnce>
-      <div className={style.fullTeam}>
-        <TeamHero name={teamTranslation?.name || team.slug} image={image} />
+    <div className={style.fullTeam}>
+      <TeamHero name={teamTranslation?.name || team.slug} image={image} />
 
-        <div className={style.contentGrid}>
-          <TeamMembers members={team.members} locale={locale} team={team} />
+      <div className={style.contentGrid}>
+        <TeamMembers members={team.members} locale={locale} team={team} />
 
-          <TeamResearch content={teamTranslation?.researchDescription} />
+        <TeamResearch content={teamTranslation?.researchDescription} />
 
-          <TeamPublications
-            publications={team.publications}
-            projects={team.projects}
-            locale={locale}
-          />
+        <TeamPublications
+          publications={team.publications}
+          projects={team.projects}
+          locale={locale}
+        />
 
-          <TeamTeaching
-            content={teamTranslation?.teachingDescription}
-            courses={team.courses}
-            locale={locale}
-          />
-        </div>
+        <TeamTeaching
+          content={teamTranslation?.teachingDescription}
+          courses={team.courses}
+          locale={locale}
+        />
       </div>
-    </AnimateOnce>
+    </div>
   );
 }

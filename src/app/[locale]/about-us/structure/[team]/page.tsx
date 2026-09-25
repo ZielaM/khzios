@@ -7,6 +7,8 @@ import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
+import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
+import { buildShareMetadata } from '@/lib/seo';
 
 // Components
 import FullTeamPage from '@/components/FullTeamPage';
@@ -39,8 +41,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { translation } = resolveTranslation(team.translations, locale);
   const title = translation?.name ? `${translation.name} | KHZIOS` : 'KHZIOS';
+  const image = getSectionImage(
+    IMAGE_SECTIONS.team(team.slug),
+    locale,
+    translation?.name
+  );
 
-  return { title };
+  return { title, ...buildShareMetadata(title, image) };
 }
 
 export default async function TeamPage({ params }: Props) {
@@ -51,6 +58,12 @@ export default async function TeamPage({ params }: Props) {
   if (!team) notFound();
 
   const t = await getTranslations('TeamPage');
+  const { translation } = resolveTranslation(team.translations, locale);
+  const image = getSectionImage(
+    IMAGE_SECTIONS.team(team.slug),
+    locale,
+    translation?.name
+  );
 
   return (
     <div className={style.page}>
@@ -60,10 +73,10 @@ export default async function TeamPage({ params }: Props) {
 
       {team.type === 'EXTERNAL' ? (
         <AnimateOnce>
-          <ExternalTeamPage team={team} locale={locale} />
+          <ExternalTeamPage team={team} locale={locale} image={image} />
         </AnimateOnce>
       ) : (
-        <FullTeamPage team={team} locale={locale} />
+        <FullTeamPage team={team} locale={locale} image={image} />
       )}
     </div>
   );

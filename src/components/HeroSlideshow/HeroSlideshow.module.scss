@@ -1,0 +1,66 @@
+@use '@/styles/variables' as *;
+
+.slideshow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+
+  // Photos compete with the yellow-on-black scheme — hide them entirely
+  :global(.wcag-high-contrast) & {
+    display: none;
+  }
+}
+
+.slide {
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.active {
+  opacity: 1;
+}
+
+// Keeps white hero text readable on any photo
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 40, 25, 0.55) 0%,
+    rgba(10, 40, 25, 0.7) 100%
+  );
+}
+
+.toggle {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  &:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+}

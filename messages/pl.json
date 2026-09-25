@@ -113,7 +113,8 @@
     "gallery": "Galeria zdjęć",
     "relatedArticles": "Czytaj też",
     "readArticle": "Czytaj dalej",
-    "scrollToTop": "Przewiń do góry"
+    "scrollToTop": "Przewiń do góry",
+    "galleryImageAlt": "{title} – zdjęcie {current} z {total}"
   },
   "TeamPage": {
     "backToStructure": "Wróć do struktury",
@@ -197,5 +198,9 @@
     "syllabus": "Sylabus",
     "download": "Pobierz PDF",
     "noDocuments": "Brak dostępnych dokumentów."
+  },
+  "HeroSlideshow": {
+    "pause": "Wstrzymaj pokaz zdjęć",
+    "play": "Wznów pokaz zdjęć"
   }
 }

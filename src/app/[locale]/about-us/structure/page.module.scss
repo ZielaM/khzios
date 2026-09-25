@@ -187,6 +187,54 @@
   }
 }
 
+// Team photo thumbnail, bleeding to the card's top and side edges
+.cardImage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: -32px -32px 0;
+  border-radius: $radius-lg $radius-lg 0 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
+
+  :global(.wcag-high-contrast) & {
+    border-radius: 0;
+    background: transparent;
+    border-bottom: 2px solid var(--foreground);
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    margin: -24px -24px 0;
+  }
+}
+
+.cardImageFallback {
+  color: rgba(255, 255, 255, 0.7);
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.cardImageInner {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+
+  .card:hover & {
+    transform: scale(1.03);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
 .cardIconWrapper {
   display: flex;
   align-items: center;

@@ -10,10 +10,14 @@ import clsx from 'clsx';
 
 interface NewsGalleryProps {
   photos: Photo[];
+  /** Article title (plain text) — used to build descriptive alt texts */
+  title: string;
 }
 
-export default function NewsGallery({ photos }: NewsGalleryProps) {
+export default function NewsGallery({ photos, title }: NewsGalleryProps) {
   const t = useTranslations('NewsDetails');
+  const altFor = (index: number) =>
+    t('galleryImageAlt', { title, current: index + 1, total: photos.length });
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const openLightbox = (index: number) => {
@@ -104,7 +108,7 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
           >
             <Image
               src={photo.url}
-              alt={`Gallery thumbnail ${index + 1}`}
+              alt={altFor(index)}
               fill
               className={style.galleryImage}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -151,7 +155,7 @@ export default function NewsGallery({ photos }: NewsGalleryProps) {
           >
             <Image
               src={photos[selectedIndex].url}
-              alt={`Gallery image ${selectedIndex + 1}`}
+              alt={altFor(selectedIndex)}
               fill
               className={style.lightboxImage}
               sizes="100vw"

@@ -5,6 +5,9 @@ import { ArrowRight, BookOpen, Network } from 'lucide-react';
 import SpotlightGrid from '@/components/SpotlightGrid';
 import BackLink from '@/components/BackLink';
 import AnimateOnce from '@/components/AnimateOnce';
+import HeroSlideshow from '@/components/HeroSlideshow';
+import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
+import { buildShareMetadata } from '@/lib/seo';
 import style from './page.module.scss';
 
 // ISR every 7 days
@@ -23,7 +26,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   setRequestLocale(locale);
 
   const t = await getTranslations('AboutUsPage');
-  return { title: `${t('title')} | KHZIOS` };
+  const title = `${t('title')} | KHZIOS`;
+  const image = getSectionImage(IMAGE_SECTIONS.aboutUs, locale, t('title'));
+
+  return { title, ...buildShareMetadata(title, image, t('description')) };
 }
 
 export default async function AboutUsPage({ params }: Props) {
@@ -32,6 +38,7 @@ export default async function AboutUsPage({ params }: Props) {
 
   const t = await getTranslations('AboutUsPage');
   const tStruct = await getTranslations('StructurePage');
+  const heroImage = getSectionImage(IMAGE_SECTIONS.aboutUs, locale, t('title'));
 
   return (
     <div className={style.page}>
@@ -42,8 +49,11 @@ export default async function AboutUsPage({ params }: Props) {
       {/* ── Hero ──────────────────────────────────────────────── */}
       <AnimateOnce>
         <section className={style.hero}>
-          <h1 className={style.heroTitle}>{t('title')}</h1>
-          <p className={style.heroDesc}>{t('description')}</p>
+          {heroImage && <HeroSlideshow images={[heroImage]} />}
+          <div className={style.heroContent}>
+            <h1 className={style.heroTitle}>{t('title')}</h1>
+            <p className={style.heroDesc}>{t('description')}</p>
+          </div>
         </section>
       </AnimateOnce>
 

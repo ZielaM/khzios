@@ -6,6 +6,10 @@ import RecentNewsServer from '@/components/RecentNews/RecentNewsServer';
 import RecentNewsSkeleton from '@/components/RecentNews/RecentNewsSkeleton';
 import AnimateOnce from '@/components/AnimateOnce';
 import SpotlightGrid from '@/components/SpotlightGrid';
+import HeroSlideshow from '@/components/HeroSlideshow';
+import { getSectionImages, IMAGE_SECTIONS } from '@/lib/site-images';
+import { getAppUrl, LOGO_IMAGE, toAbsoluteUrl } from '@/lib/seo';
+import clsx from 'clsx';
 import { BookOpen, GraduationCap, Network, Phone } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
 
@@ -17,14 +21,19 @@ export default async function Home({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('HomePage');
+  const heroImages = getSectionImages(IMAGE_SECTIONS.hero, locale);
+  const hasHeroImages = heroImages.length > 0;
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'EducationalOrganization',
     name: t('heroTitle'),
     description: t('heroSubtitle'),
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://khzios.up.poznan.pl',
-    logo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://khzios.up.poznan.pl'}/openGraph.png`,
+    url: getAppUrl(),
+    logo: toAbsoluteUrl(LOGO_IMAGE),
+    ...(hasHeroImages && {
+      image: heroImages.map((image) => toAbsoluteUrl(image.src)),
+    }),
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'ul. Szydłowska 50',
@@ -42,16 +51,21 @@ export default async function Home({
       />
       {/* ── Hero Section ──────────────────────────────────────────────── */}
       <AnimateOnce>
-        <section className={styles.hero}>
-          <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
-          <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
-          <div className={styles.heroActions}>
-            <Link href="/about-us" className={styles.primaryBtn}>
-              {t('btnAboutUs')}
-            </Link>
-            <Link href="/student" className={styles.secondaryBtn}>
-              {t('btnStudent')}
-            </Link>
+        <section
+          className={clsx(styles.hero, hasHeroImages && styles.heroWithImages)}
+        >
+          {hasHeroImages && <HeroSlideshow images={heroImages} />}
+          <div className={styles.heroContent}>
+            <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
+            <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
+            <div className={styles.heroActions}>
+              <Link href="/about-us" className={styles.primaryBtn}>
+                {t('btnAboutUs')}
+              </Link>
+              <Link href="/student" className={styles.secondaryBtn}>
+                {t('btnStudent')}
+              </Link>
+            </div>
           </div>
         </section>
       </AnimateOnce>

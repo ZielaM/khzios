@@ -3,3 +3,33 @@
 .page {
   @include page-container;
 }
+
+// Building photo beside the map; margins mirror LocationMap's own.
+// minmax(0, …) stops the map's min-height + aspect-ratio from widening tracks.
+.location {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 24px;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
+.locationPhoto {
+  margin: 2rem 0;
+
+  @media (max-width: $breakpoint-tablet) {
+    margin-bottom: 0;
+  }
+}
+
+.locationPhotoInner {
+  height: 100%;
+
+  @media (max-width: $breakpoint-tablet) {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}

@@ -19,6 +19,64 @@
   }
 }
 
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+
+// Photo background variant: taller, borderless, white text on the overlay
+.heroWithImages {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  background: var(--color-primary);
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 4.5rem;
+
+  .heroTitle {
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  }
+
+  .heroSubtitle {
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .heroActions .secondaryBtn {
+    color: #fff;
+    border-color: #fff;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+  }
+
+  // High contrast hides the photos — restore the plain hero look
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    border: 2px solid var(--foreground);
+    min-height: 0;
+
+    .heroTitle,
+    .heroSubtitle,
+    .heroActions .secondaryBtn {
+      color: var(--foreground);
+      text-shadow: none;
+    }
+
+    .heroActions .secondaryBtn {
+      border-color: var(--foreground);
+    }
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    min-height: 360px;
+  }
+}
+
 .heroTitle {
   font-size: clamp(2em, 5vw, 3.2em);
   font-weight: 700;

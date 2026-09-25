@@ -1,0 +1,20 @@
+{
+  "01-przyklad-gory.jpg": {
+    "pl": "Zachód słońca nad górami i doliną rzeki",
+    "en": "Sunset over the mountains and a river valley",
+    "uk": "Захід сонця над горами та долиною річки",
+    "ru": "Закат над горами и долиной реки"
+  },
+  "02-przyklad-las.jpg": {
+    "pl": "Leśny strumień wśród omszałych kamieni",
+    "en": "A forest stream among mossy stones",
+    "uk": "Лісовий струмок серед замшілих каменів",
+    "ru": "Лесной ручей среди замшелых камней"
+  },
+  "03-przyklad-rzeka.jpg": {
+    "pl": "Rzeka płynąca wśród zielonych zarośli",
+    "en": "A river flowing through green shrubland",
+    "uk": "Річка серед зелених заростей",
+    "ru": "Река среди зелёных зарослей"
+  }
+}

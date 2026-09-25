@@ -6,6 +6,15 @@
   margin: 0 auto;
 }
 
+.banner {
+  aspect-ratio: 21 / 6;
+  margin: 16px 0 32px;
+
+  @media (max-width: $breakpoint-tablet) {
+    aspect-ratio: 16 / 9;
+  }
+}
+
 .title {
   @include section-title;
   margin-top: 48px;

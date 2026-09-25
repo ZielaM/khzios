@@ -86,3 +86,18 @@ export const getRelatedNews = cache(
     });
   }
 );
+
+/**
+ * Lists every published article with its photos for sitemap.xml.
+ */
+export async function getPublishedNewsForSitemap() {
+  return prisma.news.findMany({
+    where: { published: true },
+    select: {
+      id: true,
+      updatedAt: true,
+      photos: { select: { url: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+}

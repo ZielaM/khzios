@@ -12,6 +12,7 @@ import {
 } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
+import { DEFAULT_OG_IMAGE, getAppUrl } from '@/lib/seo';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -25,8 +26,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'HomePage' });
-  const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL || 'https://khzios.up.poznan.pl';
+  const appUrl = getAppUrl();
 
   return {
     metadataBase: new URL(appUrl),
@@ -42,9 +42,10 @@ export async function generateMetadata({
       siteName: t('heroTitle'),
       images: [
         {
-          url: '/openGraph.png',
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
+          alt: t('heroTitle'),
         },
       ],
       locale: locale,
@@ -54,7 +55,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: t('heroTitle'),
       description: t('heroSubtitle'),
-      images: ['/openGraph.png'],
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

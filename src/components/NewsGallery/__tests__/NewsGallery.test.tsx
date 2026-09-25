@@ -21,25 +21,31 @@ describe('NewsGallery', () => {
 
   describe('rendering', () => {
     it('should render nothing when photos array is empty', () => {
-      const { container } = render(<NewsGallery photos={[]} />);
+      const { container } = render(<NewsGallery photos={[]} title="Test" />);
       expect(container.innerHTML).toBe('');
     });
 
     it('should render thumbnail buttons for each photo', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
       const buttons = screen.getAllByRole('button');
       expect(buttons).toHaveLength(3);
     });
 
-    it('should render images with correct alt text', () => {
-      render(<NewsGallery photos={mockPhotos(2)} />);
+    it('should render images with translated alt text built from the title', () => {
+      render(<NewsGallery photos={mockPhotos(2)} title="Test" />);
       const images = screen.getAllByRole('img');
-      expect(images[0]).toHaveAttribute('alt', 'Gallery thumbnail 1');
-      expect(images[1]).toHaveAttribute('alt', 'Gallery thumbnail 2');
+      expect(images[0]).toHaveAttribute(
+        'alt',
+        'galleryImageAlt:{"title":"Test","current":1,"total":2}'
+      );
+      expect(images[1]).toHaveAttribute(
+        'alt',
+        'galleryImageAlt:{"title":"Test","current":2,"total":2}'
+      );
     });
 
     it('should have aria-labels with image counter', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
       const buttons = screen.getAllByRole('button');
       // Translation mock returns key:params format
       expect(buttons[0]).toHaveAttribute(
@@ -53,7 +59,7 @@ describe('NewsGallery', () => {
 
   describe('lightbox', () => {
     it('should open lightbox when clicking a thumbnail', () => {
-      render(<NewsGallery photos={mockPhotos(2)} />);
+      render(<NewsGallery photos={mockPhotos(2)} title="Test" />);
 
       fireEvent.click(screen.getAllByRole('button')[0]);
 
@@ -61,7 +67,7 @@ describe('NewsGallery', () => {
     });
 
     it('should show the correct image in lightbox', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
 
       // Click second thumbnail
       fireEvent.click(screen.getAllByRole('button')[1]);
@@ -72,7 +78,7 @@ describe('NewsGallery', () => {
     });
 
     it('should close lightbox when close button is clicked', () => {
-      render(<NewsGallery photos={mockPhotos(2)} />);
+      render(<NewsGallery photos={mockPhotos(2)} title="Test" />);
 
       // Open
       fireEvent.click(screen.getAllByRole('button')[0]);
@@ -86,7 +92,7 @@ describe('NewsGallery', () => {
     });
 
     it('should show navigation buttons when multiple photos exist', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
 
       fireEvent.click(screen.getAllByRole('button')[0]);
 
@@ -95,7 +101,7 @@ describe('NewsGallery', () => {
     });
 
     it('should NOT show navigation buttons for single photo', () => {
-      render(<NewsGallery photos={mockPhotos(1)} />);
+      render(<NewsGallery photos={mockPhotos(1)} title="Test" />);
 
       fireEvent.click(screen.getByRole('button'));
 
@@ -108,7 +114,7 @@ describe('NewsGallery', () => {
 
   describe('keyboard navigation', () => {
     it('should close lightbox on Escape key', () => {
-      render(<NewsGallery photos={mockPhotos(2)} />);
+      render(<NewsGallery photos={mockPhotos(2)} title="Test" />);
 
       fireEvent.click(screen.getAllByRole('button')[0]);
       expect(screen.getByRole('dialog')).toBeInTheDocument();
@@ -118,7 +124,7 @@ describe('NewsGallery', () => {
     });
 
     it('should navigate to next image on ArrowRight', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
 
       fireEvent.click(screen.getAllByRole('button')[0]);
 
@@ -136,7 +142,7 @@ describe('NewsGallery', () => {
     });
 
     it('should navigate to previous image on ArrowLeft', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
 
       fireEvent.click(screen.getAllByRole('button')[1]); // Start at index 1
 
@@ -148,7 +154,7 @@ describe('NewsGallery', () => {
     });
 
     it('should wrap around from last to first image', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
 
       // Open at last image (index 2)
       fireEvent.click(screen.getAllByRole('button')[2]);
@@ -166,7 +172,7 @@ describe('NewsGallery', () => {
 
   describe('swipe gestures', () => {
     it('should navigate to next image on swipe left', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
       fireEvent.click(screen.getAllByRole('button')[0]);
 
       fireEvent.touchStart(document, { touches: [{ clientX: 100 }] });
@@ -178,7 +184,7 @@ describe('NewsGallery', () => {
     });
 
     it('should navigate to prev image on swipe right', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
       fireEvent.click(screen.getAllByRole('button')[1]);
 
       fireEvent.touchStart(document, { touches: [{ clientX: 100 }] });
@@ -190,7 +196,7 @@ describe('NewsGallery', () => {
     });
 
     it('should ignore short swipes', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
       fireEvent.click(screen.getAllByRole('button')[0]);
 
       fireEvent.touchStart(document, { touches: [{ clientX: 100 }] });
@@ -202,7 +208,7 @@ describe('NewsGallery', () => {
     });
 
     it('should do nothing on touchEnd if touchStart was not fired', () => {
-      render(<NewsGallery photos={mockPhotos(3)} />);
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" />);
       fireEvent.click(screen.getAllByRole('button')[0]);
 
       fireEvent.touchEnd(document, { changedTouches: [{ clientX: 30 }] });
@@ -218,7 +224,7 @@ describe('NewsGallery', () => {
 
   describe('scroll locking', () => {
     it('should lock body scroll when lightbox is open', () => {
-      render(<NewsGallery photos={mockPhotos(2)} />);
+      render(<NewsGallery photos={mockPhotos(2)} title="Test" />);
 
       fireEvent.click(screen.getAllByRole('button')[0]);
 
@@ -227,7 +233,7 @@ describe('NewsGallery', () => {
     });
 
     it('should restore body scroll when lightbox is closed', () => {
-      render(<NewsGallery photos={mockPhotos(2)} />);
+      render(<NewsGallery photos={mockPhotos(2)} title="Test" />);
 
       // Open
       fireEvent.click(screen.getAllByRole('button')[0]);

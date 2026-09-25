@@ -13,3 +13,23 @@ describe('TeamHero', () => {
     expect(heading.innerHTML).not.toContain('<script>');
   });
 });
+
+describe('TeamHero banner', () => {
+  it('renders without a photo when none is provided', () => {
+    render(<TeamHero name="Zespół" />);
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+  });
+
+  it('renders the team photo behind the title', () => {
+    render(
+      <TeamHero
+        name="Zespół"
+        image={{ src: '/images/teams/ruminants/a.jpg', alt: 'Obora' }}
+      />
+    );
+    expect(screen.getByRole('img')).toHaveAttribute('alt', 'Obora');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Zespół'
+    );
+  });
+});

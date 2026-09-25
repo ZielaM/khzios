@@ -1,0 +1,19 @@
+@use '@/styles/variables' as *;
+
+.banner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-card;
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+.image {
+  object-fit: cover;
+}

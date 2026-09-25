@@ -35,6 +35,11 @@
   }
 }
 
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+
 .heroTitle {
   font-family: var(--font-inter), sans-serif;
   font-size: clamp(2em, 4vw, 3em);

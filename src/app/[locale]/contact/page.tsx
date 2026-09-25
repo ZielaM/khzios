@@ -4,12 +4,15 @@ import { Briefcase } from 'lucide-react';
 import { Metadata } from 'next';
 import ContactProfile from '@/components/ContactProfile';
 import LocationMap from '@/components/LocationMap';
+import PageBanner from '@/components/PageBanner';
 import BackLink from '@/components/BackLink';
 import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
 import { getSecretariat } from '@/lib/secretariat-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { mapWorkingHours } from '@/lib/working-hours';
+import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
+import { buildShareMetadata } from '@/lib/seo';
 
 export const revalidate = 604800;
 
@@ -26,7 +29,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   setRequestLocale(locale);
 
   const t = await getTranslations('Navbar');
-  return { title: `${t('contact')} | KHZIOS` };
+  const tHome = await getTranslations('HomePage');
+  const title = `${t('contact')} | KHZIOS`;
+  const image = getSectionImage(
+    IMAGE_SECTIONS.contact,
+    locale,
+    tHome('heroTitle')
+  );
+
+  return { title, ...buildShareMetadata(title, image) };
 }
 
 export default async function ContactPage({ params }: Props) {
@@ -38,6 +49,13 @@ export default async function ContactPage({ params }: Props) {
   const tStruct = await getTranslations('StructurePage');
 
   const secretariat = await getSecretariat();
+  const tHome = await getTranslations('HomePage');
+  // Fallback alt names the department, since the photo shows its building
+  const buildingImage = getSectionImage(
+    IMAGE_SECTIONS.contact,
+    locale,
+    tHome('heroTitle')
+  );
 
   if (!secretariat) {
     return (
@@ -79,7 +97,20 @@ export default async function ContactPage({ params }: Props) {
           <Briefcase aria-hidden="true" size={64} strokeWidth={1.5} />
         }
       />
-      <LocationMap />
+      {buildingImage ? (
+        <div className={style.location}>
+          <AnimateOnce className={style.locationPhoto}>
+            <PageBanner
+              image={buildingImage}
+              className={style.locationPhotoInner}
+              sizes="(max-width: 768px) 100vw, 400px"
+            />
+          </AnimateOnce>
+          <LocationMap />
+        </div>
+      ) : (
+        <LocationMap />
+      )}
     </div>
   );
 }

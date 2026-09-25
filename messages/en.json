@@ -113,7 +113,8 @@
     "gallery": "Photo gallery",
     "relatedArticles": "Read also",
     "readArticle": "Read more",
-    "scrollToTop": "Scroll to top"
+    "scrollToTop": "Scroll to top",
+    "galleryImageAlt": "{title} – photo {current} of {total}"
   },
   "TeamPage": {
     "backToStructure": "Back to structure",
@@ -197,5 +198,9 @@
     "syllabus": "Syllabus",
     "download": "Download PDF",
     "noDocuments": "No documents available."
+  },
+  "HeroSlideshow": {
+    "pause": "Pause photo slideshow",
+    "play": "Resume photo slideshow"
   }
 }

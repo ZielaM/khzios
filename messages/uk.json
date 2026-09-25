@@ -113,7 +113,8 @@
     "gallery": "Фотогалерея",
     "relatedArticles": "Читайте також",
     "readArticle": "Читати далі",
-    "scrollToTop": "Прокрутити вгору"
+    "scrollToTop": "Прокрутити вгору",
+    "galleryImageAlt": "{title} – фото {current} з {total}"
   },
   "TeamPage": {
     "backToStructure": "Повернутися до структури",
@@ -197,5 +198,9 @@
     "syllabus": "Силабус",
     "download": "Завантажити PDF",
     "noDocuments": "Немає доступних документів."
+  },
+  "HeroSlideshow": {
+    "pause": "Призупинити показ фото",
+    "play": "Відновити показ фото"
   }
 }

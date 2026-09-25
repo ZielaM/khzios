@@ -18,6 +18,7 @@ import {
   estimateReadingTime,
 } from '@/lib/content-utils';
 import { getNewsById } from '@/lib/news-queries';
+import { DEFAULT_OG_IMAGE, getAppUrl, toAbsoluteUrl } from '@/lib/seo';
 import NewsGallery from '@/components/NewsGallery/NewsGallery';
 import ShareButton from '@/components/ShareButton/ShareButton';
 import RelatedNews from '@/components/RelatedNews/RelatedNews';
@@ -60,12 +61,20 @@ export async function generateMetadata({
 
   // Use stripHtml for clean plain-text stripping via DOMPurify
   const description = stripHtml(rawDescription);
-  const imageUrl = getPhotoUrl(news.photos);
+  // Articles without photos share the site's branded image, not the placeholder
+  const imageUrl =
+    news.photos.length > 0 ? news.photos[0].url : DEFAULT_OG_IMAGE;
 
   return {
     title,
     description,
     openGraph: {
+      title: stripHtml(title),
+      description,
+      images: [imageUrl],
+    },
+    twitter: {
+      card: 'summary_large_image',
       title: stripHtml(title),
       description,
       images: [imageUrl],
@@ -118,11 +127,13 @@ export default async function NewsDetailsPage({
     headline: cleanTitle,
     datePublished: news.createdAt.toISOString(),
     dateModified: news.updatedAt.toISOString(),
-    image: mainPhoto,
+    image: toAbsoluteUrl(
+      news.photos.length > 0 ? news.photos[0].url : DEFAULT_OG_IMAGE
+    ),
     author: {
       '@type': 'Organization',
       name: 'Katedra Hodowli Zwierząt i Oceny Surowców',
-      url: 'https://khzios.up.poznan.pl',
+      url: getAppUrl(),
     },
     publisher: {
       '@type': 'Organization',
@@ -222,7 +233,7 @@ export default async function NewsDetailsPage({
           {galleryPhotos.length > 0 && (
             <section className={style.gallerySection}>
               <h2 className={style.gallerySectionTitle}>{t('gallery')}</h2>
-              <NewsGallery photos={galleryPhotos} />
+              <NewsGallery photos={galleryPhotos} title={cleanTitle} />
             </section>
           )}
 

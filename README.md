@@ -50,3 +50,41 @@ Poniższe znaczniki HTML posiadają dedykowane, predefiniowane style w widoku ar
 - `<blockquote>` - wyróżnione cytaty z wyraźnym lewym obramowaniem, subtelnym tłem oraz dekoracyjnym znakiem cudzysłowu.
 
 Wszystkie powyższe znaczniki automatycznie dostosowują swój wygląd (kolory, tła, krawędzie), gdy użytkownik włączy tryb wysokiego kontrastu (WCAG), zachowując przy tym pełną dostępność.
+
+## Zdjęcia na stronie (podmiana bez zmian w kodzie)
+
+Zdjęcia nie są wpisane w kod — każda sekcja strony wyświetla to, co leży w jej folderze w `public/images/`. Żeby podmienić zdjęcia, wystarczy usunąć przykładowe pliki (`przyklad-*.jpg`), wrzucić własne i przebudować aplikację (`pnpm build` / nowy obraz Dockera — Next.js serwuje tylko pliki obecne w `public/` w czasie builda).
+
+| Folder                        | Gdzie się pojawia                                        | Ile zdjęć |
+| ----------------------------- | -------------------------------------------------------- | --------- |
+| `public/images/hero/`         | Strona główna — przenikające się zdjęcia w tle nagłówka  | wszystkie |
+| `public/images/about-us/`     | „O nas” — tło nagłówka, obrazek przy udostępnianiu linku | pierwsze  |
+| `public/images/student/`      | „Dla studenta” — baner na górze strony                   | pierwsze  |
+| `public/images/contact/`      | „Kontakt” — zdjęcie budynku obok mapy                    | pierwsze  |
+| `public/images/teams/<slug>/` | Baner zespołu, miniatura na liście zespołów, obrazek OG  | pierwsze  |
+
+`<slug>` to identyfikator zespołu z bazy (np. `ruminants`, `poultry`, `swine`, `fur-animals`, `veterinary`, `zlotnicka-pig-herdbooks`). Pusty lub nieistniejący folder = sekcja wygląda jak przed dodaniem zdjęć.
+
+**Zasady:**
+
+- Kolejność wyznacza nazwa pliku — używaj prefiksów `01-`, `02-`, `10-`… (sortowanie uwzględnia liczby).
+- Nazwy plików opisowe, małymi literami, bez polskich znaków i spacji, np. `01-obora-doswiadczalna.jpg` — to też sygnał dla Google Grafika.
+- Formaty: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`. Zdjęcia najlepiej jako JPG, ok. 1920–2560 px szerokości i do ~500 KB — Next.js sam serwuje przeglądarkom AVIF/WebP w odpowiednim rozmiarze.
+- Zdjęcia w nagłówkach są przycinane (`object-fit: cover`) i przyciemniane pod tekst — ważny motyw trzymaj blisko środka kadru.
+
+**Teksty alternatywne (SEO i dostępność)** — opcjonalny plik `alt.json` w tym samym folderze, klucze to nazwy plików:
+
+```json
+{
+  "01-obora-doswiadczalna.jpg": {
+    "pl": "Krowy w oborze doświadczalnej katedry",
+    "en": "Cows in the department's experimental barn",
+    "uk": "Корови в дослідному корівнику кафедри",
+    "ru": "Коровы в экспериментальном коровнике кафедры"
+  }
+}
+```
+
+Brakujący język korzysta z tego samego łańcucha zastępstw co tłumaczenia w bazie (uk/ru → en → pl). Plik bez wpisu dostaje domyślny opis sekcji (np. nazwę zespołu). Przykład: `public/images/hero/alt.json`.
+
+**Pozostałe obrazy:** `public/og-image.png` (1200×630) to domyślny podgląd linku w social mediach dla stron bez własnego zdjęcia, a `public/logo-seal.png` to logo w danych strukturalnych (JSON-LD). Wszystkie zdjęcia trafiają automatycznie do `sitemap.xml`.

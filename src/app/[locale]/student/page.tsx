@@ -11,6 +11,9 @@ import {
 } from '@/lib/student-queries';
 import { resolveTranslation } from '@/lib/translations';
 import StudentAnnouncements from '@/components/StudentAnnouncements';
+import PageBanner from '@/components/PageBanner';
+import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
+import { buildShareMetadata } from '@/lib/seo';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -27,8 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('StudentsPage');
+  const title = `${t('title')} | KHZIOS`;
+  const image = getSectionImage(IMAGE_SECTIONS.student, locale, t('title'));
 
-  return { title: `${t('title')} | KHZIOS` };
+  return { title, ...buildShareMetadata(title, image) };
 }
 
 export default async function ForStudentsPage({ params }: Props) {
@@ -41,6 +46,11 @@ export default async function ForStudentsPage({ params }: Props) {
   const documents = await getStudentDocuments();
 
   const tStruct = await getTranslations('StructurePage');
+  const bannerImage = getSectionImage(
+    IMAGE_SECTIONS.student,
+    locale,
+    t('title')
+  );
 
   const dateFormatter = new Intl.DateTimeFormat(locale, {
     year: 'numeric',
@@ -53,6 +63,12 @@ export default async function ForStudentsPage({ params }: Props) {
       <AnimateOnce>
         <BackLink href="/">{tStruct('backToHome')}</BackLink>
       </AnimateOnce>
+
+      {bannerImage && (
+        <AnimateOnce>
+          <PageBanner image={bannerImage} className={style.banner} preload />
+        </AnimateOnce>
+      )}
 
       <AnimateOnce>
         <StudentAnnouncements announcements={announcements} locale={locale} />

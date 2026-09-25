@@ -113,7 +113,8 @@
     "gallery": "Фотогалерея",
     "relatedArticles": "Читайте также",
     "readArticle": "Читать далее",
-    "scrollToTop": "Наверх"
+    "scrollToTop": "Наверх",
+    "galleryImageAlt": "{title} – фото {current} из {total}"
   },
   "TeamPage": {
     "backToStructure": "Вернуться к структуре",
@@ -197,5 +198,9 @@
     "syllabus": "Силлабус",
     "download": "Скачать PDF",
     "noDocuments": "Нет доступных документов."
+  },
+  "HeroSlideshow": {
+    "pause": "Приостановить показ фото",
+    "play": "Возобновить показ фото"
   }
 }

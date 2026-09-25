@@ -1,12 +1,14 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, routing } from '@/i18n/routing';
 import { Metadata } from 'next';
-import { ArrowRight, Crown } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, Crown, Users } from 'lucide-react';
 import BackLink from '@/components/BackLink';
 import AnimateOnce from '@/components/AnimateOnce';
 import SpotlightGrid from '@/components/SpotlightGrid';
 import { getAllTeams } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
+import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import style from './page.module.scss';
 
 // ISR every 7 days
@@ -34,6 +36,14 @@ export default async function StructurePage({ params }: Props) {
 
   const t = await getTranslations('StructurePage');
   const teams = await getAllTeams();
+  const teamImages = new Map(
+    teams.map((team) => [
+      team.id,
+      getSectionImage(IMAGE_SECTIONS.team(team.slug), locale),
+    ])
+  );
+  // Once any team has a photo, give the rest a placeholder so cards align
+  const showThumbnails = [...teamImages.values()].some(Boolean);
 
   return (
     <div className={style.page}>
@@ -64,12 +74,30 @@ export default async function StructurePage({ params }: Props) {
               );
               if (!translation) return null;
 
+              const image = teamImages.get(team.id);
+
               // Build the href using the team slug as a typed route
               const href =
                 `/about-us/structure/${team.slug}` as `/about-us/structure/ruminants`;
 
               return (
                 <Link key={team.id} href={href} className={style.card}>
+                  {showThumbnails && (
+                    // Decorative: the card's heading already names the team
+                    <div className={style.cardImage} aria-hidden="true">
+                      {image ? (
+                        <Image
+                          src={image.src}
+                          alt=""
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 330px"
+                          className={style.cardImageInner}
+                        />
+                      ) : (
+                        <Users size={40} className={style.cardImageFallback} />
+                      )}
+                    </div>
+                  )}
                   <h3 className={style.cardTitle}>{translation.name}</h3>
                   <span className={style.cardFooter}>
                     {t('viewDetails')}

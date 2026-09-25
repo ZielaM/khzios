@@ -15,7 +15,6 @@ vi.mock('next-intl', () => ({
     };
     return t;
   },
-  useLocale: () => 'en',
 }));
 
 describe('Footer', () => {
@@ -25,9 +24,6 @@ describe('Footer', () => {
     expect(screen.getByText('brandTitle')).toBeInTheDocument();
     expect(screen.getByText('university')).toBeInTheDocument();
     expect(screen.getByText('contactTitle')).toBeInTheDocument();
-
-    const rssLink = screen.getByRole('link', { name: /RSS/i });
-    expect(rssLink).toHaveAttribute('href', '/en/news/feed.xml');
 
     const phoneInfo = screen.getByText('+48 61 848 72 45');
     expect(phoneInfo).toBeInTheDocument();

@@ -4,12 +4,11 @@
 // Next-intl is used to translate static strings.
 
 import styles from './Footer.module.scss';
-import { Phone, Mail, Rss } from 'lucide-react';
-import { useTranslations, useLocale } from 'next-intl';
+import { Phone, Mail } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const Footer = () => {
   const t = useTranslations('Footer');
-  const locale = useLocale();
 
   return (
     <footer className={styles.footer}>
@@ -35,24 +34,6 @@ const Footer = () => {
             </li>
             <li>
               <a href="https://wwz.up.poznan.pl/">{t('facultyLink')}</a>
-            </li>
-            <li>
-              {/* Dynamic RSS Feed link depending on the current locale */}
-              <a
-                href={`/${locale}/news/feed.xml`}
-                target="_blank"
-                rel="alternate"
-                type="application/rss+xml"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                  color: 'var(--text-secondary)',
-                }}
-                title="RSS Feed"
-              >
-                <Rss aria-hidden="true" size={14} /> RSS
-              </a>
             </li>
           </ul>
         </div>

@@ -8,6 +8,7 @@ import { getDepartmentHead } from '@/lib/head-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { mapWorkingHours } from '@/lib/working-hours';
 import { renderOnFirstRequest } from '@/lib/static-params';
+import { pageMetadata } from '@/lib/seo';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -23,22 +24,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   setRequestLocale(locale);
 
   const t = await getTranslations('Navbar');
+  const tStruct = await getTranslations('StructurePage');
   const head = await getDepartmentHead();
 
-  if (head && head.employee) {
-    const { translation: headTranslation } = resolveTranslation(
+  let title = t('headOfDepartment');
+  if (head?.employee) {
+    const { translation } = resolveTranslation(
       head.employee.translations,
       locale
     );
-    const prefix = headTranslation?.academicTitle
-      ? `${headTranslation.academicTitle} `
-      : '';
-    return {
-      title: `${prefix}${head.employee.firstName} ${head.employee.lastName} - ${t('headOfDepartment')} | KHZIOS`,
-    };
+    const name = [
+      translation?.academicTitle,
+      head.employee.firstName,
+      head.employee.lastName,
+    ]
+      .filter(Boolean)
+      .join(' ');
+    title = `${name} – ${t('headOfDepartment')}`;
   }
 
-  return { title: `${t('headOfDepartment')} | KHZIOS` };
+  return pageMetadata({
+    locale,
+    href: '/about-us/structure/head',
+    title,
+    description: tStruct('headDesc'),
+  });
 }
 
 export default async function HeadPage({ params }: Props) {

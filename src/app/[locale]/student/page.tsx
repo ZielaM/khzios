@@ -8,8 +8,8 @@ import { resolveTranslation } from '@/lib/translations';
 import StudentSchedule from '@/components/StudentSchedule';
 import PageBanner from '@/components/PageBanner';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
-import { buildShareMetadata } from '@/lib/seo';
 import { renderOnFirstRequest } from '@/lib/static-params';
+import { pageMetadata } from '@/lib/seo';
 
 // Documents and the banner change rarely; announcements and consultations are
 // fetched by <StudentSchedule> on every visit instead.
@@ -24,11 +24,15 @@ export const generateStaticParams = renderOnFirstRequest;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations('StudentsPage');
-  const title = `${t('title')} | KHZIOS`;
-  const image = getSectionImage(IMAGE_SECTIONS.student, locale, t('title'));
 
-  return { title, ...buildShareMetadata(title, image) };
+  const t = await getTranslations('StudentsPage');
+  return pageMetadata({
+    locale,
+    href: '/student',
+    title: t('title'),
+    description: t('metaDescription'),
+    image: getSectionImage(IMAGE_SECTIONS.student, locale, t('title')),
+  });
 }
 
 export default async function ForStudentsPage({ params }: Props) {

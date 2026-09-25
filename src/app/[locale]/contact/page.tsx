@@ -11,8 +11,8 @@ import { getSecretariat } from '@/lib/secretariat-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { mapWorkingHours } from '@/lib/working-hours';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
-import { buildShareMetadata } from '@/lib/seo';
 import { renderOnFirstRequest } from '@/lib/static-params';
+import { pageMetadata } from '@/lib/seo';
 
 export const revalidate = 604800;
 
@@ -27,15 +27,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   setRequestLocale(locale);
 
   const t = await getTranslations('Navbar');
+  const tContact = await getTranslations('ContactPage');
   const tHome = await getTranslations('HomePage');
-  const title = `${t('contact')} | KHZIOS`;
-  const image = getSectionImage(
-    IMAGE_SECTIONS.contact,
+  return pageMetadata({
     locale,
-    tHome('heroTitle')
-  );
-
-  return { title, ...buildShareMetadata(title, image) };
+    href: '/contact',
+    title: t('contact'),
+    description: tContact('metaDescription'),
+    image: getSectionImage(IMAGE_SECTIONS.contact, locale, tHome('heroTitle')),
+  });
 }
 
 export default async function ContactPage({ params }: Props) {

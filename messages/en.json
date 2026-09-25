@@ -70,13 +70,15 @@
     "sortDate": "Newest",
     "sortRelevance": "Relevance",
     "noResults": "No results found.",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "metaDescription": "News from the Department of Animal Breeding and Raw Material Evaluation: events, research results, conferences and announcements."
   },
   "PublicationsPage": {
     "title": "Scientific Publications",
     "searchPlaceholder": "Search by title, authors, or journal...",
     "searchButton": "Search",
-    "noResults": "No publications found matching the criteria."
+    "noResults": "No publications found matching the criteria.",
+    "metaDescription": "Scientific publications by the department staff, searchable by title, authors and journal."
   },
   "Pagination": {
     "prev": "Previous page",
@@ -162,7 +164,8 @@
     "hoursLabel": "Working hours",
     "locationLabel": "Office location",
     "teamLabel": "Team",
-    "consultationsLabel": "Consultations"
+    "consultationsLabel": "Consultations",
+    "metaDescription": "{name} – {team}. Contact details and ORCID identifier."
   },
   "AboutUsPage": {
     "title": "About Us",
@@ -194,10 +197,14 @@
     "scheduleLoading": "Loading announcements and consultation hours…",
     "scheduleError": "Announcements and consultation hours could not be loaded.",
     "retry": "Try again",
-    "scheduleNoScript": "Announcements and consultation hours require JavaScript."
+    "scheduleNoScript": "Announcements and consultation hours require JavaScript.",
+    "metaDescription": "Announcements for students, staff consultation hours, and the regulations and syllabi of courses taught by the department."
   },
   "HeroSlideshow": {
     "pause": "Pause photo slideshow",
     "play": "Resume photo slideshow"
+  },
+  "ContactPage": {
+    "metaDescription": "Contact the department office: address, phone, e-mail and opening hours."
   }
 }

@@ -8,7 +8,9 @@ import AnimateOnce from '@/components/AnimateOnce';
 import SpotlightGrid from '@/components/SpotlightGrid';
 import HeroSlideshow from '@/components/HeroSlideshow';
 import { getSectionImages, IMAGE_SECTIONS } from '@/lib/site-images';
-import { getAppUrl, LOGO_IMAGE, toAbsoluteUrl } from '@/lib/seo';
+import { LOGO_IMAGE, pageMetadata, toAbsoluteUrl } from '@/lib/seo';
+import { getPathname } from '@/i18n/routing';
+import type { Metadata } from 'next';
 import clsx from 'clsx';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { BookOpen, GraduationCap, Network, Phone } from 'lucide-react';
@@ -19,6 +21,17 @@ import JsonLd from '@/components/JsonLd';
 // day; everything else here changes far less often.
 export const revalidate = 86400;
 export const generateStaticParams = renderOnFirstRequest;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  // Title and description come from the layout defaults
+  return pageMetadata({ locale, href: '/' });
+}
 
 export default async function Home({
   params,
@@ -36,8 +49,13 @@ export default async function Home({
     '@type': 'EducationalOrganization',
     name: t('heroTitle'),
     description: t('heroSubtitle'),
-    url: getAppUrl(),
+    url: toAbsoluteUrl(getPathname({ locale, href: '/' })),
     logo: toAbsoluteUrl(LOGO_IMAGE),
+    parentOrganization: {
+      '@type': 'CollegeOrUniversity',
+      name: 'Uniwersytet Przyrodniczy w Poznaniu',
+      url: 'https://up.poznan.pl',
+    },
     ...(hasHeroImages && {
       image: heroImages.map((image) => toAbsoluteUrl(image.src)),
     }),

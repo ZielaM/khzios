@@ -11,6 +11,7 @@ import style from './page.module.scss';
 
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
+import { listingMetadata } from '@/lib/seo';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -21,17 +22,19 @@ interface PageProps {
 
 export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const resolvedParams = await params;
-  const locale = resolvedParams.locale;
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
   setRequestLocale(locale);
 
   const t = await getTranslations({ locale, namespace: 'PublicationsPage' });
-  return {
-    title: `${t('title')} | KHZIOS`,
-  };
+  return listingMetadata({
+    locale,
+    pathname: '/about-us/publications',
+    searchParams: await searchParams,
+    title: t('title'),
+    description: t('metaDescription'),
+  });
 }
 
 export default async function PublicationsPage({

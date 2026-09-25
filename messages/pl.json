@@ -70,13 +70,15 @@
     "sortDate": "Najnowsze",
     "sortRelevance": "Trafność",
     "noResults": "Nie znaleziono wyników.",
-    "loadMore": "Pokaż więcej"
+    "loadMore": "Pokaż więcej",
+    "metaDescription": "Aktualności Katedry Hodowli Zwierząt i Oceny Surowców: wydarzenia, wyniki badań, konferencje i komunikaty."
   },
   "PublicationsPage": {
     "title": "Publikacje naukowe",
     "searchPlaceholder": "Szukaj po tytule, autorach lub czasopiśmie...",
     "searchButton": "Szukaj",
-    "noResults": "Nie znaleziono żadnych publikacji spełniających podane kryteria."
+    "noResults": "Nie znaleziono żadnych publikacji spełniających podane kryteria.",
+    "metaDescription": "Publikacje naukowe pracowników Katedry Hodowli Zwierząt i Oceny Surowców z wyszukiwarką po tytule, autorach i czasopiśmie."
   },
   "Pagination": {
     "prev": "Poprzednia strona",
@@ -162,7 +164,8 @@
     "hoursLabel": "Godziny pracy",
     "locationLabel": "Lokalizacja biura",
     "teamLabel": "Zespół",
-    "consultationsLabel": "Konsultacje"
+    "consultationsLabel": "Konsultacje",
+    "metaDescription": "{name} – {team}. Dane kontaktowe i identyfikator ORCID."
   },
   "AboutUsPage": {
     "title": "O nas",
@@ -194,10 +197,14 @@
     "scheduleLoading": "Wczytywanie ogłoszeń i konsultacji…",
     "scheduleError": "Nie udało się wczytać ogłoszeń i terminów konsultacji.",
     "retry": "Spróbuj ponownie",
-    "scheduleNoScript": "Ogłoszenia i terminy konsultacji wymagają włączonej obsługi JavaScriptu."
+    "scheduleNoScript": "Ogłoszenia i terminy konsultacji wymagają włączonej obsługi JavaScriptu.",
+    "metaDescription": "Ogłoszenia dla studentów, terminy konsultacji pracowników oraz statuty i sylabusy przedmiotów prowadzonych przez katedrę."
   },
   "HeroSlideshow": {
     "pause": "Wstrzymaj pokaz zdjęć",
     "play": "Wznów pokaz zdjęć"
+  },
+  "ContactPage": {
+    "metaDescription": "Kontakt z sekretariatem Katedry Hodowli Zwierząt i Oceny Surowców: adres, telefon, e-mail i godziny pracy."
   }
 }

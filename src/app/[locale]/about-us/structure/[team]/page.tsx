@@ -9,12 +9,13 @@ import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
-import { buildShareMetadata } from '@/lib/seo';
 
 // Components
 import FullTeamPage from '@/components/FullTeamPage';
 import ExternalTeamPage from '@/components/ExternalTeamPage';
 import { renderOnFirstRequest } from '@/lib/static-params';
+import { pageMetadata } from '@/lib/seo';
+import { excerpt, stripHtml } from '@/lib/content-utils';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -33,14 +34,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!team) return {};
 
   const { translation } = resolveTranslation(team.translations, locale);
-  const title = translation?.name ? `${translation.name} | KHZIOS` : 'KHZIOS';
-  const image = getSectionImage(
-    IMAGE_SECTIONS.team(team.slug),
+  const name = translation?.name ?? team.slug;
+  return pageMetadata({
     locale,
-    translation?.name
-  );
-
-  return { title, ...buildShareMetadata(title, image) };
+    href: (l) => teamHref(team, l),
+    title: name,
+    description:
+      excerpt(stripHtml(translation?.researchDescription ?? ''), 155) ||
+      undefined,
+    image: getSectionImage(IMAGE_SECTIONS.team(team.slug), locale, name),
+  });
 }
 
 export default async function TeamPage({ params }: Props) {

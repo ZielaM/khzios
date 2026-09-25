@@ -21,7 +21,13 @@ import {
 } from '@/lib/content-utils';
 import { formatDate } from '@/lib/dates';
 import { getNewsById } from '@/lib/news-queries';
-import { DEFAULT_OG_IMAGE, getAppUrl, toAbsoluteUrl } from '@/lib/seo';
+import {
+  DEFAULT_OG_IMAGE,
+  LOGO_IMAGE,
+  pageMetadata,
+  toAbsoluteUrl,
+} from '@/lib/seo';
+import { getPathname } from '@/i18n/routing';
 import NewsGallery from '@/components/NewsGallery/NewsGallery';
 import ShareButton from '@/components/ShareButton/ShareButton';
 import RelatedNews from '@/components/RelatedNews/RelatedNews';
@@ -53,7 +59,6 @@ export async function generateMetadata({
   const resolvedParams = await params;
   const { locale, id } = resolvedParams;
 
-  // Wymagane dla statycznego renderowania przez next-intl
   setRequestLocale(locale);
 
   // Uses React.cache() — deduplicated with the page component's call
@@ -66,27 +71,19 @@ export async function generateMetadata({
 
   const { translation } = resolveTranslation(news.translations, locale);
   // Titles may contain inline HTML; metadata needs plain text
-  const title = stripHtml(translation?.title ?? '') || 'KHZIOS';
-  const description = excerpt(stripHtml(translation?.content ?? ''), 155);
-  // Articles without photos share the site's branded image, not the placeholder
-  const imageUrl =
-    news.photos.length > 0 ? news.photos[0].url : DEFAULT_OG_IMAGE;
+  const title = stripHtml(translation?.title ?? '') || undefined;
+  const mainPhoto = news.photos[0];
 
-  return {
+  return pageMetadata({
+    locale,
+    href: { pathname: '/news/[id]', params: { id } },
     title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: [imageUrl],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: [imageUrl],
-    },
-  };
+    description: excerpt(stripHtml(translation?.content ?? ''), 155),
+    // Articles without photos use the site's default share image
+    image: mainPhoto
+      ? { src: mainPhoto.url, alt: getPhotoAlt(mainPhoto, locale, title ?? '') }
+      : null,
+  });
 }
 
 export default async function NewsDetailsPage({
@@ -125,24 +122,29 @@ export default async function NewsDetailsPage({
   // Pass all photos to the gallery
   const galleryPhotos = news.photos;
 
-  // JSON-LD Structured Data for SEO
+  const tHome = await getTranslations({ locale, namespace: 'HomePage' });
+  const articleUrl = toAbsoluteUrl(
+    getPathname({ locale, href: { pathname: '/news/[id]', params: { id } } })
+  );
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: cleanTitle,
+    description: excerpt(stripHtml(content), 200),
+    inLanguage: translation?.languageCode ?? locale,
+    mainEntityOfPage: articleUrl,
     datePublished: news.publishedAt.toISOString(),
     dateModified: news.updatedAt.toISOString(),
-    image: toAbsoluteUrl(
-      news.photos.length > 0 ? news.photos[0].url : DEFAULT_OG_IMAGE
-    ),
+    image: toAbsoluteUrl(news.photos[0]?.url ?? DEFAULT_OG_IMAGE),
     author: {
       '@type': 'Organization',
-      name: 'Katedra Hodowli Zwierząt i Oceny Surowców',
-      url: getAppUrl(),
+      name: tHome('heroTitle'),
+      url: toAbsoluteUrl(getPathname({ locale, href: '/' })),
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Uniwersytet Przyrodniczy w Poznaniu',
+      name: tHome('heroTitle'),
+      logo: { '@type': 'ImageObject', url: toAbsoluteUrl(LOGO_IMAGE) },
     },
   };
 

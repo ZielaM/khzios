@@ -39,7 +39,6 @@ export async function generateMetadata({
     openGraph: {
       title: t('heroTitle'),
       description: t('heroSubtitle'),
-      url: appUrl,
       siteName: t('heroTitle'),
       images: [
         {

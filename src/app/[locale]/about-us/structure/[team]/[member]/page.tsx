@@ -12,6 +12,8 @@ import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
 import { renderOnFirstRequest } from '@/lib/static-params';
+import { pageMetadata, toAbsoluteUrl } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -28,19 +30,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const team = await getTeamBySlug(teamSlug);
   const member = team && (await getMemberBySlug(memberSlug, team.id));
-  if (!member) return {};
+  if (!team || !member) return {};
 
+  const t = await getTranslations('MemberProfile');
   const { translation } = resolveTranslation(
     member.employee.translations,
     locale
   );
+  const { translation: teamTranslation } = resolveTranslation(
+    team.translations,
+    locale
+  );
+  const name = [
+    translation?.academicTitle,
+    member.employee.firstName,
+    member.employee.lastName,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  const titlePrefix = translation?.academicTitle
-    ? `${translation.academicTitle} `
-    : '';
-  const title = `${titlePrefix}${member.employee.firstName} ${member.employee.lastName} | KHZIOS`;
-
-  return { title };
+  return pageMetadata({
+    locale,
+    href: (l) => memberHref(team, l, memberSlug),
+    title: name,
+    description: t('metaDescription', {
+      name,
+      team: teamTranslation?.name ?? team.slug,
+    }),
+    image: member.employee.photoUrl
+      ? { src: member.employee.photoUrl, alt: name }
+      : null,
+  });
 }
 
 export default async function MemberPage({ params }: Props) {
@@ -70,8 +90,26 @@ export default async function MemberPage({ params }: Props) {
   const teamName = teamTranslation?.name || member.team.slug;
   const hasContact = member.employee.email || member.employee.phone;
 
+  const fullName = `${member.employee.firstName} ${member.employee.lastName}`;
+  const personJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: fullName,
+    ...(title && { honorificPrefix: title }),
+    ...(member.employee.email && { email: member.employee.email }),
+    ...(member.employee.phone && { telephone: member.employee.phone }),
+    ...(member.employee.photoUrl && {
+      image: toAbsoluteUrl(member.employee.photoUrl),
+    }),
+    ...(member.employee.orcid && {
+      sameAs: [`https://orcid.org/${member.employee.orcid}`],
+    }),
+    worksFor: { '@type': 'Organization', name: teamName },
+  };
+
   return (
     <div className={style.page}>
+      <JsonLd data={personJsonLd} />
       {/* Back Link */}
       <AnimateOnce>
         <BackLink href={teamHref(team, locale)}>{t('backToTeam')}</BackLink>

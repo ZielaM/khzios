@@ -12,6 +12,7 @@ import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import style from './page.module.scss';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { teamHref } from '@/lib/team-routes';
+import { pageMetadata } from '@/lib/seo';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -27,7 +28,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   setRequestLocale(locale);
 
   const t = await getTranslations('StructurePage');
-  return { title: `${t('title')} | KHZIOS` };
+  return pageMetadata({
+    locale,
+    href: '/about-us/structure',
+    title: t('title'),
+    description: t('description'),
+  });
 }
 
 export default async function StructurePage({ params }: Props) {

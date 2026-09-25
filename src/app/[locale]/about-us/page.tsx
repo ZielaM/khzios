@@ -8,8 +8,8 @@ import BackLink from '@/components/BackLink';
 import AnimateOnce from '@/components/AnimateOnce';
 import HeroSlideshow from '@/components/HeroSlideshow';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
-import { buildShareMetadata } from '@/lib/seo';
 import style from './page.module.scss';
+import { pageMetadata } from '@/lib/seo';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -26,10 +26,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   setRequestLocale(locale);
 
   const t = await getTranslations('AboutUsPage');
-  const title = `${t('title')} | KHZIOS`;
-  const image = getSectionImage(IMAGE_SECTIONS.aboutUs, locale, t('title'));
-
-  return { title, ...buildShareMetadata(title, image, t('description')) };
+  return pageMetadata({
+    locale,
+    href: '/about-us',
+    title: t('title'),
+    description: t('description'),
+    image: getSectionImage(IMAGE_SECTIONS.aboutUs, locale, t('title')),
+  });
 }
 
 export default async function AboutUsPage({ params }: Props) {

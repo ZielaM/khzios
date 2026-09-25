@@ -31,11 +31,7 @@ export default function FullTeamPage({
         <TeamHero name={teamTranslation?.name || team.slug} image={image} />
 
         <div className={style.contentGrid}>
-          <TeamMembers
-            members={team.members}
-            locale={locale}
-            teamSlug={team.slug}
-          />
+          <TeamMembers members={team.members} locale={locale} team={team} />
 
           <TeamResearch content={teamTranslation?.researchDescription} />
 

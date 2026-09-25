@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link, routing } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
+import { renderOnFirstRequest } from '@/lib/static-params';
 import { Metadata } from 'next';
 import { ArrowRight, BookOpen, Network } from 'lucide-react';
 import SpotlightGrid from '@/components/SpotlightGrid';
@@ -17,9 +18,8 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+// The layout loads the team menu from the database
+export const generateStaticParams = renderOnFirstRequest;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;

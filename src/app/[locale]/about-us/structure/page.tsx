@@ -11,6 +11,7 @@ import { resolveTranslation } from '@/lib/translations';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import style from './page.module.scss';
 import { renderOnFirstRequest } from '@/lib/static-params';
+import { teamHref } from '@/lib/team-routes';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -75,12 +76,12 @@ export default async function StructurePage({ params }: Props) {
 
               const image = teamImages.get(team.id);
 
-              // Build the href using the team slug as a typed route
-              const href =
-                `/about-us/structure/${team.slug}` as `/about-us/structure/ruminants`;
-
               return (
-                <Link key={team.id} href={href} className={style.card}>
+                <Link
+                  key={team.id}
+                  href={teamHref(team, locale)}
+                  className={style.card}
+                >
                   {showThumbnails && (
                     // Decorative: the card's heading already names the team
                     <div className={style.cardImage} aria-hidden="true">

@@ -1,17 +1,17 @@
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   getTeamBySlug,
-  getAllTeamSlugs,
   getAllTeams,
   getMemberBySlug,
   getAllMemberSlugs,
+  getNavigationTeams,
 } from '../team-queries';
 import { prisma } from '@/lib/prisma';
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
     team: {
-      findUnique: vi.fn(),
+      findFirst: vi.fn(),
       findMany: vi.fn(),
     },
     teamMember: {
@@ -25,99 +25,136 @@ vi.mock('react', () => ({
   cache: <T extends (...args: unknown[]) => unknown>(fn: T) => fn,
 }));
 
+type Resolved<T extends (...args: never[]) => unknown> = Awaited<ReturnType<T>>;
+
 describe('team-queries', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-06-01T12:00:00Z'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe('getTeamBySlug', () => {
-    it('calls prisma.team.findUnique with correct slug and includes', async () => {
-      const mockTeam = { slug: 'test-team' };
-      vi.mocked(prisma.team.findUnique).mockResolvedValue(
-        mockTeam as unknown as Awaited<
-          ReturnType<typeof prisma.team.findUnique>
-        >
+    const team = {
+      slug: 'ruminants',
+      projects: [
+        { id: 'p1', years: '2018–2020' },
+        { id: 'p2', years: '2021–2023' },
+        { id: 'p3', years: '2025–' },
+        { id: 'p4', years: 'ongoing' },
+      ],
+    };
+
+    it('finds a team by its slug in any language or its canonical slug', async () => {
+      vi.mocked(prisma.team.findFirst).mockResolvedValue(
+        team as unknown as Resolved<typeof prisma.team.findFirst>
       );
 
-      const result = await getTeamBySlug('test-team');
+      await getTeamBySlug('przezuwajace');
 
-      expect(prisma.team.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'test-team' },
-        include: expect.any(Object),
+      const args = vi.mocked(prisma.team.findFirst).mock.calls[0][0];
+      expect(args?.where).toEqual({
+        OR: [
+          { slug: 'przezuwajace' },
+          { translations: { some: { slug: 'przezuwajace' } } },
+        ],
       });
-      expect(result).toEqual(mockTeam);
     });
-  });
 
-  describe('getAllTeamSlugs', () => {
-    it('selects all team slugs', async () => {
-      const mockSlugs = [{ slug: 'team-a' }, { slug: 'team-b' }];
-      vi.mocked(prisma.team.findMany).mockResolvedValue(
-        mockSlugs as unknown as Awaited<ReturnType<typeof prisma.team.findMany>>
+    it('limits publications to the last five years', async () => {
+      vi.mocked(prisma.team.findFirst).mockResolvedValue(
+        team as unknown as Resolved<typeof prisma.team.findFirst>
       );
 
-      const result = await getAllTeamSlugs();
+      await getTeamBySlug('ruminants');
 
-      expect(prisma.team.findMany).toHaveBeenCalledWith({
-        select: { slug: true },
+      const args = vi.mocked(prisma.team.findFirst).mock.calls[0][0];
+      expect(args?.include?.publications).toMatchObject({
+        where: { year: { gte: 2022 } },
       });
-      expect(result).toEqual(mockSlugs);
+    });
+
+    it('keeps projects that end within the last five years or are ongoing', async () => {
+      vi.mocked(prisma.team.findFirst).mockResolvedValue(
+        team as unknown as Resolved<typeof prisma.team.findFirst>
+      );
+
+      const result = await getTeamBySlug('ruminants');
+
+      expect(result?.projects.map((p) => p.id)).toEqual(['p2', 'p3', 'p4']);
+    });
+
+    it('returns null for an unknown team', async () => {
+      vi.mocked(prisma.team.findFirst).mockResolvedValue(null);
+      expect(await getTeamBySlug('unknown')).toBeNull();
     });
   });
 
   describe('getAllTeams', () => {
-    it('fetches all teams ordered by displayOrder', async () => {
-      const mockTeams = [{ id: '1' }];
-      vi.mocked(prisma.team.findMany).mockResolvedValue(
-        mockTeams as unknown as Awaited<ReturnType<typeof prisma.team.findMany>>
-      );
-
-      const result = await getAllTeams();
-
+    it('orders teams by display order', async () => {
+      vi.mocked(prisma.team.findMany).mockResolvedValue([]);
+      await getAllTeams();
       expect(prisma.team.findMany).toHaveBeenCalledWith({
         include: { translations: true },
         orderBy: { displayOrder: 'asc' },
       });
-      expect(result).toEqual(mockTeams);
+    });
+  });
+
+  describe('getNavigationTeams', () => {
+    it('returns names and page slugs in the requested language', async () => {
+      vi.mocked(prisma.team.findMany).mockResolvedValue([
+        {
+          slug: 'ruminants',
+          translations: [
+            { languageCode: 'pl', name: 'Przeżuwacze', slug: 'przezuwajace' },
+            { languageCode: 'en', name: 'Ruminants', slug: 'ruminants' },
+          ],
+        },
+      ] as unknown as Resolved<typeof prisma.team.findMany>);
+
+      expect(await getNavigationTeams('pl')).toEqual([
+        { name: 'Przeżuwacze', slug: 'przezuwajace' },
+      ]);
+      // uk falls back to English
+      expect(await getNavigationTeams('uk')).toEqual([
+        { name: 'Ruminants', slug: 'ruminants' },
+      ]);
     });
   });
 
   describe('getMemberBySlug', () => {
-    it('fetches a member by profileSlug', async () => {
-      const mockMember = { id: 'm1' };
-      vi.mocked(prisma.teamMember.findFirst).mockResolvedValue(
-        mockMember as unknown as Awaited<
-          ReturnType<typeof prisma.teamMember.findFirst>
-        >
-      );
+    it('looks the member up within the given team', async () => {
+      vi.mocked(prisma.teamMember.findFirst).mockResolvedValue(null);
 
-      const result = await getMemberBySlug('john-doe');
+      await getMemberBySlug('jan-kowalski', 'team-2');
 
       expect(prisma.teamMember.findFirst).toHaveBeenCalledWith({
-        where: { employee: { profileSlug: 'john-doe' } },
+        where: { teamId: 'team-2', employee: { profileSlug: 'jan-kowalski' } },
         include: expect.any(Object),
       });
-      expect(result).toEqual(mockMember);
     });
   });
 
   describe('getAllMemberSlugs', () => {
-    it('selects member profile slugs and team slugs', async () => {
-      const mockData = [
-        { employee: { profileSlug: 'john' }, team: { slug: 'team-a' } },
-      ];
-      vi.mocked(prisma.teamMember.findMany).mockResolvedValue(
-        mockData as unknown as Awaited<
-          ReturnType<typeof prisma.teamMember.findMany>
-        >
-      );
-
-      const result = await getAllMemberSlugs();
-
+    it('selects profile slugs with the team slugs needed for URLs', async () => {
+      vi.mocked(prisma.teamMember.findMany).mockResolvedValue([]);
+      await getAllMemberSlugs();
       expect(prisma.teamMember.findMany).toHaveBeenCalledWith({
-        select: expect.any(Object),
+        select: {
+          employee: { select: { profileSlug: true } },
+          team: {
+            select: {
+              slug: true,
+              translations: { select: { languageCode: true, slug: true } },
+            },
+          },
+        },
       });
-      expect(result).toEqual(mockData);
     });
   });
 });

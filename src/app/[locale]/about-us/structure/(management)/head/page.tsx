@@ -26,9 +26,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const head = await getDepartmentHead();
 
   if (head && head.employee) {
-    const headTranslation =
-      head.employee.translations.find((tr) => tr.languageCode === locale) ||
-      head.employee.translations[0];
+    const { translation: headTranslation } = resolveTranslation(
+      head.employee.translations,
+      locale
+    );
     const prefix = headTranslation?.academicTitle
       ? `${headTranslation.academicTitle} `
       : '';

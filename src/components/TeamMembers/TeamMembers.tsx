@@ -5,18 +5,21 @@ import { Link } from '@/i18n/routing';
 import style from './TeamMembers.module.scss';
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
+import { memberHref } from '@/lib/team-routes';
 import AnimateOnce from '@/components/AnimateOnce';
 
 interface TeamMembersProps {
   members: TeamWithRelations['members'];
   locale: string;
-  teamSlug: string;
+  team: TeamSlugs;
 }
+
+type TeamSlugs = Pick<TeamWithRelations, 'slug' | 'translations'>;
 
 export default function TeamMembers({
   members,
   locale,
-  teamSlug,
+  team,
 }: TeamMembersProps) {
   const t = useTranslations('TeamPage');
 
@@ -38,7 +41,7 @@ export default function TeamMembers({
                 key={member.id}
                 member={member}
                 locale={locale}
-                teamSlug={teamSlug}
+                team={team}
               />
             ))}
           </div>
@@ -54,7 +57,7 @@ export default function TeamMembers({
                 key={member.id}
                 member={member}
                 locale={locale}
-                teamSlug={teamSlug}
+                team={team}
               />
             ))}
           </div>
@@ -67,11 +70,11 @@ export default function TeamMembers({
 function MemberCard({
   member,
   locale,
-  teamSlug,
+  team,
 }: {
   member: TeamWithRelations['members'][0];
   locale: string;
-  teamSlug: string;
+  team: TeamSlugs;
 }) {
   const t = useTranslations('TeamPage');
   const { translation } = resolveTranslation(
@@ -106,10 +109,7 @@ function MemberCard({
           >{`${member.employee.firstName} ${member.employee.lastName}`}</div>
           {member.employee.profileSlug && (
             <Link
-              href={{
-                pathname: '/about-us/structure/[team]/[member]' as const,
-                params: { team: teamSlug, member: member.employee.profileSlug },
-              }}
+              href={memberHref(team, locale, member.employee.profileSlug)}
               className={style.profileLink}
             >
               {t('viewProfile')} <ChevronRight aria-hidden="true" size={14} />

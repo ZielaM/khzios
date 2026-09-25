@@ -3,6 +3,21 @@ import { render, screen } from '@testing-library/react';
 import TeamMembers from '../TeamMembers';
 import { TeamWithRelations } from '@/lib/team-queries';
 
+// Team with a Polish URL slug that differs from its canonical slug
+const team = {
+  slug: 'test-team',
+  translations: [
+    {
+      teamId: 't1',
+      languageCode: 'pl' as const,
+      slug: 'zespol-testowy',
+      name: 'Zespół testowy',
+      researchDescription: null,
+      teachingDescription: null,
+    },
+  ],
+};
+
 describe('TeamMembers Logic', () => {
   const mockMembers: TeamWithRelations['members'] = [
     {
@@ -75,15 +90,13 @@ describe('TeamMembers Logic', () => {
 
   it('renders nothing when members list is empty', () => {
     const { container } = render(
-      <TeamMembers members={[]} locale="pl" teamSlug="test-team" />
+      <TeamMembers members={[]} locale="pl" team={team} />
     );
     expect(container).toBeEmptyDOMElement();
   });
 
   it('renders academic and technical staff sections correctly', () => {
-    render(
-      <TeamMembers members={mockMembers} locale="pl" teamSlug="test-team" />
-    );
+    render(<TeamMembers members={mockMembers} locale="pl" team={team} />);
 
     // Section titles are mocked by next-intl (returns the key)
     expect(screen.getByText('membersTitle')).toBeInTheDocument();
@@ -92,9 +105,7 @@ describe('TeamMembers Logic', () => {
   });
 
   it('renders member cards with correct employee data', () => {
-    render(
-      <TeamMembers members={mockMembers} locale="pl" teamSlug="test-team" />
-    );
+    render(<TeamMembers members={mockMembers} locale="pl" team={team} />);
 
     // Assert full name and academic title are rendered
     expect(screen.getByText('Jan Kowalski')).toBeInTheDocument();
@@ -107,9 +118,7 @@ describe('TeamMembers Logic', () => {
   });
 
   it('renders profile link only if profileSlug is present', () => {
-    render(
-      <TeamMembers members={mockMembers} locale="pl" teamSlug="test-team" />
-    );
+    render(<TeamMembers members={mockMembers} locale="pl" team={team} />);
 
     // All mock employees have a profileSlug now
     const profileLinks = screen.getAllByText(/viewProfile/i);
@@ -117,11 +126,15 @@ describe('TeamMembers Logic', () => {
 
     // Check if the link exists
     expect(profileLinks[0].closest('a')).toBeInTheDocument();
+    // Profile links use the team's slug in the page language
+    expect(profileLinks[0].closest('a')?.getAttribute('href')).toMatch(
+      /^\/about-us\/structure\/zespol-testowy\//
+    );
   });
 
   it('renders photo or fallback icon appropriately', () => {
     const { container } = render(
-      <TeamMembers members={mockMembers} locale="pl" teamSlug="test-team" />
+      <TeamMembers members={mockMembers} locale="pl" team={team} />
     );
 
     // Jan has a photo

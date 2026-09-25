@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { getPathname, routing } from '@/i18n/routing';
 import { getPublishedNewsForSitemap } from '@/lib/news-queries';
-import { getAllMemberSlugs, getAllTeamSlugs } from '@/lib/team-queries';
+import { getAllMemberSlugs, getAllTeams } from '@/lib/team-queries';
+import { memberHref, teamHref } from '@/lib/team-routes';
 import { getSectionImages, IMAGE_SECTIONS } from '@/lib/site-images';
 import { toAbsoluteUrl } from '@/lib/seo';
 
@@ -10,19 +11,26 @@ import { toAbsoluteUrl } from '@/lib/seo';
 export const dynamic = 'force-dynamic';
 
 type Href = Parameters<typeof getPathname>[0]['href'];
+type Locale = (typeof routing.locales)[number];
 
 /**
  * One <url> per locale, each listing all language versions (hreflang)
- * and the photos shown on that page (Google image sitemap).
+ * and the photos shown on that page (Google image sitemap). `href` may
+ * depend on the locale when the page has per-language slugs.
  */
 function localizedEntries(
-  href: Href,
+  href: Href | ((locale: Locale) => Href),
   options: { images?: string[]; lastModified?: Date } = {}
 ): MetadataRoute.Sitemap {
   const languages = Object.fromEntries(
     routing.locales.map((locale) => [
       locale,
-      toAbsoluteUrl(getPathname({ locale, href })),
+      toAbsoluteUrl(
+        getPathname({
+          locale,
+          href: typeof href === 'function' ? href(locale) : href,
+        })
+      ),
     ])
   );
 
@@ -42,7 +50,7 @@ function sectionImageUrls(section: string): string[] {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [news, teams, members] = await Promise.all([
     getPublishedNewsForSitemap(),
-    getAllTeamSlugs(),
+    getAllTeams(),
     getAllMemberSlugs(),
   ]);
 
@@ -68,20 +76,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       images: sectionImageUrls(IMAGE_SECTIONS.contact).slice(0, 1),
     }),
     ...teams.flatMap((team) =>
-      localizedEntries(
-        // Same cast as the structure page: team slugs are typed routes
-        `/about-us/structure/${team.slug}` as '/about-us/structure/ruminants',
-        { images: sectionImageUrls(IMAGE_SECTIONS.team(team.slug)).slice(0, 1) }
+      localizedEntries((locale) => teamHref(team, locale), {
+        images: sectionImageUrls(IMAGE_SECTIONS.team(team.slug)).slice(0, 1),
+      })
+    ),
+    ...members.flatMap((m) =>
+      localizedEntries((locale) =>
+        memberHref(m.team, locale, m.employee.profileSlug)
       )
     ),
-    ...members
-      .map((m) =>
-        localizedEntries({
-          pathname: '/about-us/structure/[team]/[member]',
-          params: { team: m.team.slug, member: m.employee.profileSlug },
-        })
-      )
-      .flat(),
     ...news.flatMap((article) =>
       localizedEntries(
         { pathname: '/news/[id]', params: { id: article.id } },

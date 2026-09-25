@@ -6,6 +6,7 @@ import { getTranslations } from 'next-intl/server';
 import { LanguageCode } from '@/types/search-types';
 import { resolveTranslation } from '@/lib/translations';
 import { Link } from '@/i18n/routing';
+import { teamHref } from '@/lib/team-routes';
 
 interface PublicationsListServerProps {
   query?: string;
@@ -86,8 +87,7 @@ export default async function PublicationsListServer({
 
                       {pub.team && teamTranslation && (
                         <Link
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          href={`/about-us/structure/${pub.team.slug}` as any}
+                          href={teamHref(pub.team, locale)}
                           className={style.teamLink}
                         >
                           {teamTranslation.name}{' '}

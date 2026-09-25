@@ -13,6 +13,7 @@ import {
 import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { DEFAULT_OG_IMAGE, getAppUrl } from '@/lib/seo';
+import { getNavigationTeams } from '@/lib/team-queries';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -74,8 +75,11 @@ export default async function RootLayout({
   }
 
   setRequestLocale(locale);
-  const messages = await getMessages();
-  const tWcag = await getTranslations('Wcag');
+  const [messages, tWcag, teams] = await Promise.all([
+    getMessages(),
+    getTranslations('Wcag'),
+    getNavigationTeams(locale),
+  ]);
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -108,7 +112,7 @@ export default async function RootLayout({
           <a href="#main-content" className="skip-link">
             {tWcag('skipToMain')}
           </a>
-          <Navbar />
+          <Navbar teams={teams} />
           <main id="main-content">{children}</main>
           <Footer />
         </NextIntlClientProvider>

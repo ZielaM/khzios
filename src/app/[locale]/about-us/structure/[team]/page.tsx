@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getTeamBySlug } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import BackLink from '@/components/BackLink';
+import { permanentRedirect } from '@/i18n/routing';
+import { teamHref, teamSlugFor } from '@/lib/team-routes';
 import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
@@ -47,6 +49,12 @@ export default async function TeamPage({ params }: Props) {
 
   const team = await getTeamBySlug(teamSlug);
   if (!team) notFound();
+
+  // A slug from another language (e.g. after switching languages) or the
+  // canonical slug leads to this language's address
+  if (teamSlug !== teamSlugFor(team, locale)) {
+    permanentRedirect({ href: teamHref(team, locale), locale });
+  }
 
   const t = await getTranslations('TeamPage');
   const { translation } = resolveTranslation(team.translations, locale);

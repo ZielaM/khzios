@@ -2,6 +2,8 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Navbar from '../Navbar';
 
+const teams = [{ name: 'Zespół testowy', slug: 'zespol-testowy' }];
+
 // We mock subcomponents to isolate testing to Navbar logic
 vi.mock('../NavItem', () => ({
   default: ({ label, onClick }: { label: string; onClick?: () => void }) => (
@@ -66,7 +68,7 @@ vi.mock('../WcagControls', () => ({
 
 describe('Navbar', () => {
   it('renders logo and standard links', () => {
-    render(<Navbar />);
+    render(<Navbar teams={teams} />);
     expect(screen.getByTestId('logo-link')).toBeInTheDocument();
     expect(screen.getByTestId('nav-item-news')).toBeInTheDocument();
     expect(screen.getByTestId('nav-item-forStudents')).toBeInTheDocument();
@@ -74,8 +76,15 @@ describe('Navbar', () => {
     expect(screen.getByTestId('dropdown-aboutUs')).toBeInTheDocument();
   });
 
+  it('lists the teams passed from the database under the structure menu', () => {
+    render(<Navbar teams={teams} />);
+    expect(
+      screen.getByTestId('dropdown-item-Zespół testowy')
+    ).toBeInTheDocument();
+  });
+
   it('toggles mobile menu when hamburger is clicked', () => {
-    render(<Navbar />);
+    render(<Navbar teams={teams} />);
     const hamburger = screen.getByLabelText('toggleMenu');
 
     // Initial state
@@ -91,7 +100,7 @@ describe('Navbar', () => {
   });
 
   it('closes mobile menu when logo is clicked', () => {
-    render(<Navbar />);
+    render(<Navbar teams={teams} />);
     const hamburger = screen.getByLabelText('toggleMenu');
 
     // Open menu
@@ -106,7 +115,7 @@ describe('Navbar', () => {
   });
 
   it('closes mobile menu when a NavItem is clicked', () => {
-    render(<Navbar />);
+    render(<Navbar teams={teams} />);
     const hamburger = screen.getByLabelText('toggleMenu');
 
     fireEvent.click(hamburger);
@@ -120,7 +129,7 @@ describe('Navbar', () => {
 
   it('closes mobile menu when pathname changes', async () => {
     vi.useFakeTimers();
-    const { rerender } = render(<Navbar />);
+    const { rerender } = render(<Navbar teams={teams} />);
     const hamburger = screen.getByLabelText('toggleMenu');
 
     fireEvent.click(hamburger);
@@ -129,7 +138,7 @@ describe('Navbar', () => {
     // Simulate pathname change
     mockPathname = '/new-path';
 
-    rerender(<Navbar />);
+    rerender(<Navbar teams={teams} />);
 
     // Fast-forward timeout inside useEffect wrapped in act
     act(() => {

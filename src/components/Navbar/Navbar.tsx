@@ -18,8 +18,9 @@ import NavItem from './NavItem';
 import { DropdownMenu, DropdownItem } from './DropdownMenu';
 import SettingsDropdown from './SettingsDropdown';
 import WcagControls from './WcagControls';
+import type { NavigationTeam } from '@/lib/team-queries';
 
-export default function Navbar() {
+export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
   // State controlling the mobile slide-down menu visibility
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -101,30 +102,16 @@ export default function Navbar() {
                 label={t('headOfDepartment')}
                 href="/about-us/structure/head"
               />
-              <DropdownItem
-                label={t('ruminants')}
-                href="/about-us/structure/ruminants"
-              />
-              <DropdownItem
-                label={t('poultry')}
-                href="/about-us/structure/poultry"
-              />
-              <DropdownItem
-                label={t('swine')}
-                href="/about-us/structure/swine"
-              />
-              <DropdownItem
-                label={t('furAnimals')}
-                href="/about-us/structure/fur-animals"
-              />
-              <DropdownItem
-                label={t('vetLab')}
-                href="/about-us/structure/veterinary"
-              />
-              <DropdownItem
-                label={t('breedingBooks')}
-                href="/about-us/structure/zlotnicka-pig-herdbooks"
-              />
+              {teams.map((team) => (
+                <DropdownItem
+                  key={team.slug}
+                  label={team.name}
+                  href={{
+                    pathname: '/about-us/structure/[team]',
+                    params: { team: team.slug },
+                  }}
+                />
+              ))}
             </DropdownItem>
             {/* Another Level 1 Item */}
             <DropdownItem

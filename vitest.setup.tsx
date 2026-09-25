@@ -60,9 +60,13 @@ vi.mock('@/i18n/routing', () => ({
   }: Omit<React.ComponentProps<'a'>, 'href'> & {
     href: string | { pathname?: string; params?: Record<string, string> };
   }) => {
+    // Fill dynamic segments such as [id] or [team] from params
     const hrefString =
       typeof href === 'object'
-        ? (href.pathname?.replace('[id]', href.params?.id ?? '') ?? '#')
+        ? (href.pathname?.replace(
+            /\[(\w+)\]/g,
+            (_, key: string) => href.params?.[key] ?? ''
+          ) ?? '#')
         : href;
     return (
       <a href={hrefString} {...props}>

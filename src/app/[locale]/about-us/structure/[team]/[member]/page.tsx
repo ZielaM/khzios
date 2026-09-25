@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { getMemberBySlug } from '@/lib/team-queries';
+import { getMemberBySlug, getTeamBySlug } from '@/lib/team-queries';
+import { memberHref, teamHref, teamSlugFor } from '@/lib/team-routes';
 import { resolveTranslation } from '@/lib/translations';
-import { Link } from '@/i18n/routing';
+import { Link, permanentRedirect } from '@/i18n/routing';
 import { Mail, Phone, ExternalLink, Users, User } from 'lucide-react';
 import BackLink from '@/components/BackLink';
 import Image from 'next/image';
@@ -22,10 +23,11 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale, member: memberSlug } = await params;
+  const { locale, team: teamSlug, member: memberSlug } = await params;
   setRequestLocale(locale);
 
-  const member = await getMemberBySlug(memberSlug);
+  const team = await getTeamBySlug(teamSlug);
+  const member = team && (await getMemberBySlug(memberSlug, team.id));
   if (!member) return {};
 
   const { translation } = resolveTranslation(
@@ -45,8 +47,14 @@ export default async function MemberPage({ params }: Props) {
   const { locale, team: teamSlug, member: memberSlug } = await params;
   setRequestLocale(locale);
 
-  const member = await getMemberBySlug(memberSlug);
-  if (!member || member.team.slug !== teamSlug) notFound();
+  const team = await getTeamBySlug(teamSlug);
+  if (!team) notFound();
+  if (teamSlug !== teamSlugFor(team, locale)) {
+    permanentRedirect({ href: memberHref(team, locale, memberSlug), locale });
+  }
+
+  const member = await getMemberBySlug(memberSlug, team.id);
+  if (!member) notFound();
 
   const t = await getTranslations('MemberProfile');
   const { translation: memberTranslation } = resolveTranslation(
@@ -66,13 +74,7 @@ export default async function MemberPage({ params }: Props) {
     <div className={style.page}>
       {/* Back Link */}
       <AnimateOnce>
-        <BackLink
-          href={
-            `/about-us/structure/${teamSlug}` as `/about-us/structure/ruminants`
-          }
-        >
-          {t('backToTeam')}
-        </BackLink>
+        <BackLink href={teamHref(team, locale)}>{t('backToTeam')}</BackLink>
       </AnimateOnce>
 
       {/* Hero Card */}
@@ -102,9 +104,7 @@ export default async function MemberPage({ params }: Props) {
               <Users aria-hidden="true" size={16} />
               <span>{t('teamLabel')}:</span>
               <Link
-                href={
-                  `/about-us/structure/${teamSlug}` as `/about-us/structure/ruminants`
-                }
+                href={teamHref(team, locale)}
                 className={style.teamBadgeLink}
               >
                 {teamName}

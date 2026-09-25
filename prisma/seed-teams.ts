@@ -9,6 +9,39 @@ const slugify = (name: string): string =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 
+// URL segment of each team page per language
+const LOCALIZED_SLUGS: Record<
+  string,
+  Record<'pl' | 'en' | 'uk' | 'ru', string>
+> = {
+  ruminants: {
+    pl: 'przezuwajace',
+    en: 'ruminants',
+    uk: 'zhuyni',
+    ru: 'zhvachnye',
+  },
+  poultry: { pl: 'drob', en: 'poultry', uk: 'ptytsia', ru: 'ptitsa' },
+  swine: { pl: 'trzoda', en: 'swine', uk: 'svyni', ru: 'svini' },
+  'fur-animals': {
+    pl: 'futerkowe',
+    en: 'fur-animals',
+    uk: 'khutrovi',
+    ru: 'pushnye',
+  },
+  veterinary: {
+    pl: 'weterynaryjna',
+    en: 'veterinary',
+    uk: 'veterynarna',
+    ru: 'veterinarnaya',
+  },
+  'zlotnicka-pig-herdbooks': {
+    pl: 'ksiegi-zlotnickie',
+    en: 'zlotnicka-pig-herdbooks',
+    uk: 'knyhy-zlotnytski',
+    ru: 'knigi-zlotnitskie',
+  },
+};
+
 export async function seedTeams() {
   console.log('Tworzenie zespołów...');
 
@@ -538,6 +571,7 @@ export async function seedTeams() {
         translations: {
           create: (['pl', 'en', 'uk', 'ru'] as const).map((lc) => ({
             languageCode: lc,
+            slug: LOCALIZED_SLUGS[t.slug][lc],
             name: t.names[lc],
             researchDescription: t.research[lc],
             teachingDescription: t.teaching[lc],
@@ -705,6 +739,7 @@ export async function seedTeams() {
         translations: {
           create: (['pl', 'en', 'uk', 'ru'] as const).map((lc) => ({
             languageCode: lc,
+            slug: LOCALIZED_SLUGS[t.slug][lc],
             name: t.names[lc],
           })),
         },

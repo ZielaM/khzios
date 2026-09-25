@@ -13,6 +13,7 @@ import {
   LANGUAGE_NAMES,
 } from '@/lib/translations';
 import {
+  excerpt,
   getPhotoAlt,
   getPhotoUrl,
   stripHtml,
@@ -63,13 +64,9 @@ export async function generateMetadata({
   }
 
   const { translation } = resolveTranslation(news.translations, locale);
-  const title = translation?.title ?? 'KHZIOS';
-  const rawDescription = translation?.content
-    ? translation.content.substring(0, 150) + '...'
-    : '';
-
-  // Use stripHtml for clean plain-text stripping via DOMPurify
-  const description = stripHtml(rawDescription);
+  // Titles may contain inline HTML; metadata needs plain text
+  const title = stripHtml(translation?.title ?? '') || 'KHZIOS';
+  const description = excerpt(stripHtml(translation?.content ?? ''), 155);
   // Articles without photos share the site's branded image, not the placeholder
   const imageUrl =
     news.photos.length > 0 ? news.photos[0].url : DEFAULT_OG_IMAGE;
@@ -78,13 +75,13 @@ export async function generateMetadata({
     title,
     description,
     openGraph: {
-      title: stripHtml(title),
+      title,
       description,
       images: [imageUrl],
     },
     twitter: {
       card: 'summary_large_image',
-      title: stripHtml(title),
+      title,
       description,
       images: [imageUrl],
     },

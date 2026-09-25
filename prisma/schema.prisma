@@ -115,6 +115,8 @@ model Team {
 model TeamTranslation {
   teamId              String
   languageCode        LanguageCode
+  // URL segment of the team page in this language, e.g. "przezuwajace"
+  slug                String
   name                String // Team name
   researchDescription String? // Research directions paragraph
   teachingDescription String? // Teaching paragraph
@@ -122,6 +124,7 @@ model TeamTranslation {
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@id([teamId, languageCode])
+  @@unique([languageCode, slug])
 }
 
 model TeamLink {

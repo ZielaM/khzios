@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { prisma } from '@/lib/prisma';
 import { seedTeams } from './seed-teams';
 import { seedHead } from './seed-head';
@@ -12,6 +13,17 @@ const getRandomMultiple = <T>(arr: T[], count: number) => {
 };
 
 async function main() {
+  // The seed wipes every table before inserting demo data. Never let it run
+  // against a production database by accident (e.g. from a container start).
+  if (
+    process.env.NODE_ENV === 'production' &&
+    process.env.ALLOW_DESTRUCTIVE_SEED !== 'true'
+  ) {
+    throw new Error(
+      'Refusing to seed: this deletes all data. Set ALLOW_DESTRUCTIVE_SEED=true to override.'
+    );
+  }
+
   console.log('Rozpoczynam populację bazy danych KHZIOS...');
 
   console.log('Czyszczenie istniejących danych...');

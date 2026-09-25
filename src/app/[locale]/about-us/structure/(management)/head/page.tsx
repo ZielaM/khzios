@@ -1,5 +1,4 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { routing } from '@/i18n/routing';
 import { Metadata } from 'next';
 import BackLink from '@/components/BackLink';
 import ContactProfile from '@/components/ContactProfile';
@@ -8,6 +7,7 @@ import style from './page.module.scss';
 import { getDepartmentHead } from '@/lib/head-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { mapWorkingHours } from '@/lib/working-hours';
+import { renderOnFirstRequest } from '@/lib/static-params';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -16,9 +16,7 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+export const generateStaticParams = renderOnFirstRequest;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;

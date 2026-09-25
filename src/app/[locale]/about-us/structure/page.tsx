@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link, routing } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { ArrowRight, Crown, Users } from 'lucide-react';
@@ -10,6 +10,7 @@ import { getAllTeams } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import style from './page.module.scss';
+import { renderOnFirstRequest } from '@/lib/static-params';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -18,9 +19,7 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+export const generateStaticParams = renderOnFirstRequest;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;

@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { getMemberBySlug, getAllMemberSlugs } from '@/lib/team-queries';
+import { getMemberBySlug } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
-import { Link, routing } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { Mail, Phone, ExternalLink, Users, User } from 'lucide-react';
 import BackLink from '@/components/BackLink';
 import Image from 'next/image';
@@ -10,23 +10,12 @@ import OrcidIcon from '@/components/OrcidIcon';
 import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
+import { renderOnFirstRequest } from '@/lib/static-params';
 
 // ISR every 7 days
 export const revalidate = 604800;
 
-export async function generateStaticParams() {
-  const members = await getAllMemberSlugs();
-
-  return routing.locales.flatMap((locale) =>
-    members
-      .filter((m) => m.employee.profileSlug)
-      .map((m) => ({
-        locale,
-        team: m.team.slug,
-        member: m.employee.profileSlug!,
-      }))
-  );
-}
+export const generateStaticParams = renderOnFirstRequest;
 
 interface Props {
   params: Promise<{ locale: string; team: string; member: string }>;

@@ -5,8 +5,9 @@ import { getAllMemberSlugs, getAllTeamSlugs } from '@/lib/team-queries';
 import { getSectionImages, IMAGE_SECTIONS } from '@/lib/site-images';
 import { toAbsoluteUrl } from '@/lib/seo';
 
-// Rebuild once a day — new articles appear without a redeploy
-export const revalidate = 86400;
+// Rendered per request: it is fetched rarely (by crawlers) and must not be
+// prerendered during `next build`, which runs without database access.
+export const dynamic = 'force-dynamic';
 
 type Href = Parameters<typeof getPathname>[0]['href'];
 

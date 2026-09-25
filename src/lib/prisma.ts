@@ -1,37 +1,33 @@
 import { PrismaClient } from '@/generated/prisma/client';
-import { neonConfig } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
 import { PrismaPg } from '@prisma/adapter-pg';
-import ws from 'ws';
 import { createLogger } from '@/lib/logger';
 
 const log = createLogger('prisma');
 
-neonConfig.webSocketConstructor = ws;
+// A single TCP driver for every environment: production uses a local
+// PostgreSQL server and the Neon development database accepts plain
+// connections too, so behaviour in development matches production.
+const createPrismaClient = () => {
+  const connectionString = process.env.DATABASE_URL;
 
-const connectionString = `${process.env.DATABASE_URL}`;
-
-const prismaClientSingleton = () => {
-  if (!connectionString || connectionString === 'undefined') {
-    log.error('DATABASE_URL is not set — Prisma client cannot connect');
+  // `next build` imports this module while collecting page data without a
+  // database; the pool connects lazily, so only a running server should warn.
+  if (
+    !connectionString &&
+    process.env.NEXT_PHASE !== 'phase-production-build'
+  ) {
+    log.error('DATABASE_URL is not set — database queries will fail');
   }
 
-  const isNeon = connectionString.includes('neon.tech');
-  log.info({ adapter: isNeon ? 'neon' : 'pg' }, 'Initialising Prisma client');
-
-  if (!isNeon) {
-    const adapter = new PrismaPg({ connectionString });
-    return new PrismaClient({ adapter });
-  }
-
-  const adapter = new PrismaNeon({ connectionString });
-  return new PrismaClient({ adapter });
+  return new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 };
 
 declare global {
-  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
+  var prismaGlobal: undefined | ReturnType<typeof createPrismaClient>;
 }
 
-export const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
+// Reuse one client across hot reloads in development to avoid exhausting
+// database connections.
+export const prisma = globalThis.prismaGlobal ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;

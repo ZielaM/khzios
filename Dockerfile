@@ -1,44 +1,46 @@
 # syntax=docker/dockerfile:1
-FROM node:22-alpine
 
-# Install OpenSSL required by Prisma and libc6-compat for Node.js
-RUN apk add --no-cache openssl libc6-compat
-
-WORKDIR /app
-
-# Enable pnpm
+# ── Base: Node + pnpm ───────────────────────────────────────────────────
+FROM node:22-alpine AS base
+RUN apk add --no-cache libc6-compat openssl
 RUN corepack enable pnpm
-
-# Copy package management files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-
-# Install all dependencies (we keep devDependencies for seeding and running migrations)
-RUN pnpm install --frozen-lockfile
-
-# Copy the rest of the application
-COPY . .
-
-# Generate Prisma Client
-RUN pnpm db:generate
-
-# Disable Next.js telemetry
+WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the Next.js application
-RUN pnpm build
+# ── Dependencies (cached until the lockfile changes) ───────────────────
+FROM base AS deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 
-# Expose port
+# ── Build: no database access required ──────────────────────────────────
+FROM deps AS builder
+COPY . .
+RUN pnpm db:generate && pnpm build
+# Keep only runtime dependencies for the final image
+RUN CI=true pnpm prune --prod && rm -rf .next/cache
+
+# ── Migrations and optional demo seed (full toolchain, run once) ────────
+FROM deps AS migrator
+COPY . .
+RUN pnpm db:generate
+CMD ["pnpm", "prisma", "migrate", "deploy"]
+
+# ── Runtime: `next start` as an unprivileged user ───────────────────────
+# Not `output: 'standalone'`: in Next 16 its server turns middleware rewrites
+# into 307 redirects, which breaks next-intl's localized paths
+# (https://github.com/vercel/next.js/issues/91844).
+FROM base AS runner
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0
+
+# The ISR cache is written to .next at runtime, so the app user owns /app
+COPY --from=builder --chown=node:node /app ./
+
+USER node
 EXPOSE 3000
 
-# Set environment variables for production
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:3000/api/health >/dev/null || exit 1
 
-# Add entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-# Set entrypoint to run migrations and seeding before starting the app
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["pnpm", "start"]
+CMD ["node", "node_modules/next/dist/bin/next", "start"]

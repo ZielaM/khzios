@@ -6,20 +6,20 @@ afterEach(() => {
 });
 
 describe('getAppUrl', () => {
-  it('uses NEXT_PUBLIC_APP_URL when set', () => {
-    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://example.org');
+  it('uses APP_URL when set', () => {
+    vi.stubEnv('APP_URL', 'https://example.org');
     expect(getAppUrl()).toBe('https://example.org');
   });
 
   it('falls back to the production domain', () => {
-    vi.stubEnv('NEXT_PUBLIC_APP_URL', '');
+    vi.stubEnv('APP_URL', '');
     expect(getAppUrl()).toBe('https://khzios.up.poznan.pl');
   });
 });
 
 describe('toAbsoluteUrl', () => {
   it('prefixes site-relative paths with the app URL', () => {
-    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://example.org');
+    vi.stubEnv('APP_URL', 'https://example.org');
     expect(toAbsoluteUrl('/images/hero/a.jpg')).toBe(
       'https://example.org/images/hero/a.jpg'
     );

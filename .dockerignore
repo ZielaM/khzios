@@ -1,11 +1,20 @@
-Dockerfile
-.dockerignore
+# Secrets and local configuration never enter the image
+.env*
+
+# Dependencies and build output are recreated inside the image
 node_modules
-npm-debug.log
-README.md
 .next
+
+# Tooling, tests and reports not needed at runtime
 .git
 .github
+.vscode
+coverage
 playwright-report
 test-results
-coverage
+e2e
+*.md
+Dockerfile
+.dockerignore
+docker-compose.yml
+npm-debug.log

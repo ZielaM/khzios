@@ -1,8 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { getTeamBySlug, getAllTeamSlugs } from '@/lib/team-queries';
+import { getTeamBySlug } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
-import { routing } from '@/i18n/routing';
 import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
@@ -13,20 +12,12 @@ import { buildShareMetadata } from '@/lib/seo';
 // Components
 import FullTeamPage from '@/components/FullTeamPage';
 import ExternalTeamPage from '@/components/ExternalTeamPage';
+import { renderOnFirstRequest } from '@/lib/static-params';
 
 // ISR every 7 days
 export const revalidate = 604800;
 
-export async function generateStaticParams() {
-  const teams = await getAllTeamSlugs();
-
-  return routing.locales.flatMap((locale) =>
-    teams.map((team) => ({
-      locale,
-      team: team.slug,
-    }))
-  );
-}
+export const generateStaticParams = renderOnFirstRequest;
 
 interface Props {
   params: Promise<{ locale: string; team: string }>;

@@ -1,35 +1,72 @@
-version: '3.8'
+# Production stack for the university server: app + local PostgreSQL.
+#
+#   cp .env.docker.example .env.docker   # fill in the values
+#   docker compose --env-file .env.docker up -d --build
+#
+# Demo data (DELETES ALL CONTENT — only for a fresh installation):
+#   docker compose --env-file .env.docker --profile seed run --rm seed
+
+name: khzios
+
+x-database-url: &database-url postgresql://${POSTGRES_USER:-khzios}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.docker}@db:5432/${POSTGRES_DB:-khzios}?schema=public
 
 services:
   db:
-    image: postgres:15-alpine
-    restart: always
+    image: postgres:17-alpine
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: khzios
-    ports:
-      - '5432:5432'
+      POSTGRES_USER: ${POSTGRES_USER:-khzios}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.docker}
+      POSTGRES_DB: ${POSTGRES_DB:-khzios}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U admin -d khzios']
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+
+  # Applies pending migrations and exits; the app starts only after it succeeds.
+  migrate:
+    build:
+      context: .
+      target: migrator
+    environment:
+      DATABASE_URL: *database-url
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+
+  seed:
+    profiles: ['seed']
+    build:
+      context: .
+      target: migrator
+    command: ['pnpm', 'db:seed']
+    environment:
+      DATABASE_URL: *database-url
+      NODE_ENV: production
+      ALLOW_DESTRUCTIVE_SEED: 'true'
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
   app:
     build:
       context: .
-      dockerfile: Dockerfile
-    restart: always
+      target: runner
+    restart: unless-stopped
     ports:
-      - '3000:3000'
+      - '${APP_PORT:-3000}:3000'
     environment:
-      - DATABASE_URL=postgresql://admin:password@db:5432/khzios?schema=public
+      DATABASE_URL: *database-url
+      APP_URL: ${APP_URL:-https://khzios.up.poznan.pl}
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
 volumes:
   pgdata:

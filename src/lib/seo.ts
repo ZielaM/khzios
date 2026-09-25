@@ -3,16 +3,15 @@
  */
 
 import type { Metadata } from 'next';
+import { getAppUrl } from '@/lib/env';
+
+export { getAppUrl };
 
 /** Default share image (1200×630) used when a page has no photo of its own */
 export const DEFAULT_OG_IMAGE = '/og-image.png';
 
 /** Square logo referenced from JSON-LD structured data */
 export const LOGO_IMAGE = '/logo-seal.png';
-
-export function getAppUrl(): string {
-  return process.env.NEXT_PUBLIC_APP_URL || 'https://khzios.up.poznan.pl';
-}
 
 /** Turns a site-relative path (`/images/...`) into an absolute URL. */
 export function toAbsoluteUrl(pathOrUrl: string): string {

@@ -1,5 +1,4 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { routing } from '@/i18n/routing';
 import { Briefcase } from 'lucide-react';
 import { Metadata } from 'next';
 import ContactProfile from '@/components/ContactProfile';
@@ -13,6 +12,7 @@ import { resolveTranslation } from '@/lib/translations';
 import { mapWorkingHours } from '@/lib/working-hours';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import { buildShareMetadata } from '@/lib/seo';
+import { renderOnFirstRequest } from '@/lib/static-params';
 
 export const revalidate = 604800;
 
@@ -20,9 +20,7 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+export const generateStaticParams = renderOnFirstRequest;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;

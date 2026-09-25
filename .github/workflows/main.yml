@@ -54,7 +54,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:17
         env:
           POSTGRES_USER: dummy
           POSTGRES_PASSWORD: dummy
@@ -104,11 +104,8 @@ jobs:
       - name: Deploy Database Migrations
         run: pnpm prisma migrate deploy
 
-      - name: Create dummy .env file
-        run: touch .env
-
       - name: Seed Database
-        run: pnpm dlx tsx prisma/seed.ts
+        run: pnpm db:seed
 
       - name: Build Next.js app
         run: pnpm build

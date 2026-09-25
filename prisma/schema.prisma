@@ -36,12 +36,12 @@ model NewsTranslation {
 
   news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
-  // Search vector for full-text search
+  // Maintained by a database trigger (see the search vector migrations)
   searchVector Unsupported("tsvector")?
 
   @@id([newsId, languageCode])
-  // Index for full-text search
-  @@index([searchVector])
+  // GIN is required for the @@ operator; a B-tree index cannot hold long vectors
+  @@index([searchVector], type: Gin)
 }
 
 model Tag {
@@ -212,12 +212,12 @@ model PublicationTranslation {
 
   publication Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
 
-  // Search vector for full-text search
+  // Maintained by a database trigger (see the search vector migrations)
   searchVector Unsupported("tsvector")?
 
   @@id([publicationId, languageCode])
-  // Index for full-text search
-  @@index([searchVector])
+  // GIN is required for the @@ operator; a B-tree index cannot hold long vectors
+  @@index([searchVector], type: Gin)
 }
 
 // ──── Research Projects ───────────────────────────────────────────────

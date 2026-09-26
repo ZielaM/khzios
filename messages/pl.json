@@ -126,8 +126,6 @@
     "membersTitle": "Skład osobowy",
     "academicStaff": "Pracownicy naukowo-dydaktyczni",
     "technicalStaff": "Pracownicy inżynieryjno-techniczni",
-    "researchTitle": "Główne kierunki badawcze",
-    "publicationsTitle": "Wybrane publikacje i projekty badawcze",
     "publicationsSubtitle": "z ostatnich 5 lat",
     "publicationsTab": "Publikacje",
     "projectsTab": "Projekty badawcze",
@@ -135,7 +133,6 @@
     "courseNameHeader": "Nazwa przedmiotu",
     "programHeader": "Kierunek i stopień studiów",
     "coordinatorHeader": "Kierownik przedmiotu",
-    "viewProfile": "Zobacz profil",
     "externalRedirect": "Strona tego zespołu jest dostępna pod adresem zewnętrznym.",
     "funder": "Finansowanie"
   },

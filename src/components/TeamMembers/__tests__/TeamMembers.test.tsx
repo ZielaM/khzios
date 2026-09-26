@@ -117,19 +117,27 @@ describe('TeamMembers Logic', () => {
     expect(screen.getByText('Brak Tlumaczenia')).toBeInTheDocument();
   });
 
-  it('renders profile link only if profileSlug is present', () => {
+  it('links each name to the profile in the team', () => {
     render(<TeamMembers members={mockMembers} locale="pl" team={team} />);
 
-    // All mock employees have a profileSlug now
-    const profileLinks = screen.getAllByText(/viewProfile/i);
-    expect(profileLinks.length).toBe(3);
-
-    // Check if the link exists
-    expect(profileLinks[0].closest('a')).toBeInTheDocument();
+    const link = screen.getByRole('link', { name: 'Jan Kowalski' });
     // Profile links use the team's slug in the page language
-    expect(profileLinks[0].closest('a')?.getAttribute('href')).toMatch(
+    expect(link.getAttribute('href')).toMatch(
       /^\/about-us\/structure\/zespol-testowy\//
     );
+    expect(screen.getAllByRole('link')).toHaveLength(3);
+  });
+
+  it('shows a name without a link when there is no profile', () => {
+    const [first] = mockMembers;
+    const noProfile = {
+      ...first,
+      employee: { ...first.employee, profileSlug: null },
+    } as unknown as (typeof mockMembers)[number];
+    render(<TeamMembers members={[noProfile]} locale="pl" team={team} />);
+
+    expect(screen.getByText('Jan Kowalski')).toBeInTheDocument();
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 
   it('renders photo or fallback icon appropriately', () => {
@@ -137,12 +145,12 @@ describe('TeamMembers Logic', () => {
       <TeamMembers members={mockMembers} locale="pl" team={team} />
     );
 
-    // Jan has a photo
-    const image = screen.getByAltText('Jan Kowalski');
+    // Jan has a photo; it is decorative next to his linked name
+    const image = container.querySelector('img');
     expect(image).toHaveAttribute('src', '/photo.jpg');
+    expect(image).toHaveAttribute('alt', '');
 
-    // Anna has no photo, she gets fallback icon
-    // We cannot easily query by lucide-react icon, but we can query by fallback class
+    // The others get the fallback icon
     const fallbacks = container.querySelectorAll('.avatarFallback');
     expect(fallbacks.length).toBe(2);
   });

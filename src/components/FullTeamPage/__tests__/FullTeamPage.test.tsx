@@ -7,10 +7,6 @@ vi.mock('@/components/TeamMembers', () => ({
   default: () => <div data-testid="team-members" />,
 }));
 
-vi.mock('@/components/TeamResearch', () => ({
-  default: () => <div data-testid="team-research" />,
-}));
-
 vi.mock('@/components/TeamPublications', () => ({
   default: () => <div data-testid="team-publications" />,
 }));
@@ -40,7 +36,6 @@ describe('FullTeamPage', () => {
     );
 
     expect(screen.getByTestId('team-members')).toBeInTheDocument();
-    expect(screen.getByTestId('team-research')).toBeInTheDocument();
     expect(screen.getByTestId('team-publications')).toBeInTheDocument();
     expect(screen.getByTestId('team-teaching')).toBeInTheDocument();
   });

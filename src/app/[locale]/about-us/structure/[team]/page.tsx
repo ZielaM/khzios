@@ -77,6 +77,11 @@ export default async function TeamPage({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(name) }}
           />
         }
+        // What the team works on comes first, before the list of people
+        lead={
+          translation?.researchDescription &&
+          stripHtml(translation.researchDescription)
+        }
         breadcrumbs={[
           { label: tNav('aboutUs'), href: '/about-us' },
           { label: tNav('structure'), href: '/about-us/structure' },

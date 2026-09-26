@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import TeamPublications from '../TeamPublications';
 
 // Mock resolveTranslation to bypass complex language fallback logic
@@ -86,7 +86,30 @@ describe('TeamPublications', () => {
     expect(container3).toBeEmptyDOMElement();
   });
 
-  it('renders only publications tab when projects is empty', () => {
+  it('renders publications and projects as two sections', () => {
+    render(
+      <TeamPublications
+        publications={mockPublications}
+        projects={mockProjects}
+        locale="en"
+      />
+    );
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: /publicationsTab/ })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'projectsTab' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('A Study of Mocking in React Tests')
+    ).toBeInTheDocument();
+    expect(screen.getByText('Advanced AI Project')).toBeInTheDocument();
+    expect(screen.getByText(/National Science Foundation/)).toBeInTheDocument();
+    expect(screen.queryByRole('tab')).not.toBeInTheDocument();
+  });
+
+  it('leaves out a section without entries', () => {
     render(
       <TeamPublications
         publications={mockPublications}
@@ -95,133 +118,21 @@ describe('TeamPublications', () => {
       />
     );
 
-    // "publicationsTab" is the returned value from our next-intl mock
     expect(
-      screen.getByRole('tab', { name: 'publicationsTab' })
-    ).toBeInTheDocument();
-
-    // projects tab shouldn't exist
-    expect(
-      screen.queryByRole('tab', { name: 'projectsTab' })
+      screen.queryByRole('heading', { name: 'projectsTab' })
     ).not.toBeInTheDocument();
-
-    expect(
-      screen.getByText('A Study of Mocking in React Tests')
-    ).toBeInTheDocument();
-    expect(screen.getByText('John Doe, Jane Doe')).toBeInTheDocument();
   });
 
   it('skips publication and project with empty translations', () => {
     render(
       <TeamPublications
-        publications={[
-          { ...mockPublications[0], id: 'empty-pub', translations: [] },
-        ]}
-        projects={[{ ...mockProjects[0], id: 'empty-proj', translations: [] }]}
-        locale="en"
-      />
-    );
-    // Neither should throw, and neither title should be rendered
-    expect(
-      screen.queryByText('A Study of Mocking in React Tests')
-    ).not.toBeInTheDocument();
-
-    // Switch to projects tab to trigger the translation check for projects
-    fireEvent.click(screen.getByRole('tab', { name: 'projectsTab' }));
-    expect(screen.queryByText('Advanced AI Project')).not.toBeInTheDocument();
-  });
-
-  it('switches to publications tab if projects become empty', () => {
-    const { rerender } = render(
-      <TeamPublications
-        publications={mockPublications}
-        projects={mockProjects}
-        locale="en"
-      />
-    );
-    fireEvent.click(screen.getByRole('tab', { name: 'projectsTab' }));
-    expect(screen.getByText('Advanced AI Project')).toBeVisible();
-
-    rerender(
-      <TeamPublications
-        publications={mockPublications}
-        projects={[]}
-        locale="en"
-      />
-    );
-    expect(screen.queryByText('Advanced AI Project')).not.toBeInTheDocument();
-    expect(screen.getByText('A Study of Mocking in React Tests')).toBeVisible();
-  });
-
-  it('switches to projects tab if publications become empty', () => {
-    const { rerender } = render(
-      <TeamPublications
-        publications={mockPublications}
-        projects={mockProjects}
-        locale="en"
-      />
-    );
-    expect(screen.getByText('A Study of Mocking in React Tests')).toBeVisible();
-
-    rerender(
-      <TeamPublications publications={[]} projects={mockProjects} locale="en" />
-    );
-    expect(
-      screen.queryByText('A Study of Mocking in React Tests')
-    ).not.toBeInTheDocument();
-    expect(screen.getByText('Advanced AI Project')).toBeVisible();
-  });
-
-  it('renders only projects tab when publications is empty', () => {
-    render(
-      <TeamPublications publications={[]} projects={mockProjects} locale="en" />
-    );
-
-    expect(
-      screen.getByRole('tab', { name: 'projectsTab' })
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole('tab', { name: 'publicationsTab' })
-    ).not.toBeInTheDocument();
-
-    // The project content should be visible
-    expect(screen.getByText('Advanced AI Project')).toBeInTheDocument();
-    expect(
-      screen.getByText('funder: National Science Foundation')
-    ).toBeInTheDocument();
-  });
-
-  it('renders both tabs and toggles between them', () => {
-    render(
-      <TeamPublications
-        publications={mockPublications}
-        projects={mockProjects}
+        publications={[{ ...mockPublications[0], translations: [] }]}
+        projects={[{ ...mockProjects[0], translations: [] }]}
         locale="en"
       />
     );
 
-    const pubTab = screen.getByRole('tab', { name: 'publicationsTab' });
-    const projTab = screen.getByRole('tab', { name: 'projectsTab' });
-
-    expect(pubTab).toBeInTheDocument();
-    expect(projTab).toBeInTheDocument();
-
-    // Default active is publications
-    expect(screen.getByText('A Study of Mocking in React Tests')).toBeVisible();
-    expect(screen.queryByText('Advanced AI Project')).not.toBeInTheDocument();
-
-    // Click projects tab
-    fireEvent.click(projTab);
-
-    // Now projects should be visible
-    expect(
-      screen.queryByText('A Study of Mocking in React Tests')
-    ).not.toBeInTheDocument();
-    expect(screen.getByText('Advanced AI Project')).toBeVisible();
-
-    // Click publications tab again
-    fireEvent.click(pubTab);
-    expect(screen.getByText('A Study of Mocking in React Tests')).toBeVisible();
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
   });
 
   it('formats DOI link correctly', () => {
@@ -255,29 +166,5 @@ describe('TeamPublications', () => {
 
     // The second one already had https:// prefix
     expect(links[1]).toHaveAttribute('href', 'https://doi.org/10.9999/test');
-  });
-  it('switches tabs with the arrow keys', () => {
-    render(
-      <TeamPublications
-        publications={mockPublications}
-        projects={mockProjects}
-        locale="pl"
-      />
-    );
-    const publicationsTab = screen.getByRole('tab', {
-      name: 'publicationsTab',
-    });
-    const projectsTab = screen.getByRole('tab', { name: 'projectsTab' });
-    expect(publicationsTab).toHaveAttribute('aria-selected', 'true');
-    expect(projectsTab).toHaveAttribute('tabindex', '-1');
-
-    fireEvent.keyDown(publicationsTab, { key: 'ArrowRight' });
-
-    expect(projectsTab).toHaveAttribute('aria-selected', 'true');
-    expect(projectsTab).toHaveFocus();
-    expect(screen.getByRole('tabpanel')).toHaveAttribute(
-      'aria-labelledby',
-      'team-tab-projects'
-    );
   });
 });

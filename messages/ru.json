@@ -126,8 +126,6 @@
     "membersTitle": "Состав группы",
     "academicStaff": "Научно-преподавательский состав",
     "technicalStaff": "Инженерно-технический состав",
-    "researchTitle": "Основные направления исследований",
-    "publicationsTitle": "Избранные публикации и исследовательские проекты",
     "publicationsSubtitle": "за последние 5 лет",
     "publicationsTab": "Публикации",
     "projectsTab": "Исследовательские проекты",
@@ -135,7 +133,6 @@
     "courseNameHeader": "Название курса",
     "programHeader": "Программа и уровень",
     "coordinatorHeader": "Координатор курса",
-    "viewProfile": "Посмотреть профиль",
     "externalRedirect": "Страница этой группы доступна по внешнему адресу.",
     "funder": "Финансирование"
   },

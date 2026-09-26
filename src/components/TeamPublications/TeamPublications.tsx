@@ -1,9 +1,5 @@
-'use client';
-
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import clsx from 'clsx';
-import { FileText, ExternalLink, Briefcase } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import style from './TeamPublications.module.scss';
@@ -14,90 +10,28 @@ interface TeamPublicationsProps {
   locale: string;
 }
 
-type Tab = 'publications' | 'projects';
+const doiUrl = (doi: string) =>
+  doi.startsWith('http') ? doi : `https://doi.org/${doi}`;
 
+/** The team's recent publications and projects, as two plain sections. */
 export default function TeamPublications({
   publications,
   projects,
   locale,
 }: TeamPublicationsProps) {
   const t = useTranslations('TeamPage');
-  const [selectedTab, setActiveTab] = useState<Tab>('publications');
-
   const safePublications = Array.isArray(publications) ? publications : [];
   const safeProjects = Array.isArray(projects) ? projects : [];
 
-  if (safePublications.length === 0 && safeProjects.length === 0) return null;
-
-  // When one list is empty the other one is shown whatever was selected
-  const activeTab: Tab =
-    safePublications.length === 0
-      ? 'projects'
-      : safeProjects.length === 0
-        ? 'publications'
-        : selectedTab;
-
-  const tabs: Tab[] = [
-    ...(safePublications.length > 0 ? (['publications'] as const) : []),
-    ...(safeProjects.length > 0 ? (['projects'] as const) : []),
-  ];
-
-  const onTabKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    const index = tabs.indexOf(activeTab);
-    const step = e.key === 'ArrowRight' ? 1 : -1;
-    const next = tabs[(index + step + tabs.length) % tabs.length];
-    setActiveTab(next);
-    document.getElementById(`team-tab-${next}`)?.focus();
-  };
-
   return (
-    <section className={style.section}>
-      <div className={style.header}>
-        <h2 className={style.sectionTitle}>
-          {t('publicationsTitle')}
-          <span className={style.subtitle}>{t('publicationsSubtitle')}</span>
-        </h2>
-      </div>
-
-      <div
-        className={style.tabs}
-        role="tablist"
-        aria-label={t('publicationsTitle')}
-        onKeyDown={onTabKeyDown}
-      >
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            role="tab"
-            id={`team-tab-${tab}`}
-            aria-selected={activeTab === tab}
-            aria-controls={`team-panel-${tab}`}
-            // Only the selected tab is in the Tab order; arrows move between tabs
-            tabIndex={activeTab === tab ? 0 : -1}
-            className={clsx(style.tab, { [style.active]: activeTab === tab })}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab === 'publications' ? (
-              <FileText aria-hidden="true" size={18} />
-            ) : (
-              <Briefcase aria-hidden="true" size={18} />
-            )}
-            {t(tab === 'publications' ? 'publicationsTab' : 'projectsTab')}
-          </button>
-        ))}
-      </div>
-
-      <div
-        className={style.content}
-        role="tabpanel"
-        id={`team-panel-${activeTab}`}
-        aria-labelledby={`team-tab-${activeTab}`}
-        tabIndex={0}
-      >
-        {activeTab === 'publications' && (
-          <div className={style.list}>
+    <>
+      {safePublications.length > 0 && (
+        <section className={style.section} aria-labelledby="team-publications">
+          <h2 id="team-publications" className={style.sectionTitle}>
+            {t('publicationsTab')}{' '}
+            <span className={style.subtitle}>{t('publicationsSubtitle')}</span>
+          </h2>
+          <ul className={style.list}>
             {safePublications.map((pub) => {
               const { translation } = resolveTranslation(
                 pub.translations,
@@ -105,21 +39,17 @@ export default function TeamPublications({
               );
               if (!translation) return null;
               return (
-                <div key={pub.id} className={style.item}>
-                  <div className={style.itemYear}>{pub.year}</div>
+                <li key={pub.id} className={style.item}>
+                  <span className={style.itemYear}>{pub.year}</span>
                   <div className={style.itemContent}>
                     <h3 className={style.itemTitle}>{translation.title}</h3>
-                    <div className={style.itemMeta}>
+                    <p className={style.itemMeta}>
                       <span className={style.authors}>{pub.authors}</span>
                       <span className={style.journal}>{pub.journal}</span>
-                    </div>
+                    </p>
                     {pub.doi && (
                       <a
-                        href={
-                          pub.doi.startsWith('http')
-                            ? pub.doi
-                            : `https://doi.org/${pub.doi}`
-                        }
+                        href={doiUrl(pub.doi)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={style.doiLink}
@@ -128,14 +58,19 @@ export default function TeamPublications({
                       </a>
                     )}
                   </div>
-                </div>
+                </li>
               );
             })}
-          </div>
-        )}
+          </ul>
+        </section>
+      )}
 
-        {activeTab === 'projects' && (
-          <div className={style.list}>
+      {safeProjects.length > 0 && (
+        <section className={style.section} aria-labelledby="team-projects">
+          <h2 id="team-projects" className={style.sectionTitle}>
+            {t('projectsTab')}
+          </h2>
+          <ul className={style.list}>
             {safeProjects.map((proj) => {
               const { translation } = resolveTranslation(
                 proj.translations,
@@ -143,24 +78,24 @@ export default function TeamPublications({
               );
               if (!translation) return null;
               return (
-                <div key={proj.id} className={style.item}>
-                  <div className={style.itemYear}>{proj.years}</div>
+                <li key={proj.id} className={style.item}>
+                  <span className={style.itemYear}>{proj.years}</span>
                   <div className={style.itemContent}>
                     <h3 className={style.itemTitle}>{translation.title}</h3>
                     {translation.funder && (
-                      <div className={style.itemMeta}>
+                      <p className={style.itemMeta}>
                         <span className={style.funder}>
                           {t('funder')}: {translation.funder}
                         </span>
-                      </div>
+                      </p>
                     )}
                   </div>
-                </div>
+                </li>
               );
             })}
-          </div>
-        )}
-      </div>
-    </section>
+          </ul>
+        </section>
+      )}
+    </>
   );
 }

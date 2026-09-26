@@ -1,7 +1,6 @@
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import TeamMembers from '@/components/TeamMembers';
-import TeamResearch from '@/components/TeamResearch';
 import TeamPublications from '@/components/TeamPublications';
 import TeamTeaching from '@/components/TeamTeaching';
 import style from './FullTeamPage.module.scss';
@@ -21,8 +20,6 @@ export default function FullTeamPage({ team, locale }: FullTeamPageProps) {
     <div className={style.fullTeam}>
       <div className={style.contentGrid}>
         <TeamMembers members={team.members} locale={locale} team={team} />
-
-        <TeamResearch content={teamTranslation?.researchDescription} />
 
         <TeamPublications
           publications={team.publications}

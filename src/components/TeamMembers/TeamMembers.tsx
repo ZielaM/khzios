@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { User, ChevronRight } from 'lucide-react';
+import { User } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import style from './TeamMembers.module.scss';
 import { TeamWithRelations } from '@/lib/team-queries';
@@ -75,43 +75,43 @@ function MemberCard({
   locale: string;
   team: TeamSlugs;
 }) {
-  const t = useTranslations('TeamPage');
   const { translation } = resolveTranslation(
     member.employee.translations,
     locale
   );
-
-  const title = translation?.academicTitle ?? '';
+  const fullName = `${member.employee.firstName} ${member.employee.lastName}`;
 
   return (
     <div className={style.card}>
       <div className={style.avatarContainer}>
         {member.employee.photoUrl ? (
+          // The name next to the photo is the link text; the photo adds nothing
           <Image
             src={member.employee.photoUrl}
-            alt={`${member.employee.firstName} ${member.employee.lastName}`}
+            alt=""
             fill
             className={style.avatar}
-            sizes="80px"
+            sizes="64px"
           />
         ) : (
           <div className={style.avatarFallback}>
-            <User aria-hidden="true" size={32} />
+            <User aria-hidden="true" size={28} />
           </div>
         )}
       </div>
       <div className={style.info}>
-        <div className={style.title}>{title}</div>
-        <div
-          className={style.name}
-        >{`${member.employee.firstName} ${member.employee.lastName}`}</div>
-        {member.employee.profileSlug && (
+        {translation?.academicTitle && (
+          <span className={style.title}>{translation.academicTitle}</span>
+        )}
+        {member.employee.profileSlug ? (
           <Link
             href={memberHref(team, locale, member.employee.profileSlug)}
-            className={style.profileLink}
+            className={style.name}
           >
-            {t('viewProfile')} <ChevronRight aria-hidden="true" size={14} />
+            {fullName}
           </Link>
+        ) : (
+          <span className={style.name}>{fullName}</span>
         )}
       </div>
     </div>

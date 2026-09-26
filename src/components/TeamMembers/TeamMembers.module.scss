@@ -37,57 +37,44 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-
-  > * {
-    height: 100%;
-  }
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem 1.5rem;
 }
 
+// Whole card is clickable through the name link's ::after
 .card {
+  position: relative;
   display: flex;
   align-items: center;
-  height: 100%;
-  gap: 16px;
-  padding: 16px;
-  background-color: var(--background);
-  border: 1px solid var(--border-subtle);
-  border-radius: $radius-lg;
-  box-shadow: $shadow-card;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  gap: 0.9rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border-subtle);
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: $shadow-card-hover;
+  &:has(:focus-visible) {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
   }
 
   :global(.wcag-high-contrast) & {
-    border: 2px solid var(--foreground);
-    box-shadow: none;
-    border-radius: 0;
+    border-top-color: var(--foreground);
 
-    &:hover {
-      transform: none;
+    &:has(:focus-visible) {
+      outline-color: var(--foreground);
     }
   }
 }
 
 .avatarContainer {
   position: relative;
-  width: 72px;
-  height: 72px;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.04);
-  flex-shrink: 0;
-  border: 2px solid transparent;
+  background-color: var(--surface-muted);
 
   :global(.wcag-high-contrast) & {
-    border-color: var(--foreground);
-    border-radius: 0;
+    border: 2px solid var(--foreground);
   }
 }
 
@@ -96,16 +83,14 @@
 }
 
 .avatarFallback {
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
   color: var(--text-muted);
-  background-color: var(--surface-muted);
 
   :global(.wcag-high-contrast) & {
-    background-color: transparent;
     color: var(--foreground);
   }
 }
@@ -113,13 +98,13 @@
 .info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  min-width: 0;
 }
 
 .title {
   font-size: 0.85em;
   color: var(--text-muted);
-  font-weight: 500;
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -127,32 +112,28 @@
 }
 
 .name {
-  font-size: 1.1em;
-  font-weight: 700;
-  color: var(--foreground);
-}
-
-.profileLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.85em;
   font-weight: 600;
-  color: var(--color-primary);
-  text-decoration: none;
-  margin-top: 4px;
-  transition: color 0.2s ease;
+  color: var(--foreground);
 
-  &:hover {
-    color: var(--color-secondary);
-    text-decoration: underline;
-  }
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
+  &[href] {
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
 
     &:hover {
-      color: var(--foreground);
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  :global(.wcag-high-contrast) &[href]:hover {
+    color: var(--foreground);
   }
 }

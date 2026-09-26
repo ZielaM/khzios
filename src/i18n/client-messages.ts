@@ -13,7 +13,6 @@ export const CLIENT_NAMESPACES = [
   'NewsPage',
   'NewsDetails',
   'PublicationsPage',
-  'TeamPage',
   'StudentsPage',
   'ErrorPage',
 ] as const;

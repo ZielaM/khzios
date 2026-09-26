@@ -59,8 +59,8 @@ test.describe('Language Switching & State Preservation Spec', () => {
     await page.goto('/en/news?query=art&tag=Research&sort=relevance&page=1');
     await page.waitForLoadState('load');
 
-    // Wait for the debounce-based search synchronization to fully stabilize
-    // before triggering the locale switch.
+    // The search form syncs its state to the URL 500 ms after hydration and
+    // that update is not observable, so a fixed wait is the reliable option
     await expect(page).toHaveURL(/sort=relevance/);
     await page.waitForTimeout(1000);
 

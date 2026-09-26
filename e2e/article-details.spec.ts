@@ -57,8 +57,9 @@ test.describe('News Article Detail Page', () => {
 
     // Scroll down on the list page
     await page.evaluate(() => window.scrollTo(0, 500));
-    await page.waitForTimeout(200);
-    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeGreaterThan(0);
 
     // Navigate to an article
     await page
@@ -69,9 +70,7 @@ test.describe('News Article Detail Page', () => {
       .click();
     await expect(page).toHaveURL(/\/en\/news\/.+/);
 
-    // Should be scrolled to top
-    await page.waitForTimeout(500);
-    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
   });
 
   // ─── Gallery Conditional Rendering ───────────────────────────────

@@ -42,6 +42,7 @@
     "sass": "^1.98.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@electric-sql/pglite": "0.5.8",
     "@electric-sql/pglite-socket": "0.2.11",
     "@playwright/test": "^1.60.0",

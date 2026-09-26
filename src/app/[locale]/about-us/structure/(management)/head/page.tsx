@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
-import BackLink from '@/components/BackLink';
 import ContactProfile from '@/components/ContactProfile';
 import style from './page.module.scss';
 import { getDepartmentHead } from '@/lib/head-queries';
@@ -9,6 +8,7 @@ import { mapWorkingHours } from '@/lib/working-hours';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -55,20 +55,21 @@ export default async function HeadPage({ params }: Props) {
   const { locale } = await params;
   setPageLocale(locale);
 
-  const tTeam = await getTranslations('TeamPage');
   const tMember = await getTranslations('MemberProfile');
   const tNav = await getTranslations('Navbar');
   const tStruct = await getTranslations('StructurePage');
 
   const head = await getDepartmentHead();
+  const crumbs = [
+    { label: tNav('aboutUs'), href: '/about-us' as const },
+    { label: tNav('structure'), href: '/about-us/structure' as const },
+  ];
 
   // Handle case where head is not yet configured in DB
   if (!head || !head.employee) {
     return (
       <div className={style.page}>
-        <BackLink href="/about-us/structure">
-          {tTeam('backToStructure')}
-        </BackLink>
+        <Breadcrumbs items={crumbs} current={tNav('headOfDepartment')} />
 
         <p>{tStruct('headNotConfigured')}</p>
       </div>
@@ -92,7 +93,7 @@ export default async function HeadPage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <BackLink href="/about-us/structure">{tTeam('backToStructure')}</BackLink>
+      <Breadcrumbs items={crumbs} current={tNav('headOfDepartment')} />
 
       <ContactProfile
         name={

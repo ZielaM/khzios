@@ -5,7 +5,6 @@ import { memberHref, teamHref, teamSlugFor } from '@/lib/team-routes';
 import { resolveTranslation } from '@/lib/translations';
 import { Link, permanentRedirect } from '@/i18n/routing';
 import { Mail, ExternalLink, Users } from 'lucide-react';
-import BackLink from '@/components/BackLink';
 import OrcidIcon from '@/components/OrcidIcon';
 import {
   ContactDetails,
@@ -19,6 +18,8 @@ import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata, toAbsoluteUrl } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 import { setPageLocale } from '@/i18n/page-locale';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import { stripHtml } from '@/lib/content-utils';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -82,6 +83,7 @@ export default async function MemberPage({ params }: Props) {
   if (!member) notFound();
 
   const t = await getTranslations('MemberProfile');
+  const tNav = await getTranslations('Navbar');
   const { translation: memberTranslation } = resolveTranslation(
     member.employee.translations,
     locale
@@ -114,9 +116,14 @@ export default async function MemberPage({ params }: Props) {
   return (
     <div className={style.page}>
       <JsonLd data={personJsonLd} />
-      {/* Back Link */}
-
-      <BackLink href={teamHref(team, locale)}>{t('backToTeam')}</BackLink>
+      <Breadcrumbs
+        items={[
+          { label: tNav('aboutUs'), href: '/about-us' },
+          { label: tNav('structure'), href: '/about-us/structure' },
+          { label: stripHtml(teamName), href: teamHref(team, locale) },
+        ]}
+        current={fullName}
+      />
 
       <div className={style.profile}>
         <ProfileHero

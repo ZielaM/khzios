@@ -3,7 +3,6 @@ import { Link } from '@/i18n/routing';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { ArrowRight, Crown, Users } from 'lucide-react';
-import BackLink from '@/components/BackLink';
 import { getAllTeams } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
@@ -12,6 +11,7 @@ import { renderOnFirstRequest } from '@/lib/static-params';
 import { teamHref } from '@/lib/team-routes';
 import { pageMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
+import PageHeader from '@/components/PageHeader';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -40,6 +40,7 @@ export default async function StructurePage({ params }: Props) {
   setPageLocale(locale);
 
   const t = await getTranslations('StructurePage');
+  const tNav = await getTranslations('Navbar');
   const teams = await getAllTeams();
   const teamImages = new Map(
     teams.map((team) => [
@@ -52,13 +53,11 @@ export default async function StructurePage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <BackLink href="/about-us">{t('backToAboutUs')}</BackLink>
-
-      {/* ── Hero ──────────────────────────────────────────────── */}
-      <section className={style.hero}>
-        <h1 className={style.heroTitle}>{t('title')}</h1>
-        <p className={style.heroDesc}>{t('description')}</p>
-      </section>
+      <PageHeader
+        title={t('title')}
+        lead={t('description')}
+        breadcrumbs={[{ label: tNav('aboutUs'), href: '/about-us' }]}
+      />
 
       {/* ── Teams ─────────────────────────────────────────────── */}
 

@@ -1,0 +1,59 @@
+@use '@/styles/variables' as *;
+
+.header {
+  padding: 1rem 0 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+
+  :global(.wcag-high-contrast) & {
+    border-bottom-color: var(--foreground);
+  }
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem 2.5rem;
+  margin-top: 1.25rem;
+
+  @media (min-width: $breakpoint-tablet) {
+    &.withImage {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      align-items: center;
+    }
+  }
+}
+
+.title {
+  font-size: clamp(1.9em, 4vw, 2.6em);
+  font-weight: 700;
+}
+
+.lead {
+  max-width: 60ch;
+  margin-top: 0.75rem;
+  font-size: 1.15em;
+  line-height: 1.6;
+  color: var(--text-muted);
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: var(--surface-muted);
+
+  img {
+    object-fit: cover;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+  }
+}

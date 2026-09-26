@@ -8,7 +8,7 @@ vi.mock('next-intl', () => ({
 }));
 
 describe('ExternalTeamPage', () => {
-  it('renders team title and links correctly', () => {
+  it('renders the notice and links', () => {
     const mockTeam = {
       id: '1',
       slug: 'test-team',
@@ -31,14 +31,13 @@ describe('ExternalTeamPage', () => {
       />
     );
 
-    expect(screen.getByText('Test Team')).toBeInTheDocument();
     expect(screen.getByText('externalRedirect')).toBeInTheDocument();
 
     const link = screen.getByRole('link', { name: /Website/i });
     expect(link).toHaveAttribute('href', 'https://example.com');
   });
 
-  it('handles missing translations and unknown icons gracefully', () => {
+  it('skips untranslated links and falls back to a generic icon', () => {
     const mockTeamEmpty = {
       id: '2',
       slug: 'fallback-slug',
@@ -66,9 +65,6 @@ describe('ExternalTeamPage', () => {
         locale="en"
       />
     );
-
-    // Should fall back to team.slug
-    expect(screen.getByText('fallback-slug')).toBeInTheDocument();
 
     // Link2 should not be rendered because translation is missing
     const links = screen.getAllByRole('link');

@@ -15,25 +15,3 @@
     padding: $page-padding-top-mobile 1rem 2rem;
   }
 }
-
-// Top bar containing BackLink and NewsSearchForm
-.topBar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  width: 100%;
-  margin-bottom: 2rem;
-  gap: 2rem;
-}
-
-.backButton {
-  margin-bottom: 0 !important;
-}
-
-.title {
-  @include section-title;
-
-  flex: 1 1 auto;
-  text-align: center;
-}

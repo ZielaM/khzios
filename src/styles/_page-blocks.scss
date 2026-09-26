@@ -1,64 +1,6 @@
 @use './variables' as *;
 
-// Blocks shared by the section landing pages (About us, Structure):
-// a coloured page hero and cards linking to subpages.
-
-@mixin page-hero {
-  position: relative;
-  width: 100%;
-  padding: 48px 40px;
-  border-radius: $radius-xl;
-  overflow: hidden;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary) 0%,
-    var(--color-secondary) 100%
-  );
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  margin-bottom: 48px;
-  text-align: center;
-
-  :global(.wcag-high-contrast) & {
-    background: transparent;
-    border: 2px solid var(--foreground);
-    box-shadow: none;
-    border-radius: 0;
-  }
-
-  @media (max-width: $breakpoint-tablet) {
-    padding: 32px 24px;
-    border-radius: $radius-lg;
-    margin-bottom: 32px;
-  }
-}
-
-@mixin page-hero-title {
-  font-family: $font-serif;
-  font-size: clamp(2em, 4vw, 3em);
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 12px;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
-    text-shadow: none;
-  }
-}
-
-@mixin page-hero-desc {
-  font-size: 1.1em;
-  color: rgba(255, 255, 255, 0.95);
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
-  }
-}
+// Cards linking to subpages, shared by the section landing pages
 
 // Expects the card's arrow icon to use the class .cardArrow
 @mixin link-card($padding: 28px) {

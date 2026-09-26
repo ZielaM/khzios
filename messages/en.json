@@ -18,6 +18,10 @@
     "heroTitle": "Department of Animal Breeding and Product Quality Assessment",
     "viewAllNews": "View all news"
   },
+  "Breadcrumbs": {
+    "label": "Breadcrumb",
+    "home": "Home"
+  },
   "Navbar": {
     "logoText": "Department of Animal Breeding <br></br> and Product Quality Assessment",
     "toggleMenu": "Toggle menu",
@@ -113,7 +117,6 @@
     "galleryImageAlt": "{title} – photo {current} of {total}"
   },
   "TeamPage": {
-    "backToStructure": "Back to structure",
     "membersTitle": "Team Members",
     "academicStaff": "Academic Staff",
     "technicalStaff": "Technical Staff",
@@ -136,15 +139,12 @@
     "headCard": "Head of Department",
     "headDesc": "Contact information and working hours of the head.",
     "viewDetails": "View details",
-    "backToHome": "Back to homepage",
-    "backToAboutUs": "Back to About us",
     "headNotConfigured": "The head of department has not been added to the system yet.",
     "secretariatNotConfigured": "The secretariat has not been added to the system yet.",
     "managementTitle": "Management",
     "teamsTitle": "Research & Teaching Teams"
   },
   "MemberProfile": {
-    "backToTeam": "Back to team",
     "contactTitle": "Contact",
     "emailLabel": "Email",
     "phoneLabel": "Phone",

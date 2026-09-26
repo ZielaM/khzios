@@ -24,12 +24,10 @@ test.describe('Contact Page Navigation Spec', () => {
     const heading = page.getByRole('heading', { level: 1 });
     await expect(heading).toBeVisible();
 
-    // Check if the contact label is present
-    const contactInfoHeading = page.getByRole('heading', {
-      name: 'Contact',
-      exact: true,
-    });
-    await expect(contactInfoHeading).toBeVisible();
+    await expect(heading).toHaveText('Contact');
+    await expect(
+      page.getByRole('heading', { level: 2, name: 'Contact', exact: true })
+    ).toBeVisible();
 
     // Check for standard icons/labels rendered by ContactProfile
     await expect(page.getByText('Working hours')).toBeVisible();

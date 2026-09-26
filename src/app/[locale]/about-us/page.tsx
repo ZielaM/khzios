@@ -3,12 +3,11 @@ import { Link } from '@/i18n/routing';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { Metadata } from 'next';
 import { ArrowRight, BookOpen, Network } from 'lucide-react';
-import BackLink from '@/components/BackLink';
-import HeroSlideshow from '@/components/HeroSlideshow';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import style from './page.module.scss';
 import { pageMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
+import PageHeader from '@/components/PageHeader';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -39,21 +38,16 @@ export default async function AboutUsPage({ params }: Props) {
   setPageLocale(locale);
 
   const t = await getTranslations('AboutUsPage');
-  const tStruct = await getTranslations('StructurePage');
   const heroImage = getSectionImage(IMAGE_SECTIONS.aboutUs, locale, t('title'));
 
   return (
     <div className={style.page}>
-      <BackLink href="/">{tStruct('backToHome')}</BackLink>
-
-      {/* ── Hero ──────────────────────────────────────────────── */}
-      <section className={style.hero}>
-        {heroImage && <HeroSlideshow images={[heroImage]} />}
-        <div className={style.heroContent}>
-          <h1 className={style.heroTitle}>{t('title')}</h1>
-          <p className={style.heroDesc}>{t('description')}</p>
-        </div>
-      </section>
+      <PageHeader
+        title={t('title')}
+        lead={t('description')}
+        breadcrumbs={[]}
+        image={heroImage}
+      />
 
       <div className={style.grid}>
         <Link href="/about-us/structure" className={style.card}>

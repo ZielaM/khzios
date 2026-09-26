@@ -18,6 +18,10 @@
     "heroTitle": "Katedra Hodowli Zwierząt i Oceny Surowców",
     "viewAllNews": "Zobacz wszystkie aktualności"
   },
+  "Breadcrumbs": {
+    "label": "Ścieżka nawigacji",
+    "home": "Strona główna"
+  },
   "Navbar": {
     "logoText": "Katedra Hodowli Zwierząt <br></br> i Oceny Surowców",
     "toggleMenu": "Przełącz menu",
@@ -113,7 +117,6 @@
     "galleryImageAlt": "{title} – zdjęcie {current} z {total}"
   },
   "TeamPage": {
-    "backToStructure": "Wróć do struktury",
     "membersTitle": "Skład osobowy",
     "academicStaff": "Pracownicy naukowo-dydaktyczni",
     "technicalStaff": "Pracownicy inżynieryjno-techniczni",
@@ -136,15 +139,12 @@
     "headCard": "Kierownik katedry",
     "headDesc": "Informacje kontaktowe i godziny pracy kierownika.",
     "viewDetails": "Zobacz szczegóły",
-    "backToHome": "Wróć do strony głównej",
-    "backToAboutUs": "Wróć do zakładki O nas",
     "headNotConfigured": "Kierownik katedry nie został jeszcze dodany w systemie.",
     "secretariatNotConfigured": "Sekretariat nie został jeszcze dodany w systemie.",
     "managementTitle": "Kierownictwo",
     "teamsTitle": "Zespoły Badawcze i Dydaktyczne"
   },
   "MemberProfile": {
-    "backToTeam": "Wróć do zespołu",
     "contactTitle": "Kontakt",
     "emailLabel": "E-mail",
     "phoneLabel": "Telefon",

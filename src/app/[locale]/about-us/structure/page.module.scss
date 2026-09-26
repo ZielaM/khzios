@@ -7,18 +7,6 @@
 
 /* ── Hero Section ──────────────────────────────────────────────────── */
 
-.hero {
-  @include page-hero;
-}
-
-.heroTitle {
-  @include page-hero-title;
-}
-
-.heroDesc {
-  @include page-hero-desc;
-}
-
 /* ── Section Titles ────────────────────────────────────────────────── */
 
 .sectionTitle {

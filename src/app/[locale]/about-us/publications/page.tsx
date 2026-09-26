@@ -1,16 +1,15 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
-import BackLink from '@/components/BackLink';
 import PublicationsSearchForm from '@/components/PublicationsSearchForm';
 import PublicationsListServer from '@/components/PublicationsListServer';
 import PublicationsListSkeleton from '@/components/PublicationsListSkeleton';
-import { LanguageCode } from '@/types/search-types';
 import { getPathname } from '@/i18n/routing';
 import style from './page.module.scss';
 
 import { Metadata } from 'next';
 import { listingMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
+import PageHeader from '@/components/PageHeader';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -41,7 +40,7 @@ export default async function PublicationsPage({
   searchParams,
 }: PageProps) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as LanguageCode;
+  const locale = setPageLocale(resolvedParams.locale);
 
   const resolvedSearchParams = await searchParams;
   const query =
@@ -56,18 +55,18 @@ export default async function PublicationsPage({
   const page = Number.isFinite(parsedPage) ? parsedPage : 1;
 
   const t = await getTranslations('PublicationsPage');
-  const tStruct = await getTranslations('StructurePage');
+  const tNav = await getTranslations('Navbar');
 
   // Key for Suspense to trigger re-render on param change
   const suspenseKey = JSON.stringify({ query, page });
 
   return (
     <div className={style.main}>
-      <BackLink href="/about-us">{tStruct('backToAboutUs')}</BackLink>
-
-      <div className={style.header}>
-        <h1 className={style.title}>{t('title')}</h1>
-      </div>
+      <PageHeader
+        title={t('title')}
+        lead={t('metaDescription')}
+        breadcrumbs={[{ label: tNav('aboutUs'), href: '/about-us' }]}
+      />
 
       <PublicationsSearchForm initialQuery={query} />
 

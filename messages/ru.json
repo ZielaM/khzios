@@ -18,6 +18,10 @@
     "heroTitle": "Кафедра разведения животных и оценки сырья",
     "viewAllNews": "Все новости"
   },
+  "Breadcrumbs": {
+    "label": "Навигационная цепочка",
+    "home": "Главная"
+  },
   "Navbar": {
     "logoText": "Кафедра разведения животных <br></br> и оценки сырья",
     "toggleMenu": "Переключить меню",
@@ -113,7 +117,6 @@
     "galleryImageAlt": "{title} – фото {current} из {total}"
   },
   "TeamPage": {
-    "backToStructure": "Вернуться к структуре",
     "membersTitle": "Состав группы",
     "academicStaff": "Научно-преподавательский состав",
     "technicalStaff": "Инженерно-технический состав",
@@ -136,15 +139,12 @@
     "headCard": "Заведующий кафедрой",
     "headDesc": "Контактная информация и часы работы заведующего.",
     "viewDetails": "Подробнее",
-    "backToHome": "Вернуться на главную",
-    "backToAboutUs": "Вернуться к О нас",
     "headNotConfigured": "Заведующий кафедрой ещё не добавлен в систему.",
     "secretariatNotConfigured": "Секретариат ещё не добавлен в систему.",
     "managementTitle": "Руководство",
     "teamsTitle": "Исследовательские и учебные группы"
   },
   "MemberProfile": {
-    "backToTeam": "Вернуться к группе",
     "contactTitle": "Контакты",
     "emailLabel": "E-mail",
     "phoneLabel": "Телефон",

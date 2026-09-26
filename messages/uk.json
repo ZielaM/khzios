@@ -18,6 +18,10 @@
     "heroTitle": "Кафедра розведення тварин та оцінки сировини",
     "viewAllNews": "Всі новини"
   },
+  "Breadcrumbs": {
+    "label": "Навігаційний ланцюжок",
+    "home": "Головна"
+  },
   "Navbar": {
     "logoText": "Кафедра розведення тварин <br></br> та оцінки сировини",
     "toggleMenu": "Перемкнути меню",
@@ -113,7 +117,6 @@
     "galleryImageAlt": "{title} – фото {current} з {total}"
   },
   "TeamPage": {
-    "backToStructure": "Повернутися до структури",
     "membersTitle": "Склад групи",
     "academicStaff": "Науково-викладацький склад",
     "technicalStaff": "Інженерно-технічний склад",
@@ -136,15 +139,12 @@
     "headCard": "Завідувач кафедри",
     "headDesc": "Контактна інформація та години роботи завідувача.",
     "viewDetails": "Детальніше",
-    "backToHome": "Повернутися на головну",
-    "backToAboutUs": "Повернутися до Про нас",
     "headNotConfigured": "Завідувача кафедри ще не додано до системи.",
     "secretariatNotConfigured": "Секретаріат ще не додано до системи.",
     "managementTitle": "Керівництво",
     "teamsTitle": "Дослідницькі та навчальні групи"
   },
   "MemberProfile": {
-    "backToTeam": "Повернутися до групи",
     "contactTitle": "Контакти",
     "emailLabel": "E-mail",
     "phoneLabel": "Телефон",

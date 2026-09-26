@@ -1,18 +1,18 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
-import BackLink from '@/components/BackLink';
 import { prisma } from '@/lib/prisma';
 import NewsSearchForm from '@/components/NewsSearchForm';
 import NewsGridServer from '@/components/NewsGrid/NewsGridServer';
 import NewsGridSkeleton from '@/components/NewsGrid/NewsGridSkeleton';
 import { resolveTagName } from '@/lib/translations';
 import { getPathname } from '@/i18n/routing';
-import { LanguageCode, SortBy } from '@/types/search-types';
+import { SortBy } from '@/types/search-types';
 import style from './page.module.scss';
 
 import { Metadata } from 'next';
 import { listingMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
+import PageHeader from '@/components/PageHeader';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -40,7 +40,7 @@ export async function generateMetadata({
 
 export default async function NewsPage({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as LanguageCode;
+  const locale = setPageLocale(resolvedParams.locale);
 
   const resolvedSearchParams = await searchParams;
   const query =
@@ -77,7 +77,6 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
     label: resolveTagName(t, locale),
   }));
 
-  const tStruct = await getTranslations('StructurePage');
   const tNews = await getTranslations('NewsPage');
 
   // Key for Suspense to trigger re-render on param change
@@ -92,13 +91,7 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
 
   return (
     <div className={style.main}>
-      <div className={style.topBar}>
-        <BackLink href="/" className={style.backButton}>
-          {tStruct('backToHome')}
-        </BackLink>
-
-        <h1 className={style.title}>{tNews('title')}</h1>
-
+      <PageHeader title={tNews('title')} breadcrumbs={[]}>
         <NewsSearchForm
           initialQuery={query}
           initialTag={tag}
@@ -107,7 +100,7 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
           initialDateTo={dateTo}
           availableTags={availableTags}
         />
-      </div>
+      </PageHeader>
 
       <Suspense key={suspenseKey} fallback={<NewsGridSkeleton />}>
         <NewsGridServer

@@ -3,12 +3,6 @@ import { describe, it, expect, vi } from 'vitest';
 import FullTeamPage from '../FullTeamPage';
 import type { TeamWithRelations } from '@/lib/team-queries';
 
-vi.mock('@/components/TeamHero', () => ({
-  default: ({ name }: { name: string }) => (
-    <div data-testid="team-hero">{name}</div>
-  ),
-}));
-
 vi.mock('@/components/TeamMembers', () => ({
   default: () => <div data-testid="team-members" />,
 }));
@@ -26,7 +20,7 @@ vi.mock('@/components/TeamTeaching', () => ({
 }));
 
 describe('FullTeamPage', () => {
-  it('renders all team sections with translated name', () => {
+  it('renders all team sections', () => {
     const mockTeam = {
       id: '1',
       slug: 'test-team',
@@ -45,14 +39,13 @@ describe('FullTeamPage', () => {
       />
     );
 
-    expect(screen.getByTestId('team-hero')).toHaveTextContent('Internal Team');
     expect(screen.getByTestId('team-members')).toBeInTheDocument();
     expect(screen.getByTestId('team-research')).toBeInTheDocument();
     expect(screen.getByTestId('team-publications')).toBeInTheDocument();
     expect(screen.getByTestId('team-teaching')).toBeInTheDocument();
   });
 
-  it('falls back to slug when name translation is missing', () => {
+  it('renders without translations', () => {
     const mockTeamEmpty = {
       id: '2',
       slug: 'fallback-slug',
@@ -71,6 +64,6 @@ describe('FullTeamPage', () => {
       />
     );
 
-    expect(screen.getByTestId('team-hero')).toHaveTextContent('fallback-slug');
+    expect(screen.getByTestId('team-members')).toBeInTheDocument();
   });
 });

@@ -25,15 +25,6 @@
   }
 }
 
-.title {
-  font-family: $font-serif;
-  font-size: 2em;
-  font-weight: 700;
-  color: var(--foreground);
-  margin: 0 0 16px;
-  line-height: 1.2;
-}
-
 .description {
   font-size: 1.1em;
   color: var(--text-muted);
@@ -96,21 +87,4 @@
 .externalIcon {
   margin-left: auto;
   opacity: 0.7;
-}
-
-// Bleeds to the card edges, flush with its top border
-.banner {
-  position: relative;
-  aspect-ratio: 16 / 7;
-  margin: (-$page-padding-top) -40px 24px;
-  border-radius: $radius-xl $radius-xl 0 0;
-  overflow: hidden;
-
-  :global(.wcag-high-contrast) & {
-    border-radius: 0;
-  }
-}
-
-.bannerImage {
-  object-fit: cover;
 }

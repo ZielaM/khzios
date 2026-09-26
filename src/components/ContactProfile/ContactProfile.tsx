@@ -20,6 +20,7 @@ export interface ContactProfileProps {
   fallbackIcon?: ReactNode;
   /** Heading of the hours card; "Working hours" by default */
   hoursTitle?: string;
+  headingLevel?: 1 | 2;
 }
 
 /** Contact card for the secretariat and the head of department. */
@@ -33,6 +34,7 @@ export default function ContactProfile({
   photoUrl,
   fallbackIcon,
   hoursTitle,
+  headingLevel,
 }: ContactProfileProps) {
   const t = useTranslations('MemberProfile');
 
@@ -43,6 +45,7 @@ export default function ContactProfile({
         title={title}
         photoUrl={photoUrl}
         fallbackIcon={fallbackIcon}
+        headingLevel={headingLevel}
       />
 
       <InfoGrid>

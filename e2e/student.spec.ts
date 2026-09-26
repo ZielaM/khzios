@@ -94,11 +94,13 @@ test.describe('For Students Page', () => {
     await expect(row).toContainText('pok. 12');
   });
 
-  test('BackLink should redirect to home page', async ({ page }) => {
+  test('breadcrumbs lead back to the home page', async ({ page }) => {
     await page.goto('/pl/student');
 
-    const backLink = page.locator('a', { hasText: 'Wróć do strony głównej' });
-    await backLink.click();
+    await page
+      .getByRole('navigation', { name: 'Ścieżka nawigacji' })
+      .getByRole('link', { name: 'Strona główna' })
+      .click();
 
     // Assert redirect
     await expect(page).toHaveURL(/.*\/pl$/);

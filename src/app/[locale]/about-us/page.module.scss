@@ -7,23 +7,6 @@
 
 /* ── Hero Section ──────────────────────────────────────────────────── */
 
-.hero {
-  @include page-hero;
-}
-
-.heroContent {
-  position: relative;
-  z-index: 1;
-}
-
-.heroTitle {
-  @include page-hero-title;
-}
-
-.heroDesc {
-  @include page-hero-desc;
-}
-
 /* ── Grid ──────────────────────────────────────────────────────── */
 
 .grid {

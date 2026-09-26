@@ -4,7 +4,6 @@ import { Metadata } from 'next';
 import ContactProfile from '@/components/ContactProfile';
 import LocationMap from '@/components/LocationMap';
 import PageBanner from '@/components/PageBanner';
-import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
 import { getSecretariat } from '@/lib/secretariat-queries';
 import { resolveTranslation } from '@/lib/translations';
@@ -13,6 +12,7 @@ import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
+import PageHeader from '@/components/PageHeader';
 
 export const revalidate = 604800;
 
@@ -45,6 +45,7 @@ export default async function ContactPage({ params }: Props) {
   const tMember = await getTranslations('MemberProfile');
   const tNav = await getTranslations('Navbar');
   const tStruct = await getTranslations('StructurePage');
+  const tContact = await getTranslations('ContactPage');
 
   const secretariat = await getSecretariat();
   const tHome = await getTranslations('HomePage');
@@ -58,6 +59,7 @@ export default async function ContactPage({ params }: Props) {
   if (!secretariat) {
     return (
       <div className={style.page}>
+        <PageHeader title={tNav('contact')} breadcrumbs={[]} />
         <p>{tStruct('secretariatNotConfigured')}</p>
       </div>
     );
@@ -80,9 +82,14 @@ export default async function ContactPage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <BackLink href="/">{tStruct('backToHome')}</BackLink>
+      <PageHeader
+        title={tNav('contact')}
+        lead={tContact('metaDescription')}
+        breadcrumbs={[]}
+      />
 
       <ContactProfile
+        headingLevel={2}
         name={secTranslation?.title || tNav('contact')}
         title=""
         email={secretariat.email || ''}

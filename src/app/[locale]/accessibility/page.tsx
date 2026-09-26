@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import BackLink from '@/components/BackLink';
 import { setPageLocale } from '@/i18n/page-locale';
 import { STATEMENT_DATES } from '@/lib/accessibility-statement';
 import { DEPARTMENT_CONTACT, telHref } from '@/lib/contact';
@@ -9,6 +8,7 @@ import { formatDate } from '@/lib/dates';
 import { getAppUrl, pageMetadata } from '@/lib/seo';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import style from './page.module.scss';
+import PageHeader from '@/components/PageHeader';
 
 // The page itself is static text, but the layout reads the team menu from
 // the database, which is not available during `next build`
@@ -41,7 +41,6 @@ export default async function AccessibilityPage({ params }: Props) {
   const { locale } = await params;
   setPageLocale(locale);
   const t = await getTranslations('AccessibilityPage');
-  const tStruct = await getTranslations('StructurePage');
 
   const date = (id: string, value: string) => (
     <time id={id} dateTime={value}>
@@ -59,10 +58,8 @@ export default async function AccessibilityPage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <BackLink href="/">{tStruct('backToHome')}</BackLink>
+      <PageHeader title={t('title')} breadcrumbs={[]} />
       <article className={style.statement}>
-        <h1 className={style.title}>{t('title')}</h1>
-
         <p id="a11y-wstep">
           {t.rich('intro', {
             org: (chunks) => <span id="a11y-podmiot">{chunks}</span>,

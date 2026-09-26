@@ -79,9 +79,10 @@ test.describe('About Us Navigation Spec', () => {
 
     await expect(page).toHaveURL(/\/en\/about-us\/structure\/head/);
 
-    // Check if back link is there
-    const backLink = page.getByRole('link', { name: /Back to structure/i });
-    await expect(backLink).toBeVisible();
+    const breadcrumbs = page.getByRole('navigation', { name: 'Breadcrumb' });
+    await expect(
+      breadcrumbs.getByRole('link', { name: 'Department Structure' })
+    ).toBeVisible();
   });
 
   test('should navigate to Publications page', async ({ page }) => {

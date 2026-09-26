@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import {
   ExternalLink,
@@ -10,13 +9,11 @@ import {
 } from 'lucide-react';
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
-import type { SiteImage } from '@/lib/site-images';
 import style from './ExternalTeamPage.module.scss';
 
 interface ExternalTeamPageProps {
   team: TeamWithRelations;
   locale: string;
-  image?: SiteImage | null;
 }
 
 const ICONS: Record<string, LucideIcon> = {
@@ -28,33 +25,11 @@ const ICONS: Record<string, LucideIcon> = {
 export default function ExternalTeamPage({
   team,
   locale,
-  image,
 }: ExternalTeamPageProps) {
   const t = useTranslations('TeamPage');
-  const { translation: teamTranslation } = resolveTranslation(
-    team.translations,
-    locale
-  );
-
-  const title = teamTranslation?.name || team.slug;
-
   return (
     <div className={style.container}>
       <div className={style.card}>
-        {image && (
-          <div className={style.banner}>
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              preload
-              sizes="(max-width: 640px) 100vw, 600px"
-              className={style.bannerImage}
-            />
-          </div>
-        )}
-        <h1 className={style.title}>{title}</h1>
-
         <p className={style.description}>{t('externalRedirect')}</p>
 
         <div className={style.links}>

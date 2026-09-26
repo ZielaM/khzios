@@ -1,15 +1,14 @@
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
-import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
 import { getStudentDocuments } from '@/lib/student-queries';
 import { resolveTranslation } from '@/lib/translations';
 import StudentSchedule from '@/components/StudentSchedule';
-import PageBanner from '@/components/PageBanner';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
+import PageHeader from '@/components/PageHeader';
 
 // Documents and the banner change rarely; announcements and consultations are
 // fetched by <StudentSchedule> on every visit instead.
@@ -42,7 +41,6 @@ export default async function ForStudentsPage({ params }: Props) {
   const t = await getTranslations('StudentsPage');
   const documents = await getStudentDocuments();
 
-  const tStruct = await getTranslations('StructurePage');
   const bannerImage = getSectionImage(
     IMAGE_SECTIONS.student,
     locale,
@@ -51,13 +49,12 @@ export default async function ForStudentsPage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <BackLink href="/">{tStruct('backToHome')}</BackLink>
-
-      <h1 className={style.pageTitle}>{t('title')}</h1>
-
-      {bannerImage && (
-        <PageBanner image={bannerImage} className={style.banner} preload />
-      )}
+      <PageHeader
+        title={t('title')}
+        lead={t('metaDescription')}
+        breadcrumbs={[]}
+        image={bannerImage}
+      />
 
       <StudentSchedule locale={locale} />
 

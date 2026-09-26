@@ -76,6 +76,12 @@ export const routing = defineRouting({
       uk: '/deklaratsiia-dostupnosti',
       ru: '/deklaratsiya-dostupnosti',
     },
+    '/privacy': {
+      pl: '/polityka-prywatnosci',
+      en: '/privacy-policy',
+      uk: '/polityka-konfidentsiinosti',
+      ru: '/politika-konfidentsialnosti',
+    },
   },
 });
 

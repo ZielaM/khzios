@@ -1,0 +1,30 @@
+@use '@/styles/variables' as *;
+@use '@/styles/page-blocks' as *;
+@use '@/styles/data-table' as *;
+
+.page {
+  @include page-container;
+}
+
+.policy {
+  @include legal-text;
+}
+
+.tableContainer {
+  @include table-container;
+
+  margin: 0 0 1rem;
+}
+
+.table {
+  @include data-table;
+
+  code {
+    font-size: 0.9em;
+    overflow-wrap: anywhere;
+  }
+}
+
+.caption {
+  @include visually-hidden;
+}

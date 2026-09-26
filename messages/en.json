@@ -61,7 +61,8 @@
     "facultyLink": "Faculty of Veterinary Medicine and Animal Sciences",
     "contactTitle": "Contact",
     "copyright": "© {year} Poznań University of Life Sciences. Department of Animal Breeding and Product Quality Assessment.",
-    "accessibility": "Accessibility statement"
+    "accessibility": "Accessibility statement",
+    "privacy": "Privacy policy"
   },
   "LocaleSwitcher": {
     "label": "Language selection",
@@ -254,5 +255,41 @@
     "architecture": "The department is located in the Poznań University of Life Sciences building at 50 Szydłowska St., Poznań. Information on the physical accessibility of the university's buildings, including entrances, lifts, toilets and parking spaces for people with disabilities, is available on the <link>university website</link>.",
     "appsTitle": "Mobile applications",
     "apps": "The department does not provide any mobile applications."
+  },
+  "PrivacyPage": {
+    "title": "Privacy policy",
+    "metaDescription": "What data the website of the Department of Animal Breeding and Product Quality Assessment collects, which cookies it uses and what rights visitors have.",
+    "updatedLabel": "Last updated: {date}",
+    "intro": "This page explains what information about visitors the website of the Department of Animal Breeding and Product Quality Assessment collects and what it is used for. In short: the site has no log-in, no forms, no analytics or advertising, and does not track visitors.",
+    "controllerTitle": "Data controller",
+    "controller": "The controller of personal data is {university}, {address}. For matters concerning this website, please contact the department office: <mail>{email}</mail>, phone {phone}.",
+    "dpoLink": "The university has appointed a data protection officer, whose contact details are on the <link>university website</link>.",
+    "dpoEmail": "The university's data protection officer can be contacted at <mail>{email}</mail>.",
+    "logsTitle": "Data recorded by the server",
+    "logs": "Like any web server, the server running this site may record technical data about requests in its logs: IP address, date and time, the page requested and information about the browser. This data is used only to keep the site working and secure. Text typed into the search box is logged only if it looks like an attack. The data is not used to identify visitors and is not shared with anyone, except where required by law.",
+    "logsBasis": "The legal basis is Article 6(1)(e) GDPR (a task carried out in the public interest: running the website of a public university). Logs are kept only as long as needed for these purposes.",
+    "storageTitle": "Cookies and browser storage",
+    "storageIntro": "The site stores in your browser only what is needed for the features you use. It uses no analytics, advertising or third-party cookies. Storing information that is strictly necessary for a service the user asks for requires no consent, which is why the site shows no cookie banner.",
+    "storageCaption": "Information stored in the browser",
+    "colName": "Name",
+    "colType": "Type",
+    "colPurpose": "Purpose",
+    "colDuration": "Kept",
+    "typeCookie": "cookie",
+    "typeLocal": "browser local storage",
+    "localePurpose": "The chosen language version. Set only when it differs from your browser's language.",
+    "contrastPurpose": "High contrast mode switched on.",
+    "fontPurpose": "The chosen text size.",
+    "untilClose": "until the browser is closed",
+    "untilCleared": "until you clear the site's data in the browser",
+    "storageNote": "Local storage data is never sent to the server. You can delete all of this information in your browser settings; the site will then use its default settings.",
+    "mapTitle": "Google Maps",
+    "map": "On the Contact page the Google map loads only after you click “Show map”. Only then does your browser connect to Google's servers, which receive data such as your IP address and may set their own cookies. Google is responsible for that processing, as described in the <link>Google privacy policy</link>. Without the click, no data is sent to Google.",
+    "otherTitle": "Other resources and links",
+    "other": "Fonts, images and all other files of the site come from the same server, without external services. Links to other sites, such as the university or the faculty, lead to websites with their own privacy policies.",
+    "messagesTitle": "E-mails",
+    "messages": "If you write to the department, your e-mail address and message are used to reply and are handled according to the university's rules.",
+    "rightsTitle": "Your rights",
+    "rights": "Within the limits set by the GDPR, you have the right to access your data, to have it corrected, erased or its processing restricted, and the right to object. You may also lodge a complaint with the President of the Personal Data Protection Office (<link>uodo.gov.pl</link>)."
   }
 }

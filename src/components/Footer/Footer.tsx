@@ -33,6 +33,9 @@ const Footer = () => {
             <li>
               <Link href="/accessibility">{t('accessibility')}</Link>
             </li>
+            <li>
+              <Link href="/privacy">{t('privacy')}</Link>
+            </li>
           </ul>
         </div>
 

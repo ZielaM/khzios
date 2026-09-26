@@ -16,6 +16,7 @@ const PAGES = [
   '/pl/student',
   '/pl/kontakt',
   '/pl/deklaracja-dostepnosci',
+  '/pl/polityka-prywatnosci',
   '/pl/nie-ma-takiej-strony',
 ];
 

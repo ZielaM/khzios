@@ -61,7 +61,8 @@
     "facultyLink": "Wydział Medycyny Weterynaryjnej i Nauk o Zwierzętach",
     "contactTitle": "Kontakt",
     "copyright": "© {year} Uniwersytet Przyrodniczy w Poznaniu. Katedra Hodowli Zwierząt i Oceny Surowców.",
-    "accessibility": "Deklaracja dostępności"
+    "accessibility": "Deklaracja dostępności",
+    "privacy": "Polityka prywatności"
   },
   "LocaleSwitcher": {
     "label": "Wybór języka",
@@ -254,5 +255,41 @@
     "architecture": "Katedra mieści się w budynku Uniwersytetu Przyrodniczego w Poznaniu przy ul. Szydłowskiej 50 w Poznaniu. Informacje o dostępności architektonicznej budynków uczelni, w tym o wejściach, windach, toaletach i miejscach parkingowych dla osób z niepełnosprawnościami, znajdują się na <link>stronie internetowej uczelni</link>.",
     "appsTitle": "Aplikacje mobilne",
     "apps": "Katedra nie udostępnia aplikacji mobilnych."
+  },
+  "PrivacyPage": {
+    "title": "Polityka prywatności",
+    "metaDescription": "Jakie dane zbiera strona Katedry Hodowli Zwierząt i Oceny Surowców, jakich plików cookies używa i jakie prawa przysługują odwiedzającym.",
+    "updatedLabel": "Ostatnia aktualizacja: {date}",
+    "intro": "Ta strona wyjaśnia, jakie informacje o odwiedzających zbiera witryna Katedry Hodowli Zwierząt i Oceny Surowców i do czego ich używa. W skrócie: strona nie wymaga logowania, nie ma formularzy, nie używa narzędzi analitycznych ani reklam i nie śledzi odwiedzających.",
+    "controllerTitle": "Administrator danych",
+    "controller": "Administratorem danych osobowych jest {university}, {address}. W sprawach dotyczących tej strony można się kontaktować z sekretariatem katedry: <mail>{email}</mail>, tel. {phone}.",
+    "dpoLink": "Uczelnia wyznaczyła inspektora ochrony danych. Jego dane kontaktowe znajdują się na <link>stronie internetowej uczelni</link>.",
+    "dpoEmail": "Z inspektorem ochrony danych uczelni można się kontaktować pod adresem <mail>{email}</mail>.",
+    "logsTitle": "Dane zapisywane przez serwer",
+    "logs": "Jak każdy serwer WWW, serwer, na którym działa strona, może zapisywać w dziennikach dane techniczne o żądaniach: adres IP, datę i godzinę, adres odwiedzanej strony oraz informacje o przeglądarce. Służą one wyłącznie do zapewnienia działania i bezpieczeństwa strony. Tekst wpisany w wyszukiwarkę trafia do dziennika tylko wtedy, gdy wygląda na próbę ataku. Dane te nie służą do identyfikowania odwiedzających i nie są udostępniane innym podmiotom, poza przypadkami przewidzianymi prawem.",
+    "logsBasis": "Podstawą przetwarzania jest art. 6 ust. 1 lit. e RODO (zadanie realizowane w interesie publicznym, czyli prowadzenie strony internetowej uczelni publicznej). Dzienniki są przechowywane przez czas niezbędny do tych celów.",
+    "storageTitle": "Pliki cookies i pamięć przeglądarki",
+    "storageIntro": "Strona zapisuje w przeglądarce tylko informacje potrzebne do działania funkcji, z których korzystasz. Nie używa cookies analitycznych, reklamowych ani pochodzących od innych firm. Zapisywanie informacji niezbędnych do działania usługi, o którą prosi użytkownik, nie wymaga zgody, dlatego strona nie wyświetla banera cookies.",
+    "storageCaption": "Informacje zapisywane w przeglądarce",
+    "colName": "Nazwa",
+    "colType": "Rodzaj",
+    "colPurpose": "Cel",
+    "colDuration": "Czas przechowywania",
+    "typeCookie": "plik cookie",
+    "typeLocal": "pamięć lokalna przeglądarki",
+    "localePurpose": "Wybrana wersja językowa. Zapisywany tylko wtedy, gdy wybrany język różni się od języka ustawionego w przeglądarce.",
+    "contrastPurpose": "Włączony tryb wysokiego kontrastu.",
+    "fontPurpose": "Wybrana wielkość tekstu.",
+    "untilClose": "do zamknięcia przeglądarki",
+    "untilCleared": "do usunięcia danych strony w przeglądarce",
+    "storageNote": "Dane z pamięci lokalnej nie są wysyłane na serwer. Wszystkie te informacje można usunąć w ustawieniach przeglądarki. Strona będzie wtedy działać z ustawieniami domyślnymi.",
+    "mapTitle": "Mapa Google",
+    "map": "Na stronie Kontakt mapa Google wczytuje się dopiero po kliknięciu przycisku „Pokaż mapę”. Dopiero wtedy przeglądarka łączy się z serwerami Google, które otrzymują m.in. adres IP i mogą zapisywać własne pliki cookies. Za to przetwarzanie odpowiada Google, a zasady opisuje <link>polityka prywatności Google</link>. Bez kliknięcia żadne dane nie są przekazywane do Google.",
+    "otherTitle": "Inne zasoby i linki",
+    "other": "Czcionki, zdjęcia i pozostałe pliki strony pochodzą z tego samego serwera, bez udziału zewnętrznych serwisów. Linki do innych stron, np. uczelni lub wydziału, prowadzą do serwisów, które mają własne zasady prywatności.",
+    "messagesTitle": "Wiadomości e-mail",
+    "messages": "Jeśli napiszesz do katedry, twój adres e-mail i treść wiadomości posłużą do udzielenia odpowiedzi i będą przetwarzane na zasadach obowiązujących w uczelni.",
+    "rightsTitle": "Twoje prawa",
+    "rights": "W zakresie przewidzianym przez RODO przysługuje ci prawo dostępu do swoich danych, ich sprostowania, usunięcia lub ograniczenia przetwarzania oraz prawo sprzeciwu. Masz też prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych (<link>uodo.gov.pl</link>)."
   }
 }

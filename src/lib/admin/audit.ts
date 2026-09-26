@@ -30,3 +30,16 @@ export function logAudit(
     },
   });
 }
+
+export const LOG_RETENTION_DAYS = 90;
+
+/** Drops sign-in and security records older than LOG_RETENTION_DAYS. */
+export function purgeOldLogs() {
+  const cutoff = new Date(
+    Date.now() - LOG_RETENTION_DAYS * 24 * 60 * 60 * 1000
+  );
+  return Promise.all([
+    prisma.loginAttempt.deleteMany({ where: { createdAt: { lt: cutoff } } }),
+    prisma.securityEvent.deleteMany({ where: { createdAt: { lt: cutoff } } }),
+  ]);
+}

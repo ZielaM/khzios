@@ -14,6 +14,9 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/office', label: 'Kierownictwo i sekretariat', role: 'EDITOR' },
   { href: '/images', label: 'Zdjęcia stron', role: 'EDITOR' },
   { href: '/texts', label: 'Teksty stron', role: 'EDITOR' },
+  { href: '/trash', label: 'Kosz', role: 'EDITOR' },
   { href: '/settings', label: 'Ustawienia', role: 'ADMIN' },
+  { href: '/users', label: 'Użytkownicy', role: 'ADMIN' },
+  { href: '/logs', label: 'Dziennik', role: 'ADMIN' },
   { href: '/account', label: 'Moje konto', role: 'EDITOR' },
 ];

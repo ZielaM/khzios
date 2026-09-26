@@ -170,6 +170,11 @@ test.describe('Admin panel accessibility', () => {
       '/texts',
       '/texts/AboutUsPage',
       '/settings',
+      '/users',
+      '/logs',
+      '/logs?tab=logins',
+      '/logs?tab=security',
+      '/trash',
       '/account',
     ]) {
       await page.goto(`${ADMIN_BASE}${path}`);

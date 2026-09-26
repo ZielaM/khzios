@@ -69,6 +69,11 @@ export async function purgeTrashItem(id: string) {
   }
 }
 
+export function trashDaysLeft(deletedAt: Date) {
+  const elapsed = Math.floor((Date.now() - deletedAt.getTime()) / 86_400_000);
+  return Math.max(0, TRASH_DAYS - elapsed);
+}
+
 /** Removes items older than TRASH_DAYS; called when the panel is used. */
 export async function purgeExpiredTrash() {
   const cutoff = new Date(Date.now() - TRASH_DAYS * 24 * 60 * 60 * 1000);

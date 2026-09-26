@@ -37,4 +37,8 @@ export function translations<F extends string>(
 export interface FormState {
   error?: string;
   message?: string;
+  /** A temporary password, shown once after it is generated */
+  password?: string;
+  /** New recovery codes, shown once */
+  recoveryCodes?: string[];
 }

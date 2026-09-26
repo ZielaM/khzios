@@ -28,6 +28,26 @@ export default function ActionForm({
       className={clsx(style.form, wide && style.wideForm)}
     >
       <FormMessage error={state.error} message={state.message} />
+      {state.password && (
+        <p className={style.secret}>
+          Hasło tymczasowe (pokazane tylko teraz): <code>{state.password}</code>
+        </p>
+      )}
+      {state.recoveryCodes && (
+        <>
+          <p>
+            Nowe kody zapasowe (pokazane tylko teraz; poprzednie przestały
+            działać):
+          </p>
+          <ul className={style.codes}>
+            {state.recoveryCodes.map((code) => (
+              <li key={code}>
+                <code>{code}</code>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
       {children}
       <SubmitButton>{submitLabel}</SubmitButton>
     </form>

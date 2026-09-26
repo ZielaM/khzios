@@ -138,6 +138,7 @@ export function auditInput(
   const result = detectThreats(input);
 
   if (result.detected) {
+    recordSecurityEvent(result.threats, context, input);
     log.warn(
       {
         threats: result.threats,
@@ -152,4 +153,35 @@ export function auditInput(
   }
 
   return result;
+}
+
+// At most this many events per minute go to the database, so a scanner
+// hammering the search cannot fill the table; the log still gets them all
+const EVENTS_PER_MINUTE = 30;
+let windowStart = 0;
+let windowCount = 0;
+
+/** Keeps the event for the admin panel's log (fire and forget). */
+function recordSecurityEvent(
+  threats: string[],
+  context: string,
+  input: string
+) {
+  const now = Date.now();
+  if (now - windowStart > 60_000) {
+    windowStart = now;
+    windowCount = 0;
+  }
+  if (++windowCount > EVENTS_PER_MINUTE) return;
+  import('@/lib/prisma')
+    .then(({ prisma }) =>
+      prisma.securityEvent.create({
+        data: {
+          threats,
+          context: context.slice(0, 100),
+          preview: input.slice(0, 200),
+        },
+      })
+    )
+    .catch((err) => log.error({ err }, 'Could not store the security event'));
 }

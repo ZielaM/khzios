@@ -213,3 +213,37 @@ export async function signOut() {
   await destroySession();
   redirect(adminHref());
 }
+
+/** New recovery codes after checking the password; the old ones stop working. */
+export async function regenerateRecoveryCodes(
+  _: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const session = await getSession();
+  if (!session?.mfaPassed) redirect(adminHref());
+  const { user } = session;
+  if (!(await verifyPassword(user.passwordHash, text(formData, 'password')))) {
+    return { error: 'Nieprawidłowe hasło.' };
+  }
+  const { codes, hashes } = generateRecoveryCodes();
+  await prisma.adminUser.update({
+    where: { id: user.id },
+    data: { recoveryCodes: hashes },
+  });
+  await logAudit(user, 'security', 'account', 'Nowe kody zapasowe');
+  return { recoveryCodes: codes };
+}
+
+/** Signs out every other browser (e.g. after using a shared computer). */
+export async function signOutEverywhereElse(): Promise<void> {
+  const session = await getSession();
+  if (!session?.mfaPassed) redirect(adminHref());
+  await destroyUserSessions(session.user.id, true);
+  await logAudit(
+    session.user,
+    'security',
+    'account',
+    'Wylogowanie z pozostałych urządzeń'
+  );
+  redirect(adminHref('/account?signedOut=1'));
+}

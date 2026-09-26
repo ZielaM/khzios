@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  sanitizeArticleHtml,
   stripHtml,
   excerpt,
   sanitizeInlineHtml,
@@ -100,6 +101,37 @@ describe('sanitizeInlineHtml', () => {
     ).toBe('Tytuł');
     expect(sanitizeInlineHtml('<i onclick="x()">Gatunek</i>')).toBe(
       '<i>Gatunek</i>'
+    );
+  });
+});
+
+describe('sanitizeArticleHtml', () => {
+  it('keeps the predefined formatting', () => {
+    const html =
+      '<h2>Cel</h2><p><strong>Ważne:</strong> <em>tekst</em> <a href="https://up.poznan.pl">link</a></p>' +
+      '<ul><li>a</li></ul><ol><li>b</li></ol><blockquote>cytat</blockquote>' +
+      '<div class="highlight-box"><strong>Uwaga</strong></div>';
+    expect(sanitizeArticleHtml(html)).toBe(html);
+  });
+
+  it('removes scripts, styles, other elements and unknown classes', () => {
+    expect(
+      sanitizeArticleHtml(
+        '<p class="big" style="color:red" onclick="x()">A</p><script>alert(1)</script>' +
+          '<img src=x onerror=alert(1)><h1>H</h1><div class="evil">D</div><iframe src="//x"></iframe>'
+      )
+    ).toBe('<p>A</p>HD');
+  });
+
+  it('drops unsafe link targets', () => {
+    expect(sanitizeArticleHtml('<a href="javascript:alert(1)">x</a>')).toBe(
+      '<a>x</a>'
+    );
+    expect(sanitizeArticleHtml('<a href="/pl/kontakt">x</a>')).toBe(
+      '<a href="/pl/kontakt">x</a>'
+    );
+    expect(sanitizeArticleHtml('<a href="mailto:khz@up.poznan.pl">x</a>')).toBe(
+      '<a href="mailto:khz@up.poznan.pl">x</a>'
     );
   });
 });

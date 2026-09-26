@@ -5,7 +5,6 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import style from './page.module.scss';
-import DOMPurify from 'isomorphic-dompurify';
 import {
   resolveTranslation,
   resolveTagName,
@@ -14,6 +13,7 @@ import {
 import {
   estimateReadingTime,
   excerpt,
+  sanitizeArticleHtml,
   sanitizeInlineHtml,
   stripHtml,
 } from '@/lib/content-utils';
@@ -201,9 +201,7 @@ export default async function NewsDetailsPage({
           <div
             className={style.content}
             dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(content, {
-                FORBID_TAGS: ['style', 'script'],
-              }),
+              __html: sanitizeArticleHtml(content),
             }}
           />
 

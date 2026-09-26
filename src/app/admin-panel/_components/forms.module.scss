@@ -136,3 +136,93 @@
   border: 1px dashed var(--border-strong);
   list-style: none;
 }
+
+.languageTabs {
+  display: flex;
+  flex-direction: column;
+
+  [role='tablist'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: $radius-md $radius-md 0 0;
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid var(--color-primary);
+  }
+}
+
+.activeTab {
+  margin-bottom: -1px;
+  border-color: var(--border-strong);
+  background: var(--background);
+}
+
+.tabState {
+  font-size: 0.75em;
+  font-weight: 400;
+  color: var(--color-danger);
+}
+
+.filled {
+  color: var(--text-muted);
+}
+
+.tabPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  input {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+}
+
+.fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: $radius-md;
+
+  legend {
+    padding: 0 0.35rem;
+    font-weight: 600;
+  }
+}
+
+.wideForm {
+  max-width: 900px;
+}

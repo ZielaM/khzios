@@ -1,0 +1,100 @@
+@use '@/styles/variables' as *;
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-strong);
+  border-radius: $radius-md;
+  background: var(--background);
+
+  &:focus-within {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 1px;
+  }
+}
+
+.label {
+  padding: 0.6rem 0.75rem 0;
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.toolButton {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--border-strong);
+  border-radius: $radius-sm;
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.875em;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-muted);
+  }
+}
+
+.activeTool {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+
+  &:hover {
+    background: var(--color-secondary);
+  }
+}
+
+// Mirrors the article page styles, so editors see what readers will see
+.content {
+  min-height: 16rem;
+  padding: 1rem 1.25rem;
+  line-height: 1.7;
+  outline: none;
+
+  p,
+  ul,
+  ol {
+    margin-bottom: 1em;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.5em;
+  }
+
+  h2 {
+    margin: 1.5em 0 0.5em;
+    font-size: 1.45em;
+  }
+
+  h3 {
+    margin: 1.25em 0 0.5em;
+    font-size: 1.2em;
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  blockquote {
+    margin: 1.5em 0;
+    padding-left: 1em;
+    border-left: 3px solid var(--color-primary);
+    font-style: italic;
+  }
+
+  :global(.highlight-box) {
+    margin: 1.25em 0;
+    padding: 0.75em 1em;
+    border-left: 4px solid var(--color-primary);
+    background: var(--surface-muted);
+  }
+}

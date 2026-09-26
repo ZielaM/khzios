@@ -35,6 +35,56 @@ export function sanitizeInlineHtml(html: string): string {
   });
 }
 
+// Elements articles may contain; each has a style on the article page and a
+// button in the panel's editor. Everything else is removed.
+const ARTICLE_TAGS = [
+  'p',
+  'h2',
+  'h3',
+  'ul',
+  'ol',
+  'li',
+  'strong',
+  'em',
+  'blockquote',
+  'a',
+  'br',
+  'div',
+];
+const ARTICLE_CLASSES = new Set(['highlight-box']);
+const SAFE_LINK = /^(https?:|mailto:|\/)/i;
+
+/**
+ * Article body HTML limited to the predefined formatting: paragraphs,
+ * h2/h3 headings, lists, bold, italics, quotes, links (http, https, mailto
+ * or site paths) and the highlighted box (<div class="highlight-box">).
+ */
+export function sanitizeArticleHtml(html: string): string {
+  if (typeof html !== 'string') return '';
+  DOMPurify.addHook('uponSanitizeAttribute', (node, data) => {
+    if (data.attrName === 'class') {
+      const kept = data.attrValue
+        .split(/\s+/)
+        .filter((name) => node.nodeName === 'DIV' && ARTICLE_CLASSES.has(name));
+      data.attrValue = kept.join(' ');
+      if (kept.length === 0) data.keepAttr = false;
+    }
+    if (data.attrName === 'href' && !SAFE_LINK.test(data.attrValue.trim())) {
+      data.keepAttr = false;
+    }
+  });
+  try {
+    const clean = DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ARTICLE_TAGS,
+      ALLOWED_ATTR: ['href', 'class'],
+    });
+    // A <div> is only allowed as the highlighted box; unwrap the rest
+    return clean.replace(/<div>([\s\S]*?)<\/div>/g, '$1');
+  } finally {
+    DOMPurify.removeHook('uponSanitizeAttribute');
+  }
+}
+
 /**
  * Plain text with only the <mark> highlights added by search. Script and
  * style elements go first, together with their text, before the remaining

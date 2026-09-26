@@ -92,8 +92,6 @@
   font-size: 0.8em;
   color: var(--text-muted);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -101,7 +99,7 @@
 }
 
 .cardTitle {
-  font-family: var(--font-inter), sans-serif;
+  font-family: $font-serif;
   font-size: 1.05em;
   font-weight: 700;
   line-height: 1.35;

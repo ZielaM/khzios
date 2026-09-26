@@ -2,7 +2,6 @@ import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import BackLink from '@/components/BackLink';
 import ContactProfile from '@/components/ContactProfile';
-import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
 import { getDepartmentHead } from '@/lib/head-queries';
 import { resolveTranslation } from '@/lib/translations';
@@ -67,11 +66,10 @@ export default async function HeadPage({ params }: Props) {
   if (!head || !head.employee) {
     return (
       <div className={style.page}>
-        <AnimateOnce>
-          <BackLink href="/about-us/structure">
-            {tTeam('backToStructure')}
-          </BackLink>
-        </AnimateOnce>
+        <BackLink href="/about-us/structure">
+          {tTeam('backToStructure')}
+        </BackLink>
+
         <p>{tStruct('headNotConfigured')}</p>
       </div>
     );
@@ -94,11 +92,7 @@ export default async function HeadPage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <AnimateOnce>
-        <BackLink href="/about-us/structure">
-          {tTeam('backToStructure')}
-        </BackLink>
-      </AnimateOnce>
+      <BackLink href="/about-us/structure">{tTeam('backToStructure')}</BackLink>
 
       <ContactProfile
         name={

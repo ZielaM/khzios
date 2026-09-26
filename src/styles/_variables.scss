@@ -9,14 +9,19 @@ $color-bg: #fff;
 $color-text: $color-neutral;
 $accent-color: $color-primary;
 
-// Shape
-$radius-sm: 6px;
-$radius-md: 8px;
-$radius-lg: 10px;
-$radius-xl: 12px;
-$hover-lift: -3px;
-$shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
-$shadow-card-hover: 0 6px 20px rgba(0, 0, 0, 0.1);
+// Type: serif headings give the academic tone, sans for text and UI
+$font-serif: var(--font-serif), georgia, 'Times New Roman', serif;
+$font-sans: var(--font-sans), system-ui, sans-serif;
+$measure: 68ch; // comfortable line length for running text
+
+// Shape: small radii, borders rather than shadows, cards do not float
+$radius-sm: 3px;
+$radius-md: 4px;
+$radius-lg: 6px;
+$radius-xl: 8px;
+$hover-lift: 0;
+$shadow-card: none;
+$shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.06);
 
 // Layout
 $breakpoint-tablet: 768px;
@@ -80,13 +85,19 @@ $page-padding-top-mobile: 12px;
   }
 }
 
-@mixin section-title {
-  font-family: var(--font-inter), sans-serif;
-  font-size: 1.7em;
-  font-weight: 700;
+@mixin heading {
+  font-family: $font-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
   color: var(--foreground);
+}
+
+@mixin section-title {
+  @include heading;
+
+  font-size: 1.7em;
   margin: 0;
-  letter-spacing: -0.01em;
 }
 
 // Hidden on screen, still read by screen readers

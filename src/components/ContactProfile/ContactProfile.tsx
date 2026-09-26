@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { Clock, Mail, MapPin } from 'lucide-react';
-import AnimateOnce from '@/components/AnimateOnce';
 import {
   ContactDetails,
   InfoCard,
@@ -39,45 +38,41 @@ export default function ContactProfile({
 
   return (
     <div className={style.container}>
-      <AnimateOnce>
-        <ProfileHero
-          name={name}
-          title={title}
-          photoUrl={photoUrl}
-          fallbackIcon={fallbackIcon}
-        />
-      </AnimateOnce>
+      <ProfileHero
+        name={name}
+        title={title}
+        photoUrl={photoUrl}
+        fallbackIcon={fallbackIcon}
+      />
 
-      <AnimateOnce>
-        <InfoGrid>
-          <InfoCard icon={<Mail size={20} />} title={t('contactTitle')}>
-            <ContactDetails email={email} phone={phone} />
-          </InfoCard>
+      <InfoGrid>
+        <InfoCard icon={<Mail size={20} />} title={t('contactTitle')}>
+          <ContactDetails email={email} phone={phone} />
+        </InfoCard>
 
-          <InfoCard
-            icon={<Clock size={20} />}
-            title={hoursTitle || t('hoursLabel')}
-            className={style.hoursCard}
-          >
-            <ul className={style.hoursList}>
-              {(Array.isArray(workingHours) ? workingHours : []).map((wh) => (
-                <li key={wh.day} className={style.hoursItem}>
-                  <span className={style.dayLabel}>{wh.day}</span>
-                  <span className={style.hoursValue}>
-                    {wh.hours || t('closedLabel')}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </InfoCard>
+        <InfoCard
+          icon={<Clock size={20} />}
+          title={hoursTitle || t('hoursLabel')}
+          className={style.hoursCard}
+        >
+          <ul className={style.hoursList}>
+            {(Array.isArray(workingHours) ? workingHours : []).map((wh) => (
+              <li key={wh.day} className={style.hoursItem}>
+                <span className={style.dayLabel}>{wh.day}</span>
+                <span className={style.hoursValue}>
+                  {wh.hours || t('closedLabel')}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </InfoCard>
 
-          <InfoCard icon={<MapPin size={20} />} title={t('locationLabel')}>
-            <div className={style.locationContent}>
-              <p className={style.locationText}>{officeLocation}</p>
-            </div>
-          </InfoCard>
-        </InfoGrid>
-      </AnimateOnce>
+        <InfoCard icon={<MapPin size={20} />} title={t('locationLabel')}>
+          <div className={style.locationContent}>
+            <p className={style.locationText}>{officeLocation}</p>
+          </div>
+        </InfoCard>
+      </InfoGrid>
     </div>
   );
 }

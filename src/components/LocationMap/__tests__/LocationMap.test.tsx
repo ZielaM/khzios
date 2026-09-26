@@ -2,12 +2,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import LocationMap from '../LocationMap';
 
-vi.mock('@/components/AnimateOnce', () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  ),
-}));
-
 describe('LocationMap', () => {
   it('does not contact Google until the visitor asks for the map', () => {
     render(<LocationMap />);

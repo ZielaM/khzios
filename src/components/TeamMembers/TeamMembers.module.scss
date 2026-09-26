@@ -120,8 +120,6 @@
   font-size: 0.85em;
   color: var(--text-muted);
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);

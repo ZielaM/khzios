@@ -4,8 +4,6 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { ArrowRight, Crown, Users } from 'lucide-react';
 import BackLink from '@/components/BackLink';
-import AnimateOnce from '@/components/AnimateOnce';
-import SpotlightGrid from '@/components/SpotlightGrid';
 import { getAllTeams } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
@@ -54,9 +52,7 @@ export default async function StructurePage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <AnimateOnce>
-        <BackLink href="/about-us">{t('backToAboutUs')}</BackLink>
-      </AnimateOnce>
+      <BackLink href="/about-us">{t('backToAboutUs')}</BackLink>
 
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section className={style.hero}>
@@ -65,84 +61,78 @@ export default async function StructurePage({ params }: Props) {
       </section>
 
       {/* ── Teams ─────────────────────────────────────────────── */}
-      <AnimateOnce>
-        <h2 className={style.sectionTitle}>{t('teamsTitle')}</h2>
-      </AnimateOnce>
+
+      <h2 className={style.sectionTitle}>{t('teamsTitle')}</h2>
 
       <div className={style.teamsSection}>
-        <AnimateOnce>
-          <SpotlightGrid className={style.teamsGrid}>
-            {teams.map((team) => {
-              const { translation } = resolveTranslation(
-                team.translations,
-                locale
-              );
-              if (!translation) return null;
+        <div className={style.teamsGrid}>
+          {teams.map((team) => {
+            const { translation } = resolveTranslation(
+              team.translations,
+              locale
+            );
+            if (!translation) return null;
 
-              const image = teamImages.get(team.id);
+            const image = teamImages.get(team.id);
 
-              return (
-                <Link
-                  key={team.id}
-                  href={teamHref(team, locale)}
-                  className={style.card}
-                >
-                  {showThumbnails && (
-                    // Decorative: the card's heading already names the team
-                    <div className={style.cardImage} aria-hidden="true">
-                      {image ? (
-                        <Image
-                          src={image.src}
-                          alt=""
-                          fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 330px"
-                          className={style.cardImageInner}
-                        />
-                      ) : (
-                        <Users size={40} className={style.cardImageFallback} />
-                      )}
-                    </div>
-                  )}
-                  <h3 className={style.cardTitle}>{translation.name}</h3>
-                  <span className={style.cardFooter}>
-                    {t('viewDetails')}
-                    <ArrowRight
-                      aria-hidden="true"
-                      size={16}
-                      className={style.cardArrow}
-                    />
-                  </span>
-                </Link>
-              );
-            })}
-          </SpotlightGrid>
-        </AnimateOnce>
+            return (
+              <Link
+                key={team.id}
+                href={teamHref(team, locale)}
+                className={style.card}
+              >
+                {showThumbnails && (
+                  // Decorative: the card's heading already names the team
+                  <div className={style.cardImage} aria-hidden="true">
+                    {image ? (
+                      <Image
+                        src={image.src}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 330px"
+                        className={style.cardImageInner}
+                      />
+                    ) : (
+                      <Users size={40} className={style.cardImageFallback} />
+                    )}
+                  </div>
+                )}
+                <h3 className={style.cardTitle}>{translation.name}</h3>
+                <span className={style.cardFooter}>
+                  {t('viewDetails')}
+                  <ArrowRight
+                    aria-hidden="true"
+                    size={16}
+                    className={style.cardArrow}
+                  />
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       {/* ── Management & Administration ───────────────────────── */}
-      <AnimateOnce>
-        <h2 className={style.sectionTitle}>{t('managementTitle')}</h2>
-      </AnimateOnce>
 
-      <AnimateOnce>
-        <SpotlightGrid className={style.managementGrid}>
-          <Link href="/about-us/structure/head" className={style.card}>
-            <div className={style.cardIconWrapper} aria-hidden="true">
-              <Crown aria-hidden="true" size={26} />
-            </div>
-            <h3 className={style.cardTitle}>{t('headCard')}</h3>
-            <p className={style.cardDesc}>{t('headDesc')}</p>
-            <span className={style.cardFooter}>
-              {t('viewDetails')}
-              <ArrowRight
-                aria-hidden="true"
-                size={16}
-                className={style.cardArrow}
-              />
-            </span>
-          </Link>
-        </SpotlightGrid>
-      </AnimateOnce>
+      <h2 className={style.sectionTitle}>{t('managementTitle')}</h2>
+
+      <div className={style.managementGrid}>
+        <Link href="/about-us/structure/head" className={style.card}>
+          <div className={style.cardIconWrapper} aria-hidden="true">
+            <Crown aria-hidden="true" size={26} />
+          </div>
+          <h3 className={style.cardTitle}>{t('headCard')}</h3>
+          <p className={style.cardDesc}>{t('headDesc')}</p>
+          <span className={style.cardFooter}>
+            {t('viewDetails')}
+            <ArrowRight
+              aria-hidden="true"
+              size={16}
+              className={style.cardArrow}
+            />
+          </span>
+        </Link>
+      </div>
     </div>
   );
 }

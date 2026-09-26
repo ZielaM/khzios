@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
-import AnimateOnce from '@/components/AnimateOnce';
 import BackLink from '@/components/BackLink';
 import style from './page.module.scss';
 import { getStudentDocuments } from '@/lib/student-queries';
@@ -52,110 +51,102 @@ export default async function ForStudentsPage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <AnimateOnce>
-        <BackLink href="/">{tStruct('backToHome')}</BackLink>
-      </AnimateOnce>
+      <BackLink href="/">{tStruct('backToHome')}</BackLink>
 
       <h1 className={style.pageTitle}>{t('title')}</h1>
 
       {bannerImage && (
-        <AnimateOnce>
-          <PageBanner image={bannerImage} className={style.banner} preload />
-        </AnimateOnce>
+        <PageBanner image={bannerImage} className={style.banner} preload />
       )}
 
       <StudentSchedule locale={locale} />
 
-      <AnimateOnce>
-        <h2 className={style.title}>{t('documentsTitle')}</h2>
-      </AnimateOnce>
+      <h2 className={style.title}>{t('documentsTitle')}</h2>
 
-      <AnimateOnce>
-        <div className={style.tableContainer}>
-          {documents.length === 0 ? (
-            <p>{t('noDocuments')}</p>
-          ) : (
-            <table className={style.table} id="documents-table">
-              <thead>
-                <tr>
-                  <th>{t('subjectName')}</th>
-                  <th>{t('statute')}</th>
-                  <th>{t('syllabus')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {documents.map((doc) => {
-                  const { translation } = resolveTranslation(
-                    doc.translations,
-                    locale
-                  );
+      <div className={style.tableContainer}>
+        {documents.length === 0 ? (
+          <p>{t('noDocuments')}</p>
+        ) : (
+          <table className={style.table} id="documents-table">
+            <thead>
+              <tr>
+                <th>{t('subjectName')}</th>
+                <th>{t('statute')}</th>
+                <th>{t('syllabus')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {documents.map((doc) => {
+                const { translation } = resolveTranslation(
+                  doc.translations,
+                  locale
+                );
 
-                  const subjectName = translation?.subjectName ?? doc.slug;
+                const subjectName = translation?.subjectName ?? doc.slug;
 
-                  return (
-                    <tr key={doc.id}>
-                      <td
-                        className={style.subjectName}
-                        data-label={t('subjectName')}
+                return (
+                  <tr key={doc.id}>
+                    <td
+                      className={style.subjectName}
+                      data-label={t('subjectName')}
+                    >
+                      {subjectName}
+                    </td>
+                    <td data-label={t('statute')}>
+                      <a
+                        href={doc.statutePath}
+                        download
+                        className={style.downloadLink}
+                        aria-label={`${t('download')}: ${t('statute')} – ${subjectName}`}
                       >
-                        {subjectName}
-                      </td>
-                      <td data-label={t('statute')}>
-                        <a
-                          href={doc.statutePath}
-                          download
-                          className={style.downloadLink}
-                          aria-label={`${t('download')}: ${t('statute')} – ${subjectName}`}
+                        <svg
+                          className={style.downloadIcon}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
                         >
-                          <svg
-                            className={style.downloadIcon}
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                          >
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                            <polyline points="7 10 12 15 17 10" />
-                            <line x1="12" y1="15" x2="12" y2="3" />
-                          </svg>
-                          {t('download')}
-                        </a>
-                      </td>
-                      <td data-label={t('syllabus')}>
-                        <a
-                          href={doc.syllabusPath}
-                          download
-                          className={style.downloadLink}
-                          aria-label={`${t('download')}: ${t('syllabus')} – ${subjectName}`}
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                          <polyline points="7 10 12 15 17 10" />
+                          <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        {t('download')}
+                      </a>
+                    </td>
+                    <td data-label={t('syllabus')}>
+                      <a
+                        href={doc.syllabusPath}
+                        download
+                        className={style.downloadLink}
+                        aria-label={`${t('download')}: ${t('syllabus')} – ${subjectName}`}
+                      >
+                        <svg
+                          className={style.downloadIcon}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
                         >
-                          <svg
-                            className={style.downloadIcon}
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                          >
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                            <polyline points="7 10 12 15 17 10" />
-                            <line x1="12" y1="15" x2="12" y2="3" />
-                          </svg>
-                          {t('download')}
-                        </a>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </AnimateOnce>
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                          <polyline points="7 10 12 15 17 10" />
+                          <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        {t('download')}
+                      </a>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }

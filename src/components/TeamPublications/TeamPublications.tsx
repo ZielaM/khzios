@@ -6,7 +6,6 @@ import clsx from 'clsx';
 import { FileText, ExternalLink, Briefcase } from 'lucide-react';
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
-import AnimateOnce from '@/components/AnimateOnce';
 import style from './TeamPublications.module.scss';
 
 interface TeamPublicationsProps {
@@ -106,32 +105,30 @@ export default function TeamPublications({
               );
               if (!translation) return null;
               return (
-                <AnimateOnce key={pub.id}>
-                  <div className={style.item}>
-                    <div className={style.itemYear}>{pub.year}</div>
-                    <div className={style.itemContent}>
-                      <h3 className={style.itemTitle}>{translation.title}</h3>
-                      <div className={style.itemMeta}>
-                        <span className={style.authors}>{pub.authors}</span>
-                        <span className={style.journal}>{pub.journal}</span>
-                      </div>
-                      {pub.doi && (
-                        <a
-                          href={
-                            pub.doi.startsWith('http')
-                              ? pub.doi
-                              : `https://doi.org/${pub.doi}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={style.doiLink}
-                        >
-                          DOI <ExternalLink aria-hidden="true" size={14} />
-                        </a>
-                      )}
+                <div key={pub.id} className={style.item}>
+                  <div className={style.itemYear}>{pub.year}</div>
+                  <div className={style.itemContent}>
+                    <h3 className={style.itemTitle}>{translation.title}</h3>
+                    <div className={style.itemMeta}>
+                      <span className={style.authors}>{pub.authors}</span>
+                      <span className={style.journal}>{pub.journal}</span>
                     </div>
+                    {pub.doi && (
+                      <a
+                        href={
+                          pub.doi.startsWith('http')
+                            ? pub.doi
+                            : `https://doi.org/${pub.doi}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={style.doiLink}
+                      >
+                        DOI <ExternalLink aria-hidden="true" size={14} />
+                      </a>
+                    )}
                   </div>
-                </AnimateOnce>
+                </div>
               );
             })}
           </div>
@@ -146,21 +143,19 @@ export default function TeamPublications({
               );
               if (!translation) return null;
               return (
-                <AnimateOnce key={proj.id}>
-                  <div className={style.item}>
-                    <div className={style.itemYear}>{proj.years}</div>
-                    <div className={style.itemContent}>
-                      <h3 className={style.itemTitle}>{translation.title}</h3>
-                      {translation.funder && (
-                        <div className={style.itemMeta}>
-                          <span className={style.funder}>
-                            {t('funder')}: {translation.funder}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                <div key={proj.id} className={style.item}>
+                  <div className={style.itemYear}>{proj.years}</div>
+                  <div className={style.itemContent}>
+                    <h3 className={style.itemTitle}>{translation.title}</h3>
+                    {translation.funder && (
+                      <div className={style.itemMeta}>
+                        <span className={style.funder}>
+                          {t('funder')}: {translation.funder}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                </AnimateOnce>
+                </div>
               );
             })}
           </div>

@@ -6,12 +6,6 @@ vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key,
 }));
 
-vi.mock('@/components/AnimateOnce', () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="animate-once">{children}</div>
-  ),
-}));
-
 describe('TeamResearch', () => {
   it('returns null if content is missing', () => {
     const { container } = render(<TeamResearch content={null} />);

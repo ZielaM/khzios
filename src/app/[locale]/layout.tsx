@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Source_Serif_4 } from 'next/font/google';
 import '@/app/globals.scss';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -11,9 +11,15 @@ import { getNavigationTeams } from '@/lib/team-queries';
 import { pickClientMessages } from '@/i18n/client-messages';
 import { setPageLocale } from '@/i18n/page-locale';
 
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin', 'latin-ext'],
+// Both with Cyrillic for the Ukrainian and Russian versions
+const sans = Inter({
+  variable: '--font-sans',
+  subsets: ['latin', 'latin-ext', 'cyrillic'],
+});
+const serif = Source_Serif_4({
+  variable: '--font-serif',
+  subsets: ['latin', 'latin-ext', 'cyrillic'],
+  weight: ['600', '700'],
 });
 
 export async function generateMetadata({
@@ -97,7 +103,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className={inter.variable}>
+      <body className={`${sans.variable} ${serif.variable}`}>
         <NextIntlClientProvider messages={pickClientMessages(messages)}>
           <ScrollRestoration />
           <a href="#main-content" className="skip-link">

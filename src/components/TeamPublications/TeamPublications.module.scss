@@ -28,8 +28,6 @@
   font-size: 1em;
   font-weight: 500;
   color: var(--color-primary);
-  text-transform: uppercase;
-  letter-spacing: 1px;
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -128,9 +126,9 @@
 }
 
 .itemYear {
-  font-family: var(--font-inter), sans-serif;
+  font-family: $font-sans;
   font-size: 1.5em;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-primary);
   min-width: 80px;
   flex-shrink: 0;

@@ -41,8 +41,6 @@
     font-weight: 700;
     font-size: 0.95em;
     color: #555;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
     white-space: nowrap;
 
     :global(.wcag-high-contrast) & {
@@ -105,11 +103,9 @@
       &::before {
         content: attr(data-label);
         font-size: 0.8em;
-        text-transform: uppercase;
         color: #666;
         font-weight: 700;
         margin-bottom: 4px;
-        letter-spacing: 0.5px;
 
         :global(.wcag-high-contrast) & {
           color: var(--foreground);

@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import BackLink from '@/components/BackLink';
-import AnimateOnce from '@/components/AnimateOnce';
 import { prisma } from '@/lib/prisma';
 import NewsSearchForm from '@/components/NewsSearchForm';
 import NewsGridServer from '@/components/NewsGrid/NewsGridServer';
@@ -94,11 +93,9 @@ export default async function NewsPage({ params, searchParams }: PageProps) {
   return (
     <div className={style.main}>
       <div className={style.topBar}>
-        <AnimateOnce>
-          <BackLink href="/" className={style.backButton}>
-            {tStruct('backToHome')}
-          </BackLink>
-        </AnimateOnce>
+        <BackLink href="/" className={style.backButton}>
+          {tStruct('backToHome')}
+        </BackLink>
 
         <h1 className={style.title}>{tNews('title')}</h1>
 

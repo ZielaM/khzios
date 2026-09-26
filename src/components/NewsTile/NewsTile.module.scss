@@ -137,8 +137,6 @@
   border-radius: $radius-sm;
   font-size: 0.7em;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
   border: 1px solid rgba($color-primary, 0.15);
 
   :global(.wcag-high-contrast) & {
@@ -240,8 +238,6 @@
   color: var(--color-tertiary);
   margin-top: auto; // Force to bottom
   transition: color 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);

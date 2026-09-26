@@ -6,7 +6,6 @@ import style from './TeamMembers.module.scss';
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import { memberHref } from '@/lib/team-routes';
-import AnimateOnce from '@/components/AnimateOnce';
 
 interface TeamMembersProps {
   members: TeamWithRelations['members'];
@@ -85,38 +84,36 @@ function MemberCard({
   const title = translation?.academicTitle ?? '';
 
   return (
-    <AnimateOnce>
-      <div className={style.card}>
-        <div className={style.avatarContainer}>
-          {member.employee.photoUrl ? (
-            <Image
-              src={member.employee.photoUrl}
-              alt={`${member.employee.firstName} ${member.employee.lastName}`}
-              fill
-              className={style.avatar}
-              sizes="80px"
-            />
-          ) : (
-            <div className={style.avatarFallback}>
-              <User aria-hidden="true" size={32} />
-            </div>
-          )}
-        </div>
-        <div className={style.info}>
-          <div className={style.title}>{title}</div>
-          <div
-            className={style.name}
-          >{`${member.employee.firstName} ${member.employee.lastName}`}</div>
-          {member.employee.profileSlug && (
-            <Link
-              href={memberHref(team, locale, member.employee.profileSlug)}
-              className={style.profileLink}
-            >
-              {t('viewProfile')} <ChevronRight aria-hidden="true" size={14} />
-            </Link>
-          )}
-        </div>
+    <div className={style.card}>
+      <div className={style.avatarContainer}>
+        {member.employee.photoUrl ? (
+          <Image
+            src={member.employee.photoUrl}
+            alt={`${member.employee.firstName} ${member.employee.lastName}`}
+            fill
+            className={style.avatar}
+            sizes="80px"
+          />
+        ) : (
+          <div className={style.avatarFallback}>
+            <User aria-hidden="true" size={32} />
+          </div>
+        )}
       </div>
-    </AnimateOnce>
+      <div className={style.info}>
+        <div className={style.title}>{title}</div>
+        <div
+          className={style.name}
+        >{`${member.employee.firstName} ${member.employee.lastName}`}</div>
+        {member.employee.profileSlug && (
+          <Link
+            href={memberHref(team, locale, member.employee.profileSlug)}
+            className={style.profileLink}
+          >
+            {t('viewProfile')} <ChevronRight aria-hidden="true" size={14} />
+          </Link>
+        )}
+      </div>
+    </div>
   );
 }

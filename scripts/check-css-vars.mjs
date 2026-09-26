@@ -7,7 +7,7 @@ import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..', 'src');
 // Defined outside the stylesheets: next/font and runtime scripts
-const EXTERNAL = new Set(['--font-inter']);
+const EXTERNAL = new Set(['--font-sans', '--font-serif']);
 
 function files(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {

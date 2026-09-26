@@ -5,7 +5,6 @@ import ContactProfile from '@/components/ContactProfile';
 import LocationMap from '@/components/LocationMap';
 import PageBanner from '@/components/PageBanner';
 import BackLink from '@/components/BackLink';
-import AnimateOnce from '@/components/AnimateOnce';
 import style from './page.module.scss';
 import { getSecretariat } from '@/lib/secretariat-queries';
 import { resolveTranslation } from '@/lib/translations';
@@ -81,9 +80,8 @@ export default async function ContactPage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <AnimateOnce>
-        <BackLink href="/">{tStruct('backToHome')}</BackLink>
-      </AnimateOnce>
+      <BackLink href="/">{tStruct('backToHome')}</BackLink>
+
       <ContactProfile
         name={secTranslation?.title || tNav('contact')}
         title=""
@@ -98,13 +96,13 @@ export default async function ContactPage({ params }: Props) {
       />
       {buildingImage ? (
         <div className={style.location}>
-          <AnimateOnce className={style.locationPhoto}>
+          <div className={style.locationPhoto}>
             <PageBanner
               image={buildingImage}
               className={style.locationPhotoInner}
               sizes="(max-width: 768px) 100vw, 400px"
             />
-          </AnimateOnce>
+          </div>
           <LocationMap />
         </div>
       ) : (

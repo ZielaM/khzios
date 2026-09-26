@@ -70,8 +70,6 @@
   margin-bottom: 0;
   transition: all 0.2s ease;
   align-self: flex-start;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   background-color: rgba(0, 0, 0, 0.04);
   padding: 8px 16px;
   border-radius: $radius-md;
@@ -113,7 +111,7 @@
 }
 
 .title {
-  font-family: var(--font-inter), sans-serif;
+  font-family: $font-serif;
   font-size: clamp(2em, 5vw, 3em);
   font-weight: 700;
   color: var(--foreground);
@@ -186,8 +184,6 @@
   border-radius: 8px;
   font-size: 0.85em;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   transition: background-color 0.2s ease;
 
   &:hover {
@@ -274,7 +270,7 @@
   }
 
   h2 {
-    font-family: var(--font-inter), sans-serif;
+    font-family: $font-serif;
     font-size: 1.8em;
     margin-top: 48px;
     margin-bottom: 24px;
@@ -283,7 +279,7 @@
   }
 
   h3 {
-    font-family: var(--font-inter), sans-serif;
+    font-family: $font-serif;
     font-size: 1.4em;
     margin-top: 32px;
     margin-bottom: 16px;
@@ -379,7 +375,7 @@
 }
 
 .gallerySectionTitle {
-  font-family: var(--font-inter), sans-serif;
+  font-family: $font-serif;
   font-size: 1.5em;
   font-weight: 700;
   color: var(--foreground);

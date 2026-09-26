@@ -14,7 +14,6 @@ import {
   ProfileHero,
 } from '@/components/Profile';
 import style from './page.module.scss';
-import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata, toAbsoluteUrl } from '@/lib/seo';
@@ -116,64 +115,55 @@ export default async function MemberPage({ params }: Props) {
     <div className={style.page}>
       <JsonLd data={personJsonLd} />
       {/* Back Link */}
-      <AnimateOnce>
-        <BackLink href={teamHref(team, locale)}>{t('backToTeam')}</BackLink>
-      </AnimateOnce>
+
+      <BackLink href={teamHref(team, locale)}>{t('backToTeam')}</BackLink>
 
       <div className={style.profile}>
-        <AnimateOnce>
-          <ProfileHero
-            name={fullName}
-            title={title}
-            photoUrl={member.employee.photoUrl}
-          >
-            <div className={style.teamBadge}>
-              <Users aria-hidden="true" size={16} />
-              <span>{t('teamLabel')}:</span>
-              <Link
-                href={teamHref(team, locale)}
-                className={style.teamBadgeLink}
-              >
-                {teamName}
-              </Link>
-            </div>
-          </ProfileHero>
-        </AnimateOnce>
+        <ProfileHero
+          name={fullName}
+          title={title}
+          photoUrl={member.employee.photoUrl}
+        >
+          <div className={style.teamBadge}>
+            <Users aria-hidden="true" size={16} />
+            <span>{t('teamLabel')}:</span>
+            <Link href={teamHref(team, locale)} className={style.teamBadgeLink}>
+              {teamName}
+            </Link>
+          </div>
+        </ProfileHero>
 
-        <AnimateOnce>
-          <InfoGrid>
-            <InfoCard icon={<Mail size={20} />} title={t('contactTitle')}>
-              <ContactDetails
-                email={member.employee.email}
-                phone={member.employee.phone}
-              />
-            </InfoCard>
+        <InfoGrid>
+          <InfoCard icon={<Mail size={20} />} title={t('contactTitle')}>
+            <ContactDetails
+              email={member.employee.email}
+              phone={member.employee.phone}
+            />
+          </InfoCard>
 
-            {member.employee.orcid && (
-              <InfoCard
-                icon={<OrcidIcon className={style.orcidLogo} />}
-                title={t('orcidTitle')}
-              >
-                <div className={style.orcidContent}>
-                  <p className={style.orcidDesc}>{t('orcidDesc')}</p>
-                  <div className={style.orcidId}>
-                    <OrcidIcon className={style.orcidLogo} />
-                    <span>{member.employee.orcid}</span>
-                  </div>
-                  <a
-                    href={`https://orcid.org/${member.employee.orcid}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={style.orcidLink}
-                  >
-                    {t('viewOrcid')}{' '}
-                    <ExternalLink aria-hidden="true" size={14} />
-                  </a>
+          {member.employee.orcid && (
+            <InfoCard
+              icon={<OrcidIcon className={style.orcidLogo} />}
+              title={t('orcidTitle')}
+            >
+              <div className={style.orcidContent}>
+                <p className={style.orcidDesc}>{t('orcidDesc')}</p>
+                <div className={style.orcidId}>
+                  <OrcidIcon className={style.orcidLogo} />
+                  <span>{member.employee.orcid}</span>
                 </div>
-              </InfoCard>
-            )}
-          </InfoGrid>
-        </AnimateOnce>
+                <a
+                  href={`https://orcid.org/${member.employee.orcid}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={style.orcidLink}
+                >
+                  {t('viewOrcid')} <ExternalLink aria-hidden="true" size={14} />
+                </a>
+              </div>
+            </InfoCard>
+          )}
+        </InfoGrid>
       </div>
     </div>
   );

@@ -194,7 +194,6 @@ input:checked + .slider::before {
   gap: 0.25rem;
   font-size: 0.75em;
   font-weight: 700;
-  text-transform: uppercase;
   color: var(--color-danger);
   background-color: rgba(220, 38, 38, 0.1);
   padding: 0.25rem 0.5rem;

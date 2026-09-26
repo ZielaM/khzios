@@ -3,13 +3,6 @@ import { describe, it, expect, vi } from 'vitest';
 import FullTeamPage from '../FullTeamPage';
 import type { TeamWithRelations } from '@/lib/team-queries';
 
-// Mock inner components to simplify testing
-vi.mock('@/components/AnimateOnce', () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="animate-once">{children}</div>
-  ),
-}));
-
 vi.mock('@/components/TeamHero', () => ({
   default: ({ name }: { name: string }) => (
     <div data-testid="team-hero">{name}</div>

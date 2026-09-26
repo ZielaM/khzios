@@ -6,7 +6,6 @@ import BackLink from '@/components/BackLink';
 import { permanentRedirect } from '@/i18n/routing';
 import { teamHref, teamSlugFor } from '@/lib/team-routes';
 import style from './page.module.scss';
-import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 
@@ -70,14 +69,10 @@ export default async function TeamPage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <AnimateOnce>
-        <BackLink href="/about-us/structure">{t('backToStructure')}</BackLink>
-      </AnimateOnce>
+      <BackLink href="/about-us/structure">{t('backToStructure')}</BackLink>
 
       {team.type === 'EXTERNAL' ? (
-        <AnimateOnce>
-          <ExternalTeamPage team={team} locale={locale} image={image} />
-        </AnimateOnce>
+        <ExternalTeamPage team={team} locale={locale} image={image} />
       ) : (
         <FullTeamPage team={team} locale={locale} image={image} />
       )}

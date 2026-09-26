@@ -7,7 +7,6 @@ import { getPhotoAlt, getPhotoUrl } from '@/lib/photos';
 import { formatDate } from '@/lib/dates';
 import { getRelatedNews } from '@/lib/news-queries';
 import { ArrowRight } from 'lucide-react';
-import AnimateOnce from '@/components/AnimateOnce';
 import style from './RelatedNews.module.scss';
 
 interface RelatedNewsProps {
@@ -51,30 +50,29 @@ export default async function RelatedNews({
           const formattedDate = formatDate(article.publishedAt, locale);
 
           return (
-            <AnimateOnce key={article.id}>
-              <Link
-                href={{ pathname: '/news/[id]', params: { id: article.id } }}
-                className={style.card}
-              >
-                <div className={style.cardImage}>
-                  <Image
-                    src={photoUrl}
-                    alt={getPhotoAlt(article.photos[0], locale, cleanTitle)}
-                    fill
-                    className={style.image}
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <div className={style.cardContent}>
-                  <span className={style.cardDate}>{formattedDate}</span>
-                  <h3 className={style.cardTitle}>{cleanTitle}</h3>
-                  <span className={style.cardLink}>
-                    {t('readArticle')}
-                    <ArrowRight aria-hidden="true" size={16} />
-                  </span>
-                </div>
-              </Link>
-            </AnimateOnce>
+            <Link
+              key={article.id}
+              href={{ pathname: '/news/[id]', params: { id: article.id } }}
+              className={style.card}
+            >
+              <div className={style.cardImage}>
+                <Image
+                  src={photoUrl}
+                  alt={getPhotoAlt(article.photos[0], locale, cleanTitle)}
+                  fill
+                  className={style.image}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
+              <div className={style.cardContent}>
+                <span className={style.cardDate}>{formattedDate}</span>
+                <h3 className={style.cardTitle}>{cleanTitle}</h3>
+                <span className={style.cardLink}>
+                  {t('readArticle')}
+                  <ArrowRight aria-hidden="true" size={16} />
+                </span>
+              </div>
+            </Link>
           );
         })}
       </div>

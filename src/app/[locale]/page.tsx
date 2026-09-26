@@ -5,7 +5,6 @@ import { Link } from '@/i18n/routing';
 import RecentNewsServer from '@/components/RecentNews/RecentNewsServer';
 import RecentNewsSkeleton from '@/components/RecentNews/RecentNewsSkeleton';
 import AnimateOnce from '@/components/AnimateOnce';
-import SpotlightGrid from '@/components/SpotlightGrid';
 import HeroSlideshow from '@/components/HeroSlideshow';
 import { getSectionImages, IMAGE_SECTIONS } from '@/lib/site-images';
 import { LOGO_IMAGE, pageMetadata, toAbsoluteUrl } from '@/lib/seo';
@@ -117,7 +116,7 @@ export default async function Home({
       </AnimateOnce>
 
       <AnimateOnce>
-        <SpotlightGrid className={styles.bentoGrid}>
+        <div className={styles.bentoGrid}>
           <Link href="/student" className={styles.bentoCard}>
             <div className={styles.cardIconWrapper} aria-hidden="true">
               <GraduationCap aria-hidden="true" size={28} />
@@ -177,7 +176,7 @@ export default async function Home({
               aria-hidden="true"
             />
           </Link>
-        </SpotlightGrid>
+        </div>
       </AnimateOnce>
     </div>
   );

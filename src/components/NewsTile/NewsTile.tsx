@@ -14,7 +14,6 @@ import {
 import { excerpt, stripHtml } from '@/lib/content-utils';
 import { getPhotoAlt, getPhotoUrl } from '@/lib/photos';
 import { formatDate } from '@/lib/dates';
-import AnimateOnce from '@/components/AnimateOnce';
 
 /**
  * Plain text with only the <mark> highlights added by search. Script and
@@ -74,74 +73,70 @@ export default function NewsTile({
   const imageAlt = getPhotoAlt(news.photos[0], locale, stripHtml(title));
 
   return (
-    <AnimateOnce>
-      <article className={style.newsTile} data-testid="news-tile">
-        <div className={style.imageContainer}>
-          <Image
-            src={thumbnail}
-            alt={imageAlt}
-            fill
-            preload={preload}
-            className={style.image}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-          <div className={style.dateBadge}>
-            <time dateTime={news.publishedAt.toISOString()}>
-              {formattedDate}
-            </time>
-          </div>
+    <article className={style.newsTile} data-testid="news-tile">
+      <div className={style.imageContainer}>
+        <Image
+          src={thumbnail}
+          alt={imageAlt}
+          fill
+          preload={preload}
+          className={style.image}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        <div className={style.dateBadge}>
+          <time dateTime={news.publishedAt.toISOString()}>{formattedDate}</time>
         </div>
+      </div>
 
-        <div className={style.content}>
-          {news.tags.length > 0 && (
-            <div className={style.tags}>
-              {news.tags.map((tag) => (
-                <span key={tag.id} className={style.tag}>
-                  {getTagName(tag)}
-                </span>
-              ))}
-            </div>
-          )}
+      <div className={style.content}>
+        {news.tags.length > 0 && (
+          <div className={style.tags}>
+            {news.tags.map((tag) => (
+              <span key={tag.id} className={style.tag}>
+                {getTagName(tag)}
+              </span>
+            ))}
+          </div>
+        )}
 
-          {isFallback && translation && (
-            <span
-              className={style.fallbackBadge}
-              data-testid="news-fallback-badge"
-            >
-              {t('translationUnavailable', {
-                language:
-                  LANGUAGE_NAMES[translation.languageCode] ??
-                  translation.languageCode,
-              })}
-            </span>
-          )}
+        {isFallback && translation && (
+          <span
+            className={style.fallbackBadge}
+            data-testid="news-fallback-badge"
+          >
+            {t('translationUnavailable', {
+              language:
+                LANGUAGE_NAMES[translation.languageCode] ??
+                translation.languageCode,
+            })}
+          </span>
+        )}
 
-          {/* Only the title is the link, so its accessible name stays short;
+        {/* Only the title is the link, so its accessible name stays short;
               the link's ::after stretches the click area over the card.
               Search results carry <mark> highlights, hence innerHTML. */}
-          <Heading className={style.title} data-testid="news-title">
-            <Link
-              href={{ pathname: '/news/[id]', params: { id: news.id } }}
-              className={style.titleLink}
-              dangerouslySetInnerHTML={{ __html: cleanTitle }}
-            />
-          </Heading>
+        <Heading className={style.title} data-testid="news-title">
+          <Link
+            href={{ pathname: '/news/[id]', params: { id: news.id } }}
+            className={style.titleLink}
+            dangerouslySetInnerHTML={{ __html: cleanTitle }}
+          />
+        </Heading>
 
-          {isHighlighted ? (
-            <p
-              className={clsx(style.description, style.highlighted)}
-              dangerouslySetInnerHTML={{ __html: description }}
-            />
-          ) : (
-            <p className={style.description}>{description}</p>
-          )}
+        {isHighlighted ? (
+          <p
+            className={clsx(style.description, style.highlighted)}
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
+        ) : (
+          <p className={style.description}>{description}</p>
+        )}
 
-          <span className={style.readMore} aria-hidden="true">
-            {t('readMore')}
-            <ArrowRight size={18} />
-          </span>
-        </div>
-      </article>
-    </AnimateOnce>
+        <span className={style.readMore} aria-hidden="true">
+          {t('readMore')}
+          <ArrowRight size={18} />
+        </span>
+      </div>
+    </article>
   );
 }

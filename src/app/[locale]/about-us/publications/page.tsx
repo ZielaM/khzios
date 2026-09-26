@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import BackLink from '@/components/BackLink';
-import AnimateOnce from '@/components/AnimateOnce';
 import PublicationsSearchForm from '@/components/PublicationsSearchForm';
 import PublicationsListServer from '@/components/PublicationsListServer';
 import PublicationsListSkeleton from '@/components/PublicationsListSkeleton';
@@ -64,9 +63,7 @@ export default async function PublicationsPage({
 
   return (
     <div className={style.main}>
-      <AnimateOnce>
-        <BackLink href="/about-us">{tStruct('backToAboutUs')}</BackLink>
-      </AnimateOnce>
+      <BackLink href="/about-us">{tStruct('backToAboutUs')}</BackLink>
 
       <div className={style.header}>
         <h1 className={style.title}>{t('title')}</h1>

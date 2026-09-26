@@ -3,7 +3,7 @@
 .footer {
   background-color: var(--footer-bg);
   padding: 4rem 2rem;
-  font-family: var(--font-inter), sans-serif;
+  font-family: $font-sans;
   border-top: 3px solid var(--color-primary);
   color: rgba(255, 255, 255, 0.85);
 
@@ -73,8 +73,6 @@
   color: rgba(255, 255, 255, 0.5);
   font-size: 0.85em;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   margin: 0;
 
   :global(.wcag-high-contrast) & {
@@ -150,8 +148,6 @@
   margin-top: 3rem;
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.65em;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   line-height: 1.6;
   font-weight: 600;
 

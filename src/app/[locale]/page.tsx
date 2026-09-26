@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import styles from './page.module.scss';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import RecentNewsServer from '@/components/RecentNews/RecentNewsServer';
 import RecentNewsSkeleton from '@/components/RecentNews/RecentNewsSkeleton';
@@ -16,6 +16,7 @@ import { renderOnFirstRequest } from '@/lib/static-params';
 import { BookOpen, GraduationCap, Network, Phone } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
 import JsonLd from '@/components/JsonLd';
+import { setPageLocale } from '@/i18n/page-locale';
 
 // The latest news on this page should not trail the articles by more than a
 // day; everything else here changes far less often.
@@ -28,7 +29,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
   // Title and description come from the layout defaults
   return pageMetadata({ locale, href: '/' });
 }
@@ -39,7 +40,7 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
   const t = await getTranslations('HomePage');
   const heroImages = getSectionImages(IMAGE_SECTIONS.hero, locale);
   const hasHeroImages = heroImages.length > 0;

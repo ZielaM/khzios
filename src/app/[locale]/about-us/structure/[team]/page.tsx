@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { getTeamBySlug } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import BackLink from '@/components/BackLink';
@@ -16,6 +16,7 @@ import ExternalTeamPage from '@/components/ExternalTeamPage';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata } from '@/lib/seo';
 import { excerpt, stripHtml } from '@/lib/content-utils';
+import { setPageLocale } from '@/i18n/page-locale';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -28,7 +29,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, team: teamSlug } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const team = await getTeamBySlug(teamSlug);
   if (!team) return {};
@@ -48,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function TeamPage({ params }: Props) {
   const { locale, team: teamSlug } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const team = await getTeamBySlug(teamSlug);
   if (!team) notFound();

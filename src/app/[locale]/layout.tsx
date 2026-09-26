@@ -5,16 +5,11 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ScrollRestoration from '@/components/ScrollRestoration/ScrollRestoration';
 import { NextIntlClientProvider } from 'next-intl';
-import {
-  getMessages,
-  getTranslations,
-  setRequestLocale,
-} from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import { routing, type Locale } from '@/i18n/routing';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { DEFAULT_OG_IMAGE, getAppUrl } from '@/lib/seo';
 import { getNavigationTeams } from '@/lib/team-queries';
 import { pickClientMessages } from '@/i18n/client-messages';
+import { setPageLocale } from '@/i18n/page-locale';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -27,6 +22,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  setPageLocale(locale);
   const t = await getTranslations({ locale, namespace: 'HomePage' });
   const appUrl = getAppUrl();
 
@@ -69,12 +65,7 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
-
-  if (!routing.locales.includes(locale as Locale)) {
-    notFound();
-  }
-
-  setRequestLocale(locale);
+  setPageLocale(locale);
   const [messages, tWcag, teams] = await Promise.all([
     getMessages(),
     getTranslations('Wcag'),

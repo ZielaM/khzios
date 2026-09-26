@@ -1,4 +1,4 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import AnimateOnce from '@/components/AnimateOnce';
 import BackLink from '@/components/BackLink';
@@ -10,6 +10,7 @@ import PageBanner from '@/components/PageBanner';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata } from '@/lib/seo';
+import { setPageLocale } from '@/i18n/page-locale';
 
 // Documents and the banner change rarely; announcements and consultations are
 // fetched by <StudentSchedule> on every visit instead.
@@ -23,7 +24,7 @@ export const generateStaticParams = renderOnFirstRequest;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const t = await getTranslations('StudentsPage');
   return pageMetadata({
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ForStudentsPage({ params }: Props) {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const t = await getTranslations('StudentsPage');
   const documents = await getStudentDocuments();

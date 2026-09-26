@@ -3,8 +3,9 @@ import { routing } from './i18n/routing';
 
 export default createMiddleware(routing);
 
-// Match all routes except static assets and images
-// This pattern routes everything through next-intl for locale detection
+// Every page path, so that e.g. /aktualnosci redirects to /pl/aktualnosci and
+// unknown paths get the translated 404. Skips API routes, Next.js internals
+// and anything with a file extension (images, sitemap.xml, robots.txt).
 export const config = {
-  matcher: ['/', '/(pl|en|uk|ru)/:path*'],
+  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
 };

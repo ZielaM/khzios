@@ -85,6 +85,13 @@
     "description": "Niestety, strona, której szukasz, nie istnieje lub została przeniesiona.",
     "backHome": "Wróć na stronę główną"
   },
+  "ErrorPage": {
+    "title": "Coś poszło nie tak",
+    "description": "Nie udało się wyświetlić tej strony. Spróbuj ponownie za chwilę.",
+    "retry": "Spróbuj ponownie",
+    "backHome": "Wróć na stronę główną",
+    "code": "Kod błędu: {code}"
+  },
   "NewsDetails": {
     "backToNews": "Wróć do aktualności",
     "translationUnavailable": "Wyświetlono w języku: {language}",

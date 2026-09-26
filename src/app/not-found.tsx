@@ -1,47 +1,46 @@
-import { Inter } from 'next/font/google';
 import Link from 'next/link';
 
-const inter = Inter({ subsets: ['latin'] });
-
-// This global not-found.tsx is necessary to catch errors outside of
-// the [locale] segment.
+// Only reached by paths the proxy does not handle (e.g. /some-file.php);
+// everything else is redirected to a locale and gets the translated 404
 export default function GlobalNotFound() {
-  // Basic styling since the main styles might not be loaded here
   return (
-    <html lang="pl" suppressHydrationWarning>
-      <body className={inter.className} style={{ margin: 0, padding: 0 }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '100vh',
-            fontFamily: 'sans-serif',
-            textAlign: 'center',
-            padding: '2rem',
-            backgroundColor: '#f9f9f9',
-            color: '#333',
-          }}
-        >
-          <h1 style={{ fontSize: '3rem', margin: '0 0 1rem 0' }}>404</h1>
-          <p style={{ fontSize: '1.2rem', margin: '0 0 2rem 0' }}>
-            Nie znaleziono strony. / Page not found.
+    <html lang="pl">
+      <body
+        style={{
+          margin: 0,
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '2rem',
+          textAlign: 'center',
+          fontFamily: 'system-ui, sans-serif',
+          color: '#1a1a2e',
+          background: '#fff',
+        }}
+      >
+        <main>
+          <h1 style={{ fontSize: '3rem', margin: '0 0 1rem' }}>404</h1>
+          <p style={{ margin: 0 }}>Nie znaleziono strony.</p>
+          <p lang="en" style={{ margin: '0.25rem 0 2rem', color: '#5a6a60' }}>
+            Page not found.
           </p>
           <Link
             href="/"
             style={{
+              display: 'inline-block',
               padding: '0.8rem 1.5rem',
-              backgroundColor: '#247151',
-              color: 'white',
+              borderRadius: 8,
+              background: '#1b5e3b',
+              color: '#fff',
+              fontWeight: 600,
               textDecoration: 'none',
-              borderRadius: '8px',
-              fontWeight: 'bold',
             }}
           >
-            Go to homepage
+            Strona główna / Home
           </Link>
-        </div>
+        </main>
       </body>
     </html>
   );

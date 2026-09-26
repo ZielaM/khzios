@@ -1,4 +1,4 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import BackLink from '@/components/BackLink';
 import ContactProfile from '@/components/ContactProfile';
@@ -9,6 +9,7 @@ import { resolveTranslation } from '@/lib/translations';
 import { mapWorkingHours } from '@/lib/working-hours';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata } from '@/lib/seo';
+import { setPageLocale } from '@/i18n/page-locale';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -21,7 +22,7 @@ export const generateStaticParams = renderOnFirstRequest;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const t = await getTranslations('Navbar');
   const tStruct = await getTranslations('StructurePage');
@@ -53,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function HeadPage({ params }: Props) {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const tTeam = await getTranslations('TeamPage');
   const tMember = await getTranslations('MemberProfile');

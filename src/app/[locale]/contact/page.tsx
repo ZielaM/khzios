@@ -1,4 +1,4 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Briefcase } from 'lucide-react';
 import { Metadata } from 'next';
 import ContactProfile from '@/components/ContactProfile';
@@ -13,6 +13,7 @@ import { mapWorkingHours } from '@/lib/working-hours';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata } from '@/lib/seo';
+import { setPageLocale } from '@/i18n/page-locale';
 
 export const revalidate = 604800;
 
@@ -24,7 +25,7 @@ export const generateStaticParams = renderOnFirstRequest;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const t = await getTranslations('Navbar');
   const tContact = await getTranslations('ContactPage');
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ContactPage({ params }: Props) {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const tMember = await getTranslations('MemberProfile');
   const tNav = await getTranslations('Navbar');

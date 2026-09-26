@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import BackLink from '@/components/BackLink';
@@ -31,6 +31,7 @@ import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
 import RelatedNewsSkeleton from '@/components/RelatedNews/RelatedNewsSkeleton';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import JsonLd from '@/components/JsonLd';
+import { setPageLocale } from '@/i18n/page-locale';
 
 // Articles are cached after their first view and refreshed daily, so an edit
 // or unpublication shows up within a day without hitting the database on
@@ -51,7 +52,7 @@ export async function generateMetadata({
   const resolvedParams = await params;
   const { locale, id } = resolvedParams;
 
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   // getNewsById is wrapped in React.cache(): the page reuses this query
   const news = await getNewsById(id);
@@ -83,7 +84,7 @@ export default async function NewsDetailsPage({
 }: NewsDetailsPageProps) {
   const resolvedParams = await params;
   const { locale, id } = resolvedParams;
-  setRequestLocale(locale);
+  setPageLocale(locale);
   const t = await getTranslations({ locale, namespace: 'NewsDetails' });
 
   const news = await getNewsById(id);

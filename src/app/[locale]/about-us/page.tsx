@@ -1,4 +1,4 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { Metadata } from 'next';
@@ -10,6 +10,7 @@ import HeroSlideshow from '@/components/HeroSlideshow';
 import { getSectionImage, IMAGE_SECTIONS } from '@/lib/site-images';
 import style from './page.module.scss';
 import { pageMetadata } from '@/lib/seo';
+import { setPageLocale } from '@/i18n/page-locale';
 
 // ISR every 7 days
 export const revalidate = 604800;
@@ -23,7 +24,7 @@ export const generateStaticParams = renderOnFirstRequest;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const t = await getTranslations('AboutUsPage');
   return pageMetadata({
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function AboutUsPage({ params }: Props) {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const t = await getTranslations('AboutUsPage');
   const tStruct = await getTranslations('StructurePage');

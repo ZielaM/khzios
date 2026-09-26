@@ -10,8 +10,8 @@ import { getPathname } from '@/i18n/routing';
 import style from './page.module.scss';
 
 import { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
 import { listingMetadata } from '@/lib/seo';
+import { setPageLocale } from '@/i18n/page-locale';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -25,7 +25,7 @@ export async function generateMetadata({
   searchParams,
 }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setPageLocale(locale);
 
   const t = await getTranslations({ locale, namespace: 'PublicationsPage' });
   return listingMetadata({

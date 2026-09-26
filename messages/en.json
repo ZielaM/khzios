@@ -85,6 +85,13 @@
     "description": "Sorry, the page you are looking for does not exist or has been moved.",
     "backHome": "Back to homepage"
   },
+  "ErrorPage": {
+    "title": "Something went wrong",
+    "description": "This page could not be displayed. Please try again shortly.",
+    "retry": "Try again",
+    "backHome": "Back to homepage",
+    "code": "Error code: {code}"
+  },
   "NewsDetails": {
     "backToNews": "Back to news",
     "translationUnavailable": "Shown in {language}",

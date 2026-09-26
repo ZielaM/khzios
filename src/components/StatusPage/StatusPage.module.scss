@@ -1,0 +1,125 @@
+@use '@/styles/variables' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 300px); // leaves room for the navbar and footer
+  padding: 4rem 2rem;
+  text-align: center;
+  background-color: var(--background);
+}
+
+.icon {
+  color: var(--color-primary);
+  margin-bottom: 2rem;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.title {
+  font-size: 2.5em;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.description {
+  font-size: 1.1em;
+  color: var(--text-muted);
+  max-width: 500px;
+  margin-bottom: 2.5rem;
+  line-height: 1.5;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+%button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.8rem 1.5rem;
+  border: 2px solid var(--color-primary);
+  border-radius: $radius-md;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+    border-radius: 0;
+
+    &:focus-visible {
+      outline-color: var(--foreground);
+    }
+  }
+}
+
+.primaryButton {
+  @extend %button;
+
+  background-color: var(--color-primary);
+  color: #fff;
+
+  &:hover {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary);
+  }
+
+  :global(.wcag-high-contrast) & {
+    background-color: var(--foreground);
+    color: var(--background);
+
+    &:hover {
+      background-color: var(--background);
+      color: var(--foreground);
+    }
+  }
+}
+
+.secondaryButton {
+  @extend %button;
+
+  background-color: transparent;
+  color: var(--color-primary);
+
+  &:hover {
+    background-color: var(--surface-muted);
+  }
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+.digest {
+  flex-basis: 100%;
+  margin: 1rem 0 0;
+  font-size: 0.85em;
+  color: var(--text-muted);
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}

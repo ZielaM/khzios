@@ -15,6 +15,7 @@ export const CLIENT_NAMESPACES = [
   'PublicationsPage',
   'TeamPage',
   'StudentsPage',
+  'ErrorPage',
 ] as const;
 
 export function pickClientMessages(

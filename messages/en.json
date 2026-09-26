@@ -1,11 +1,10 @@
 {
   "HomePage": {
     "title": "News",
-    "readMore": "Read more",
     "translationUnavailable": "Shown in {language}",
     "heroSubtitle": "We carry out research, teach and run innovative projects in animal breeding.",
-    "btnAboutUs": "Discover our department",
-    "btnStudent": "Student Zone",
+    "btnAboutUs": "About the department",
+    "btnStudent": "For students",
     "recentNewsTitle": "News",
     "heroTitle": "Department of Animal Breeding and Product Quality Assessment",
     "viewAllNews": "All news",
@@ -33,9 +32,9 @@
     "toggleMenu": "Toggle menu",
     "news": "News",
     "aboutUs": "About Us",
-    "forStudents": "For Students",
+    "forStudents": "For students",
     "contact": "Contact",
-    "seeLabel": "SEE: {label}",
+    "seeLabel": "{label}: overview",
     "structure": "Department Structure",
     "structureDesc": "Management and research teams of the department",
     "headOfDepartment": "Head of Department",
@@ -56,11 +55,11 @@
     "university": "Poznań University of Life Sciences",
     "faculty": "Faculty of Veterinary Medicine and Animal Sciences",
     "address": "50 Szydłowska St., 60-656 Poznań",
-    "quickLinks": "QUICK LINKS",
+    "quickLinks": "Useful links",
     "upPoznan": "PULS Poznań",
     "facultyLink": "Faculty of Veterinary Medicine and Animal Sciences",
-    "contactTitle": "CONTACT",
-    "copyright": "© 2026 POZNAŃ UNIVERSITY OF LIFE SCIENCES. DEPARTMENT OF ANIMAL BREEDING AND PRODUCT QUALITY ASSESSMENT.",
+    "contactTitle": "Contact",
+    "copyright": "© {year} Poznań University of Life Sciences. Department of Animal Breeding and Product Quality Assessment.",
     "accessibility": "Accessibility statement"
   },
   "LocaleSwitcher": {
@@ -104,9 +103,7 @@
     "code": "Error code: {code}"
   },
   "NewsDetails": {
-    "backToNews": "Back to news",
     "translationUnavailable": "Shown in {language}",
-    "publishedOn": "Published on {date}",
     "readingTime": "{minutes} min read",
     "notFoundTitle": "News not found",
     "notFoundDesc": "The article you are looking for does not exist.",
@@ -118,7 +115,6 @@
     "linkCopied": "Link copied",
     "gallery": "Photo gallery",
     "relatedArticles": "Read also",
-    "readArticle": "Read more",
     "scrollToTop": "Scroll to top",
     "galleryImageAlt": "{title} – photo {current} of {total}"
   },
@@ -138,14 +134,15 @@
   },
   "StructurePage": {
     "title": "Department Structure",
-    "description": "Explore the organisational units, research teams and administration of our department.",
+    "description": "The department's research and teaching teams and its management.",
     "headCard": "Head of Department",
     "headDesc": "Contact information and working hours of the head.",
-    "viewDetails": "View details",
+    "viewDetails": "Team page",
     "headNotConfigured": "The head of department has not been added to the system yet.",
     "secretariatNotConfigured": "The secretariat has not been added to the system yet.",
     "managementTitle": "Management",
-    "teamsTitle": "Research & Teaching Teams"
+    "teamsTitle": "Research and teaching teams",
+    "headLink": "Contact and consultations"
   },
   "MemberProfile": {
     "contactTitle": "Contact",
@@ -171,12 +168,16 @@
   },
   "AboutUsPage": {
     "title": "About Us",
-    "description": "Learn more about the Department of Animal Breeding and Product Quality Assessment: its structure, research teams and scientific publications.",
-    "structureCardTitle": "Department Structure",
-    "structureCardDesc": "Meet the management and the specialised research teams of the department.",
-    "publicationsCardTitle": "Scientific Publications",
-    "publicationsCardDesc": "Browse our repository of scientific articles, research papers, and monographs published by our staff.",
-    "viewDetails": "Explore"
+    "description": "The Department of Animal Breeding and Product Quality Assessment carries out research and teaching in animal breeding and the quality assessment of animal products.",
+    "overviewTitle": "What we do",
+    "overview": "The department is part of the Faculty of Veterinary Medicine and Animal Sciences at Poznań University of Life Sciences. It works on the breeding and husbandry of farm and fur animals and on the quality assessment of milk, meat and other animal products, and its staff teach on the faculty's degree programmes.",
+    "teamsTitle": "Teams",
+    "teamsIntro": "Research and teaching are carried out by teams with different specialisations:",
+    "workTitle": "Publications and projects",
+    "workText": "The full, searchable list of the staff's scientific publications is on the <link>Scientific publications</link> page. Selected recent publications and projects are also listed on each team's page.",
+    "contactTitle": "Management and contact",
+    "contactText": "Contact details and consultation hours of the <head>head of department</head>, and how to reach the <contact>department office</contact>, are on separate pages.",
+    "teamsMore": "Team members and the department's management: <link>Department structure</link>."
   },
   "StudentsPage": {
     "title": "For Students",

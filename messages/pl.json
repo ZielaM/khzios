@@ -1,11 +1,10 @@
 {
   "HomePage": {
     "title": "Aktualności",
-    "readMore": "Czytaj dalej",
     "translationUnavailable": "Wyświetlono w języku: {language}",
     "heroSubtitle": "Prowadzimy badania naukowe, działalność dydaktyczną oraz innowacyjne projekty w dziedzinie hodowli zwierząt.",
-    "btnAboutUs": "Poznaj naszą katedrę",
-    "btnStudent": "Strefa Studenta",
+    "btnAboutUs": "O katedrze",
+    "btnStudent": "Dla studentów",
     "recentNewsTitle": "Aktualności",
     "heroTitle": "Katedra Hodowli Zwierząt i Oceny Surowców",
     "viewAllNews": "Wszystkie aktualności",
@@ -33,9 +32,9 @@
     "toggleMenu": "Przełącz menu",
     "news": "Aktualności",
     "aboutUs": "O nas",
-    "forStudents": "Dla studenta",
+    "forStudents": "Dla studentów",
     "contact": "Kontakt",
-    "seeLabel": "ZOBACZ: {label}",
+    "seeLabel": "Strona „{label}”",
     "structure": "Struktura katedry",
     "structureDesc": "Kierownictwo i zespoły pracujące w katedrze",
     "headOfDepartment": "Kierownik katedry",
@@ -56,11 +55,11 @@
     "university": "Uniwersytet Przyrodniczy w Poznaniu",
     "faculty": "Wydział Medycyny Weterynaryjnej i Nauk o Zwierzętach",
     "address": "ul. Szydłowska 50, 60-656 Poznań",
-    "quickLinks": "SZYBKIE LINKI",
+    "quickLinks": "Przydatne linki",
     "upPoznan": "UP Poznań",
     "facultyLink": "Wydział Medycyny Weterynaryjnej i Nauk o Zwierzętach",
-    "contactTitle": "KONTAKT",
-    "copyright": "© 2026 UNIWERSYTET PRZYRODNICZY W POZNANIU. KATEDRA HODOWLI ZWIERZĄT I OCENY SUROWCÓW.",
+    "contactTitle": "Kontakt",
+    "copyright": "© {year} Uniwersytet Przyrodniczy w Poznaniu. Katedra Hodowli Zwierząt i Oceny Surowców.",
     "accessibility": "Deklaracja dostępności"
   },
   "LocaleSwitcher": {
@@ -104,9 +103,7 @@
     "code": "Kod błędu: {code}"
   },
   "NewsDetails": {
-    "backToNews": "Wróć do aktualności",
     "translationUnavailable": "Wyświetlono w języku: {language}",
-    "publishedOn": "Opublikowano {date}",
     "readingTime": "{minutes} min czytania",
     "notFoundTitle": "Nie znaleziono aktualności",
     "notFoundDesc": "Artykuł, którego szukasz, nie istnieje.",
@@ -118,7 +115,6 @@
     "linkCopied": "Skopiowano link",
     "gallery": "Galeria zdjęć",
     "relatedArticles": "Czytaj też",
-    "readArticle": "Czytaj dalej",
     "scrollToTop": "Przewiń do góry",
     "galleryImageAlt": "{title} – zdjęcie {current} z {total}"
   },
@@ -138,14 +134,15 @@
   },
   "StructurePage": {
     "title": "Struktura katedry",
-    "description": "Poznaj jednostki organizacyjne, zespoły badawcze i administrację naszej katedry.",
+    "description": "Zespoły badawcze i dydaktyczne katedry oraz jej kierownictwo.",
     "headCard": "Kierownik katedry",
     "headDesc": "Informacje kontaktowe i godziny pracy kierownika.",
-    "viewDetails": "Zobacz szczegóły",
+    "viewDetails": "Strona zespołu",
     "headNotConfigured": "Kierownik katedry nie został jeszcze dodany w systemie.",
     "secretariatNotConfigured": "Sekretariat nie został jeszcze dodany w systemie.",
     "managementTitle": "Kierownictwo",
-    "teamsTitle": "Zespoły Badawcze i Dydaktyczne"
+    "teamsTitle": "Zespoły badawcze i dydaktyczne",
+    "headLink": "Kontakt i konsultacje"
   },
   "MemberProfile": {
     "contactTitle": "Kontakt",
@@ -171,12 +168,16 @@
   },
   "AboutUsPage": {
     "title": "O nas",
-    "description": "Dowiedz się więcej o Katedrze Hodowli Zwierząt i Oceny Surowców: jej strukturze, zespołach badawczych i publikacjach naukowych.",
-    "structureCardTitle": "Struktura katedry",
-    "structureCardDesc": "Poznaj kierownictwo oraz specjalistyczne zespoły badawcze działające w katedrze.",
-    "publicationsCardTitle": "Publikacje naukowe",
-    "publicationsCardDesc": "Przeglądaj repozytorium artykułów naukowych i monografii opublikowanych przez naszych pracowników.",
-    "viewDetails": "Zobacz szczegóły"
+    "description": "Katedra Hodowli Zwierząt i Oceny Surowców prowadzi badania i zajęcia z hodowli zwierząt oraz oceny jakości surowców pochodzenia zwierzęcego.",
+    "overviewTitle": "Czym się zajmujemy",
+    "overview": "Katedra działa na Wydziale Medycyny Weterynaryjnej i Nauk o Zwierzętach Uniwersytetu Przyrodniczego w Poznaniu. Zajmuje się hodowlą i chowem zwierząt gospodarskich i futerkowych oraz oceną jakości mleka, mięsa i innych surowców pochodzenia zwierzęcego, a jej pracownicy prowadzą zajęcia na kierunkach wydziału.",
+    "teamsTitle": "Zespoły",
+    "teamsIntro": "Badania i dydaktykę prowadzą zespoły o różnych specjalnościach:",
+    "workTitle": "Publikacje i projekty",
+    "workText": "Pełny wykaz publikacji naukowych pracowników, z wyszukiwarką, znajduje się na stronie <link>Publikacje naukowe</link>. Wybrane publikacje i projekty z ostatnich lat są też na stronach poszczególnych zespołów.",
+    "contactTitle": "Kierownictwo i kontakt",
+    "contactText": "Dane <head>kierownika katedry</head> z godzinami konsultacji oraz kontakt z <contact>sekretariatem</contact> znajdują się na osobnych stronach.",
+    "teamsMore": "Skład osobowy zespołów i kierownictwo katedry: <link>Struktura katedry</link>."
   },
   "StudentsPage": {
     "title": "Dla studentów",

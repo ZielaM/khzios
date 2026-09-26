@@ -49,7 +49,7 @@ test.describe('For Students Page', () => {
     await page.goto('/pl');
 
     // Click the link in the navbar
-    await page.click('nav >> text="Dla studenta"');
+    await page.click('nav >> text="Dla studentów"');
 
     // Wait for URL to be correct
     await expect(page).toHaveURL(/.*\/student/);
@@ -70,7 +70,7 @@ test.describe('For Students Page', () => {
     await page.click('button[aria-label="Przełącz menu"]');
 
     // Click the link inside the mobile menu
-    await page.click('text="Dla studenta"');
+    await page.click('nav >> text="Dla studentów"');
 
     // Wait for URL to be correct
     await expect(page).toHaveURL(/.*\/student/);

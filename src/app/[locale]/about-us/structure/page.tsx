@@ -123,7 +123,7 @@ export default async function StructurePage({ params }: Props) {
           <h3 className={style.cardTitle}>{t('headCard')}</h3>
           <p className={style.cardDesc}>{t('headDesc')}</p>
           <span className={style.cardFooter}>
-            {t('viewDetails')}
+            {t('headLink')}
             <ArrowRight
               aria-hidden="true"
               size={16}

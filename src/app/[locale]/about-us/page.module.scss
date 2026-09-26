@@ -1,53 +1,44 @@
 @use '@/styles/variables' as *;
-@use '@/styles/page-blocks' as *;
 
 .page {
   @include page-container;
 }
 
-/* ── Hero Section ──────────────────────────────────────────────────── */
+.content {
+  max-width: $measure;
+  font-size: 1.05em;
+  line-height: 1.7;
 
-/* ── Grid ──────────────────────────────────────────────────────── */
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 48px;
-
-  > * {
-    height: 100%;
+  section + section {
+    margin-top: 2.5rem;
   }
 
-  @media (max-width: $breakpoint-tablet) {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 32px;
+  h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.75rem;
+  }
+
+  p + p,
+  p + ul,
+  ul + p {
+    margin-top: 0.75rem;
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+    }
   }
 }
 
-/* ── Shared Card Styles ────────────────────────────────────────────── */
+.teams {
+  padding-left: 1.25rem;
 
-.card {
-  @include link-card;
-}
-
-.cardIconWrapper {
-  @include card-icon;
-}
-
-.cardTitle {
-  @include card-title;
-}
-
-.cardDesc {
-  @include card-desc;
-}
-
-.cardFooter {
-  @include card-footer;
-}
-
-.cardArrow {
-  @include card-arrow;
+  li + li {
+    margin-top: 0.35rem;
+  }
 }

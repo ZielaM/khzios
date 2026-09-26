@@ -53,7 +53,7 @@ const Footer = () => {
           </div>
 
           <div className={styles.copyright}>
-            <p>{t('copyright')}</p>
+            <p>{t('copyright', { year: new Date().getFullYear() })}</p>
           </div>
         </div>
       </div>

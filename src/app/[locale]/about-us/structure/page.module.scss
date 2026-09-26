@@ -88,11 +88,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary) 0%,
-    var(--color-secondary) 100%
-  );
+
+  // Teams without a photo yet get a quiet placeholder, not a colour block
+  background: var(--surface-muted);
 
   :global(.wcag-high-contrast) & {
     border-radius: 0;
@@ -106,7 +104,7 @@
 }
 
 .cardImageFallback {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--border-strong);
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -115,15 +113,6 @@
 
 .cardImageInner {
   object-fit: cover;
-  transition: transform 0.3s ease;
-
-  .card:hover & {
-    transform: scale(1.03);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 .cardIconWrapper {

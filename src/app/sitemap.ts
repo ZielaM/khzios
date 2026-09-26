@@ -75,6 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...localizedEntries('/contact', {
       images: sectionImageUrls(IMAGE_SECTIONS.contact).slice(0, 1),
     }),
+    ...localizedEntries('/accessibility'),
     ...teams.flatMap((team) =>
       localizedEntries((locale) => teamHref(team, locale), {
         images: sectionImageUrls(IMAGE_SECTIONS.team(team.slug)).slice(0, 1),

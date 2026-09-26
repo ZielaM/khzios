@@ -1,6 +1,8 @@
 import styles from './Footer.module.scss';
 import { Phone, Mail } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
+import { DEPARTMENT_CONTACT } from '@/lib/contact';
 
 const Footer = () => {
   const t = useTranslations('Footer');
@@ -28,6 +30,9 @@ const Footer = () => {
             <li>
               <a href="https://wwz.up.poznan.pl/">{t('facultyLink')}</a>
             </li>
+            <li>
+              <Link href="/accessibility">{t('accessibility')}</Link>
+            </li>
           </ul>
         </div>
 
@@ -38,11 +43,11 @@ const Footer = () => {
             <ul className={styles.contactList}>
               <li>
                 <Phone aria-hidden="true" className={styles.icon} size={20} />
-                <span>+48 61 848 72 45</span>
+                <span>{DEPARTMENT_CONTACT.phone}</span>
               </li>
               <li>
                 <Mail aria-hidden="true" className={styles.icon} size={20} />
-                <span>khz@up.poznan.pl</span>
+                <span>{DEPARTMENT_CONTACT.email}</span>
               </li>
             </ul>
           </div>

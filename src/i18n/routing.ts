@@ -70,6 +70,12 @@ export const routing = defineRouting({
       uk: '/kontakt',
       ru: '/kontakt',
     },
+    '/accessibility': {
+      pl: '/deklaracja-dostepnosci',
+      en: '/accessibility-statement',
+      uk: '/deklaratsiia-dostupnosti',
+      ru: '/deklaratsiya-dostupnosti',
+    },
   },
 });
 

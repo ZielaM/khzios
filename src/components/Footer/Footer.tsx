@@ -2,9 +2,14 @@ import styles from './Footer.module.scss';
 import { Phone, Mail } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { DEPARTMENT_CONTACT, telHref } from '@/lib/contact';
+import { telHref } from '@/lib/contact';
 
-const Footer = () => {
+interface FooterProps {
+  /** Office e-mail and phone from the site settings */
+  contact: { email: string; phone: string };
+}
+
+const Footer = ({ contact }: FooterProps) => {
   const t = useTranslations('Footer');
 
   return (
@@ -46,15 +51,11 @@ const Footer = () => {
             <ul className={styles.contactList}>
               <li>
                 <Phone aria-hidden="true" className={styles.icon} size={20} />
-                <a href={telHref(DEPARTMENT_CONTACT.phone)}>
-                  {DEPARTMENT_CONTACT.phone}
-                </a>
+                <a href={telHref(contact.phone)}>{contact.phone}</a>
               </li>
               <li>
                 <Mail aria-hidden="true" className={styles.icon} size={20} />
-                <a href={`mailto:${DEPARTMENT_CONTACT.email}`}>
-                  {DEPARTMENT_CONTACT.email}
-                </a>
+                <a href={`mailto:${contact.email}`}>{contact.email}</a>
               </li>
             </ul>
           </div>

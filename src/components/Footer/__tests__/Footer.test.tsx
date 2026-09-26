@@ -19,7 +19,11 @@ vi.mock('next-intl', () => ({
 
 describe('Footer', () => {
   it('renders footer content and links', () => {
-    render(<Footer />);
+    render(
+      <Footer
+        contact={{ email: 'khz@up.poznan.pl', phone: '+48 61 848 72 45' }}
+      />
+    );
 
     expect(screen.getByText('brandTitle')).toBeInTheDocument();
     expect(screen.getByText('university')).toBeInTheDocument();

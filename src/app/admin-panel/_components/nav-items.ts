@@ -13,5 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/publications', label: 'Publikacje', role: 'EDITOR' },
   { href: '/office', label: 'Kierownictwo i sekretariat', role: 'EDITOR' },
   { href: '/images', label: 'Zdjęcia stron', role: 'EDITOR' },
+  { href: '/texts', label: 'Teksty stron', role: 'EDITOR' },
+  { href: '/settings', label: 'Ustawienia', role: 'ADMIN' },
   { href: '/account', label: 'Moje konto', role: 'EDITOR' },
 ];

@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { setPageLocale } from '@/i18n/page-locale';
-import { STATEMENT_DATES } from '@/lib/accessibility-statement';
-import { DEPARTMENT_CONTACT, telHref } from '@/lib/contact';
+import { telHref } from '@/lib/contact';
+import { getSettings } from '@/lib/settings';
 import { formatDate } from '@/lib/dates';
 import { getAppUrl, pageMetadata } from '@/lib/seo';
 import { renderOnFirstRequest } from '@/lib/static-params';
@@ -41,6 +41,7 @@ export default async function AccessibilityPage({ params }: Props) {
   const { locale } = await params;
   setPageLocale(locale);
   const t = await getTranslations('AccessibilityPage');
+  const { accessibility: dates, contact } = await getSettings();
 
   const date = (id: string, value: string) => (
     <time id={id} dateTime={value}>
@@ -71,10 +72,15 @@ export default async function AccessibilityPage({ params }: Props) {
           })}
         </p>
         <dl className={style.facts}>
-          <dt>{t('publishedLabel')}</dt>
-          <dd>{date('a11y-data-publikacja', STATEMENT_DATES.published)}</dd>
+          {/* Set in the admin panel when the site goes live */}
+          {dates.published && (
+            <>
+              <dt>{t('publishedLabel')}</dt>
+              <dd>{date('a11y-data-publikacja', dates.published)}</dd>
+            </>
+          )}
           <dt>{t('updatedLabel')}</dt>
-          <dd>{date('a11y-data-aktualizacja', STATEMENT_DATES.lastUpdated)}</dd>
+          <dd>{date('a11y-data-aktualizacja', dates.lastUpdated)}</dd>
         </dl>
 
         <section aria-labelledby="a11y-status-heading">
@@ -93,9 +99,9 @@ export default async function AccessibilityPage({ params }: Props) {
           <h2 id="a11y-preparation-heading">{t('preparationTitle')}</h2>
           <dl className={style.facts}>
             <dt>{t('preparedLabel')}</dt>
-            <dd>{date('a11y-data-sporzadzenie', STATEMENT_DATES.prepared)}</dd>
+            <dd>{date('a11y-data-sporzadzenie', dates.prepared)}</dd>
             <dt>{t('reviewedLabel')}</dt>
-            <dd>{date('a11y-data-przeglad', STATEMENT_DATES.reviewed)}</dd>
+            <dd>{date('a11y-data-przeglad', dates.reviewed)}</dd>
           </dl>
           <p id="a11y-ocena">{t('assessment')}</p>
         </section>
@@ -119,14 +125,14 @@ export default async function AccessibilityPage({ params }: Props) {
             <dd id="a11y-osoba">{t('person')}</dd>
             <dt>{t('emailLabel')}</dt>
             <dd>
-              <a id="a11y-email" href={`mailto:${DEPARTMENT_CONTACT.email}`}>
-                {DEPARTMENT_CONTACT.email}
+              <a id="a11y-email" href={`mailto:${contact.email}`}>
+                {contact.email}
               </a>
             </dd>
             <dt>{t('phoneLabel')}</dt>
             <dd>
-              <a id="a11y-telefon" href={telHref(DEPARTMENT_CONTACT.phone)}>
-                {DEPARTMENT_CONTACT.phone}
+              <a id="a11y-telefon" href={telHref(contact.phone)}>
+                {contact.phone}
               </a>
             </dd>
           </dl>

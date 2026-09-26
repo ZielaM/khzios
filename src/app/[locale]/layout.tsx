@@ -9,6 +9,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { DEFAULT_OG_IMAGE, getAppUrl } from '@/lib/seo';
 import { getNavigationTeams } from '@/lib/team-queries';
 import { pickClientMessages } from '@/i18n/client-messages';
+import { getSettings } from '@/lib/settings';
 import { setPageLocale } from '@/i18n/page-locale';
 
 // Both with Cyrillic for the Ukrainian and Russian versions
@@ -72,10 +73,11 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params;
   setPageLocale(locale);
-  const [messages, tWcag, teams] = await Promise.all([
+  const [messages, tWcag, teams, settings] = await Promise.all([
     getMessages(),
     getTranslations('Wcag'),
     getNavigationTeams(locale),
+    getSettings(),
   ]);
 
   return (
@@ -111,7 +113,7 @@ export default async function RootLayout({
           </a>
           <Navbar teams={teams} />
           <main id="main-content">{children}</main>
-          <Footer />
+          <Footer contact={settings.contact} />
         </NextIntlClientProvider>
       </body>
     </html>

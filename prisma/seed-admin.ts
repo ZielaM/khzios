@@ -14,6 +14,11 @@ export async function seedAdmin() {
   await prisma.siteSetting.deleteMany();
   await prisma.adminUser.deleteMany();
 
+  // Example: production leaves the publication date empty until launch
+  await prisma.siteSetting.create({
+    data: { key: 'accessibility', value: { published: '2026-10-01' } },
+  });
+
   for (const account of Object.values(DEV_ADMIN_ACCOUNTS)) {
     await prisma.adminUser.create({
       data: {

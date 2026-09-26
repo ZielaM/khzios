@@ -3,9 +3,8 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import PageHeader from '@/components/PageHeader';
 import { setPageLocale } from '@/i18n/page-locale';
-import { DEPARTMENT_CONTACT } from '@/lib/contact';
 import { formatDate } from '@/lib/dates';
-import { PRIVACY_POLICY } from '@/lib/privacy-policy';
+import { getSettings } from '@/lib/settings';
 import { pageMetadata } from '@/lib/seo';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import style from './page.module.scss';
@@ -30,6 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t('metaDescription'),
   });
 }
+
+const UNIVERSITY_URL = 'https://www.up.poznan.pl/';
 
 const externalLink = (href: string) =>
   function ExternalLink(chunks: ReactNode) {
@@ -72,13 +73,14 @@ export default async function PrivacyPage({ params }: Props) {
   setPageLocale(locale);
   const t = await getTranslations('PrivacyPage');
   const tFooter = await getTranslations('Footer');
+  const { privacy, contact } = await getSettings();
 
   return (
     <div className={style.page}>
       <PageHeader
         title={t('title')}
         lead={t('updatedLabel', {
-          date: formatDate(PRIVACY_POLICY.lastUpdated, locale),
+          date: formatDate(privacy.lastUpdated, locale),
         })}
         breadcrumbs={[]}
       />
@@ -91,20 +93,20 @@ export default async function PrivacyPage({ params }: Props) {
           <p>
             {t.rich('controller', {
               university: tFooter('university'),
-              address: PRIVACY_POLICY.controllerAddress,
-              email: DEPARTMENT_CONTACT.email,
-              phone: DEPARTMENT_CONTACT.phone,
-              mail: mailLink(DEPARTMENT_CONTACT.email),
+              address: privacy.controllerAddress,
+              email: contact.email,
+              phone: contact.phone,
+              mail: mailLink(contact.email),
             })}
           </p>
           <p>
-            {PRIVACY_POLICY.dpoEmail
+            {privacy.dpoEmail
               ? t.rich('dpoEmail', {
-                  email: PRIVACY_POLICY.dpoEmail,
-                  mail: mailLink(PRIVACY_POLICY.dpoEmail),
+                  email: privacy.dpoEmail,
+                  mail: mailLink(privacy.dpoEmail),
                 })
               : t.rich('dpoLink', {
-                  link: externalLink(PRIVACY_POLICY.universityUrl),
+                  link: externalLink(UNIVERSITY_URL),
                 })}
           </p>
         </section>

@@ -1,0 +1,41 @@
+# Weekly dependency update PRs. Related packages are grouped so that e.g.
+# next and react, or prisma and its client, are upgraded together; CI runs
+# the full test suite on every PR.
+version: 2
+updates:
+  - package-ecosystem: npm # also covers pnpm-lock.yaml
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Europe/Warsaw
+    open-pull-requests-limit: 5
+    groups:
+      next-react:
+        patterns:
+          - next
+          - react
+          - react-dom
+          - eslint-config-next
+          - '@next/*'
+          - '@types/react'
+          - '@types/react-dom'
+      prisma:
+        patterns:
+          - prisma
+          - '@prisma/*'
+      dev-tooling:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly

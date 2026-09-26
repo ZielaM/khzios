@@ -8,5 +8,9 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/student/announcements', label: 'Ogłoszenia', role: 'EDITOR' },
   { href: '/student/consultations', label: 'Konsultacje', role: 'EDITOR' },
   { href: '/student/documents', label: 'Statuty i sylabusy', role: 'EDITOR' },
+  { href: '/employees', label: 'Pracownicy', role: 'EDITOR' },
+  { href: '/teams', label: 'Zespoły', role: 'EDITOR' },
+  { href: '/publications', label: 'Publikacje', role: 'EDITOR' },
+  { href: '/office', label: 'Kierownictwo i sekretariat', role: 'EDITOR' },
   { href: '/account', label: 'Moje konto', role: 'EDITOR' },
 ];

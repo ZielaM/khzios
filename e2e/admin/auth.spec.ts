@@ -160,6 +160,12 @@ test.describe('Admin panel accessibility', () => {
       '/student/announcements',
       '/student/consultations',
       '/student/documents',
+      '/employees',
+      '/employees/new',
+      '/teams',
+      '/teams/new',
+      '/publications',
+      '/office',
       '/account',
     ]) {
       await page.goto(`${ADMIN_BASE}${path}`);

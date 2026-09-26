@@ -15,7 +15,7 @@ import { revalidatePublicSite } from '@/lib/admin/revalidate';
 import { requireUser } from '@/lib/admin/session';
 import { slugify } from '@/lib/admin/slug';
 import { saveDocument, UploadError } from '@/lib/admin/storage';
-import { moveToTrash } from '@/lib/admin/trash';
+import { deleteMediaIfUnused, moveToTrash } from '@/lib/admin/trash';
 import {
   announcementSnapshot,
   consultationSnapshot,
@@ -238,7 +238,8 @@ export async function saveDocumentEntry(
     subjectName: values.subjectName,
   }));
   if (id) {
-    // Replaced files stay on disk until nothing refers to them (trash purge)
+    const before = await prisma.studentDocument.findUnique({ where: { id } });
+    if (!before) return { error: 'Ten przedmiot już nie istnieje.' };
     await prisma.$transaction([
       prisma.studentDocumentTranslation.deleteMany({
         where: { documentId: id },
@@ -253,6 +254,9 @@ export async function saveDocumentEntry(
         },
       }),
     ]);
+    // Replaced PDFs go unless a trashed item still needs them
+    if (statutePath) await deleteMediaIfUnused(before.statutePath);
+    if (syllabusPath) await deleteMediaIfUnused(before.syllabusPath);
     await logAudit(
       user,
       'update',

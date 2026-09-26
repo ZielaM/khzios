@@ -85,3 +85,53 @@ export function valuesByLanguage<T extends { languageCode: string }>(
     items.map((t) => [t.languageCode, t as Record<string, string | null>])
   );
 }
+
+const WEEKDAY_NAMES = [
+  'Poniedziałek',
+  'Wtorek',
+  'Środa',
+  'Czwartek',
+  'Piątek',
+  'Sobota',
+  'Niedziela',
+];
+
+/** Seven inputs hours_1 … hours_7; empty means closed / no hours. */
+export function WeeklyHoursFields({
+  legend,
+  hours = [],
+}: {
+  legend: string;
+  /** Current hours by day (index 0 = Monday) */
+  hours?: string[];
+}) {
+  return (
+    <fieldset className={style.fieldset}>
+      <legend>{legend}</legend>
+      {WEEKDAY_NAMES.map((day, i) => (
+        <Field
+          key={day}
+          label={day}
+          name={`hours_${i + 1}`}
+          defaultValue={hours[i] ?? ''}
+          placeholder="np. 08:00 - 14:00"
+          maxLength={60}
+        />
+      ))}
+      <small>Puste pole oznacza, że tego dnia nie ma godzin.</small>
+    </fieldset>
+  );
+}
+
+/** Polish hours per weekday from DB rows with displayOrder 1–7. */
+export function hoursByDay(
+  rows: {
+    displayOrder: number;
+    translations: { languageCode: string; hours: string }[];
+  }[]
+) {
+  return Array.from({ length: 7 }, (_, i) => {
+    const row = rows.find((r) => r.displayOrder === i + 1);
+    return row?.translations.find((t) => t.languageCode === 'pl')?.hours ?? '';
+  });
+}

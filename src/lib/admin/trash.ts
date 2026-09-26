@@ -40,7 +40,7 @@ export function mediaUrlsIn(data: unknown): string[] {
 }
 
 /** Whether a file is still used by any record (or another trashed item). */
-async function isMediaUsed(url: string, exceptTrashId?: string) {
+export async function isMediaUsed(url: string, exceptTrashId?: string) {
   const [photos, employees, documents, siteImages, trash] = await Promise.all([
     prisma.photo.count({ where: { url } }),
     prisma.employee.count({ where: { photoUrl: url } }),
@@ -77,4 +77,9 @@ export async function purgeExpiredTrash() {
     select: { id: true },
   });
   for (const { id } of expired) await purgeTrashItem(id);
+}
+
+/** Deletes a replaced or removed upload unless something still uses it. */
+export async function deleteMediaIfUnused(url: string | null | undefined) {
+  if (url && !(await isMediaUsed(url))) await deleteMedia(url);
 }

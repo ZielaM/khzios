@@ -89,7 +89,7 @@ export default function NewsGallery({
     [showNext, showPrev]
   );
 
-  // Handle keyboard navigation, scroll locking, and touch swipe
+  // While open: arrow keys and swipes change the photo, the page does not scroll
   useEffect(() => {
     if (selectedIndex === null) return;
 
@@ -106,8 +106,7 @@ export default function NewsGallery({
     });
     document.addEventListener('touchend', handleTouchEnd);
 
-    // Prevent scrolling globally when lightbox is open
-    // Blocking both root and body ensures scroll is blocked in all browsers
+    // Some browsers scroll <html>, others <body>
     const originalBodyOverflow = document.body.style.overflow;
     const originalHtmlOverflow = document.documentElement.style.overflow;
 
@@ -182,7 +181,6 @@ export default function NewsGallery({
           {photos.length > 1 && (
             <button
               className={clsx(style.navButton, style.prevButton)}
-              /* istanbul ignore next */
               onClick={(e) => {
                 e.stopPropagation();
                 showPrev();
@@ -195,8 +193,8 @@ export default function NewsGallery({
 
           <div
             className={style.lightboxContent}
-            /* istanbul ignore next */
-            onClick={(e) => e.stopPropagation()} // Prevent click from closing when clicking on image
+            // Clicks on the photo must not reach the backdrop, which closes
+            onClick={(e) => e.stopPropagation()}
           >
             <Image
               src={photos[selectedIndex].url}
@@ -217,7 +215,6 @@ export default function NewsGallery({
           {photos.length > 1 && (
             <button
               className={clsx(style.navButton, style.nextButton)}
-              /* istanbul ignore next */
               onClick={(e) => {
                 e.stopPropagation();
                 showNext();

@@ -17,8 +17,8 @@ const tag = (
   translations,
 });
 
-// Zrezygnowano z testowania stałych FALLBACK_CHAIN oraz LANGUAGE_NAMES.
-// Weryfikacją ich struktury zajmuje się TypeScript poprzez typowanie Record<LanguageCode, ...>.
+// FALLBACK_CHAIN and LANGUAGE_NAMES are typed as Record<LanguageCode, ...>,
+// so the compiler already checks that every language has an entry.
 
 // ─── resolveTranslation ──────────────────────────────────────────────
 

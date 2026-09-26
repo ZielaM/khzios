@@ -1,6 +1,5 @@
 @use '@/styles/variables' as *;
 
-// Main wrapper for a single news article card
 .newsTile {
   background: var(--background);
   border-radius: $radius-lg;
@@ -21,7 +20,6 @@
     box-shadow: none; // Box shadows reduce contrast, disable them in WCAG mode
   }
 
-  // Float up and cast a deeper shadow when hovered
   &:hover {
     transform: translateY($hover-lift);
     box-shadow: $shadow-card-hover;
@@ -32,12 +30,10 @@
       box-shadow: 0 0 15px var(--foreground);
     }
 
-    // Trigger inner image zoom effect
     .image {
       transform: scale(1.03);
     }
 
-    // Emphasize the "Read More" call to action
     .readMore {
       color: var(--color-primary);
       text-decoration: underline;
@@ -47,15 +43,13 @@
         color: var(--foreground);
       }
 
-      // Slide the arrow icon to the right
       svg {
         transform: translateX(4px);
       }
     }
   }
 
-  // Use :has(:focus-visible) so the entire card gets a focus ring
-  // when the hidden inner link receives keyboard focus
+  // The focus ring goes around the whole card, not just the title link
   &:has(:focus-visible) {
     outline: 3px solid var(--color-primary);
     outline-offset: 4px;
@@ -82,7 +76,6 @@
   }
 }
 
-// Wrapper to enforce an aspect ratio/fixed height for the thumbnail
 .imageContainer {
   position: relative;
   width: 100%;
@@ -91,13 +84,11 @@
   background-color: var(--surface-muted);
 }
 
-// The thumbnail image itself, set to cover the container
 .image {
   object-fit: cover;
   transition: transform 0.4s ease;
 }
 
-// Absolute positioned date pill overlaying the image
 .dateBadge {
   position: absolute;
   top: 12px;
@@ -120,7 +111,6 @@
   }
 }
 
-// The text container, growing to push the footer down if needed
 .content {
   padding: 24px;
   display: flex;
@@ -133,7 +123,6 @@
   }
 }
 
-// Tag list container
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -141,7 +130,6 @@
   margin-bottom: 16px;
 }
 
-// Individual category tag
 .tag {
   background: rgba($color-primary, 0.08);
   color: var(--color-primary);
@@ -160,8 +148,7 @@
   }
 }
 
-// Badge shown when the current locale's translation is missing
-// and we had to fall back to English or Polish.
+// Shown when the article is in another language than the page
 .fallbackBadge {
   display: inline-block;
   background: rgba(255, 170, 0, 0.1);
@@ -182,15 +169,12 @@
   }
 }
 
-// Article title with multi-line truncation
 .title {
   font-size: 1.3em;
   font-weight: 700;
   margin-bottom: 14px;
   line-height: 1.4;
   color: var(--foreground);
-
-  // Truncate text after 2 lines
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -198,7 +182,6 @@
   overflow: hidden;
   transition: color 0.3s ease;
 
-  // Search keyword highlighting overrides injected via <mark> tags
   :global(mark) {
     background: rgba($color-primary, 0.15);
     color: inherit;
@@ -212,14 +195,11 @@
   }
 }
 
-// Article excerpt/summary with multi-line truncation
 .description {
   font-size: 0.95em;
   color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 24px;
-
-  // Truncate text after 3 lines
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -242,9 +222,7 @@
     }
   }
 
-  // When content has highlighted search results, show the full snippet
-  // instead of clamping to first 3 lines (ts_headline already returns
-  // a focused excerpt around the matched phrase)
+  // ts_headline already returns a short fragment around the match
   &.highlighted {
     display: block;
     -webkit-line-clamp: unset;
@@ -253,7 +231,6 @@
   }
 }
 
-// The CTA link at the bottom of the card
 .readMore {
   display: flex;
   align-items: center;

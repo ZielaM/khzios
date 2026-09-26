@@ -8,17 +8,14 @@ body {
   overflow-x: clip;
 }
 
-// Base body styles setting up the global design system variables (typography, colors)
-// Uses flexbox to ensure the footer sticks to the bottom even on pages with little content.
+// Column flex keeps the footer at the bottom of short pages
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: var(--font-inter), sans-serif;
 
-  // Font scale variable allows dynamic resizing for WCAG accessibility features
+  // --font-scale is set by the WCAG font size controls
   font-size: calc(1rem * var(--wcag-font-scale));
-
-  // Font smoothing for better legibility on macOS/iOS
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -26,14 +23,12 @@ body {
   flex-direction: column;
 }
 
-// Layout relationship: the <main> tag following <nav> pushes the content down
-// to avoid being hidden under the fixed/absolute navbar, and expands to push the footer down.
+// <main> starts below the fixed navbar and grows to fill the page
 nav + main {
   flex: 1;
   margin-top: $navbar-height;
 }
 
-// Standard box-sizing reset for more predictable element sizing
 * {
   box-sizing: border-box;
   padding: 0;
@@ -41,8 +36,6 @@ nav + main {
   -webkit-tap-highlight-color: transparent;
 }
 
-// Global anchor reset to inherit text colors and remove default underlines
-// Specific components (or high contrast mode) will add decorations explicitly when needed.
 a {
   color: inherit;
   text-decoration: none;

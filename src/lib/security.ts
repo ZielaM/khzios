@@ -1,13 +1,7 @@
 /**
- * Security threat detection module.
- *
- * Analyses user-supplied input (search queries, parameters, IDs) for
- * patterns that indicate potential attacks. When a threat is detected
- * it is logged at WARN level so ops can investigate.
- *
- * This module does NOT block requests — the app already has proper
- * defences (Prisma parameterised queries, DOMPurify sanitisation).
- * Its purpose is **observability**: knowing WHEN someone tries something.
+ * Logs (at WARN) user input that looks like an attack: SQL injection, XSS,
+ * path traversal. Nothing is blocked here, since queries are parameterised
+ * and HTML is sanitised anyway; the point is to see when someone is probing.
  */
 
 import { createLogger } from '@/lib/logger';
@@ -128,8 +122,8 @@ export function detectThreats(
 
 /**
  * Analyses user input and logs a security warning if threats are found.
- * Call this at the boundary where user data enters the system (validation,
- * server actions, API route handlers).
+ * Call this where user data enters the app (search params validation, route
+ * handlers).
  *
  * @param context   - Where the input came from, e.g. `'search_query'`, `'tag_filter'`.
  * @param input     - The raw user-supplied string.

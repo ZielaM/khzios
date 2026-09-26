@@ -23,19 +23,20 @@ export default function TeamPublications({
   locale,
 }: TeamPublicationsProps) {
   const t = useTranslations('TeamPage');
-  const [activeTab, setActiveTab] = useState<Tab>('publications');
+  const [selectedTab, setActiveTab] = useState<Tab>('publications');
 
-  // Fallback do pustych tablic, by unikać crashy przy obiektach / stringach
   const safePublications = Array.isArray(publications) ? publications : [];
   const safeProjects = Array.isArray(projects) ? projects : [];
 
   if (safePublications.length === 0 && safeProjects.length === 0) return null;
 
-  // If one of them is empty, default to the other one
-  if (safePublications.length === 0 && activeTab === 'publications')
-    setActiveTab('projects');
-  if (safeProjects.length === 0 && activeTab === 'projects')
-    setActiveTab('publications');
+  // When one list is empty the other one is shown whatever was selected
+  const activeTab: Tab =
+    safePublications.length === 0
+      ? 'projects'
+      : safeProjects.length === 0
+        ? 'publications'
+        : selectedTab;
 
   const tabs: Tab[] = [
     ...(safePublications.length > 0 ? (['publications'] as const) : []),

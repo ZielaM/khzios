@@ -1,6 +1,5 @@
 @use '@/styles/variables' as *;
 
-// Main footer wrapping element – dark academic footer
 .footer {
   background-color: var(--footer-bg);
   padding: 4rem 2rem;
@@ -15,7 +14,6 @@
   }
 }
 
-// Inner container implementing CSS Grid for responsive columns
 .container {
   max-width: $max-width-content;
   margin: 0 auto;
@@ -23,24 +21,20 @@
   grid-template-columns: 1fr; // Mobile: 1 column stacking vertically
   gap: 3rem;
 
-  // Tablet/Desktop: 3 columns.
-  // The first column (Brand/Address) takes up 1.5 fraction units,
-  // making it slightly wider than the other two columns (Links/Contact).
+  // The address column is a little wider than the other two
   @media (min-width: $breakpoint-tablet) {
     grid-template-columns: 1.5fr 1fr 1fr;
     gap: 2rem;
   }
 }
 
-// Generic column wrapper
 .column {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-// Used primarily in the first column to stretch content vertically
-// and push copyright/bottom elements to the bottom edge.
+// Pushes the copyright to the bottom of the column
 .columnWrapper {
   display: flex;
   flex-direction: column;
@@ -48,7 +42,6 @@
   height: 100%;
 }
 
-// Brand title styling
 .brandTitle {
   color: rgba(255, 255, 255, 0.95);
   font-size: 1.25em;
@@ -61,7 +54,6 @@
   }
 }
 
-// Address paragraph styling
 .addressInfo {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.875em;
@@ -77,7 +69,6 @@
   }
 }
 
-// Title header for individual columns (e.g., "Links", "Contact")
 .colTitle {
   color: rgba(255, 255, 255, 0.5);
   font-size: 0.85em;
@@ -91,7 +82,6 @@
   }
 }
 
-// Unordered list reset for navigation links
 .linksList {
   list-style: none;
   padding: 0;
@@ -111,7 +101,6 @@
       color: var(--foreground);
     }
 
-    // Add underline for accessibility on hover/focus
     &:hover,
     &:focus {
       color: rgba(255, 255, 255, 0.95);
@@ -124,7 +113,6 @@
   }
 }
 
-// Unordered list reset for contact information (often with icons)
 .contactList {
   list-style: none;
   padding: 0;
@@ -147,7 +135,6 @@
   }
 }
 
-// Shared icon styling for contact list
 .icon {
   color: rgba(255, 255, 255, 0.5);
   flex-shrink: 0; // Prevents icon from squishing if text wraps
@@ -159,7 +146,6 @@
   }
 }
 
-// Copyright text positioned at the bottom of the first column
 .copyright {
   margin-top: 3rem;
   color: rgba(255, 255, 255, 0.7);

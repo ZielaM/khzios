@@ -1,11 +1,5 @@
 'use client';
 
-// LanguageSwitcher Architecture:
-// This component provides a UI to switch between available locales (PL, EN, etc.).
-// It uses Next.js `useRouter` from `next-intl` to replace the current URL
-// while retaining any active dynamic route parameters (e.g. news IDs)
-// and search query parameters without causing a full page refresh.
-
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { routing, type Locale } from '@/i18n/routing';
@@ -21,13 +15,11 @@ function LanguageSwitcherInner() {
   const t = useTranslations('LocaleSwitcher');
   const searchParams = useSearchParams();
 
-  // Grab any dynamic route segments (like [id]) to retain them during locale switch
   const params = useParams();
 
-  // Route Replacement Logic:
-  // Using router.replace() instead of push() prevents filling the browser history
-  // with localized versions of the exact same page, which can be frustrating
-  // if the user tries to hit the "Back" button later.
+  // Same page in another language, keeping route params (e.g. an article id)
+  // and the query. replace(): language versions are not separate history
+  // entries.
   const handleLocaleChange = (newLocale: string) => {
     router.replace(
       {
@@ -50,7 +42,6 @@ function LanguageSwitcherInner() {
             [style.active]: locale === loc,
           })}
           aria-label={t('switchTo', { locale: loc.toUpperCase() })}
-          // ARIA attributes for screen readers to announce the currently active locale
           aria-current={locale === loc ? 'true' : undefined}
           disabled={locale === loc}
         >

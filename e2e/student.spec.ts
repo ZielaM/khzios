@@ -97,7 +97,6 @@ test.describe('For Students Page', () => {
   test('BackLink should redirect to home page', async ({ page }) => {
     await page.goto('/pl/student');
 
-    // Click "Wróć do strony głównej"
     const backLink = page.locator('a', { hasText: 'Wróć do strony głównej' });
     await backLink.waitFor({ state: 'visible' });
     // Wait for Next.js hydration and framer-motion animations to settle for Webkit

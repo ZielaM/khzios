@@ -1,8 +1,7 @@
-// WCAG Controls Architecture:
-// This component manages global accessibility overrides (High Contrast & Font Scaling).
-// It directly mutates the DOM (adding classes and CSS Custom Properties to the `<html>` root element)
-// to ensure that layout updates happen synchronously without waiting for a full React state tree re-render.
-// Preferences are synced with localStorage to persist across sessions.
+// High contrast and font scaling. Settings are applied directly to <html>
+// (class and CSS variable) so the whole page updates at once, and stored in
+// localStorage; the inline script in the root layout reapplies them before
+// the first paint.
 
 import { useState, useEffect } from 'react';
 import clsx from 'clsx';
@@ -22,11 +21,8 @@ export default function WcagControls({
   const [highContrast, setHighContrast] = useState(false);
   const [fontSizeOffset, setFontSizeOffset] = useState(0);
 
-  // Dynamic Compact Layout Calculation:
-  // When the font size scales up significantly, standard desktop layouts break.
-  // We calculate an 'effectiveWidth' dividing actual pixel width by the scale factor.
-  // If the effective width drops below tablet breakpoints, we forcefully apply
-  // global `.compact-layout` classes, forcing the UI into mobile-view even on desktop.
+  // Scaled-up text needs the narrow layouts even on a wide window: compare
+  // the window width divided by the scale with the layout breakpoints
   const updateCompactClasses = (scale: number) => {
     const effectiveWidth = window.innerWidth / scale;
     const root = document.documentElement.classList;
@@ -86,12 +82,11 @@ export default function WcagControls({
   };
 
   const changeFontSize = (step: number) => {
-    // Restrict offset bounds (e.g. max 6 steps)
+    // 0–6 steps of 10% each
     const newOffset = Math.min(Math.max(fontSizeOffset + step, 0), 6);
     setFontSizeOffset(newOffset);
     localStorage.setItem('wcag-font-offset', newOffset.toString());
 
-    // Scale is mathematically calculated where 1 step = 10% increase
     const scale = 1 + newOffset * 0.1;
 
     if (newOffset === 0) {
@@ -105,9 +100,8 @@ export default function WcagControls({
 
     updateCompactClasses(scale);
 
-    // Force full DOM repaint:
-    // Sometimes Chromium-based browsers fail to update deep deeply nested REM values
-    // dynamically. Toggling body display forces the browser compositor to recalculate everything.
+    // Force a full repaint: after a scale change Chromium sometimes leaves
+    // stale copies of elements on screen until they are hovered
     requestAnimationFrame(() => {
       const currentScroll = window.scrollY;
       document.body.style.display = 'none';

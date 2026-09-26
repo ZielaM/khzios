@@ -1,9 +1,3 @@
-// NewsTile Architecture:
-// A reusable card component representing a single news article in feeds/grids.
-// It relies on centralized utility functions (`resolveTranslation`, `resolveTagName`)
-// to decouple layout logic from the complexities of language fallback chains
-// (e.g. falling back to EN if RU translation is missing).
-
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import style from './NewsTile.module.scss';
@@ -21,6 +15,18 @@ import { excerpt, stripHtml } from '@/lib/content-utils';
 import { getPhotoAlt, getPhotoUrl } from '@/lib/photos';
 import { formatDate } from '@/lib/dates';
 import AnimateOnce from '@/components/AnimateOnce';
+
+/**
+ * Plain text with only the <mark> highlights added by search. Script and
+ * style elements go first, together with their text, before the remaining
+ * tags are unwrapped.
+ */
+function keepMarksOnly(html: string) {
+  return DOMPurify.sanitize(
+    DOMPurify.sanitize(html, { FORBID_TAGS: ['style', 'script'] }),
+    { ALLOWED_TAGS: ['mark'] }
+  );
+}
 
 export interface NewsTileProps {
   news: NewsWithRelations;
@@ -40,13 +46,9 @@ export default function NewsTile({
   const Heading = headingLevel === 2 ? 'h2' : 'h3';
   const t = useTranslations('HomePage');
 
-  // Select the first uploaded photo as the thumbnail,
-  // or fallback to a static local placeholder image if the article has no photos.
   const thumbnail = getPhotoUrl(news.photos);
 
-  // Extract the most appropriate translation based on the user's locale.
-  // The 'isFallback' flag warns us if the content is being displayed in a language
-  // different than the user's primary preference.
+  // isFallback: the text is in another language than the page
   const { translation, isFallback } = resolveTranslation(
     news.translations,
     locale
@@ -55,25 +57,15 @@ export default function NewsTile({
   const title = translation?.title ?? '';
   const content = translation?.content ?? '...';
 
-  // 2-pass sanitization to safely remove <style>/<script> contents without regex:
-  // Pass 1: Remove forbidden tags completely (including their text content).
-  // Pass 2: Strip all remaining HTML tags except <mark>.
-  const cleanTitle = DOMPurify.sanitize(
-    DOMPurify.sanitize(title, { FORBID_TAGS: ['style', 'script'] }),
-    { ALLOWED_TAGS: ['mark'] }
-  );
+  const cleanTitle = keepMarksOnly(title);
 
   // Search results carry a short ts_headline snippet with <mark> highlights;
   // regular listings get a plain-text excerpt instead of the whole article.
   const isHighlighted = content.includes('<mark>');
   const description = isHighlighted
-    ? DOMPurify.sanitize(
-        DOMPurify.sanitize(content, { FORBID_TAGS: ['style', 'script'] }),
-        { ALLOWED_TAGS: ['mark'] }
-      )
+    ? keepMarksOnly(content)
     : excerpt(stripHtml(content), 220);
 
-  // Re-use standard fallback logic for each individual tag
   const getTagName = (tag: NewsWithRelations['tags'][number]) =>
     resolveTagName(tag, locale);
 

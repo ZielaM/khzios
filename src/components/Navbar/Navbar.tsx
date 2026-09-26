@@ -1,11 +1,7 @@
 'use client';
 
-// Navbar Component Architecture:
-// This is the primary navigation shell for the application.
-// It handles responsive layout switching between a standard desktop bar
-// and a full-screen mobile overlay menu. It relies heavily on CSS Modules
-// for media queries and class toggling rather than conditional React rendering,
-// ensuring the menu is always in the DOM for SEO and immediate accessibility.
+// The mobile menu is toggled with CSS classes rather than conditional
+// rendering, so every link stays in the HTML for crawlers and no-JS users.
 
 import { useState, useEffect, useRef } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
@@ -21,7 +17,6 @@ import WcagControls from './WcagControls';
 import type { NavigationTeam } from '@/lib/team-queries';
 
 export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
-  // State controlling the mobile slide-down menu visibility
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations('Navbar');
@@ -29,10 +24,7 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
 
   const prevPathname = useRef(pathname);
 
-  // Automatic Menu Closing Logic:
-  // Whenever the pathname changes (user clicked a link and navigated successfully),
-  // we force the mobile menu to close. We use a ref to ensure we only close
-  // when the pathname ACTUALLY changes, ignoring initial mount or hydration quirks.
+  // Close the mobile menu after navigation (but not on the initial render)
   useEffect(() => {
     if (prevPathname.current !== pathname) {
       const timeoutId = setTimeout(() => {
@@ -43,7 +35,6 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
     }
   }, [pathname]);
 
-  // Manual close handler passed down to individual NavItems.
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   // Escape closes the open mobile menu and returns focus to its toggle
@@ -63,7 +54,6 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
   return (
     <nav className={style.navbar} aria-label={t('mainNavLabel')}>
       <div className={style.navbarHeader}>
-        {/* Logo */}
         <div className={style.logo}>
           <Link
             href="/"
@@ -74,13 +64,12 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
             {/* The department name next to the logo is the link text */}
             <Image src="/logo.png" alt="" width={40} height={40} />
             <span className={style.logoText}>
-              {/* .rich allows rendering injected tags like <br /> from translation strings */}
+              {/* The translation marks the line break with <br></br> */}
               {t.rich('logoText', { br: () => <br /> })}
             </span>
           </Link>
         </div>
 
-        {/* Mobile Hamburger Toggle Button */}
         <button
           ref={toggleRef}
           type="button"
@@ -98,26 +87,22 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
         </button>
       </div>
 
-      {/* Main Navigation Container (links + actions) */}
       <div
         id="main-menu"
         className={clsx(style.navMenuContainer, {
           [style.mobileOpen]: isMobileMenuOpen,
         })}
       >
-        {/* Links Array */}
         <div className={style.navLinks}>
           <NavItem label={t('news')} href="/news" onClick={closeMobileMenu} />
 
-          {/* Nested Dropdown Menu structure for "About Us" */}
           <DropdownMenu label={t('aboutUs')} href="/about-us">
-            {/* Level 1 Submenu */}
             <DropdownItem
               label={t('structure')}
               desc={t('structureDesc')}
               href="/about-us/structure"
             >
-              {/* Level 2 Submenus (Flyout on desktop, accordion on mobile) */}
+              {/* Flyout on desktop, accordion in the compact menu */}
               <DropdownItem
                 label={t('headOfDepartment')}
                 href="/about-us/structure/head"
@@ -133,7 +118,6 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
                 />
               ))}
             </DropdownItem>
-            {/* Another Level 1 Item */}
             <DropdownItem
               label={t('publications')}
               desc={t('publicationsDesc')}
@@ -153,9 +137,7 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
           />
         </div>
 
-        {/* System Actions (Language & Accessibility Settings) */}
-        {/* Placed inside SettingsDropdown to save space, but CSS modules 
-            extract them inline on larger screens by default. */}
+        {/* Inline on wide screens; behind a toggle in the compact layout */}
         <div className={style.navActions}>
           <SettingsDropdown label={tWcag('settingsToggle')}>
             <LanguageSwitcher />

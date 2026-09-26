@@ -1,17 +1,12 @@
 /**
- * Central translation fallback resolution logic.
- *
- * Every object (News, Tag, etc.) has its own translations array —
- * these helpers operate on a specific object's array,
- * so the fallback is resolved on a per-instance basis.
+ * Picks a translation for the requested language from a record's own
+ * translations, falling back along FALLBACK_CHAIN. The fallback is resolved
+ * per record, so one article can be in English while the next is in Polish.
  */
 
 import { LanguageCode } from '@/types/search-types';
 
-/**
- * Fallback language chain order.
- * E.g. for locale='uk': search uk -> en -> pl
- */
+/** Languages tried in order, e.g. uk → en → pl. */
 const EN_FALLBACK: readonly LanguageCode[] = ['en', 'pl'];
 
 export const FALLBACK_CHAIN: Record<LanguageCode, readonly LanguageCode[]> = {
@@ -54,7 +49,7 @@ export function resolveTranslation<T extends { languageCode: string }>(
     }
   }
 
-  // If nothing matches the chain, but there are translations available, fallback to the first one
+  // Any translation is better than none
   if (translations.length > 0) {
     return { translation: translations[0], isFallback: true };
   }

@@ -6,7 +6,6 @@ import { seedSecretariat } from './seed-secretariat';
 import { seedAnnouncements } from './seed-announcements';
 import { seedDocuments } from './seed-documents';
 
-// Helper to get random elements
 const getRandomMultiple = <T>(arr: T[], count: number) => {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
@@ -235,8 +234,8 @@ async function main() {
     `,
   ];
 
-  // Helper to construct English/UK/RU generic equivalents since LLM can't translate 100 perfectly on the fly,
-  // we will map the Polish template structure dynamically.
+  // The other languages reuse the Polish article structure with their own
+  // fixed phrases, which is enough for demo data
   const contentGenerators = {
     pl: (topic: string, idx: number) =>
       htmlTemplates[idx % htmlTemplates.length](topic),
@@ -244,7 +243,7 @@ async function main() {
       if (idx % htmlTemplates.length === 0)
         return `<p>In today's article, we discuss: <strong>${topic}</strong>. The research conducted by our Department brings promising results.</p><h2>Main objectives</h2><ul><li>Increased herd immunity</li><li>Optimization of raw material evaluation</li><li>Implementation of animal welfare standards</li></ul><blockquote>"This is a breakthrough in our field." - Prof. Jan Kowalski</blockquote>`;
       if (idx % htmlTemplates.length === 1)
-        return `<p>The Department of Animal Breeding and Product Evaluation presents guidelines on <em>${topic}</em>.</p><div class="highlight-box"><strong>Important:</strong> New protocols apply from next semester.</div><h3>Technical details</h3><ol><li>Sterile sampling</li><li>Spectrometric analysis</li><li>Correlation with genetic data</li></ol>`;
+        return `<p>The Department of Animal Breeding and Product Quality Assessment presents guidelines on <em>${topic}</em>.</p><div class="highlight-box"><strong>Important:</strong> New protocols apply from next semester.</div><h3>Technical details</h3><ol><li>Sterile sampling</li><li>Spectrometric analysis</li><li>Correlation with genetic data</li></ol>`;
       return `<p>Our research teams are not slowing down. Focusing on <strong>${topic}</strong>, we set new educational and scientific standards.</p><h2>International Conference</h2><p>We will soon present our achievements internationally.</p><blockquote>Continuous development is the basis of 21st-century breeding.</blockquote>`;
     },
     uk: (topic: string, idx: number) => {
@@ -315,7 +314,6 @@ async function main() {
   await prisma.$transaction(
     async (tx) => {
       for (let i = 0; i < 100; i++) {
-        // Select random title components
         const prefixIdx = i % titlePrefixes.pl.length;
         const subjectIdx = i % titleSubjects.pl.length;
 
@@ -347,7 +345,6 @@ async function main() {
             ? deterministicTagMap[i].map((idx) => createdTags[idx])
             : getRandomMultiple(createdTags, (i % 3) + 1);
 
-        // Photos
         const photoCount = i % 6; // 0 to 5 photos per gallery
         const photos = Array.from({ length: photoCount }).map((_, pIdx) => {
           const image = images[pIdx % images.length];

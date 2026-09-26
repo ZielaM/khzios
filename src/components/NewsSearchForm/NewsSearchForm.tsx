@@ -1,11 +1,8 @@
 'use client';
 
-// NewsSearchForm Architecture:
-// This component acts as the control panel for filtering and sorting news articles.
-// It manages local state for instantaneous UI feedback (typing, selecting dropdowns)
-// but synchronizes its final state to the URL search parameters via debouncing.
-// This ensures that the URL always represents the exact view, making searches
-// shareable and bookmarkable, while triggering server-side data fetching.
+// Filters live in local state for instant feedback and are written to the
+// URL (debounced); the server page renders results from the URL, so every
+// search can be shared or bookmarked.
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
@@ -138,7 +135,6 @@ export default function NewsSearchForm({
         newDateTo
       );
 
-      // Only push router state if a param was actually modified.
       if (nextParams) {
         // replace: intermediate queries typed by the user are not history entries
         router.replace(`${pathname}?${nextParams.toString()}`, {
@@ -149,14 +145,11 @@ export default function NewsSearchForm({
     [searchParams, pathname, router]
   );
 
-  // Debouncing effect:
-  // Waits 500ms after the user stops interacting before pushing URL changes.
-  // This prevents spamming the server with requests while the user is typing.
+  // Update the URL 500 ms after the last change, not on every keystroke
   useEffect(() => {
     if (isSkeleton) return;
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
-      /* istanbul ignore next */
       applyChanges(query, selectedTags, selectedSort, dateFrom, dateTo);
     }, 500);
     return () => {
@@ -217,8 +210,7 @@ export default function NewsSearchForm({
               tabIndex={!isExpanded ? -1 : 0}
               onChange={(e) => {
                 const val = e.target.value;
-                // Quality of life feature: if the user starts typing a query,
-                // automatically switch sort method to relevance for better initial results.
+                // Starting a query switches the sort to relevance
                 if (!query && val) {
                   setSelectedSort('relevance');
                 }

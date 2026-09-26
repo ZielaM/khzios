@@ -1,8 +1,7 @@
 @use '@/styles/variables' as *;
 
-// Settings toggle button (gear icon)
-// Only visible on desktop when the user forces compact-layout,
-// acting as a trigger for a dropdown panel.
+// Gear button: only in the medium layout (.compact-layout), where the
+// settings no longer fit in the bar but the menu is not collapsed yet
 .settingsToggle {
   display: none;
   align-items: center;
@@ -18,7 +17,6 @@
     background-color 0.2s ease,
     color 0.2s ease;
 
-  // Accessible focus outline
   &:hover,
   &:focus-visible {
     background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
@@ -30,31 +28,26 @@
     }
   }
 
-  // Show toggle when desktop user explicitly activates compact-layout
   :global(.compact-layout) & {
     display: flex;
   }
 
-  // In compact-layout-sm (hamburger menu active), hide the toggle — controls show inline in menu instead
+  // In the collapsed menu the settings are listed inline
   :global(.compact-layout-sm) & {
     display: none;
   }
 
-  // Hide on physical mobile devices, as controls are always inline in the mobile menu
   @media (max-width: $breakpoint-tablet) {
     display: none;
   }
 }
 
-// Container for settings controls (WCAG buttons, Language switcher, etc.)
 .settingsPanel {
-  // Desktop Default: show inline, flowing horizontally within the navbar
   display: flex;
   gap: 0.75rem;
   align-items: center;
 
-  // Desktop Compact Layout: hide by default, render as an absolute dropdown menu
-  // triggered by `.settingsToggle`
+  // Medium layout: a panel opened by the gear button
   :global(.compact-layout) & {
     display: none;
     position: absolute;
@@ -75,8 +68,7 @@
     }
   }
 
-  // In compact-layout-sm (hamburger menu active), reset dropdown styles
-  // and show the controls stacked inline directly within the mobile menu
+  // Collapsed menu: stacked inline
   :global(.compact-layout-sm) & {
     display: flex;
     position: static;
@@ -91,7 +83,6 @@
     min-width: unset;
   }
 
-  // Mobile layout behavior: exactly identical to compact-layout-sm
   @media (max-width: $breakpoint-tablet) {
     display: flex;
     position: static;

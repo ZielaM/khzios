@@ -1,12 +1,6 @@
-// DropdownMenu Architecture:
-// A fully accessible, responsive dropdown/flyout component.
-// On desktop, it acts as a hover-triggered flyout submenu.
-// On mobile/compact layouts, it acts as a tap-triggered accordion pushing other content down.
-//
-// Key tricks:
-// - We use `onMouseEnter`/`onMouseLeave` combined with `onFocus`/`onBlur` for full keyboard accessibility.
-// - The `contains(e.relatedTarget)` check in onBlur prevents the dropdown from closing immediately
-//   when the user tabs from the trigger button into the actual submenu links.
+// Menu with submenus: a hover/focus flyout on desktop and a tap-to-open
+// accordion in the compact (hamburger) menu. On blur the menu stays open
+// while focus moves between its own links (relatedTarget check).
 
 import { useState } from 'react';
 import { Link } from '@/i18n/routing';
@@ -40,8 +34,8 @@ export function DropdownMenu({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const t = useTranslations('Navbar');
 
-  // Prevent default navigation ONLY on mobile to allow the first tap to open the accordion.
-  // On desktop, the link still works as a top-level navigational element while hovering reveals children.
+  // In the compact menu the first tap opens the accordion; on desktop the
+  // trigger remains a regular link
   const handleLinkClick = (e: React.MouseEvent) => {
     if (isCompactNav()) {
       e.preventDefault();
@@ -84,11 +78,10 @@ export function DropdownMenu({
         </svg>
       </Link>
 
-      {/* Dropdown Menu Container */}
       <div
         className={clsx(style.dropdownMenu, { [style.show]: isDropdownOpen })}
       >
-        {/* Mobile-only overview link, since the main trigger on mobile acts as an accordion toggle */}
+        {/* In the compact menu the trigger only toggles, so link the page here */}
         <div className={style.mobileOverviewItem}>
           <Link href={href} className={style.overviewLink}>
             {t('seeLabel', { label })}
@@ -100,7 +93,7 @@ export function DropdownMenu({
   );
 }
 
-// Sub-component for nested dropdown items, handling its own 3rd-level flyout logic
+/** Menu entry that can hold its own nested submenu. */
 export function DropdownItem({
   label,
   desc,
@@ -126,11 +119,8 @@ export function DropdownItem({
   return (
     <div
       className={clsx(style.dropdownItem, { [style.hasSubmenu]: hasChildren })}
-      /* istanbul ignore next */
       onMouseEnter={() => !isCompactNav() && setIsSubMenuOpen(true)}
-      /* istanbul ignore next */
       onMouseLeave={() => !isCompactNav() && setIsSubMenuOpen(false)}
-      /* istanbul ignore next */
       onFocus={() => !isCompactNav() && setIsSubMenuOpen(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
@@ -167,7 +157,6 @@ export function DropdownItem({
         )}
       </Link>
 
-      {/* Nested Submenu (Level 3) */}
       {hasChildren && (
         <div className={clsx(style.subMenu, { [style.show]: isSubMenuOpen })}>
           <div className={style.mobileOverviewItem}>

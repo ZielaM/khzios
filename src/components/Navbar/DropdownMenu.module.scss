@@ -1,17 +1,14 @@
 @use '@/styles/variables' as *;
 
-// Wrapper for the dropdown trigger and the menu itself.
 .dropdownContainer {
   position: relative;
   height: 100%;
   display: flex;
   align-items: center;
 
-  // Extra vertical padding prevents the cursor from "falling off"
-  // and closing the menu when moving from the trigger to the dropdown panel.
+  // Keeps the hover area continuous between the trigger and the panel
   padding: 1rem 0;
 
-  // On mobile, the dropdown shifts from a flyout to an inline accordion.
   @include compact-nav {
     flex-direction: column;
     align-items: flex-start;
@@ -21,7 +18,6 @@
   }
 }
 
-// Small chevron icon indicating a dropdown
 .dropdownIcon {
   transition: transform 0.3s ease;
 
@@ -30,9 +26,7 @@
   }
 }
 
-// The main dropdown panel (Level 1).
-// Desktop: positioned absolutely below the trigger.
-// Mobile: positioned statically, expanding like an accordion.
+// Flyout below the trigger; an inline accordion in the compact menu
 .dropdownMenu {
   position: absolute;
   top: 100%;
@@ -45,8 +39,7 @@
   padding: 0.5rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-  // Hidden by default using opacity/visibility rather than display: none
-  // to allow CSS transitions to run smoothly.
+  // opacity/visibility instead of display: none, so it can fade
   opacity: 0;
   visibility: hidden;
   transition: all 0.25s ease;
@@ -60,7 +53,6 @@
     pointer-events: auto;
   }
 
-  // Mobile accordion behavior overrides absolute positioning
   @include compact-nav {
     position: static;
     transform: none;
@@ -80,7 +72,6 @@
   }
 }
 
-// Individual clickable item within a dropdown menu
 .dropdownItem {
   border-radius: $radius-sm;
   transition: background-color 0.2s ease;
@@ -95,7 +86,6 @@
   }
 }
 
-// Link wrapper inside the item
 .dropdownLink {
   display: flex;
   align-items: center;
@@ -106,7 +96,6 @@
   width: 100%;
 }
 
-// Typography styling for the dropdown content
 .dropdownItemContent {
   display: block;
 }
@@ -126,7 +115,6 @@
   line-height: 1.4;
 }
 
-// Icon for items that trigger a level-2 nested submenu
 .subMenuIcon {
   margin-left: 0.5rem;
   opacity: 0.5;
@@ -144,8 +132,7 @@
   }
 }
 
-// Level 2 nested submenu (flyout)
-// Extends horizontally to the right of the parent item on desktop.
+// Nested flyout to the right of its parent item
 .subMenu {
   position: absolute;
   top: 0;
@@ -170,10 +157,8 @@
     pointer-events: auto;
   }
 
-  // CRITICAL HITBOX TRICK:
-  // This pseudo-element bridges the gap between the parent item and this submenu.
-  // Without it, moving the mouse diagonally towards the submenu would leave
-  // the parent item, causing the submenu to close instantly before the mouse reaches it.
+  // Bridges the gap to the parent item, so moving the pointer diagonally
+  // towards the submenu does not leave the hover area and close it
   &::before {
     content: '';
     position: absolute;
@@ -183,7 +168,6 @@
     height: 100%;
   }
 
-  // On mobile, force accordion behavior
   @include compact-nav {
     position: static;
     transform: none;
@@ -208,7 +192,7 @@
   }
 }
 
-// A specific item type visible only on mobile, often used as a category header
+// Link to the section page, shown only in the compact menu
 .mobileOverviewItem {
   display: none;
 
@@ -221,7 +205,6 @@
   }
 }
 
-// Styling for the mobile overview link
 .overviewLink {
   display: block;
   padding: 0.5rem 1rem;

@@ -1,8 +1,5 @@
-// Routing Configuration:
-// Centralized setup for `next-intl` defining supported locales and translating route pathnames.
-// Instead of creating separate physical folders for `/news` vs `/aktualnosci`,
-// Next.js handles routing dynamically through the `[locale]` dynamic segment,
-// and `next-intl` maps the localized URL string back to the correct physical component route.
+// Localized URLs: next-intl maps e.g. /pl/aktualnosci to app/[locale]/news,
+// so each page exists once in the file tree.
 
 import { defineRouting } from 'next-intl/routing';
 import { createNavigation } from 'next-intl/navigation';

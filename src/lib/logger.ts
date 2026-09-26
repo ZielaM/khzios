@@ -1,17 +1,7 @@
 /**
- * Application logger built on pino.
+ * pino logger: JSON lines in production (stdout, or LOG_FILE_PATH when set),
+ * pino-pretty in development, silent in tests.
  *
- * Production:
- *   Structured JSON → stdout → captured by Docker logging driver / K8s / Vercel.
- *   Configure downstream routing via Docker `--log-driver`, Loki, Datadog, etc.
- *
- * Development:
- *   Colorised, human-readable output via pino-pretty.
- *
- * Test:
- *   Silent — zero noise in CI output.
- *
- * Usage:
  * ```ts
  * import { createLogger } from '@/lib/logger';
  * const log = createLogger('search');
@@ -47,8 +37,6 @@ function buildLogger(): pino.Logger {
   ];
 
   if (isProduction) {
-    // If LOG_FILE_PATH is provided (e.g. '/var/log/khzios/app.log'), write to it.
-    // Otherwise, write to process.stdout (standard for Docker, Vercel, PM2).
     const destination = process.env.LOG_FILE_PATH
       ? pino.destination(process.env.LOG_FILE_PATH)
       : process.stdout;
@@ -62,16 +50,11 @@ function buildLogger(): pino.Logger {
             return { level: label };
           },
         },
-        // Routing to files / log aggregators is handled by infrastructure:
-        //   Docker:     --log-driver json-file | fluentd | awslogs
-        //   Vercel:     captured automatically
-        //   PM2:        pm2 logs / pm2-logrotate
       },
       destination
     );
   }
 
-  // Development — pretty printing
   return pino({
     level: 'debug',
     redact,

@@ -38,7 +38,6 @@ import JsonLd from '@/components/JsonLd';
 export const revalidate = 86400;
 export const generateStaticParams = renderOnFirstRequest;
 
-// For Next.js dynamic routes, define the expected params interface
 interface NewsDetailsPageProps {
   params: Promise<{
     locale: string;
@@ -46,7 +45,6 @@ interface NewsDetailsPageProps {
   }>;
 }
 
-// Generate SEO Metadata dynamically
 export async function generateMetadata({
   params,
 }: NewsDetailsPageProps): Promise<Metadata> {
@@ -55,7 +53,7 @@ export async function generateMetadata({
 
   setRequestLocale(locale);
 
-  // Uses React.cache() — deduplicated with the page component's call
+  // getNewsById is wrapped in React.cache(): the page reuses this query
   const news = await getNewsById(id);
 
   if (!news) {
@@ -88,7 +86,6 @@ export default async function NewsDetailsPage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'NewsDetails' });
 
-  // Uses React.cache() — deduplicated with generateMetadata's call
   const news = await getNewsById(id);
 
   if (!news) {
@@ -110,10 +107,8 @@ export default async function NewsDetailsPage({
   const mainPhotoAlt = getPhotoAlt(news.photos[0], locale, cleanTitle);
   const readingTime = estimateReadingTime(content);
 
-  // Tag IDs for the Suspense-wrapped RelatedNews component
   const tagIds = news.tags.map((tag) => tag.id);
 
-  // Pass all photos to the gallery
   const galleryPhotos = news.photos;
 
   const tHome = await getTranslations({ locale, namespace: 'HomePage' });

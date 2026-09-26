@@ -35,8 +35,11 @@ test.describe('Contact Page Navigation Spec', () => {
     await expect(page.getByText('Working hours')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Office' })).toBeVisible();
 
-    // Check if the map iframe is present
+    // Google Maps loads only on request
     const mapIframe = page.locator('iframe[title^="Map"]');
+    await expect(mapIframe).toHaveCount(0);
+    await page.getByRole('button', { name: 'Show map' }).click();
     await expect(mapIframe).toBeVisible();
+    await expect(mapIframe).toBeFocused();
   });
 });

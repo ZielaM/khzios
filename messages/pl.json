@@ -204,6 +204,10 @@
   },
   "ContactPage": {
     "metaDescription": "Kontakt z sekretariatem Katedry Hodowli Zwierząt i Oceny Surowców: adres, telefon, e-mail i godziny pracy.",
-    "mapTitle": "Mapa: lokalizacja katedry, ul. Szydłowska 50, Poznań"
+    "mapTitle": "Mapa: lokalizacja katedry, ul. Szydłowska 50, Poznań",
+    "mapNotice": "Mapę dostarcza Google. Po jej wyświetleniu Google otrzyma m.in. Twój adres IP.",
+    "mapShow": "Pokaż mapę",
+    "mapOpenExternal": "Otwórz w Mapach Google",
+    "opensInNewTab": "(otwiera się w nowej karcie)"
   }
 }

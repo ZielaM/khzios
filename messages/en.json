@@ -204,6 +204,10 @@
   },
   "ContactPage": {
     "metaDescription": "Contact the department office: address, phone, e-mail and opening hours.",
-    "mapTitle": "Map: department location, Szydłowska 50, Poznań"
+    "mapTitle": "Map: department location, Szydłowska 50, Poznań",
+    "mapNotice": "The map is provided by Google. Once it is shown, Google receives data such as your IP address.",
+    "mapShow": "Show map",
+    "mapOpenExternal": "Open in Google Maps",
+    "opensInNewTab": "(opens in a new tab)"
   }
 }

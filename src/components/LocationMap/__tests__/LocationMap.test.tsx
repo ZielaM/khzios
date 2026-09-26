@@ -1,8 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import LocationMap from '../LocationMap';
 
-// Mock AnimateOnce to just render children
 vi.mock('@/components/AnimateOnce', () => ({
   default: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
@@ -10,15 +9,22 @@ vi.mock('@/components/AnimateOnce', () => ({
 }));
 
 describe('LocationMap', () => {
-  it('renders iframe with correct src and title', () => {
+  it('does not contact Google until the visitor asks for the map', () => {
     render(<LocationMap />);
-    const iframe = screen.getByTitle('mapTitle');
 
-    expect(iframe).toBeInTheDocument();
+    expect(screen.queryByTitle('mapTitle')).not.toBeInTheDocument();
+    expect(screen.getByText('mapNotice')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /mapOpenExternal/ })
+    ).toHaveAttribute('target', '_blank');
+
+    fireEvent.click(screen.getByRole('button', { name: 'mapShow' }));
+
+    const iframe = screen.getByTitle('mapTitle');
     expect(iframe).toHaveAttribute(
       'src',
       expect.stringContaining('google.com/maps/embed')
     );
-    expect(iframe).toHaveAttribute('loading', 'lazy');
+    expect(iframe).toHaveFocus();
   });
 });

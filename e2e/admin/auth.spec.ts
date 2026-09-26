@@ -152,5 +152,18 @@ test.describe('Admin panel accessibility', () => {
     expect(await scan()).toEqual([]);
     await signIn(page, DEV_ADMIN_ACCOUNTS.admin);
     expect(await scan()).toEqual([]);
+
+    for (const path of [
+      '/news',
+      '/news/new',
+      '/tags',
+      '/student/announcements',
+      '/student/consultations',
+      '/student/documents',
+      '/account',
+    ]) {
+      await page.goto(`${ADMIN_BASE}${path}`);
+      expect(await scan(), path).toEqual([]);
+    }
   });
 });

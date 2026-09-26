@@ -17,8 +17,8 @@ import { setPageLocale } from '@/i18n/page-locale';
 import { excerpt, sanitizeInlineHtml, stripHtml } from '@/lib/content-utils';
 import PageHeader from '@/components/PageHeader';
 
-// ISR every 7 days
-export const revalidate = 604800;
+// Refreshed after every panel edit and daily (see revalidatePublicSite)
+export const revalidate = 86400;
 
 export const generateStaticParams = renderOnFirstRequest;
 

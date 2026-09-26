@@ -22,8 +22,7 @@ import { teamHref } from '@/lib/team-routes';
 import { resolveTranslation } from '@/lib/translations';
 import styles from './page.module.scss';
 
-// The latest news on this page should not trail the articles by more than a
-// day; everything else here changes far less often.
+// Refreshed after every panel edit and daily (see revalidatePublicSite)
 export const revalidate = 86400;
 export const generateStaticParams = renderOnFirstRequest;
 

@@ -14,7 +14,8 @@ import { pageMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
 import PageHeader from '@/components/PageHeader';
 
-export const revalidate = 604800;
+// Refreshed after every panel edit and daily (see revalidatePublicSite)
+export const revalidate = 86400;
 
 interface Props {
   params: Promise<{ locale: string }>;

@@ -10,9 +10,9 @@ import { pageMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
 import PageHeader from '@/components/PageHeader';
 
-// Documents and the banner change rarely; announcements and consultations are
-// fetched by <StudentSchedule> on every visit instead.
-export const revalidate = 604800;
+// Announcements and consultations are fetched by <StudentSchedule> on every
+// visit; the rest is refreshed after panel edits and daily.
+export const revalidate = 86400;
 
 interface Props {
   params: Promise<{ locale: string }>;

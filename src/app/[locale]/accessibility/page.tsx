@@ -11,8 +11,9 @@ import style from './page.module.scss';
 import PageHeader from '@/components/PageHeader';
 
 // The page itself is static text, but the layout reads the team menu from
-// the database, which is not available during `next build`
-export const revalidate = 604800;
+// the database, which is not available during `next build`.
+// Refreshed after every panel edit and daily (see revalidatePublicSite)
+export const revalidate = 86400;
 export const generateStaticParams = renderOnFirstRequest;
 
 interface Props {

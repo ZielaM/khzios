@@ -9,8 +9,9 @@ import { pageMetadata } from '@/lib/seo';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import style from './page.module.scss';
 
-// Static text, but the layout reads the team menu from the database
-export const revalidate = 604800;
+// Static text, but the layout reads the team menu from the database.
+// Refreshed after every panel edit and daily (see revalidatePublicSite)
+export const revalidate = 86400;
 export const generateStaticParams = renderOnFirstRequest;
 
 interface Props {

@@ -12,8 +12,8 @@ import { teamHref } from '@/lib/team-routes';
 import { resolveTranslation } from '@/lib/translations';
 import { stripHtml } from '@/lib/content-utils';
 
-// ISR every 7 days
-export const revalidate = 604800;
+// Refreshed after every panel edit and daily (see revalidatePublicSite)
+export const revalidate = 86400;
 
 interface Props {
   params: Promise<{ locale: string }>;

@@ -37,9 +37,8 @@ import { renderOnFirstRequest } from '@/lib/static-params';
 import JsonLd from '@/components/JsonLd';
 import { setPageLocale } from '@/i18n/page-locale';
 
-// Articles are cached after their first view and refreshed daily, so an edit
-// or unpublication shows up within a day without hitting the database on
-// every request.
+// Articles are cached after their first view; panel edits refresh them at
+// once, and the daily refresh covers anything changed outside the panel.
 export const revalidate = 86400;
 export const generateStaticParams = renderOnFirstRequest;
 

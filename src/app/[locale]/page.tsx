@@ -54,7 +54,7 @@ export default async function Home({
     getAllTeams(),
     getDepartmentStats(),
   ]);
-  const heroImages = getSectionImages(IMAGE_SECTIONS.hero, locale);
+  const heroImages = await getSectionImages(IMAGE_SECTIONS.hero, locale);
 
   const researchAreas = teams.flatMap((team) => {
     const { translation } = resolveTranslation(team.translations, locale);

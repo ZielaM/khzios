@@ -3,7 +3,7 @@ import { getPathname, routing } from '@/i18n/routing';
 import { getPublishedNewsForSitemap } from '@/lib/news-queries';
 import { getAllMemberSlugs, getAllTeams } from '@/lib/team-queries';
 import { memberHref, teamHref } from '@/lib/team-routes';
-import { getSectionImages, IMAGE_SECTIONS } from '@/lib/site-images';
+import { getSectionImageUrls, IMAGE_SECTIONS } from '@/lib/site-images';
 import { toAbsoluteUrl } from '@/lib/seo';
 
 // Rendered per request: it is fetched rarely (by crawlers) and must not be
@@ -42,16 +42,12 @@ function localizedEntries(
   }));
 }
 
-/** Image URLs of a section folder (alt texts are irrelevant here) */
-function sectionImageUrls(section: string): string[] {
-  return getSectionImages(section, routing.defaultLocale).map((i) => i.src);
-}
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [news, teams, members] = await Promise.all([
+  const [news, teams, members, sectionImageUrls] = await Promise.all([
     getPublishedNewsForSitemap(),
     getAllTeams(),
     getAllMemberSlugs(),
+    getSectionImageUrls(),
   ]);
 
   return [

@@ -34,7 +34,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     href: '/contact',
     title: t('contact'),
     description: tContact('metaDescription'),
-    image: getSectionImage(IMAGE_SECTIONS.contact, locale, tHome('heroTitle')),
+    image: await getSectionImage(
+      IMAGE_SECTIONS.contact,
+      locale,
+      tHome('heroTitle')
+    ),
   });
 }
 
@@ -50,7 +54,7 @@ export default async function ContactPage({ params }: Props) {
   const secretariat = await getSecretariat();
   const tHome = await getTranslations('HomePage');
   // Fallback alt names the department, since the photo shows its building
-  const buildingImage = getSectionImage(
+  const buildingImage = await getSectionImage(
     IMAGE_SECTIONS.contact,
     locale,
     tHome('heroTitle')

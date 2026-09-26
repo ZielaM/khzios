@@ -166,6 +166,7 @@ test.describe('Admin panel accessibility', () => {
       '/teams/new',
       '/publications',
       '/office',
+      '/images',
       '/account',
     ]) {
       await page.goto(`${ADMIN_BASE}${path}`);

@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     href: '/about-us',
     title: t('title'),
     description: t('description'),
-    image: getSectionImage(IMAGE_SECTIONS.aboutUs, locale, t('title')),
+    image: await getSectionImage(IMAGE_SECTIONS.aboutUs, locale, t('title')),
   });
 }
 
@@ -41,7 +41,11 @@ export default async function AboutUsPage({ params }: Props) {
   setPageLocale(locale);
 
   const t = await getTranslations('AboutUsPage');
-  const heroImage = getSectionImage(IMAGE_SECTIONS.aboutUs, locale, t('title'));
+  const heroImage = await getSectionImage(
+    IMAGE_SECTIONS.aboutUs,
+    locale,
+    t('title')
+  );
   const teams = await getAllTeams();
 
   return (

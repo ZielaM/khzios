@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     href: '/student',
     title: t('title'),
     description: t('metaDescription'),
-    image: getSectionImage(IMAGE_SECTIONS.student, locale, t('title')),
+    image: await getSectionImage(IMAGE_SECTIONS.student, locale, t('title')),
   });
 }
 
@@ -41,7 +41,7 @@ export default async function ForStudentsPage({ params }: Props) {
   const t = await getTranslations('StudentsPage');
   const documents = await getStudentDocuments();
 
-  const bannerImage = getSectionImage(
+  const bannerImage = await getSectionImage(
     IMAGE_SECTIONS.student,
     locale,
     t('title')

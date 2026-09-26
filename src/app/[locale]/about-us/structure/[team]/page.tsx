@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description:
       excerpt(stripHtml(translation?.researchDescription ?? ''), 155) ||
       undefined,
-    image: getSectionImage(IMAGE_SECTIONS.team(team.slug), locale, name),
+    image: await getSectionImage(IMAGE_SECTIONS.team(team.slug), locale, name),
   });
 }
 
@@ -62,7 +62,7 @@ export default async function TeamPage({ params }: Props) {
   const tNav = await getTranslations('Navbar');
   const { translation } = resolveTranslation(team.translations, locale);
   const name = translation?.name || team.slug;
-  const image = getSectionImage(
+  const image = await getSectionImage(
     IMAGE_SECTIONS.team(team.slug),
     locale,
     translation?.name

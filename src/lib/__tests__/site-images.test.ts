@@ -1,116 +1,86 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { prisma } from '@/lib/prisma';
 import {
-  getSectionImages,
   getSectionImage,
+  getSectionImages,
+  getSectionImageUrls,
   IMAGE_SECTIONS,
 } from '../site-images';
 
-let root: string;
+vi.mock('@/lib/prisma', () => ({
+  prisma: { siteImage: { findMany: vi.fn() } },
+}));
 
-function addFiles(section: string, files: Record<string, string>) {
-  const dir = path.join(root, 'public', 'images', ...section.split('/'));
-  fs.mkdirSync(dir, { recursive: true });
-  for (const [name, content] of Object.entries(files)) {
-    fs.writeFileSync(path.join(dir, name), content);
-  }
-}
+const findMany = vi.mocked(prisma.siteImage.findMany);
 
-beforeEach(() => {
-  root = fs.mkdtempSync(path.join(os.tmpdir(), 'site-images-'));
-  vi.spyOn(process, 'cwd').mockReturnValue(root);
+const row = (url: string, alts: Record<string, string> = {}) => ({
+  id: url,
+  section: 'hero',
+  url,
+  displayOrder: 0,
+  translations: Object.entries(alts).map(([languageCode, alt]) => ({
+    siteImageId: url,
+    languageCode,
+    alt,
+  })),
 });
 
-afterEach(() => {
-  vi.restoreAllMocks();
-  fs.rmSync(root, { recursive: true, force: true });
-});
+describe('site images', () => {
+  beforeEach(() => findMany.mockReset());
 
-describe('getSectionImages', () => {
-  it('returns an empty array when the folder does not exist', () => {
-    expect(getSectionImages('hero', 'pl')).toEqual([]);
-  });
-
-  it('lists only image files, sorted by name with numeric awareness', () => {
-    addFiles('hero', {
-      '10-late.jpg': '',
-      '2-middle.webp': '',
-      '1-first.PNG': '',
-      'notes.txt': '',
-      '.DS_Store': '',
-      'alt.json': '{}',
-    });
-
-    expect(getSectionImages('hero', 'pl').map((i) => i.src)).toEqual([
-      '/images/hero/1-first.PNG',
-      '/images/hero/2-middle.webp',
-      '/images/hero/10-late.jpg',
+  it('returns a section’s photos in the stored order', async () => {
+    findMany.mockResolvedValue([
+      row('/media/a.webp'),
+      row('/media/b.webp'),
+    ] as never);
+    const images = await getSectionImages('hero', 'pl');
+    expect(images.map((i) => i.src)).toEqual([
+      '/media/a.webp',
+      '/media/b.webp',
     ]);
-  });
-
-  it('URL-encodes filenames', () => {
-    addFiles('hero', { 'zdjęcie 1.jpg': '' });
-    expect(getSectionImages('hero', 'pl')[0].src).toBe(
-      '/images/hero/zdj%C4%99cie%201.jpg'
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { section: 'hero' } })
     );
   });
 
-  it('resolves alt text for the locale from alt.json', () => {
-    addFiles('hero', {
-      'a.jpg': '',
-      'alt.json': JSON.stringify({ 'a.jpg': { pl: 'Obora', en: 'Barn' } }),
-    });
-
-    expect(getSectionImages('hero', 'en')[0].alt).toBe('Barn');
-    expect(getSectionImages('hero', 'pl')[0].alt).toBe('Obora');
+  it('picks the alt text along the language fallback chain', async () => {
+    findMany.mockResolvedValue([
+      row('/media/a.webp', { pl: 'Obora', en: 'Barn' }),
+    ] as never);
+    expect((await getSectionImages('hero', 'en'))[0].alt).toBe('Barn');
+    expect((await getSectionImages('hero', 'uk'))[0].alt).toBe('Barn');
+    expect((await getSectionImages('hero', 'pl'))[0].alt).toBe('Obora');
   });
 
-  it('follows the translation fallback chain for missing languages', () => {
-    addFiles('hero', {
-      'a.jpg': '',
-      'b.jpg': '',
-      'alt.json': JSON.stringify({
-        'a.jpg': { pl: 'Obora', en: 'Barn' },
-        'b.jpg': { pl: 'Tylko po polsku' },
-      }),
-    });
-
-    const [a, b] = getSectionImages('hero', 'uk');
-    expect(a.alt).toBe('Barn');
-    expect(b.alt).toBe('Tylko po polsku');
+  it('uses the fallback alt for photos without a description', async () => {
+    findMany.mockResolvedValue([row('/media/a.webp')] as never);
+    expect((await getSectionImages('hero', 'pl', 'Katedra'))[0].alt).toBe(
+      'Katedra'
+    );
   });
 
-  it('uses the fallback alt for files without an entry', () => {
-    addFiles('hero', { 'a.jpg': '' });
-    expect(getSectionImages('hero', 'pl', 'Katedra')[0].alt).toBe('Katedra');
+  it('returns the first photo or null', async () => {
+    findMany.mockResolvedValueOnce([
+      row('/media/a.webp'),
+      row('/media/b.webp'),
+    ] as never);
+    expect(
+      (await getSectionImage(IMAGE_SECTIONS.team('poultry'), 'pl'))?.src
+    ).toBe('/media/a.webp');
+    findMany.mockResolvedValueOnce([] as never);
+    expect(
+      await getSectionImage(IMAGE_SECTIONS.team('swine'), 'pl')
+    ).toBeNull();
   });
 
-  it('ignores a malformed alt.json instead of failing', () => {
-    addFiles('hero', { 'a.jpg': '', 'alt.json': '{ not json' });
-    expect(getSectionImages('hero', 'pl', 'fallback')).toEqual([
-      { src: '/images/hero/a.jpg', alt: 'fallback' },
-    ]);
-  });
-
-  it('rejects section names that could escape the images folder', () => {
-    addFiles('hero', { 'a.jpg': '' });
-    expect(getSectionImages('../hero', 'pl')).toEqual([]);
-    expect(getSectionImages(IMAGE_SECTIONS.team('../../x'), 'pl')).toEqual([]);
-  });
-});
-
-describe('getSectionImage', () => {
-  it('returns the first image of a team folder', () => {
-    addFiles(IMAGE_SECTIONS.team('poultry'), { 'b.jpg': '', 'a.jpg': '' });
-    expect(getSectionImage(IMAGE_SECTIONS.team('poultry'), 'pl')).toEqual({
-      src: '/images/teams/poultry/a.jpg',
-      alt: '',
-    });
-  });
-
-  it('returns null when the section has no images', () => {
-    expect(getSectionImage(IMAGE_SECTIONS.team('swine'), 'pl')).toBeNull();
+  it('groups URLs by section for the sitemap', async () => {
+    findMany.mockResolvedValue([
+      { section: 'hero', url: '/media/a.webp' },
+      { section: 'teams/poultry', url: '/media/b.webp' },
+      { section: 'hero', url: '/media/c.webp' },
+    ] as never);
+    const urls = await getSectionImageUrls();
+    expect(urls('hero')).toEqual(['/media/a.webp', '/media/c.webp']);
+    expect(urls('contact')).toEqual([]);
   });
 });

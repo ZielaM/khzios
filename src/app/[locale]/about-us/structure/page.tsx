@@ -43,10 +43,15 @@ export default async function StructurePage({ params }: Props) {
   const tNav = await getTranslations('Navbar');
   const teams = await getAllTeams();
   const teamImages = new Map(
-    teams.map((team) => [
-      team.id,
-      getSectionImage(IMAGE_SECTIONS.team(team.slug), locale),
-    ])
+    await Promise.all(
+      teams.map(
+        async (team) =>
+          [
+            team.id,
+            await getSectionImage(IMAGE_SECTIONS.team(team.slug), locale),
+          ] as const
+      )
+    )
   );
   // Once any team has a photo, give the rest a placeholder so cards align
   const showThumbnails = [...teamImages.values()].some(Boolean);

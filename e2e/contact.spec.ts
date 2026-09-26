@@ -33,7 +33,7 @@ test.describe('Contact Page Navigation Spec', () => {
 
     // Check for standard icons/labels rendered by ContactProfile
     await expect(page.getByText('Working hours')).toBeVisible();
-    await expect(page.getByText('Office location')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Office' })).toBeVisible();
 
     // Check if the map iframe is present
     const mapIframe = page.locator('iframe[title^="Map"]');

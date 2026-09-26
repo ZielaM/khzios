@@ -2,9 +2,8 @@
   "HomePage": {
     "title": "News",
     "readMore": "Read more",
-    "noNews": "No news found.",
     "translationUnavailable": "Shown in {language}",
-    "heroSubtitle": "We conduct scientific research, educational activities, and innovative projects in the field of animal breeding.",
+    "heroSubtitle": "We carry out research, teach and run innovative projects in animal breeding.",
     "btnAboutUs": "Discover our department",
     "btnStudent": "Student Zone",
     "quickLinksTitle": "Quick access",
@@ -16,11 +15,11 @@
     "linkStructureTitle": "Structure",
     "linkPublicationsTitle": "Publications",
     "linkContactTitle": "Contact",
-    "heroTitle": "Department of Animal Breeding and Product Evaluation",
+    "heroTitle": "Department of Animal Breeding and Product Quality Assessment",
     "viewAllNews": "View all news"
   },
   "Navbar": {
-    "logoText": "Department of Animal Breeding <br></br> and Product Evaluation",
+    "logoText": "Department of Animal Breeding <br></br> and Product Quality Assessment",
     "toggleMenu": "Toggle menu",
     "news": "News",
     "aboutUs": "About Us",
@@ -43,7 +42,7 @@
     "settingsToggle": "Accessibility settings"
   },
   "Footer": {
-    "brandTitle": "Department of Animal Breeding <br></br> and Product Evaluation",
+    "brandTitle": "Department of Animal Breeding <br></br> and Product Quality Assessment",
     "university": "Poznań University of Life Sciences",
     "faculty": "Faculty of Veterinary Medicine and Animal Sciences",
     "address": "50 Szydłowska St., 60-656 Poznań",
@@ -51,26 +50,20 @@
     "upPoznan": "PULS Poznań",
     "facultyLink": "Faculty of Veterinary Medicine and Animal Sciences",
     "contactTitle": "CONTACT",
-    "copyright": "© 2026 POZNAŃ UNIVERSITY OF LIFE SCIENCES. DEPARTMENT OF ANIMAL BREEDING AND PRODUCT EVALUATION."
+    "copyright": "© 2026 POZNAŃ UNIVERSITY OF LIFE SCIENCES. DEPARTMENT OF ANIMAL BREEDING AND PRODUCT QUALITY ASSESSMENT."
   },
   "LocaleSwitcher": {
-    "pl": "Polski",
-    "en": "English",
-    "uk": "Українська",
-    "ru": "Русский",
     "label": "Language selection",
     "switchTo": "Switch language to {locale}"
   },
   "NewsPage": {
     "title": "News",
     "searchPlaceholder": "Search news...",
-    "searchButton": "Search",
     "sortBy": "Sort by",
     "sortDate": "Newest",
     "sortRelevance": "Relevance",
     "noResults": "No results found.",
-    "loadMore": "Load more",
-    "metaDescription": "News from the Department of Animal Breeding and Raw Material Evaluation: events, research results, conferences and announcements.",
+    "metaDescription": "News from the Department of Animal Breeding and Product Quality Assessment: events, research results, conferences and announcements.",
     "dateFrom": "From date",
     "dateTo": "To date",
     "tagsLabel": "Topics"
@@ -78,7 +71,6 @@
   "PublicationsPage": {
     "title": "Scientific Publications",
     "searchPlaceholder": "Search by title, authors, or journal...",
-    "searchButton": "Search",
     "noResults": "No publications found matching the criteria.",
     "metaDescription": "Scientific publications by the department staff, searchable by title, authors and journal."
   },
@@ -86,8 +78,7 @@
     "prev": "Previous page",
     "next": "Next page",
     "page": "Page {page}",
-    "navLabel": "Pagination",
-    "more": "More pages"
+    "navLabel": "Pagination"
   },
   "NotFound": {
     "title": "Page Not Found",
@@ -129,8 +120,6 @@
     "coordinatorHeader": "Course Coordinator",
     "viewProfile": "View profile",
     "externalRedirect": "This team's page is available at an external address.",
-    "noPublications": "No publications from the last 5 years.",
-    "noProjects": "No projects from the last 5 years.",
     "funder": "Funding"
   },
   "StructurePage": {
@@ -164,16 +153,16 @@
     "saturday": "Saturday",
     "sunday": "Sunday",
     "hoursLabel": "Working hours",
-    "locationLabel": "Office location",
+    "locationLabel": "Office",
     "teamLabel": "Team",
     "consultationsLabel": "Consultations",
     "metaDescription": "{name} – {team}. Contact details and ORCID identifier."
   },
   "AboutUsPage": {
     "title": "About Us",
-    "description": "Learn more about the Department of Animal Breeding and Product Evaluation. Explore our organizational structure, research teams, and scientific publications.",
+    "description": "Learn more about the Department of Animal Breeding and Product Quality Assessment: its structure, research teams and scientific publications.",
     "structureCardTitle": "Department Structure",
-    "structureCardDesc": "Get to know the management and specialized research teams operating within the Department.",
+    "structureCardDesc": "Meet the management and the specialised research teams of the department.",
     "publicationsCardTitle": "Scientific Publications",
     "publicationsCardDesc": "Browse our repository of scientific articles, research papers, and monographs published by our staff.",
     "viewDetails": "Explore"
@@ -184,15 +173,15 @@
     "employeeName": "Name",
     "consultationDay": "Date",
     "consultationTime": "Hours",
-    "consultationRoom": "Location",
+    "consultationRoom": "Room",
     "noConsultations": "No consultations declared",
     "announcementsTitle": "Student Announcements",
     "showPastAnnouncements": "Show past announcements",
     "urgent": "Urgent",
     "noAnnouncementsToShow": "No current announcements for students.",
-    "documentsTitle": "Statutes & Syllabi",
+    "documentsTitle": "Course regulations and syllabi",
     "subjectName": "Subject",
-    "statute": "Statute",
+    "statute": "Regulations",
     "syllabus": "Syllabus",
     "download": "Download PDF",
     "noDocuments": "No documents available.",

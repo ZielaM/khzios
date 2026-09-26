@@ -2,7 +2,6 @@
   "HomePage": {
     "title": "Aktualności",
     "readMore": "Czytaj dalej",
-    "noNews": "Brak aktualności.",
     "translationUnavailable": "Wyświetlono w języku: {language}",
     "heroSubtitle": "Prowadzimy badania naukowe, działalność dydaktyczną oraz innowacyjne projekty w dziedzinie hodowli zwierząt.",
     "btnAboutUs": "Poznaj naszą katedrę",
@@ -54,22 +53,16 @@
     "copyright": "© 2026 UNIWERSYTET PRZYRODNICZY W POZNANIU. KATEDRA HODOWLI ZWIERZĄT I OCENY SUROWCÓW."
   },
   "LocaleSwitcher": {
-    "pl": "Polski",
-    "en": "English",
-    "uk": "Українська",
-    "ru": "Русский",
     "label": "Wybór języka",
     "switchTo": "Zmień język na {locale}"
   },
   "NewsPage": {
     "title": "Aktualności",
     "searchPlaceholder": "Szukaj aktualności...",
-    "searchButton": "Szukaj",
     "sortBy": "Sortuj według",
     "sortDate": "Najnowsze",
     "sortRelevance": "Trafność",
     "noResults": "Nie znaleziono wyników.",
-    "loadMore": "Pokaż więcej",
     "metaDescription": "Aktualności Katedry Hodowli Zwierząt i Oceny Surowców: wydarzenia, wyniki badań, konferencje i komunikaty.",
     "dateFrom": "Od dnia",
     "dateTo": "Do dnia",
@@ -78,7 +71,6 @@
   "PublicationsPage": {
     "title": "Publikacje naukowe",
     "searchPlaceholder": "Szukaj po tytule, autorach lub czasopiśmie...",
-    "searchButton": "Szukaj",
     "noResults": "Nie znaleziono żadnych publikacji spełniających podane kryteria.",
     "metaDescription": "Publikacje naukowe pracowników Katedry Hodowli Zwierząt i Oceny Surowców z wyszukiwarką po tytule, autorach i czasopiśmie."
   },
@@ -86,8 +78,7 @@
     "prev": "Poprzednia strona",
     "next": "Następna strona",
     "page": "Strona {page}",
-    "navLabel": "Paginacja",
-    "more": "Więcej stron"
+    "navLabel": "Paginacja"
   },
   "NotFound": {
     "title": "Nie znaleziono strony",
@@ -129,8 +120,6 @@
     "coordinatorHeader": "Kierownik przedmiotu",
     "viewProfile": "Zobacz profil",
     "externalRedirect": "Strona tego zespołu jest dostępna pod adresem zewnętrznym.",
-    "noPublications": "Brak publikacji z ostatnich 5 lat.",
-    "noProjects": "Brak projektów z ostatnich 5 lat.",
     "funder": "Finansowanie"
   },
   "StructurePage": {
@@ -171,10 +160,10 @@
   },
   "AboutUsPage": {
     "title": "O nas",
-    "description": "Dowiedz się więcej o Zakładzie Hodowli Zwierząt i Ocenie Produktów. Poznaj naszą strukturę organizacyjną, zespoły badawcze oraz publikacje naukowe.",
-    "structureCardTitle": "Struktura Zakładu",
-    "structureCardDesc": "Poznaj kierownictwo oraz specjalistyczne zespoły badawcze działające w ramach Zakładu.",
-    "publicationsCardTitle": "Publikacje Naukowe",
+    "description": "Dowiedz się więcej o Katedrze Hodowli Zwierząt i Oceny Surowców: jej strukturze, zespołach badawczych i publikacjach naukowych.",
+    "structureCardTitle": "Struktura katedry",
+    "structureCardDesc": "Poznaj kierownictwo oraz specjalistyczne zespoły badawcze działające w katedrze.",
+    "publicationsCardTitle": "Publikacje naukowe",
     "publicationsCardDesc": "Przeglądaj repozytorium artykułów naukowych i monografii opublikowanych przez naszych pracowników.",
     "viewDetails": "Zobacz szczegóły"
   },

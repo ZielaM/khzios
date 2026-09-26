@@ -6,11 +6,6 @@
   z-index: 0;
   overflow: hidden;
   border-radius: inherit;
-
-  // Photos compete with the yellow-on-black scheme — hide them entirely
-  :global(.wcag-high-contrast) & {
-    display: none;
-  }
 }
 
 .slide {
@@ -25,17 +20,6 @@
 
 .active {
   opacity: 1;
-}
-
-// Keeps white hero text readable on any photo
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(10, 40, 25, 0.55) 0%,
-    rgba(10, 40, 25, 0.7) 100%
-  );
 }
 
 .toggle {
@@ -62,5 +46,15 @@
   &:focus-visible {
     outline: 3px solid #fff;
     outline-offset: 2px;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    background: var(--background);
+    color: var(--foreground);
+
+    &:focus-visible {
+      outline-color: var(--foreground);
+    }
   }
 }

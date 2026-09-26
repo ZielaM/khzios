@@ -1,12 +1,43 @@
 @use '@/styles/variables' as *;
 
-.grid {
+.layout {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  justify-content: center;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: 2.5rem;
+  align-items: start;
 
   @media (max-width: $breakpoint-tablet) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+}
+
+// The first row sits flush with the lead story's photo
+.list > :first-child {
+  padding-top: 0;
+  border-top: 0;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+}
+
+.skeletonLead,
+.skeletonRow {
+  @include skeleton-pulse;
+
+  border-radius: $radius-md;
+}
+
+.skeletonLead {
+  aspect-ratio: 16 / 12;
+}
+
+.skeletonRow {
+  height: 110px;
+
+  & + & {
+    margin-top: 1.5rem;
   }
 }

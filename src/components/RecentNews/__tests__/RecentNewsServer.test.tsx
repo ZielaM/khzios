@@ -13,25 +13,22 @@ describe('RecentNewsServer Component', () => {
     vi.clearAllMocks();
   });
 
-  it('should render an empty container if no news is found', async () => {
+  it('renders nothing when there is no news', async () => {
     vi.mocked(getRecentNews).mockResolvedValue([]);
     const jsx = await RecentNewsServer({ locale: 'en' });
-    const { container } = render(jsx);
 
-    expect(container.firstChild).toBeInTheDocument();
-    expect(container.firstChild).toBeEmptyDOMElement();
+    expect(jsx).toBeNull();
   });
 
-  it('should render a NewsTile for each of the three latest articles', async () => {
-    vi.mocked(getRecentNews).mockResolvedValue([
-      makeNews('1'),
-      makeNews('2'),
-      makeNews('3'),
-    ]);
+  it('shows the latest article as the lead and the next four as a list', async () => {
+    vi.mocked(getRecentNews).mockResolvedValue(
+      ['1', '2', '3', '4', '5'].map((id) => makeNews(id))
+    );
     const jsx = await RecentNewsServer({ locale: 'en' });
-    render(jsx);
+    render(jsx!);
 
-    expect(getRecentNews).toHaveBeenCalledWith(3);
-    expect(screen.getAllByRole('link')).toHaveLength(3);
+    expect(getRecentNews).toHaveBeenCalledWith(5);
+    expect(screen.getAllByRole('article')).toHaveLength(5);
+    expect(screen.getAllByRole('link')).toHaveLength(5);
   });
 });

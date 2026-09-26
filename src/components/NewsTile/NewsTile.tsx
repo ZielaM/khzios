@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import style from './NewsTile.module.scss';
 import clsx from 'clsx';
-import DOMPurify from 'isomorphic-dompurify';
 import type { NewsWithRelations } from '@/lib/news-queries';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -11,21 +10,9 @@ import {
   resolveTagName,
   LANGUAGE_NAMES,
 } from '@/lib/translations';
-import { excerpt, stripHtml } from '@/lib/content-utils';
+import { excerpt, keepMarksOnly, stripHtml } from '@/lib/content-utils';
 import { getPhotoAlt, getPhotoUrl } from '@/lib/photos';
 import { formatDate } from '@/lib/dates';
-
-/**
- * Plain text with only the <mark> highlights added by search. Script and
- * style elements go first, together with their text, before the remaining
- * tags are unwrapped.
- */
-function keepMarksOnly(html: string) {
-  return DOMPurify.sanitize(
-    DOMPurify.sanitize(html, { FORBID_TAGS: ['style', 'script'] }),
-    { ALLOWED_TAGS: ['mark'] }
-  );
-}
 
 export interface NewsTileProps {
   news: NewsWithRelations;

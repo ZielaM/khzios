@@ -1,26 +1,33 @@
 import { Suspense } from 'react';
-import styles from './page.module.scss';
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/routing';
-import RecentNewsServer from '@/components/RecentNews/RecentNewsServer';
-import RecentNewsSkeleton from '@/components/RecentNews/RecentNewsSkeleton';
+import { ArrowRight } from 'lucide-react';
+import { getPathname, Link } from '@/i18n/routing';
+import { setPageLocale } from '@/i18n/page-locale';
 import AnimateOnce from '@/components/AnimateOnce';
 import HeroSlideshow from '@/components/HeroSlideshow';
-import { getSectionImages, IMAGE_SECTIONS } from '@/lib/site-images';
-import { LOGO_IMAGE, pageMetadata, toAbsoluteUrl } from '@/lib/seo';
-import { getPathname } from '@/i18n/routing';
-import type { Metadata } from 'next';
-import clsx from 'clsx';
-import { renderOnFirstRequest } from '@/lib/static-params';
-import { BookOpen, GraduationCap, Network, Phone } from 'lucide-react';
-import { ArrowRight } from 'lucide-react';
 import JsonLd from '@/components/JsonLd';
-import { setPageLocale } from '@/i18n/page-locale';
+import RecentNewsServer from '@/components/RecentNews/RecentNewsServer';
+import RecentNewsSkeleton from '@/components/RecentNews/RecentNewsSkeleton';
+import { excerpt, stripHtml } from '@/lib/content-utils';
+import { LOGO_IMAGE, pageMetadata, toAbsoluteUrl } from '@/lib/seo';
+import { getSectionImages, IMAGE_SECTIONS } from '@/lib/site-images';
+import { renderOnFirstRequest } from '@/lib/static-params';
+import {
+  getAllTeams,
+  getDepartmentStats,
+  RECENT_YEARS,
+} from '@/lib/team-queries';
+import { teamHref } from '@/lib/team-routes';
+import { resolveTranslation } from '@/lib/translations';
+import styles from './page.module.scss';
 
 // The latest news on this page should not trail the articles by more than a
 // day; everything else here changes far less often.
 export const revalidate = 86400;
 export const generateStaticParams = renderOnFirstRequest;
+
+const FACULTY_URL = 'https://wwz.up.poznan.pl/';
 
 export async function generateMetadata({
   params,
@@ -41,8 +48,32 @@ export default async function Home({
   const { locale } = await params;
   setPageLocale(locale);
   const t = await getTranslations('HomePage');
+  const tNav = await getTranslations('Navbar');
+  const tFooter = await getTranslations('Footer');
+  const [teams, stats] = await Promise.all([
+    getAllTeams(),
+    getDepartmentStats(),
+  ]);
   const heroImages = getSectionImages(IMAGE_SECTIONS.hero, locale);
-  const hasHeroImages = heroImages.length > 0;
+
+  const researchAreas = teams.flatMap((team) => {
+    const { translation } = resolveTranslation(team.translations, locale);
+    if (!translation) return [];
+    return [
+      {
+        team,
+        name: stripHtml(translation.name),
+        summary: excerpt(stripHtml(translation.researchDescription ?? ''), 170),
+      },
+    ];
+  });
+
+  const audience = [
+    { key: 'students', href: '/student' as const },
+    { key: 'candidates', href: FACULTY_URL },
+    { key: 'researchers', href: '/about-us/publications' as const },
+    { key: 'partners', href: '/contact' as const },
+  ] as const;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -56,7 +87,7 @@ export default async function Home({
       name: 'Uniwersytet Przyrodniczy w Poznaniu',
       url: 'https://up.poznan.pl',
     },
-    ...(hasHeroImages && {
+    ...(heroImages.length > 0 && {
       image: heroImages.map((image) => toAbsoluteUrl(image.src)),
     }),
     address: {
@@ -68,15 +99,17 @@ export default async function Home({
     },
   };
 
+  const num = (chunks: React.ReactNode) => (
+    <strong className={styles.statNumber}>{chunks}</strong>
+  );
+
   return (
     <div className={styles.main}>
       <JsonLd data={jsonLd} />
-      {/* ── Hero Section ──────────────────────────────────────────────── */}
-      <section
-        className={clsx(styles.hero, hasHeroImages && styles.heroWithImages)}
-      >
-        {hasHeroImages && <HeroSlideshow images={heroImages} />}
-        <div className={styles.heroContent}>
+
+      <section className={styles.hero}>
+        <div className={styles.heroText}>
+          <p className={styles.eyebrow}>{tFooter('university')}</p>
           <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
           <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
           <div className={styles.heroActions}>
@@ -88,96 +121,97 @@ export default async function Home({
             </Link>
           </div>
         </div>
+        {heroImages.length > 0 && (
+          <div className={styles.heroMedia}>
+            <HeroSlideshow images={heroImages} />
+          </div>
+        )}
       </section>
 
-      {/* ── Recent News ────────────────────────────────────────────────── */}
-      <section className={styles.newsSection}>
-        <AnimateOnce>
-          <h2 className={styles.sectionTitle}>{t('recentNewsTitle')}</h2>
-        </AnimateOnce>
-
+      <section className={styles.section} aria-labelledby="home-news">
+        <div className={styles.sectionHeader}>
+          <h2 id="home-news" className={styles.sectionTitle}>
+            {t('recentNewsTitle')}
+          </h2>
+          <Link href="/news" className={styles.moreLink}>
+            {t('viewAllNews')}
+            <ArrowRight aria-hidden="true" size={16} />
+          </Link>
+        </div>
         <Suspense fallback={<RecentNewsSkeleton />}>
           <RecentNewsServer locale={locale} />
         </Suspense>
-
-        <AnimateOnce>
-          <div className={styles.newsFooter}>
-            <Link href="/news">
-              {t('viewAllNews')}
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-        </AnimateOnce>
       </section>
 
-      {/* ── Quick Links (Bento Grid) ──────────────────────────────────── */}
       <AnimateOnce>
-        <h2 className={styles.sectionTitle}>{t('quickLinksTitle')}</h2>
+        <section className={styles.section} aria-labelledby="home-audience">
+          <h2 id="home-audience" className={styles.sectionTitle}>
+            {t('audienceTitle')}
+          </h2>
+          <ul className={styles.audience}>
+            {audience.map(({ key, href }) => (
+              <li key={key} className={styles.audienceItem}>
+                <h3 className={styles.audienceTitle}>
+                  {href.startsWith('http') ? (
+                    <a href={href} className={styles.audienceLink}>
+                      {t(`${key}Title`)}
+                    </a>
+                  ) : (
+                    <Link
+                      href={href as Exclude<typeof href, typeof FACULTY_URL>}
+                      className={styles.audienceLink}
+                    >
+                      {t(`${key}Title`)}
+                    </Link>
+                  )}
+                </h3>
+                <p className={styles.audienceDesc}>{t(`${key}Desc`)}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
       </AnimateOnce>
 
-      <AnimateOnce>
-        <div className={styles.bentoGrid}>
-          <Link href="/student" className={styles.bentoCard}>
-            <div className={styles.cardIconWrapper} aria-hidden="true">
-              <GraduationCap aria-hidden="true" size={28} />
+      {researchAreas.length > 0 && (
+        <AnimateOnce>
+          <section className={styles.section} aria-labelledby="home-research">
+            <div className={styles.sectionHeader}>
+              <h2 id="home-research" className={styles.sectionTitle}>
+                {t('researchTitle')}
+              </h2>
+              <Link href="/about-us/structure" className={styles.moreLink}>
+                {tNav('structure')}
+                <ArrowRight aria-hidden="true" size={16} />
+              </Link>
             </div>
-            <div>
-              <h3 className={styles.cardTitle}>{t('btnStudent')}</h3>
-              <p className={styles.cardDesc}>{t('linkStudentsDesc')}</p>
-            </div>
-            <ArrowRight
-              size={20}
-              className={styles.cardArrow}
-              aria-hidden="true"
-            />
-          </Link>
 
-          <Link href="/about-us/structure" className={styles.bentoCard}>
-            <div className={styles.cardIconWrapper} aria-hidden="true">
-              <Network aria-hidden="true" size={28} />
-            </div>
-            <div>
-              <h3 className={styles.cardTitle}>{t('linkStructureTitle')}</h3>
-              <p className={styles.cardDesc}>{t('linkStructureDesc')}</p>
-            </div>
-            <ArrowRight
-              size={20}
-              className={styles.cardArrow}
-              aria-hidden="true"
-            />
-          </Link>
+            <ul className={styles.stats} aria-label={t('statsLabel')}>
+              <li>{t.rich('statTeams', { count: stats.teams, num })}</li>
+              <li>
+                {t.rich('statEmployees', { count: stats.employees, num })}
+              </li>
+              <li>
+                {t.rich('statPublications', {
+                  count: stats.publications,
+                  years: RECENT_YEARS,
+                  num,
+                })}
+              </li>
+            </ul>
 
-          <Link href="/about-us/publications" className={styles.bentoCard}>
-            <div className={styles.cardIconWrapper} aria-hidden="true">
-              <BookOpen aria-hidden="true" size={28} />
-            </div>
-            <div>
-              <h3 className={styles.cardTitle}>{t('linkPublicationsTitle')}</h3>
-              <p className={styles.cardDesc}>{t('linkPublicationsDesc')}</p>
-            </div>
-            <ArrowRight
-              size={20}
-              className={styles.cardArrow}
-              aria-hidden="true"
-            />
-          </Link>
-
-          <Link href="/contact" className={styles.bentoCard}>
-            <div className={styles.cardIconWrapper} aria-hidden="true">
-              <Phone aria-hidden="true" size={28} />
-            </div>
-            <div>
-              <h3 className={styles.cardTitle}>{t('linkContactTitle')}</h3>
-              <p className={styles.cardDesc}>{t('linkContactDesc')}</p>
-            </div>
-            <ArrowRight
-              size={20}
-              className={styles.cardArrow}
-              aria-hidden="true"
-            />
-          </Link>
-        </div>
-      </AnimateOnce>
+            <ul className={styles.research}>
+              {researchAreas.map(({ team, name, summary }) => (
+                <li key={team.id} className={styles.researchItem}>
+                  <h3 className={styles.researchTitle}>
+                    <Link href={teamHref(team, locale)}>{name}</Link>
+                  </h3>
+                  {summary && <p className={styles.researchDesc}>{summary}</p>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        </AnimateOnce>
+      )}
     </div>
   );
 }

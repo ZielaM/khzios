@@ -153,3 +153,13 @@ export const getNavigationTeams = cache(async (locale: string) => {
 export type NavigationTeam = Awaited<
   ReturnType<typeof getNavigationTeams>
 >[number];
+
+/** Headline numbers for the home page. */
+export const getDepartmentStats = cache(async () => {
+  const [teams, employees, publications] = await Promise.all([
+    prisma.team.count(),
+    prisma.employee.count(),
+    prisma.publication.count({ where: { year: { gte: firstRecentYear() } } }),
+  ]);
+  return { teams, employees, publications };
+});

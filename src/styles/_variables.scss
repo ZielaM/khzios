@@ -100,6 +100,19 @@ $page-padding-top-mobile: 12px;
   margin: 0;
 }
 
+// Search matches marked with <mark> by ts_headline
+@mixin search-highlight {
+  background: rgba($color-primary, 0.15);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: $radius-sm;
+
+  :global(.wcag-high-contrast) & {
+    background: var(--foreground);
+    color: var(--background);
+  }
+}
+
 // Hidden on screen, still read by screen readers
 @mixin visually-hidden {
   position: absolute;

@@ -35,6 +35,18 @@ export function sanitizeInlineHtml(html: string): string {
   });
 }
 
+/**
+ * Plain text with only the <mark> highlights added by search. Script and
+ * style elements go first, together with their text, before the remaining
+ * tags are unwrapped.
+ */
+export function keepMarksOnly(html: string): string {
+  return DOMPurify.sanitize(
+    DOMPurify.sanitize(html, { FORBID_TAGS: ['style', 'script'] }),
+    { ALLOWED_TAGS: ['mark'] }
+  );
+}
+
 /** Shortens plain text to at most `maxLength` characters on a word boundary. */
 export function excerpt(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;

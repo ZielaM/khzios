@@ -26,8 +26,8 @@ interface HeroSlideshowProps {
 }
 
 /**
- * Cross-fading photo background for a hero section. The parent must be
- * `position: relative` — the slideshow fills it and sits behind its content.
+ * Cross-fading photos that fill their positioned parent (the home page
+ * hero's photo panel).
  *
  * Accessibility (WCAG 2.2.2): auto-rotation can be paused with a button and
  * never starts for users who prefer reduced motion. Only the visible photo
@@ -80,13 +80,11 @@ export default function HeroSlideshow({
               aria-hidden={index !== active}
               fill
               preload={index === 0}
-              sizes="(max-width: 1024px) 100vw, 1024px"
+              sizes="(max-width: 768px) 100vw, 480px"
               className={clsx(style.slide, index === active && style.active)}
             />
           )
       )}
-
-      <div className={style.overlay} aria-hidden="true" />
 
       {canRotate && (
         <button

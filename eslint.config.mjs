@@ -25,9 +25,9 @@ const eslintConfig = defineConfig([
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
-  // Allow console in the logger module itself and seed scripts
+  // Allow console in the logger module itself, seed and CLI scripts
   {
-    files: ['src/lib/logger.ts', 'prisma/seed*.ts'],
+    files: ['src/lib/logger.ts', 'prisma/seed*.ts', 'scripts/**'],
     rules: {
       'no-console': 'off',
     },

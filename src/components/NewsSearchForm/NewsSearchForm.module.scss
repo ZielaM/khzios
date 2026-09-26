@@ -26,7 +26,7 @@
   // Shared look of the form fields, swapped wholesale in high contrast mode
   --field-bg: var(--background);
   --field-text: var(--foreground);
-  --field-border: rgba(0, 0, 0, 0.18);
+  --field-border: var(--border-strong);
   --field-border-focus: var(--color-primary);
   --field-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   --field-shadow-focus: 0 0 0 3px rgba(27, 94, 59, 0.15);
@@ -193,7 +193,7 @@
     width: 100%;
     padding: 0.85rem 1rem 0.85rem 2.75rem; // Extra left padding to make room for absolute icon
     border: 1px solid var(--field-border);
-    border-radius: var(--radius-md, 8px);
+    border-radius: $radius-md;
     background: var(--field-bg);
     color: var(--field-text);
     font-size: 1em;
@@ -301,7 +301,7 @@
   min-width: 130px;
   padding: 0.55rem 1rem;
   border: 1px solid var(--field-border);
-  border-radius: var(--radius-md, 8px);
+  border-radius: $radius-md;
   background: var(--field-bg);
   color: var(--field-text);
   font-family: inherit;

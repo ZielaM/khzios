@@ -11,6 +11,7 @@
 
 .sectionTitle {
   @include section-title;
+
   font-size: 1.6em;
   margin-bottom: 32px;
 }
@@ -67,7 +68,7 @@
   width: 100%;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: var(--surface-muted);
 }
 
 .image {
@@ -106,6 +107,7 @@
   line-height: 1.35;
   color: var(--foreground);
   margin: 0;
+
   // Clamp to 3 lines for visual consistency
   display: -webkit-box;
   -webkit-line-clamp: 3;

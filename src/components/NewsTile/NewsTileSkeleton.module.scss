@@ -24,6 +24,7 @@
 // Placeholder mimicking the article thumbnail
 .imagePlaceholder {
   @extend .pulse;
+
   width: 100%;
   height: 240px;
 }
@@ -45,6 +46,7 @@
 
 .tagPlaceholder {
   @extend .pulse;
+
   height: 24px;
   width: 60px;
   border-radius: 8px;
@@ -53,6 +55,7 @@
 // Placeholders for title lines
 .titlePlaceholder {
   @extend .pulse;
+
   height: 24px;
   width: 100%;
   border-radius: 4px;
@@ -61,6 +64,7 @@
 
 .titlePlaceholderShort {
   @extend .pulse;
+
   height: 24px;
   width: 70%; // Simulates an uneven wrapping line
   border-radius: 4px;
@@ -70,6 +74,7 @@
 // Placeholders for description lines
 .textPlaceholder {
   @extend .pulse;
+
   height: 16px;
   width: 100%;
   border-radius: 4px;
@@ -78,6 +83,7 @@
 
 .textPlaceholderShort {
   @extend .pulse;
+
   height: 16px;
   width: 80%;
   border-radius: 4px;

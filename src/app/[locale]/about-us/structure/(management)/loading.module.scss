@@ -1,14 +1,18 @@
 @use '@/styles/variables' as *;
+
 .page {
   @include page-container;
 }
 
 .backLink {
   @include back-link;
+
   margin-bottom: 32px;
 }
+
 .skeleton {
   @include skeleton-shimmer;
+
   border-radius: 12px;
 }
 

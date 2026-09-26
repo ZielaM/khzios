@@ -3,6 +3,7 @@
     opacity: 0;
     transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: none;
@@ -14,9 +15,10 @@
     .wrapper {
       animation: fadeInUp linear both;
       animation-timeline: view();
+
       // Complete once the element is 160px into view: content already on
       // screen at load (even if taller than the viewport) is fully shown
-      animation-range: entry 0px entry 160px;
+      animation-range: entry 0 entry 160px;
     }
   }
 }

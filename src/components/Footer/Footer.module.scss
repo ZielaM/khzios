@@ -2,7 +2,7 @@
 
 // Main footer wrapping element – dark academic footer
 .footer {
-  background-color: #1a2e23;
+  background-color: var(--footer-bg);
   padding: 4rem 2rem;
   font-family: var(--font-inter), sans-serif;
   border-top: 3px solid var(--color-primary);

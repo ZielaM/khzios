@@ -63,7 +63,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #555;
+  color: var(--text-muted);
   font-weight: 700;
   text-decoration: none;
   font-size: 0.9em;
@@ -87,6 +87,7 @@
     color: var(--foreground);
     background-color: transparent;
     border: 2px solid var(--foreground);
+
     &:hover,
     &:focus-visible {
       background-color: var(--foreground);
@@ -97,12 +98,12 @@
 
 .fallbackBanner {
   background-color: rgba(255, 170, 0, 0.1);
-  color: #b38600;
+  color: var(--color-warning);
   padding: 12px 24px;
   border-radius: $radius-lg;
   font-size: 0.95em;
   font-weight: 600;
-  border-left: 4px solid #b38600;
+  border-left: 4px solid var(--color-warning);
 
   :global(.wcag-high-contrast) & {
     background-color: transparent;
@@ -151,7 +152,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .metaIcon {
@@ -208,7 +209,7 @@
   aspect-ratio: 16 / 9;
   border-radius: $radius-lg;
   overflow: hidden;
-  background-color: #f5f5f5;
+  background-color: var(--surface-muted);
   box-shadow: $shadow-card;
 
   :global(.wcag-high-contrast) & {
@@ -265,7 +266,7 @@
 
   p {
     margin-bottom: 24px;
-    color: #333;
+    color: var(--foreground);
 
     :global(.wcag-high-contrast) & {
       color: var(--foreground);
@@ -292,7 +293,7 @@
   ol {
     margin-bottom: 24px;
     padding-left: 32px;
-    color: #333;
+    color: var(--foreground);
   }
 
   li {
@@ -313,6 +314,7 @@
 
     :global(.wcag-high-contrast) & {
       color: var(--foreground);
+
       &:hover {
         color: var(--foreground);
       }
@@ -321,11 +323,10 @@
 
   blockquote {
     border-left: 6px solid var(--color-primary);
-    padding-left: 32px;
     margin: 40px 0;
     font-style: italic;
     font-size: 1.25em;
-    color: #444;
+    color: var(--foreground);
     background-color: rgba(0, 0, 0, 0.02);
     padding: 32px;
     border-radius: 0 $radius-lg $radius-lg 0;
@@ -353,10 +354,12 @@
     ol {
       color: var(--foreground);
     }
+
     blockquote {
       border-color: var(--foreground);
       color: var(--foreground);
       background-color: transparent;
+
       &::before {
         display: none;
       }
@@ -387,11 +390,13 @@
 // Shared shimmer effect for all skeleton elements
 %skeleton-base {
   @include skeleton-pulse;
+
   border-radius: 8px;
 }
 
 .skeletonPill {
   @extend %skeleton-base;
+
   width: 160px;
   height: 36px;
   border-radius: 999px;
@@ -399,6 +404,7 @@
 
 .skeletonPillSmall {
   @extend %skeleton-base;
+
   width: 110px;
   height: 36px;
   border-radius: 999px;
@@ -406,6 +412,7 @@
 
 .skeletonLine {
   @extend %skeleton-base;
+
   height: 18px;
   width: 100%;
   border-radius: 4px;
@@ -413,6 +420,7 @@
 
 .skeletonLineShort {
   @extend %skeleton-base;
+
   height: 18px;
   width: 65%;
   border-radius: 4px;
@@ -424,6 +432,7 @@
 
 .skeletonTag {
   @extend %skeleton-base;
+
   width: 72px;
   height: 28px;
   border-radius: 8px;
@@ -431,6 +440,7 @@
 
 .skeletonTitleLine {
   @extend %skeleton-base;
+
   height: 40px;
   width: 100%;
   border-radius: 6px;
@@ -438,6 +448,7 @@
 
 .skeletonTitleLineShort {
   @extend %skeleton-base;
+
   height: 40px;
   width: 55%;
   border-radius: 6px;
@@ -445,6 +456,7 @@
 
 .skeletonHero {
   @extend %skeleton-base;
+
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: $radius-lg;

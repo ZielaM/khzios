@@ -41,8 +41,10 @@ const securityHeaders = [
 const nextConfig = {
   poweredByHeader: false,
   images: {
-    // Serve modern formats; originals in public/images can stay plain JPG/PNG
-    formats: ['image/avif', 'image/webp'],
+    // WebP only: AVIF files are a little smaller but take ~10x longer to
+    // encode on first request (0.8–1.8 s per size vs ~0.1 s), and under load
+    // some AVIF encodes stalled. Originals in public/images can stay JPG/PNG.
+    formats: ['image/webp'],
   },
   compiler: {
     reactRemoveProperties:

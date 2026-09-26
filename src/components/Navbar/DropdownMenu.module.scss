@@ -6,6 +6,7 @@
   height: 100%;
   display: flex;
   align-items: center;
+
   // Extra vertical padding prevents the cursor from "falling off"
   // and closing the menu when moving from the trigger to the dropdown panel.
   padding: 1rem 0;
@@ -23,6 +24,7 @@
 // Small chevron icon indicating a dropdown
 .dropdownIcon {
   transition: transform 0.3s ease;
+
   &.open {
     transform: rotate(180deg);
   }

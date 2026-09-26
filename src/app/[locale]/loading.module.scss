@@ -2,6 +2,7 @@
 
 .skeleton {
   @include skeleton-shimmer;
+
   border-radius: $radius-xl;
 }
 

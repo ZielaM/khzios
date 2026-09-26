@@ -2,6 +2,7 @@
 
 %skeleton-base {
   @include skeleton-pulse;
+
   border-radius: 8px;
 }
 
@@ -16,6 +17,7 @@
 
 .relatedSkeletonTitle {
   @extend %skeleton-base;
+
   height: 28px;
   width: 180px;
   margin-bottom: 32px;
@@ -40,6 +42,7 @@
 
 .relatedSkeletonImage {
   @extend %skeleton-base;
+
   width: 100%;
   aspect-ratio: 16 / 10;
   border-radius: 0;
@@ -54,6 +57,7 @@
 
 .relatedSkeletonDate {
   @extend %skeleton-base;
+
   height: 12px;
   width: 100px;
   border-radius: 4px;
@@ -61,6 +65,7 @@
 
 .relatedSkeletonCardTitle {
   @extend %skeleton-base;
+
   height: 16px;
   width: 90%;
   border-radius: 4px;
@@ -68,6 +73,7 @@
 
 .relatedSkeletonCardTitleShort {
   @extend %skeleton-base;
+
   height: 16px;
   width: 60%;
   border-radius: 4px;

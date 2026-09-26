@@ -88,7 +88,7 @@
   width: 100%;
   height: 240px;
   overflow: hidden;
-  background-color: #f5f5f5;
+  background-color: var(--surface-muted);
 }
 
 // The thumbnail image itself, set to cover the container
@@ -165,7 +165,7 @@
 .fallbackBadge {
   display: inline-block;
   background: rgba(255, 170, 0, 0.1);
-  color: #b38600; // Warning orange
+  color: var(--color-warning); // Warning orange
   padding: 3px 10px;
   border-radius: $radius-sm;
   font-size: 0.7em;

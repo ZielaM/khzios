@@ -42,6 +42,9 @@ jobs:
       - name: Run linter (ESLint)
         run: pnpm lint
 
+      - name: Lint styles (Stylelint, CSS custom properties)
+        run: pnpm lint:css
+
       - name: Check types (TypeScript)
         run: pnpm typecheck
 

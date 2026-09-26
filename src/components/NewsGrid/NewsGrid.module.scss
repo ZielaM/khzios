@@ -40,9 +40,9 @@
   color: var(--text-muted);
   font-size: 1.25em;
   font-weight: 500;
-  background: var(--surface-alt, #f8f9fa);
-  border-radius: var(--radius-lg, 16px);
-  border: 2px dashed var(--border-dark, #d1d5db);
+  background: var(--surface-muted);
+  border-radius: $radius-lg;
+  border: 2px dashed var(--border-strong);
 
   :global(.wcag-high-contrast) & {
     background: transparent;

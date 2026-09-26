@@ -1,0 +1,23 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "rules": {
+    "selector-class-pattern": [
+      "^([a-z][a-zA-Z0-9]*|wcag-high-contrast|compact-layout(-sm)?|skip-link)$",
+      {
+        "message": "Use camelCase class names (CSS Modules); kebab-case only for the global state classes"
+      }
+    ],
+    "keyframes-name-pattern": "^[a-z][a-zA-Z0-9-]*$",
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global"]
+      }
+    ],
+    "color-function-notation": "legacy",
+    "color-function-alias-notation": null,
+    "alpha-value-notation": "number",
+    "media-feature-range-notation": "prefix",
+    "scss/at-extend-no-missing-placeholder": null
+  }
+}

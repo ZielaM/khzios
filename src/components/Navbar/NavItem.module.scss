@@ -4,6 +4,7 @@
 .navLink {
   font-size: 0.95em;
   font-weight: 500;
+
   // Use color-mix to create a slightly muted color, making hover states more obvious
   color: color-mix(in srgb, var(--foreground) 80%, transparent);
   transition: color 0.2s ease;
@@ -50,6 +51,7 @@
 
   &:hover {
     color: var(--foreground);
+
     // Trigger the underline growth animation
     &::after {
       width: 100%;

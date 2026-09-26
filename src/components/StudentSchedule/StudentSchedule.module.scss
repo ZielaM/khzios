@@ -2,6 +2,7 @@
 
 .title {
   @include section-title;
+
   margin: 48px 0 32px;
   text-align: center;
 }
@@ -11,12 +12,14 @@
   min-height: 180px;
   margin-bottom: 2rem;
   border-radius: $radius-lg;
+
   @include skeleton-pulse;
 }
 
 .skeleton {
   min-height: 240px;
   border-radius: $radius-lg;
+
   @include skeleton-pulse;
 }
 

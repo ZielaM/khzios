@@ -9,6 +9,7 @@
 
 .sectionTitle {
   @include section-title;
+
   border-bottom: 2px solid rgba(0, 0, 0, 0.05);
   padding-bottom: 12px;
 
@@ -20,7 +21,7 @@
 .content {
   font-size: 1.1em;
   line-height: 1.7;
-  color: #333;
+  color: var(--foreground);
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -63,7 +64,7 @@
     background-color: rgba(0, 0, 0, 0.02);
     font-weight: 700;
     font-size: 0.95em;
-    color: #555;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
@@ -85,7 +86,7 @@
 
   td {
     font-size: 1.05em;
-    color: #222;
+    color: var(--foreground);
 
     :global(.wcag-high-contrast) & {
       color: var(--foreground);
@@ -138,7 +139,7 @@
         content: attr(data-label);
         font-size: 0.8em;
         text-transform: uppercase;
-        color: #666;
+        color: var(--text-muted);
         font-weight: 700;
         margin-bottom: 4px;
         letter-spacing: 0.5px;

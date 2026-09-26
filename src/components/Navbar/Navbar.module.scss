@@ -108,7 +108,6 @@
     justify-content: flex-start;
     padding: 2rem 1rem;
     overflow-y: auto; // Allow scrolling if menu items exceed screen height
-
     opacity: 0;
     visibility: hidden;
     transform: translateY(-20px);
@@ -184,10 +183,12 @@
     .hamburgerLine:nth-child(1) {
       transform: rotate(45deg);
     }
+
     .hamburgerLine:nth-child(2) {
       opacity: 0;
       transform: translateX(20px);
     }
+
     .hamburgerLine:nth-child(3) {
       transform: rotate(-45deg);
     }

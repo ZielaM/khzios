@@ -4,10 +4,15 @@ import { getMemberBySlug, getTeamBySlug } from '@/lib/team-queries';
 import { memberHref, teamHref, teamSlugFor } from '@/lib/team-routes';
 import { resolveTranslation } from '@/lib/translations';
 import { Link, permanentRedirect } from '@/i18n/routing';
-import { Mail, Phone, ExternalLink, Users, User } from 'lucide-react';
+import { Mail, ExternalLink, Users } from 'lucide-react';
 import BackLink from '@/components/BackLink';
-import Image from 'next/image';
 import OrcidIcon from '@/components/OrcidIcon';
+import {
+  ContactDetails,
+  InfoCard,
+  InfoGrid,
+  ProfileHero,
+} from '@/components/Profile';
 import style from './page.module.scss';
 import AnimateOnce from '@/components/AnimateOnce';
 import { Metadata } from 'next';
@@ -88,7 +93,6 @@ export default async function MemberPage({ params }: Props) {
 
   const title = memberTranslation?.academicTitle ?? '';
   const teamName = teamTranslation?.name || member.team.slug;
-  const hasContact = member.employee.email || member.employee.phone;
 
   const fullName = `${member.employee.firstName} ${member.employee.lastName}`;
   const personJsonLd = {
@@ -115,29 +119,13 @@ export default async function MemberPage({ params }: Props) {
         <BackLink href={teamHref(team, locale)}>{t('backToTeam')}</BackLink>
       </AnimateOnce>
 
-      {/* Hero Card */}
-      <AnimateOnce>
-        <div className={style.heroCard}>
-          <div className={style.avatarContainer}>
-            {member.employee.photoUrl ? (
-              <Image
-                src={member.employee.photoUrl}
-                alt={`${member.employee.firstName} ${member.employee.lastName}`}
-                fill
-                className={style.avatar}
-                sizes="120px"
-              />
-            ) : (
-              <div className={style.avatarFallback}>
-                <User aria-hidden="true" size={48} />
-              </div>
-            )}
-          </div>
-          <div className={style.heroInfo}>
-            {title && <span className={style.heroTitle}>{title}</span>}
-            <h1
-              className={style.heroName}
-            >{`${member.employee.firstName} ${member.employee.lastName}`}</h1>
+      <div className={style.profile}>
+        <AnimateOnce>
+          <ProfileHero
+            name={fullName}
+            title={title}
+            photoUrl={member.employee.photoUrl}
+          >
             <div className={style.teamBadge}>
               <Users aria-hidden="true" size={16} />
               <span>{t('teamLabel')}:</span>
@@ -148,99 +136,44 @@ export default async function MemberPage({ params }: Props) {
                 {teamName}
               </Link>
             </div>
-          </div>
-        </div>
-      </AnimateOnce>
+          </ProfileHero>
+        </AnimateOnce>
 
-      {/* Info Cards Grid */}
-      <AnimateOnce>
-        <div className={style.infoGrid}>
-          {/* Contact Card */}
-          <div className={style.infoCard}>
-            <div className={style.cardHeader}>
-              <div className={style.cardIcon}>
-                <Mail aria-hidden="true" size={20} />
-              </div>
-              <h2 className={style.cardTitle}>{t('contactTitle')}</h2>
-            </div>
+        <AnimateOnce>
+          <InfoGrid>
+            <InfoCard icon={<Mail size={20} />} title={t('contactTitle')}>
+              <ContactDetails
+                email={member.employee.email}
+                phone={member.employee.phone}
+              />
+            </InfoCard>
 
-            {hasContact ? (
-              <ul className={style.contactList}>
-                {member.employee.email && (
-                  <li className={style.contactItem}>
-                    <div className={style.contactIconWrapper}>
-                      <Mail aria-hidden="true" size={18} />
-                    </div>
-                    <div>
-                      <div className={style.contactLabel}>
-                        {t('emailLabel')}
-                      </div>
-                      <div className={style.contactValue}>
-                        <a
-                          href={`mailto:${member.employee.email}`}
-                          className={style.contactLink}
-                        >
-                          {member.employee.email}
-                        </a>
-                      </div>
-                    </div>
-                  </li>
-                )}
-                {member.employee.phone && (
-                  <li className={style.contactItem}>
-                    <div className={style.contactIconWrapper}>
-                      <Phone aria-hidden="true" size={18} />
-                    </div>
-                    <div>
-                      <div className={style.contactLabel}>
-                        {t('phoneLabel')}
-                      </div>
-                      <div className={style.contactValue}>
-                        <a
-                          href={`tel:${member.employee.phone.replace(/\s/g, '')}`}
-                          className={style.contactLink}
-                        >
-                          {member.employee.phone}
-                        </a>
-                      </div>
-                    </div>
-                  </li>
-                )}
-              </ul>
-            ) : (
-              <p className={style.noData}>{t('noContact')}</p>
+            {member.employee.orcid && (
+              <InfoCard
+                icon={<OrcidIcon className={style.orcidLogo} />}
+                title={t('orcidTitle')}
+              >
+                <div className={style.orcidContent}>
+                  <p className={style.orcidDesc}>{t('orcidDesc')}</p>
+                  <div className={style.orcidId}>
+                    <OrcidIcon className={style.orcidLogo} />
+                    <span>{member.employee.orcid}</span>
+                  </div>
+                  <a
+                    href={`https://orcid.org/${member.employee.orcid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={style.orcidLink}
+                  >
+                    {t('viewOrcid')}{' '}
+                    <ExternalLink aria-hidden="true" size={14} />
+                  </a>
+                </div>
+              </InfoCard>
             )}
-          </div>
-
-          {/* ORCID Card */}
-          {member.employee.orcid && (
-            <div className={style.infoCard}>
-              <div className={style.cardHeader}>
-                <div className={style.cardIcon}>
-                  <OrcidIcon className={style.orcidLogo} />
-                </div>
-                <h2 className={style.cardTitle}>{t('orcidTitle')}</h2>
-              </div>
-
-              <div className={style.orcidContent}>
-                <p className={style.orcidDesc}>{t('orcidDesc')}</p>
-                <div className={style.orcidId}>
-                  <OrcidIcon className={style.orcidLogo} />
-                  <span>{member.employee.orcid}</span>
-                </div>
-                <a
-                  href={`https://orcid.org/${member.employee.orcid}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={style.orcidLink}
-                >
-                  {t('viewOrcid')} <ExternalLink aria-hidden="true" size={14} />
-                </a>
-              </div>
-            </div>
-          )}
-        </div>
-      </AnimateOnce>
+          </InfoGrid>
+        </AnimateOnce>
+      </div>
     </div>
   );
 }

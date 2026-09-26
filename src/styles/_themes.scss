@@ -13,10 +13,14 @@
   --color-tertiary: #{$color-tertiary};
   --color-neutral: #{$color-neutral};
 
-  // Semantic surface & text tokens for professional design consistency
+  // Semantic tokens: use these instead of raw colours in components
   --surface-muted: #f4f6f5;
-  --text-muted: #5a6a60;
+  --text-muted: #5a6a60; // 5.7:1 on white
   --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.18);
+  --color-warning: #8a6500; // 5.3:1 on white (the previous #b38600 was 3.3:1)
+  --color-danger: #dc2626;
+  --footer-bg: #1a2e23;
 
   // Multiplier for accessible font scaling, easily modified by JS
   // when a user requests larger text.

@@ -10,6 +10,7 @@
   // Row headers reuse the cell look instead of the column-header style
   tbody th {
     @include table-key-cell;
+
     font-size: 1.05em;
     text-transform: none;
     letter-spacing: normal;

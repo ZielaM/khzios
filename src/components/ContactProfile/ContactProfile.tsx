@@ -1,10 +1,14 @@
-import Image from 'next/image';
-import { Mail, Phone, MapPin, Clock, User } from 'lucide-react';
-import clsx from 'clsx';
-import style from './ContactProfile.module.scss';
-import AnimateOnce from '@/components/AnimateOnce';
+import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
-import { ReactNode } from 'react';
+import { Clock, Mail, MapPin } from 'lucide-react';
+import AnimateOnce from '@/components/AnimateOnce';
+import {
+  ContactDetails,
+  InfoCard,
+  InfoGrid,
+  ProfileHero,
+} from '@/components/Profile';
+import style from './ContactProfile.module.scss';
 
 export interface ContactProfileProps {
   name: string;
@@ -15,9 +19,11 @@ export interface ContactProfileProps {
   workingHours: { day: string; hours: string }[];
   photoUrl?: string;
   fallbackIcon?: ReactNode;
+  /** Heading of the hours card; "Working hours" by default */
   hoursTitle?: string;
 }
 
+/** Contact card for the secretariat and the head of department. */
 export default function ContactProfile({
   name,
   title,
@@ -29,135 +35,48 @@ export default function ContactProfile({
   fallbackIcon,
   hoursTitle,
 }: ContactProfileProps) {
-  const tMember = useTranslations('MemberProfile');
-
-  const contactLabel = tMember('contactTitle');
-  const emailLabel = tMember('emailLabel');
-  const phoneLabel = tMember('phoneLabel');
-  const hoursLabel = hoursTitle || tMember('hoursLabel');
-  const locationLabel = tMember('locationLabel');
-  const closedLabel = tMember('closedLabel');
-
-  const safeEmail = typeof email === 'string' ? email.trim() : '';
-  const safePhone = typeof phone === 'string' ? phone.trim() : '';
+  const t = useTranslations('MemberProfile');
 
   return (
     <div className={style.container}>
-      {/* Hero Card */}
       <AnimateOnce>
-        <div className={style.heroCard}>
-          <div className={style.avatarContainer}>
-            {photoUrl ? (
-              <Image
-                src={photoUrl}
-                alt={name}
-                fill
-                className={style.avatar}
-                sizes="150px"
-              />
-            ) : (
-              <div className={style.avatarFallback}>
-                {fallbackIcon || <User aria-hidden="true" size={64} />}
-              </div>
-            )}
-          </div>
-          <div className={style.heroInfo}>
-            {title && <span className={style.heroTitle}>{title}</span>}
-            <h1 className={style.heroName}>{name}</h1>
-          </div>
-        </div>
+        <ProfileHero
+          name={name}
+          title={title}
+          photoUrl={photoUrl}
+          fallbackIcon={fallbackIcon}
+        />
       </AnimateOnce>
 
-      {/* Info Cards Grid */}
       <AnimateOnce>
-        <div className={style.infoGrid}>
-          {/* Contact Card */}
-          <div className={style.infoCard}>
-            <div className={style.cardHeader}>
-              <div className={style.cardIcon}>
-                <Mail aria-hidden="true" size={20} />
-              </div>
-              <h2 className={style.cardTitle}>{contactLabel}</h2>
-            </div>
-            {safeEmail || safePhone ? (
-              <ul className={style.contactList}>
-                {safeEmail && (
-                  <li className={style.contactItem}>
-                    <div className={style.contactIconWrapper}>
-                      <Mail aria-hidden="true" size={18} />
-                    </div>
-                    <div>
-                      <div className={style.contactLabel}>{emailLabel}</div>
-                      <div className={style.contactValue}>
-                        <a
-                          href={`mailto:${email}`}
-                          className={style.contactLink}
-                        >
-                          {email}
-                        </a>
-                      </div>
-                    </div>
-                  </li>
-                )}
-                {phone && (
-                  <li className={style.contactItem}>
-                    <div className={style.contactIconWrapper}>
-                      <Phone aria-hidden="true" size={18} />
-                    </div>
-                    <div>
-                      <div className={style.contactLabel}>{phoneLabel}</div>
-                      <div className={style.contactValue}>
-                        <a
-                          href={`tel:${phone.replace(/\s/g, '')}`}
-                          className={style.contactLink}
-                        >
-                          {phone}
-                        </a>
-                      </div>
-                    </div>
-                  </li>
-                )}
-              </ul>
-            ) : (
-              <p className={style.noData}>{tMember('noContact')}</p>
-            )}
-          </div>
+        <InfoGrid>
+          <InfoCard icon={<Mail size={20} />} title={t('contactTitle')}>
+            <ContactDetails email={email} phone={phone} />
+          </InfoCard>
 
-          {/* Working Hours Card */}
-          <div className={clsx(style.infoCard, style.hoursCard)}>
-            <div className={style.cardHeader}>
-              <div className={style.cardIcon}>
-                <Clock aria-hidden="true" size={20} />
-              </div>
-              <h2 className={style.cardTitle}>{hoursLabel}</h2>
-            </div>
+          <InfoCard
+            icon={<Clock size={20} />}
+            title={hoursTitle || t('hoursLabel')}
+            className={style.hoursCard}
+          >
             <ul className={style.hoursList}>
-              {(Array.isArray(workingHours) ? workingHours : []).map(
-                (wh, idx) => (
-                  <li key={idx} className={style.hoursItem}>
-                    <span className={style.dayLabel}>{wh?.day}</span>
-                    <span className={style.hoursValue}>
-                      {wh?.hours || closedLabel}
-                    </span>
-                  </li>
-                )
-              )}
+              {(Array.isArray(workingHours) ? workingHours : []).map((wh) => (
+                <li key={wh.day} className={style.hoursItem}>
+                  <span className={style.dayLabel}>{wh.day}</span>
+                  <span className={style.hoursValue}>
+                    {wh.hours || t('closedLabel')}
+                  </span>
+                </li>
+              ))}
             </ul>
-          </div>
+          </InfoCard>
 
-          {/* Location Card */}
-          <div className={style.infoCard}>
-            <div className={style.cardHeader}>
-              <div className={style.cardIcon}>
-                <MapPin aria-hidden="true" size={20} />
-              </div>
-              <h2 className={style.cardTitle}>{locationLabel}</h2>
-            </div>
+          <InfoCard icon={<MapPin size={20} />} title={t('locationLabel')}>
             <div className={style.locationContent}>
               <p className={style.locationText}>{officeLocation}</p>
             </div>
-          </div>
-        </div>
+          </InfoCard>
+        </InfoGrid>
       </AnimateOnce>
     </div>
   );

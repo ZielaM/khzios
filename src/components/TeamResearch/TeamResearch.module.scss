@@ -9,6 +9,7 @@
 
 .sectionTitle {
   @include section-title;
+
   border-bottom: 2px solid rgba(0, 0, 0, 0.05);
   padding-bottom: 12px;
 
@@ -20,7 +21,7 @@
 .content {
   font-size: 1.1em;
   line-height: 1.7;
-  color: #333;
+  color: var(--foreground);
 
   p {
     margin-bottom: 16px;

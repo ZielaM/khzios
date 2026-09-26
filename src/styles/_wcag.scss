@@ -3,16 +3,17 @@
 // these global rules enforce a strict high-contrast color scheme (typically yellow on black).
 
 html.wcag-high-contrast {
-  --background: #000000;
-  --foreground: #ffff00;
+  --background: #000;
+  --foreground: #ff0;
+
   // Further boosts the contrast of images/UI elements globally
   filter: contrast(120%) saturate(120%);
 }
 
 // Force all borders and outlines to be visible against the black background
 html.wcag-high-contrast * {
-  border-color: #ffff00 !important;
-  outline-color: #ffff00 !important;
+  border-color: #ff0 !important;
+  outline-color: #ff0 !important;
 }
 
 // Ensure interactive elements have extremely clear visual affordances

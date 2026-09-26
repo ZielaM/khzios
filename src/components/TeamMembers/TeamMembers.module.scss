@@ -9,6 +9,7 @@
 
 .sectionTitle {
   @include section-title;
+
   border-bottom: 2px solid rgba(0, 0, 0, 0.05);
   padding-bottom: 12px;
 
@@ -67,6 +68,7 @@
     border: 2px solid var(--foreground);
     box-shadow: none;
     border-radius: 0;
+
     &:hover {
       transform: none;
     }
@@ -99,8 +101,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #888;
-  background-color: #f0f0f0;
+  color: var(--text-muted);
+  background-color: var(--surface-muted);
 
   :global(.wcag-high-contrast) & {
     background-color: transparent;
@@ -150,6 +152,7 @@
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
+
     &:hover {
       color: var(--foreground);
     }

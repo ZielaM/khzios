@@ -1,0 +1,182 @@
+@use './variables' as *;
+
+// Blocks shared by the section landing pages (About us, Structure):
+// a coloured page hero and cards linking to subpages.
+
+@mixin page-hero {
+  position: relative;
+  width: 100%;
+  padding: 48px 40px;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin-bottom: 48px;
+  text-align: center;
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    border: 2px solid var(--foreground);
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 32px 24px;
+    border-radius: $radius-lg;
+    margin-bottom: 32px;
+  }
+}
+
+@mixin page-hero-title {
+  font-family: var(--font-inter), sans-serif;
+  font-size: clamp(2em, 4vw, 3em);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 12px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+    text-shadow: none;
+  }
+}
+
+@mixin page-hero-desc {
+  font-size: 1.1em;
+  color: rgba(255, 255, 255, 0.95);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+// Expects the card's arrow icon to use the class .cardArrow
+@mixin link-card($padding: 28px) {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: $padding;
+  height: 100%;
+  background: var(--background);
+  border: 1px solid var(--border-subtle);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    transform: translateY($hover-lift);
+    box-shadow: $shadow-card-hover;
+    border-color: rgba($color-primary, 0.2);
+
+    .cardArrow {
+      transform: translateX(4px);
+      color: var(--color-primary);
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 4px;
+    border-color: transparent;
+  }
+
+  :global(.wcag-high-contrast) & {
+    border: 2px solid var(--foreground);
+    border-radius: 0;
+    box-shadow: none;
+
+    &:hover {
+      transform: none;
+      box-shadow: 0 0 12px var(--foreground);
+
+      .cardArrow {
+        color: var(--foreground);
+      }
+    }
+
+    &:focus-visible {
+      outline-color: var(--foreground);
+    }
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 24px;
+  }
+}
+
+@mixin card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-md;
+  background: rgba($color-primary, 0.08);
+  color: var(--color-primary);
+  flex-shrink: 0;
+
+  :global(.wcag-high-contrast) & {
+    background: transparent;
+    border: 2px solid var(--foreground);
+    color: var(--foreground);
+    border-radius: 0;
+  }
+}
+
+@mixin card-title {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 1.2em;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0;
+}
+
+@mixin card-desc {
+  font-size: 0.95em;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+@mixin card-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  font-size: 0.9em;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
+@mixin card-arrow {
+  transition: transform 0.2s ease;
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}

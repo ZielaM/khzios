@@ -18,6 +18,7 @@
 
 .sectionTitle {
   @include section-title;
+
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -51,7 +52,7 @@
   border-radius: $radius-md;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: var(--background);
-  color: #555;
+  color: var(--text-muted);
   font-size: 0.95em;
   font-weight: 600;
   cursor: pointer;
@@ -59,7 +60,7 @@
 
   &:hover {
     background: rgba(0, 0, 0, 0.03);
-    color: #222;
+    color: var(--foreground);
   }
 
   &.active {
@@ -162,7 +163,7 @@
 }
 
 .authors {
-  color: #444;
+  color: var(--foreground);
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -171,7 +172,7 @@
 
 .journal {
   font-style: italic;
-  color: #666;
+  color: var(--text-muted);
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -179,7 +180,7 @@
 }
 
 .funder {
-  color: #666;
+  color: var(--text-muted);
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);

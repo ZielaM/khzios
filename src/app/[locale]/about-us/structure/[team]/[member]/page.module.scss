@@ -4,128 +4,10 @@
   @include page-container;
 }
 
-/* ── Hero Card ─────────────────────────────────────────────────────── */
-
-.heroCard {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  padding: 40px;
-  background: var(--surface-muted);
-  border: 1px solid var(--border-subtle);
-  border-radius: $radius-xl;
-  margin-bottom: 32px;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -40px;
-    right: -40px;
-    width: 160px;
-    height: 160px;
-    background: radial-gradient(
-      circle,
-      rgba(36, 113, 81, 0.08) 0%,
-      transparent 70%
-    );
-    border-radius: 50%;
-    pointer-events: none;
-  }
-
-  @media (max-width: $breakpoint-tablet) {
-    flex-direction: column;
-    text-align: center;
-    padding: 28px 20px;
-    gap: 20px;
-  }
-
-  :global(.wcag-high-contrast) & {
-    border: 2px solid var(--foreground);
-    border-radius: 0;
-    background: transparent;
-
-    &::before {
-      display: none;
-    }
-  }
-}
-
-.avatarContainer {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.04);
-  flex-shrink: 0;
-  border: 3px solid rgba(36, 113, 81, 0.15);
-  box-shadow: 0 8px 24px rgba(36, 113, 81, 0.1);
-
-  @media (max-width: $breakpoint-tablet) {
-    width: 100px;
-    height: 100px;
-  }
-
-  :global(.wcag-high-contrast) & {
-    border-color: var(--foreground);
-    border-radius: 0;
-    box-shadow: none;
-  }
-}
-
-.avatar {
-  object-fit: cover;
-}
-
-.avatarFallback {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #888;
-  background-color: #f0f0f0;
-
-  :global(.wcag-high-contrast) & {
-    background-color: transparent;
-    color: var(--foreground);
-  }
-}
-
-.heroInfo {
+.profile {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  position: relative;
-  z-index: 1;
-}
-
-.heroTitle {
-  font-size: 0.9em;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--color-primary);
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
-  }
-}
-
-.heroName {
-  font-family: var(--font-inter), sans-serif;
-  font-size: 2em;
-  font-weight: 700;
-  color: var(--foreground);
-  letter-spacing: -0.02em;
-  margin: 0;
-  line-height: 1.2;
-
-  @media (max-width: $breakpoint-tablet) {
-    font-size: 1.6em;
-  }
+  gap: 32px;
 }
 
 .teamBadge {
@@ -134,7 +16,7 @@
   gap: 6px;
   font-size: 0.85em;
   font-weight: 500;
-  color: #666;
+  color: var(--text-muted);
   margin-top: 4px;
 
   :global(.wcag-high-contrast) & {
@@ -159,154 +41,6 @@
   }
 }
 
-/* ── Info Cards Grid ───────────────────────────────────────────────── */
-
-.infoGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-
-  @media (max-width: $breakpoint-tablet) {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
-
-.infoCard {
-  padding: 28px;
-  background-color: var(--background);
-  border: 1px solid var(--border-subtle);
-  border-radius: $radius-lg;
-  box-shadow: $shadow-card;
-  transition: box-shadow 0.2s ease;
-
-  &:hover {
-    box-shadow: $shadow-card-hover;
-  }
-
-  :global(.wcag-high-contrast) & {
-    border: 2px solid var(--foreground);
-    border-radius: 0;
-    box-shadow: none;
-
-    &:hover {
-      box-shadow: none;
-    }
-  }
-}
-
-.cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  padding-bottom: 14px;
-  border-bottom: 2px solid rgba(36, 113, 81, 0.1);
-
-  :global(.wcag-high-contrast) & {
-    border-color: var(--foreground);
-  }
-}
-
-.cardIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: $radius-md;
-  background: rgba($color-primary, 0.08);
-  color: var(--color-primary);
-  flex-shrink: 0;
-
-  :global(.wcag-high-contrast) & {
-    background: transparent;
-    border: 2px solid var(--foreground);
-    color: var(--foreground);
-    border-radius: 0;
-  }
-}
-
-.cardTitle {
-  font-family: var(--font-inter), sans-serif;
-  font-size: 1.25em;
-  font-weight: 700;
-  color: var(--foreground);
-  margin: 0;
-}
-
-.contactList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.contactItem {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.contactIconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: $radius-md;
-  background: rgba(0, 0, 0, 0.04);
-  color: #555;
-  flex-shrink: 0;
-
-  :global(.wcag-high-contrast) & {
-    background: transparent;
-    border: 1px solid var(--foreground);
-    color: var(--foreground);
-    border-radius: 0;
-  }
-}
-
-.contactLabel {
-  font-size: 0.8em;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #888;
-  margin-bottom: 2px;
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
-  }
-}
-
-.contactValue {
-  font-size: 1em;
-  font-weight: 600;
-  color: var(--foreground);
-}
-
-.contactLink {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: var(--color-secondary);
-    text-decoration: underline;
-  }
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
-    text-decoration: underline;
-  }
-}
-
-/* ── ORCID ─────────────────────────────────────────────────────────── */
-
 .orcidContent {
   display: flex;
   flex-direction: column;
@@ -315,7 +49,7 @@
 
 .orcidDesc {
   font-size: 0.9em;
-  color: #666;
+  color: var(--text-muted);
   margin: 0;
 
   :global(.wcag-high-contrast) & {
@@ -368,15 +102,5 @@
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
     text-decoration: underline;
-  }
-}
-
-.noData {
-  font-size: 0.95em;
-  color: #888;
-  font-style: italic;
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
   }
 }

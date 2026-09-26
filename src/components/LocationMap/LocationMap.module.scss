@@ -2,13 +2,13 @@
 
 .mapContainer {
   width: 100%;
-  border-radius: var(--radius-lg);
+  border-radius: $radius-lg;
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: $shadow-card;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  border: 1px solid var(--border-color);
-  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  background: var(--background);
 
   // Aspect ratio 16:9 for responsive height, with min-height
   aspect-ratio: 16 / 9;

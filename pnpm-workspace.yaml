@@ -9,3 +9,9 @@ allowBuilds:
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+# next: the image optimizer fetched local images through the visitor's
+# socket; once a visitor left mid-request, that image and width hung for
+# everyone until a restart. Recheck (and drop if fixed upstream) when
+# upgrading Next: pnpm refuses to install with a patch for a missing version.
+patchedDependencies:
+  next@16.1.6: patches/next@16.1.6.patch

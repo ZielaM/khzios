@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  next@16.1.6: 9a8e5105c49e1b8581adf76d38d2cbbe766070dd6115b2f8a9f1ae58a82045f5
+
 importers:
 
   .:
@@ -25,10 +28,10 @@ importers:
         version: 0.577.0(react@19.2.3)
       next:
         specifier: 16.1.6
-        version: 16.1.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0)
+        version: 16.1.6(patch_hash=9a8e5105c49e1b8581adf76d38d2cbbe766070dd6115b2f8a9f1ae58a82045f5)(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0)
       next-intl:
         specifier: ^4.11.0
-        version: 4.12.0(next@16.1.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0))(react@19.2.3)(typescript@5.9.3)
+        version: 4.12.0(next@16.1.6(patch_hash=9a8e5105c49e1b8581adf76d38d2cbbe766070dd6115b2f8a9f1ae58a82045f5)(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0))(react@19.2.3)(typescript@5.9.3)
       pg:
         specifier: ^8.20.0
         version: 8.21.0
@@ -6539,14 +6542,14 @@ snapshots:
 
   next-intl-swc-plugin-extractor@4.12.0: {}
 
-  next-intl@4.12.0(next@16.1.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0))(react@19.2.3)(typescript@5.9.3):
+  next-intl@4.12.0(next@16.1.6(patch_hash=9a8e5105c49e1b8581adf76d38d2cbbe766070dd6115b2f8a9f1ae58a82045f5)(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0))(react@19.2.3)(typescript@5.9.3):
     dependencies:
       '@formatjs/intl-localematcher': 0.8.8
       '@parcel/watcher': 2.5.6
       '@swc/core': 1.15.40
       icu-minify: 4.12.0
       negotiator: 1.0.0
-      next: 16.1.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0)
+      next: 16.1.6(patch_hash=9a8e5105c49e1b8581adf76d38d2cbbe766070dd6115b2f8a9f1ae58a82045f5)(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0)
       next-intl-swc-plugin-extractor: 4.12.0
       po-parser: 2.1.1
       react: 19.2.3
@@ -6556,7 +6559,7 @@ snapshots:
     transitivePeerDependencies:
       - '@swc/helpers'
 
-  next@16.1.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0):
+  next@16.1.6(patch_hash=9a8e5105c49e1b8581adf76d38d2cbbe766070dd6115b2f8a9f1ae58a82045f5)(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.100.0):
     dependencies:
       '@next/env': 16.1.6
       '@swc/helpers': 0.5.15

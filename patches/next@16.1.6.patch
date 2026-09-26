@@ -1,0 +1,14 @@
+diff --git a/dist/server/image-optimizer.js b/dist/server/image-optimizer.js
+index 7c8df2a96a447e4f050bc5a3f9fdb419bde777ee..1c5349b0a4efe82e92af16d902fbe7525e3ab91f 100644
+--- a/dist/server/image-optimizer.js
++++ b/dist/server/image-optimizer.js
+@@ -891,8 +891,7 @@ async function fetchInternalImage(href, _req, _res, handleRequest) {
+     try {
+         const mocked = (0, _mockrequest.createRequestResponseMocks)({
+             url: href,
+-            method: _req.method || 'GET',
+-            socket: _req.socket
++            method: _req.method || 'GET'
+         });
+         await handleRequest(mocked.req, mocked.res, _url.default.parse(href, true));
+         await mocked.res.hasStreamed;

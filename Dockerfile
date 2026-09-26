@@ -10,6 +10,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # ── Dependencies (cached until the lockfile changes) ───────────────────
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 RUN pnpm install --frozen-lockfile
 
 # ── Build: no database access required ──────────────────────────────────

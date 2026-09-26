@@ -8,6 +8,25 @@ import { seedDocuments } from './seed-documents';
 import { seedAdmin } from './seed-admin';
 import { seedSiteImages } from './seed-site-images';
 
+/**
+ * Runs `task(0..count-1)`, `size` at a time. Each nested create is atomic on
+ * its own; a single interactive transaction around a loop would exceed its
+ * timeout on a remote database (~190 ms per query to Neon) and roll back
+ * halfway through a nested write.
+ */
+async function inBatches(
+  count: number,
+  task: (i: number) => Promise<unknown>,
+  size = 10
+) {
+  for (let start = 0; start < count; start += size) {
+    const end = Math.min(start + size, count);
+    await Promise.all(
+      Array.from({ length: end - start }, (_, k) => task(start + k))
+    );
+  }
+}
+
 const getRandomMultiple = <T>(arr: T[], count: number) => {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
@@ -313,83 +332,76 @@ async function main() {
     },
   ];
 
-  await prisma.$transaction(
-    async (tx) => {
-      for (let i = 0; i < 100; i++) {
-        const prefixIdx = i % titlePrefixes.pl.length;
-        const subjectIdx = i % titleSubjects.pl.length;
+  await inBatches(100, async (i) => {
+    const prefixIdx = i % titlePrefixes.pl.length;
+    const subjectIdx = i % titleSubjects.pl.length;
 
-        const titlePl = `${titlePrefixes.pl[prefixIdx]} ${titleSubjects.pl[subjectIdx]} (#${i + 1})`;
-        const titleEn = `${titlePrefixes.en[prefixIdx]} ${titleSubjects.en[subjectIdx]} (#${i + 1})`;
-        const titleUk = `${titlePrefixes.uk[prefixIdx]} ${titleSubjects.uk[subjectIdx]} (#${i + 1})`;
-        const titleRu = `${titlePrefixes.ru[prefixIdx]} ${titleSubjects.ru[subjectIdx]} (#${i + 1})`;
+    const titlePl = `${titlePrefixes.pl[prefixIdx]} ${titleSubjects.pl[subjectIdx]} (#${i + 1})`;
+    const titleEn = `${titlePrefixes.en[prefixIdx]} ${titleSubjects.en[subjectIdx]} (#${i + 1})`;
+    const titleUk = `${titlePrefixes.uk[prefixIdx]} ${titleSubjects.uk[subjectIdx]} (#${i + 1})`;
+    const titleRu = `${titlePrefixes.ru[prefixIdx]} ${titleSubjects.ru[subjectIdx]} (#${i + 1})`;
 
-        const contentPl = contentGenerators.pl(titleSubjects.pl[subjectIdx], i);
-        const contentEn = contentGenerators.en(titleSubjects.en[subjectIdx], i);
-        const contentUk = contentGenerators.uk(titleSubjects.uk[subjectIdx], i);
-        const contentRu = contentGenerators.ru(titleSubjects.ru[subjectIdx], i);
+    const contentPl = contentGenerators.pl(titleSubjects.pl[subjectIdx], i);
+    const contentEn = contentGenerators.en(titleSubjects.en[subjectIdx], i);
+    const contentUk = contentGenerators.uk(titleSubjects.uk[subjectIdx], i);
+    const contentRu = contentGenerators.ru(titleSubjects.ru[subjectIdx], i);
 
-        const isPublished = i % 10 !== 0; // 90% published
+    const isPublished = i % 10 !== 0; // 90% published
 
-        // First 7 articles (i=0..6) use deterministic tags for reliable E2E testing.
-        // Remaining articles use random tags for realistic data variety.
-        // See e2e/article-details.spec.ts for the full article layout reference.
-        const deterministicTagMap: Record<number, number[]> = {
-          1: [0], // 1 photo, 1 tag  (Swine Breeding)
-          2: [1, 2], // 2 photos, 2 tags (Product Evaluation, Poultry)
-          3: [3, 4, 5], // 3 photos, 3 tags (Fur Animals, Events, Publications)
-          4: [0, 6], // 4 photos, 2 tags (Swine Breeding, Research)
-          5: [1, 2, 3], // 5 photos, 3 tags (Product Eval, Poultry, Fur Animals)
-          6: [4], // 0 photos, 1 tag  (Events) — no gallery
-        };
-        const articleTags =
-          i in deterministicTagMap
-            ? deterministicTagMap[i].map((idx) => createdTags[idx])
-            : getRandomMultiple(createdTags, (i % 3) + 1);
+    // First 7 articles (i=0..6) use deterministic tags for reliable E2E testing.
+    // Remaining articles use random tags for realistic data variety.
+    // See e2e/article-details.spec.ts for the full article layout reference.
+    const deterministicTagMap: Record<number, number[]> = {
+      1: [0], // 1 photo, 1 tag  (Swine Breeding)
+      2: [1, 2], // 2 photos, 2 tags (Product Evaluation, Poultry)
+      3: [3, 4, 5], // 3 photos, 3 tags (Fur Animals, Events, Publications)
+      4: [0, 6], // 4 photos, 2 tags (Swine Breeding, Research)
+      5: [1, 2, 3], // 5 photos, 3 tags (Product Eval, Poultry, Fur Animals)
+      6: [4], // 0 photos, 1 tag  (Events) — no gallery
+    };
+    const articleTags =
+      i in deterministicTagMap
+        ? deterministicTagMap[i].map((idx) => createdTags[idx])
+        : getRandomMultiple(createdTags, (i % 3) + 1);
 
-        const photoCount = i % 6; // 0 to 5 photos per gallery
-        const photos = Array.from({ length: photoCount }).map((_, pIdx) => {
-          const image = images[pIdx % images.length];
-          return {
-            url: image.url,
-            translations: {
-              create: (['pl', 'en', 'uk', 'ru'] as const).map((lc) => ({
-                languageCode: lc,
-                alt: image.alt[lc],
-              })),
-            },
-          };
-        });
+    const photoCount = i % 6; // 0 to 5 photos per gallery
+    const photos = Array.from({ length: photoCount }).map((_, pIdx) => {
+      const image = images[pIdx % images.length];
+      return {
+        url: image.url,
+        translations: {
+          create: (['pl', 'en', 'uk', 'ru'] as const).map((lc) => ({
+            languageCode: lc,
+            alt: image.alt[lc],
+          })),
+        },
+      };
+    });
 
-        // Date spread over the last year
-        const date = new Date();
-        date.setDate(date.getDate() - i * 3); // every 3 days
+    // Date spread over the last year
+    const date = new Date();
+    date.setDate(date.getDate() - i * 3); // every 3 days
 
-        await tx.news.create({
-          data: {
-            published: isPublished,
-            createdAt: date,
-            publishedAt: date,
-            tags: {
-              connect: articleTags.map((t) => ({ id: t.id })),
-            },
-            photos: { create: photos },
-            translations: {
-              create: [
-                { languageCode: 'pl', title: titlePl, content: contentPl },
-                { languageCode: 'en', title: titleEn, content: contentEn },
-                { languageCode: 'uk', title: titleUk, content: contentUk },
-                { languageCode: 'ru', title: titleRu, content: contentRu },
-              ],
-            },
-          },
-        });
-      }
-    },
-    {
-      timeout: 150000, // Extend timeout for 100 articles
-    }
-  );
+    await prisma.news.create({
+      data: {
+        published: isPublished,
+        createdAt: date,
+        publishedAt: date,
+        tags: {
+          connect: articleTags.map((t) => ({ id: t.id })),
+        },
+        photos: { create: photos },
+        translations: {
+          create: [
+            { languageCode: 'pl', title: titlePl, content: contentPl },
+            { languageCode: 'en', title: titleEn, content: contentEn },
+            { languageCode: 'uk', title: titleUk, content: contentUk },
+            { languageCode: 'ru', title: titleRu, content: contentRu },
+          ],
+        },
+      },
+    });
+  });
 
   console.log('Utworzono 100 unikalnych, bogatych w HTML artykułów.');
 
@@ -412,43 +424,38 @@ async function main() {
   await seedDocuments();
 
   console.log('Generowanie dodatkowych 50 publikacji naukowych...');
-  await prisma.$transaction(
-    async (tx) => {
-      for (let i = 0; i < 50; i++) {
-        const year = 2015 + (i % 10);
+  await inBatches(50, async (i) => {
+    const year = 2015 + (i % 10);
 
-        await tx.publication.create({
-          data: {
-            year,
-            authors: `Author ${i + 1}, Co-author A., Co-author B.`,
-            journal: `Journal of Animal Science #${(i % 5) + 1}`,
-            doi: `10.1016/j.animal.${year}.${i}`,
-            translations: {
-              create: [
-                {
-                  languageCode: 'pl',
-                  title: `Przykładowa publikacja naukowa #${i + 1} dotycząca zaawansowanych badań`,
-                },
-                {
-                  languageCode: 'en',
-                  title: `Sample scientific publication #${i + 1} regarding advanced research`,
-                },
-                {
-                  languageCode: 'uk',
-                  title: `Приклад наукової публікації #${i + 1} щодо передових досліджень`,
-                },
-                {
-                  languageCode: 'ru',
-                  title: `Пример научной публикации #${i + 1} о передовых исследованиях`,
-                },
-              ],
+    await prisma.publication.create({
+      data: {
+        year,
+        authors: `Author ${i + 1}, Co-author A., Co-author B.`,
+        journal: `Journal of Animal Science #${(i % 5) + 1}`,
+        doi: `10.1016/j.animal.${year}.${i}`,
+        translations: {
+          create: [
+            {
+              languageCode: 'pl',
+              title: `Przykładowa publikacja naukowa #${i + 1} dotycząca zaawansowanych badań`,
             },
-          },
-        });
-      }
-    },
-    { timeout: 30000 }
-  );
+            {
+              languageCode: 'en',
+              title: `Sample scientific publication #${i + 1} regarding advanced research`,
+            },
+            {
+              languageCode: 'uk',
+              title: `Приклад наукової публікації #${i + 1} щодо передових досліджень`,
+            },
+            {
+              languageCode: 'ru',
+              title: `Пример научной публикации #${i + 1} о передовых исследованиях`,
+            },
+          ],
+        },
+      },
+    });
+  });
 
   console.log('Populacja bazy zakończona sukcesem!');
 }

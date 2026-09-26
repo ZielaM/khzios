@@ -8,16 +8,20 @@ vi.mock('@/lib/news-queries', () => ({
   getRecentNews: vi.fn(),
 }));
 
+vi.mock('next-intl/server', () => ({
+  getTranslations: vi.fn().mockResolvedValue((key: string) => key),
+}));
+
 describe('RecentNewsServer Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders nothing when there is no news', async () => {
+  it('says so when there is no news', async () => {
     vi.mocked(getRecentNews).mockResolvedValue([]);
-    const jsx = await RecentNewsServer({ locale: 'en' });
+    render(await RecentNewsServer({ locale: 'en' }));
 
-    expect(jsx).toBeNull();
+    expect(screen.getByText('noNews')).toBeInTheDocument();
   });
 
   it('shows the latest article as the lead and the next four as a list', async () => {
@@ -25,7 +29,7 @@ describe('RecentNewsServer Component', () => {
       ['1', '2', '3', '4', '5'].map((id) => makeNews(id))
     );
     const jsx = await RecentNewsServer({ locale: 'en' });
-    render(jsx!);
+    render(jsx);
 
     expect(getRecentNews).toHaveBeenCalledWith(5);
     expect(screen.getAllByRole('article')).toHaveLength(5);

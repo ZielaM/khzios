@@ -21,7 +21,8 @@
     "statTeams": "{count, plural, one {<num>#</num> группа} few {<num>#</num> группы} many {<num>#</num> групп} other {<num>#</num> группы}}",
     "statEmployees": "{count, plural, one {<num>#</num> сотрудник} few {<num>#</num> сотрудника} many {<num>#</num> сотрудников} other {<num>#</num> сотрудника}}",
     "statPublications": "{count, plural, one {<num>#</num> публикация за последние {years} лет} few {<num>#</num> публикации за последние {years} лет} many {<num>#</num> публикаций за последние {years} лет} other {<num>#</num> публикации за последние {years} лет}}",
-    "statsLabel": "Кафедра в цифрах"
+    "statsLabel": "Кафедра в цифрах",
+    "noNews": "Новостей пока нет."
   },
   "Breadcrumbs": {
     "label": "Навигационная цепочка",

@@ -1,0 +1,59 @@
+@use '@/styles/variables' as *;
+
+.block,
+.line {
+  @include skeleton-pulse;
+
+  display: block;
+  border-radius: $radius-sm;
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.line {
+  height: 1rem;
+
+  &:last-child {
+    width: 65%;
+  }
+}
+
+.header {
+  padding: 1rem 0 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.crumbs {
+  width: 14rem;
+  height: 0.8rem;
+}
+
+.headerBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem 2.5rem;
+  margin-top: 1.25rem;
+
+  @media (min-width: $breakpoint-tablet) {
+    &.withImage {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      align-items: center;
+    }
+  }
+}
+
+.title {
+  width: min(22rem, 80%);
+  height: 2.6rem;
+}
+
+.image {
+  aspect-ratio: 4 / 3;
+  border-radius: $radius-lg;
+}

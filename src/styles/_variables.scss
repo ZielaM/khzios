@@ -169,6 +169,10 @@ $skeleton-highlight-hc: rgba(255, 255, 255, 0.2);
     );
     background-size: 1000px 100%;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 @mixin skeleton-pulse {
@@ -177,5 +181,9 @@ $skeleton-highlight-hc: rgba(255, 255, 255, 0.2);
 
   :global(.wcag-high-contrast) & {
     background-color: $skeleton-highlight-hc;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
   }
 }

@@ -21,7 +21,8 @@
     "statTeams": "{count, plural, one {<num>#</num> team} other {<num>#</num> teams}}",
     "statEmployees": "{count, plural, one {<num>#</num> staff member} other {<num>#</num> staff members}}",
     "statPublications": "{count, plural, one {<num>#</num> publication in the last {years} years} other {<num>#</num> publications in the last {years} years}}",
-    "statsLabel": "The department in numbers"
+    "statsLabel": "The department in numbers",
+    "noNews": "There is no news yet."
   },
   "Breadcrumbs": {
     "label": "Breadcrumb",

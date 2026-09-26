@@ -23,6 +23,15 @@
   }
 }
 
+.empty {
+  padding: 1.5rem 0;
+  color: var(--text-muted);
+
+  :global(.wcag-high-contrast) & {
+    color: var(--foreground);
+  }
+}
+
 .skeletonLead,
 .skeletonRow {
   @include skeleton-pulse;

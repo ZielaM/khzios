@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { getRecentNews } from '@/lib/news-queries';
 import NewsListItem from '@/components/NewsListItem';
 import styles from './RecentNews.module.scss';
@@ -5,7 +6,10 @@ import styles from './RecentNews.module.scss';
 /** Home page news: the latest article large, the next four as a list. */
 export default async function RecentNewsServer({ locale }: { locale: string }) {
   const [lead, ...rest] = await getRecentNews(5);
-  if (!lead) return null;
+  if (!lead) {
+    const t = await getTranslations('HomePage');
+    return <p className={styles.empty}>{t('noNews')}</p>;
+  }
 
   return (
     <div className={styles.layout}>

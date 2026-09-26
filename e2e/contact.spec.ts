@@ -26,7 +26,9 @@ test.describe('Contact Page Navigation Spec', () => {
 
     await expect(heading).toHaveText('Contact');
     await expect(
-      page.getByRole('heading', { level: 2, name: 'Contact', exact: true })
+      page
+        .getByRole('main')
+        .getByRole('heading', { level: 2, name: 'Contact', exact: true })
     ).toBeVisible();
 
     // Check for standard icons/labels rendered by ContactProfile

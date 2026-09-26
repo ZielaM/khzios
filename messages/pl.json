@@ -21,7 +21,8 @@
     "statTeams": "{count, plural, one {<num>#</num> zespół} few {<num>#</num> zespoły} many {<num>#</num> zespołów} other {<num>#</num> zespołu}}",
     "statEmployees": "{count, plural, one {<num>#</num> pracownik} few {<num>#</num> pracowników} many {<num>#</num> pracowników} other {<num>#</num> pracownika}}",
     "statPublications": "{count, plural, one {<num>#</num> publikacja z ostatnich {years} lat} few {<num>#</num> publikacje z ostatnich {years} lat} many {<num>#</num> publikacji z ostatnich {years} lat} other {<num>#</num> publikacji z ostatnich {years} lat}}",
-    "statsLabel": "Katedra w liczbach"
+    "statsLabel": "Katedra w liczbach",
+    "noNews": "Nie ma jeszcze aktualności."
   },
   "Breadcrumbs": {
     "label": "Ścieżka nawigacji",

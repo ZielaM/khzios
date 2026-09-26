@@ -4,27 +4,8 @@
   @include page-container;
 }
 
-.skeletonHeader {
-  padding: 3rem 0 2rem;
-  margin-bottom: 2.5rem;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.skeletonTitle,
-.skeletonSearch {
-  @include skeleton-pulse;
-
-  display: block;
-  border-radius: $radius-md;
-}
-
-.skeletonTitle {
-  width: 14rem;
-  height: 2.6rem;
-  margin-bottom: 1.75rem;
-}
-
 .skeletonSearch {
   max-width: 760px;
   height: 3rem;
+  margin: -1rem 0 2.5rem;
 }

@@ -86,30 +86,7 @@
     flex: 2;
   }
 
-  @media (max-width: $breakpoint-tablet) {
-    position: fixed;
-    top: $navbar-height;
-    left: 0;
-    width: 100%;
-    height: calc(100vh - #{$navbar-height});
-    background-color: var(--background);
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 2rem 1rem;
-    overflow-y: auto; // Allow scrolling if menu items exceed screen height
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-20px);
-    transition: all 0.3s ease;
-
-    &.mobileOpen {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-  }
-
-  :global(.compact-layout-sm) & {
+  @include compact-nav {
     flex: unset;
     position: fixed;
     top: $navbar-height;
@@ -119,7 +96,7 @@
     background-color: var(--background);
     flex-direction: column;
     justify-content: flex-start;
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem 2rem;
     overflow-y: auto;
     opacity: 0;
     visibility: hidden;
@@ -191,19 +168,11 @@
     flex: 1;
   }
 
-  @media (max-width: $breakpoint-tablet) {
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-    margin-bottom: 2rem;
-  }
-
-  :global(.compact-layout-sm) & {
+  @include compact-nav {
     flex: unset;
     flex-direction: column;
     gap: 1.5rem;
     width: 100%;
-    margin-bottom: 2rem;
   }
 }
 
@@ -218,14 +187,14 @@
     flex: 1;
   }
 
-  @media (max-width: $breakpoint-tablet) {
-    width: 100%;
-    justify-content: center;
-  }
-
-  :global(.compact-layout-sm) & {
+  // Language and accessibility settings first in the opened menu
+  @include compact-nav {
+    order: -1;
     flex: unset;
     width: 100%;
     justify-content: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-subtle);
   }
 }

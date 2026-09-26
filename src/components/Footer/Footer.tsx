@@ -2,7 +2,7 @@ import styles from './Footer.module.scss';
 import { Phone, Mail } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { DEPARTMENT_CONTACT } from '@/lib/contact';
+import { DEPARTMENT_CONTACT, telHref } from '@/lib/contact';
 
 const Footer = () => {
   const t = useTranslations('Footer');
@@ -11,9 +11,9 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <div className={styles.column}>
-          <h3 className={styles.brandTitle}>
+          <p className={styles.brandTitle}>
             {t.rich('brandTitle', { br: () => <br /> })}
-          </h3>
+          </p>
           <div className={styles.addressInfo}>
             <p>{t('university')}</p>
             <p>{t('faculty')}</p>
@@ -22,7 +22,7 @@ const Footer = () => {
         </div>
 
         <div className={styles.column}>
-          <h4 className={styles.colTitle}>{t('quickLinks')}</h4>
+          <h2 className={styles.colTitle}>{t('quickLinks')}</h2>
           <ul className={styles.linksList}>
             <li>
               <a href="https://www.up.poznan.pl/">{t('upPoznan')}</a>
@@ -39,15 +39,19 @@ const Footer = () => {
         {/* The wrapper pushes the copyright to the bottom of the column */}
         <div className={styles.columnWrapper}>
           <div className={styles.column}>
-            <h4 className={styles.colTitle}>{t('contactTitle')}</h4>
+            <h2 className={styles.colTitle}>{t('contactTitle')}</h2>
             <ul className={styles.contactList}>
               <li>
                 <Phone aria-hidden="true" className={styles.icon} size={20} />
-                <span>{DEPARTMENT_CONTACT.phone}</span>
+                <a href={telHref(DEPARTMENT_CONTACT.phone)}>
+                  {DEPARTMENT_CONTACT.phone}
+                </a>
               </li>
               <li>
                 <Mail aria-hidden="true" className={styles.icon} size={20} />
-                <span>{DEPARTMENT_CONTACT.email}</span>
+                <a href={`mailto:${DEPARTMENT_CONTACT.email}`}>
+                  {DEPARTMENT_CONTACT.email}
+                </a>
               </li>
             </ul>
           </div>

@@ -43,6 +43,7 @@
 }
 
 .brandTitle {
+  font-family: $font-serif;
   color: rgba(255, 255, 255, 0.95);
   font-size: 1.25em;
   font-weight: 700;
@@ -70,7 +71,8 @@
 }
 
 .colTitle {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: $font-sans;
   font-size: 0.85em;
   font-weight: 700;
   margin: 0;
@@ -89,9 +91,9 @@
   gap: 1.1rem;
 
   li a {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    font-size: 0.875em;
+    font-size: 0.925em;
     font-weight: 500;
     transition: color 0.2s ease;
 
@@ -123,11 +125,26 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 0.875em;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.925em;
     font-weight: 600;
 
     :global(.wcag-high-contrast) & {
+      color: var(--foreground);
+    }
+  }
+
+  a {
+    color: inherit;
+
+    &:hover,
+    &:focus-visible {
+      color: #fff;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    :global(.wcag-high-contrast) &:hover {
       color: var(--foreground);
     }
   }
@@ -146,10 +163,9 @@
 
 .copyright {
   margin-top: 3rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.65em;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8em;
   line-height: 1.6;
-  font-weight: 600;
 
   p {
     margin: 0;

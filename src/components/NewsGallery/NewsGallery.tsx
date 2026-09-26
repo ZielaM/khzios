@@ -138,25 +138,33 @@ export default function NewsGallery({
   return (
     <>
       <section className={style.gallery}>
-        {photos.map((photo, index) => (
-          <button
-            key={photo.id}
-            className={style.galleryImageWrapper}
-            onClick={() => openLightbox(index)}
-            aria-label={t('imageCounter', {
-              current: index + 1,
-              total: photos.length,
-            })}
-          >
-            <Image
-              src={photo.url}
-              alt={altFor(index)}
-              fill
-              className={style.galleryImage}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          </button>
-        ))}
+        {photos.map((photo, index) => {
+          // Only a description written for the photo makes a useful caption
+          const caption = getPhotoAlt(photo, locale, '');
+          return (
+            <figure key={photo.id} className={style.item}>
+              <button
+                className={style.galleryImageWrapper}
+                onClick={() => openLightbox(index)}
+                aria-label={t('imageCounter', {
+                  current: index + 1,
+                  total: photos.length,
+                })}
+              >
+                <Image
+                  src={photo.url}
+                  alt={altFor(index)}
+                  fill
+                  className={style.galleryImage}
+                  sizes="(max-width: 768px) 50vw, 240px"
+                />
+              </button>
+              {caption && (
+                <figcaption className={style.caption}>{caption}</figcaption>
+              )}
+            </figure>
+          );
+        })}
       </section>
 
       {selectedIndex !== null && (

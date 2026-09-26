@@ -1,17 +1,30 @@
 @use '@/styles/variables' as *;
 
-// Main container for the News page
 .main {
-  max-width: $max-width-content;
-  margin: 0 auto;
-  padding: $page-padding-top 4rem;
+  @include page-container;
+}
 
-  // Increase top padding on mobile/compact to avoid overlapping with the fixed navbar
-  @media (max-width: $breakpoint-tablet) {
-    padding: $page-padding-top-mobile 1rem 2rem;
-  }
+.skeletonHeader {
+  padding: 3rem 0 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
 
-  :global(.compact-layout-sm) & {
-    padding: $page-padding-top-mobile 1rem 2rem;
-  }
+.skeletonTitle,
+.skeletonSearch {
+  @include skeleton-pulse;
+
+  display: block;
+  border-radius: $radius-md;
+}
+
+.skeletonTitle {
+  width: 14rem;
+  height: 2.6rem;
+  margin-bottom: 1.75rem;
+}
+
+.skeletonSearch {
+  max-width: 760px;
+  height: 3rem;
 }

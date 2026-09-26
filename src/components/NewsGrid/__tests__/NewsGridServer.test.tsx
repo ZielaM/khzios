@@ -58,7 +58,7 @@ describe('NewsGridServer', () => {
     });
   });
 
-  it('renders a tile per result and pagination links', async () => {
+  it('renders a row per result and pagination links', async () => {
     vi.mocked(searchNews).mockResolvedValue({
       data: [makeNews('1'), makeNews('2')],
       total: 30,
@@ -68,7 +68,7 @@ describe('NewsGridServer', () => {
 
     render(await NewsGridServer(baseProps));
 
-    expect(screen.getAllByTestId('news-tile')).toHaveLength(2);
+    expect(screen.getAllByRole('article')).toHaveLength(2);
     expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
 

@@ -14,7 +14,6 @@ test.describe('News Search & Filtering Spec', () => {
     await page.waitForLoadState('load');
 
     const searchInput = page.getByTestId('search-input');
-    await page.getByRole('button', { name: 'Search news...' }).click();
     await expect(searchInput).toBeVisible();
 
     // 1. Initial State: URL has no query parameters
@@ -44,7 +43,6 @@ test.describe('News Search & Filtering Spec', () => {
 
     // Use standard accessibility role/aria-label to locate the Sort By dropdown
     const sortSelect = page.getByLabel('Sort by');
-    await page.getByRole('button', { name: 'Search news...' }).click();
 
     // 1. Initial State: No query, so sorting dropdown should NOT be visible/rendered and sort=date should be present
     await expect(sortSelect).not.toBeVisible();
@@ -62,8 +60,6 @@ test.describe('News Search & Filtering Spec', () => {
   test('should filter by a tag chip and update the URL', async ({ page }) => {
     await page.goto('/en/news');
     await page.waitForLoadState('load');
-
-    await page.getByRole('button', { name: 'Search news...' }).click();
 
     const tags = page.getByRole('group', { name: 'Topics' });
     const firstTag = tags.getByRole('button').first();

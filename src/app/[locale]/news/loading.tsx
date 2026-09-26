@@ -1,32 +1,15 @@
-import style from './page.module.scss';
-import NewsSearchForm from '@/components/NewsSearchForm';
 import NewsGridSkeleton from '@/components/NewsGrid/NewsGridSkeleton';
+import style from './page.module.scss';
 
+// No translations here: loading.tsx gets no params, so next-intl would read
+// the locale from the request headers and make every page below dynamic
 export default function Loading() {
   return (
-    <div className={style.main}>
-      <div className={style.topBar}>
-        <div
-          style={{
-            opacity: 0.5,
-            pointerEvents: 'none',
-            width: '150px',
-            height: '40px',
-            background: 'rgba(0,0,0,0.05)',
-            borderRadius: '8px',
-          }}
-        />
-
-        {/* Inline styles are used here to avoid adding a new className just for skeleton */}
-        <div style={{ opacity: 0.5, pointerEvents: 'none' }}>
-          <NewsSearchForm
-            initialSort="relevance"
-            availableTags={[]}
-            isSkeleton={true}
-          />
-        </div>
+    <div className={style.main} aria-hidden="true">
+      <div className={style.skeletonHeader}>
+        <span className={style.skeletonTitle} />
+        <span className={style.skeletonSearch} />
       </div>
-
       <NewsGridSkeleton />
     </div>
   );

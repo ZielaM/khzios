@@ -1,80 +1,24 @@
 @use '@/styles/variables' as *;
 
-%skeleton-base {
+.relatedSkeleton {
+  max-width: $measure;
+  margin-top: 4rem;
+}
+
+.title,
+.row {
   @include skeleton-pulse;
 
-  border-radius: 8px;
+  border-radius: $radius-sm;
 }
 
-.relatedSkeleton {
-  border-top: 2px solid rgba(0, 0, 0, 0.06);
-  padding-top: 48px;
-
-  :global(.wcag-high-contrast) & {
-    border-color: var(--foreground);
-  }
+.title {
+  width: 10rem;
+  height: 1.8rem;
+  margin-bottom: 1.5rem;
 }
 
-.relatedSkeletonTitle {
-  @extend %skeleton-base;
-
-  height: 28px;
-  width: 180px;
-  margin-bottom: 32px;
-  border-radius: 6px;
-}
-
-.relatedSkeletonGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 24px;
-}
-
-.relatedSkeletonCard {
-  border-radius: $radius-lg;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.02);
-
-  :global(.wcag-high-contrast) & {
-    border: 2px solid var(--foreground);
-  }
-}
-
-.relatedSkeletonImage {
-  @extend %skeleton-base;
-
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  border-radius: 0;
-}
-
-.relatedSkeletonContent {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.relatedSkeletonDate {
-  @extend %skeleton-base;
-
-  height: 12px;
-  width: 100px;
-  border-radius: 4px;
-}
-
-.relatedSkeletonCardTitle {
-  @extend %skeleton-base;
-
-  height: 16px;
-  width: 90%;
-  border-radius: 4px;
-}
-
-.relatedSkeletonCardTitleShort {
-  @extend %skeleton-base;
-
-  height: 16px;
-  width: 60%;
-  border-radius: 4px;
+.row {
+  height: 90px;
+  margin-bottom: 1rem;
 }

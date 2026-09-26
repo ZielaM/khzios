@@ -270,39 +270,16 @@ describe('NewsSearchForm', () => {
     );
   });
 
-  it('expands and collapses correctly', () => {
+  it('shows the search field and labelled filters right away', () => {
     render(<NewsSearchForm {...defaultProps} />);
 
-    const container = screen.getByTestId('news-search-form');
-    expect(container.className).toContain('collapsed');
-
-    const expandButton = screen.getByRole('button', {
-      name: 'searchPlaceholder',
-    });
-    fireEvent.click(expandButton);
-
-    expect(container.className).toContain('expanded');
-
-    // Click on the container when already expanded (covers line 269 false branch)
-    fireEvent.click(container);
-    expect(container.className).toContain('expanded');
-
-    // Clicking inside the container should not collapse it (covers line 155 false branch)
-    const input = screen.getByRole('textbox', { name: 'searchPlaceholder' });
-    fireEvent.mouseDown(input);
-    expect(container.className).toContain('expanded');
-
-    // Clicking outside collapses it
-    fireEvent.mouseDown(document.body);
-    expect(container.className).toContain('collapsed');
-
-    // Expand again, then type something
-    fireEvent.click(expandButton);
-    fireEvent.change(input, { target: { value: 'test query' } });
-
-    // Clicking outside should NOT collapse it when query is present
-    fireEvent.mouseDown(document.body);
-    expect(container.className).toContain('expanded');
+    expect(
+      screen.getByRole('textbox', { name: 'searchPlaceholder' })
+    ).toBeVisible();
+    expect(screen.getByLabelText('dateFrom')).toBeInTheDocument();
+    expect(screen.getByLabelText('dateTo')).toBeInTheDocument();
+    // Sorting by relevance needs a query
+    expect(screen.queryByLabelText('sortBy')).not.toBeInTheDocument();
   });
 
   it('handles date filters', () => {
@@ -314,41 +291,17 @@ describe('NewsSearchForm', () => {
       />
     );
 
-    // Expand search form
-    const expandButton = screen.getByRole('button', {
-      name: 'searchPlaceholder',
-    });
-    fireEvent.click(expandButton);
+    const from = screen.getByLabelText('dateFrom') as HTMLInputElement;
+    const to = screen.getByLabelText('dateTo') as HTMLInputElement;
+    expect(from.value).toBe('2026-01-01');
+    expect(to.value).toBe('2026-12-31');
 
-    const inputs = screen
-      .getAllByRole('textbox')
-      .filter(
-        (i) => (i as HTMLInputElement).type === 'date'
-      ) as HTMLInputElement[];
-    if (inputs.length === 0) {
-      // Fallback if jsdom doesn't support input[type="date"] mapping to textbox
-      const allInputs = document.querySelectorAll('.dateInput');
-      expect(allInputs.length).toBe(2);
-
-      fireEvent.change(allInputs[0], { target: { value: '2026-02-01' } });
-      fireEvent.focus(allInputs[0]);
-      fireEvent.blur(allInputs[0]);
-
-      fireEvent.change(allInputs[1], { target: { value: '2026-11-30' } });
-      fireEvent.focus(allInputs[1]);
-      fireEvent.blur(allInputs[1]);
-    } else {
-      expect(inputs[0].value).toBe('2026-01-01');
-      expect(inputs[1].value).toBe('2026-12-31');
-
-      fireEvent.change(inputs[0], { target: { value: '2026-02-01' } });
-      fireEvent.focus(inputs[0]);
-      fireEvent.blur(inputs[0]);
-
-      fireEvent.change(inputs[1], { target: { value: '2026-11-30' } });
-      fireEvent.focus(inputs[1]);
-      fireEvent.blur(inputs[1]);
-    }
+    fireEvent.focus(from);
+    fireEvent.change(from, { target: { value: '2026-02-01' } });
+    fireEvent.blur(from);
+    fireEvent.focus(to);
+    fireEvent.change(to, { target: { value: '2026-11-30' } });
+    fireEvent.blur(to);
 
     act(() => {
       vi.advanceTimersByTime(500);

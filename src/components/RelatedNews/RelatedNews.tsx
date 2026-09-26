@@ -1,12 +1,6 @@
-import Image from 'next/image';
-import { Link } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
-import { resolveTranslation } from '@/lib/translations';
-import { stripHtml } from '@/lib/content-utils';
-import { getPhotoAlt, getPhotoUrl } from '@/lib/photos';
-import { formatDate } from '@/lib/dates';
+import NewsListItem from '@/components/NewsListItem';
 import { getRelatedNews } from '@/lib/news-queries';
-import { ArrowRight } from 'lucide-react';
 import style from './RelatedNews.module.scss';
 
 interface RelatedNewsProps {
@@ -16,11 +10,8 @@ interface RelatedNewsProps {
 }
 
 /**
- * Async server component that fetches and renders a "Read also" section.
- *
- * Designed to be wrapped in <Suspense> so the main article content
- * can stream to the client immediately while this component loads
- * its own data (related articles query) independently.
+ * "Read also": recent articles sharing a tag. Wrapped in <Suspense> by the
+ * article page, so the article streams without waiting for this query.
  */
 export default async function RelatedNews({
   newsId,
@@ -35,46 +26,19 @@ export default async function RelatedNews({
   if (articles.length === 0) return null;
 
   return (
-    <section className={style.relatedSection}>
-      <h2 className={style.sectionTitle}>{t('relatedArticles')}</h2>
-      <div className={style.grid}>
-        {articles.map((article) => {
-          const { translation } = resolveTranslation(
-            article.translations,
-            locale
-          );
-          const title = translation?.title ?? '';
-          const cleanTitle = stripHtml(title);
-          const photoUrl = getPhotoUrl(article.photos);
-
-          const formattedDate = formatDate(article.publishedAt, locale);
-
-          return (
-            <Link
-              key={article.id}
-              href={{ pathname: '/news/[id]', params: { id: article.id } }}
-              className={style.card}
-            >
-              <div className={style.cardImage}>
-                <Image
-                  src={photoUrl}
-                  alt={getPhotoAlt(article.photos[0], locale, cleanTitle)}
-                  fill
-                  className={style.image}
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-              </div>
-              <div className={style.cardContent}>
-                <span className={style.cardDate}>{formattedDate}</span>
-                <h3 className={style.cardTitle}>{cleanTitle}</h3>
-                <span className={style.cardLink}>
-                  {t('readArticle')}
-                  <ArrowRight aria-hidden="true" size={16} />
-                </span>
-              </div>
-            </Link>
-          );
-        })}
+    <section className={style.relatedSection} aria-labelledby="related-news">
+      <h2 id="related-news" className={style.sectionTitle}>
+        {t('relatedArticles')}
+      </h2>
+      <div className={style.list}>
+        {articles.map((article) => (
+          <NewsListItem
+            key={article.id}
+            news={article}
+            locale={locale}
+            compact
+          />
+        ))}
       </div>
     </section>
   );

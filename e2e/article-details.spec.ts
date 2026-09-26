@@ -1,13 +1,13 @@
 import { test, expect, Page } from '@playwright/test';
 
-/** Navigate from the news listing to the Nth article tile (1-indexed). */
+/** Navigate from the news listing to the Nth article (1-indexed). */
 async function navigateToArticle(page: Page, position: number) {
   await page.goto('/en/news');
   await page.waitForLoadState('load');
 
-  const tile = page.getByTestId('news-tile').nth(position - 1);
-  await expect(tile).toBeVisible();
-  await tile.getByRole('link').first().click();
+  const item = page.getByRole('article').nth(position - 1);
+  await expect(item).toBeVisible();
+  await item.getByRole('link').first().click();
 
   await expect(page).toHaveURL(/\/en\/news\/.+/);
 }
@@ -26,10 +26,13 @@ test.describe('News Article Detail Page', () => {
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await expect(
-      page.getByRole('link', { name: 'Back to news' })
+      page
+        .getByRole('navigation', { name: 'Breadcrumb' })
+        .getByRole('link', { name: 'News' })
     ).toBeVisible();
-    await expect(page.locator('time')).toBeVisible();
-    await expect(page.getByText(/\d+ min read/)).toBeVisible();
+    await expect(page.locator('article time').first()).toBeVisible();
+    // Short article: no reading time
+    await expect(page.getByText(/\d+ min read/)).toHaveCount(0);
 
     // Deterministic: article at position 1 has the "Swine Breeding" tag
     await expect(
@@ -37,11 +40,14 @@ test.describe('News Article Detail Page', () => {
     ).toBeVisible();
   });
 
-  test('should navigate back to news list via "Back to news"', async ({
+  test('should navigate back to the news list via the breadcrumbs', async ({
     page,
   }) => {
     await navigateToArticle(page, 1);
-    await page.getByRole('link', { name: 'Back to news' }).click();
+    await page
+      .getByRole('navigation', { name: 'Breadcrumb' })
+      .getByRole('link', { name: 'News' })
+      .click();
 
     await expect(page).toHaveURL(/\/en\/news/);
     await expect(page).not.toHaveURL(/\/en\/news\/.+/);
@@ -62,12 +68,7 @@ test.describe('News Article Detail Page', () => {
       .toBeGreaterThan(0);
 
     // Navigate to an article
-    await page
-      .getByTestId('news-tile')
-      .first()
-      .getByRole('link')
-      .first()
-      .click();
+    await page.getByRole('article').first().getByRole('link').first().click();
     await expect(page).toHaveURL(/\/en\/news\/.+/);
 
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
@@ -124,16 +125,13 @@ test.describe('News Article Detail Page', () => {
     await expect(page.getByRole('status')).toHaveText('Link copied');
   });
 
-  // ─── Reading Progress (presence check) ───────────────────────────
+  // ─── Reading Progress ────────────────────────────────────────────
   // (Scroll update logic is covered by the ReadingProgress component tests.)
 
-  test('should render a decorative reading progress bar', async ({ page }) => {
+  test('shows no reading progress bar on a short article', async ({ page }) => {
     await navigateToArticle(page, 1);
 
-    const progress = page.locator('[class*="progressBar"]');
-    await expect(progress).toBeVisible();
-    // Purely visual: hidden from screen readers
-    await expect(progress).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('[class*="progressBar"]')).toHaveCount(0);
   });
 
   // ─── Related Articles (Suspense streaming) ──────────────────────
@@ -145,7 +143,9 @@ test.describe('News Article Detail Page', () => {
     await expect(page.getByRole('heading', { name: 'Read also' })).toBeVisible({
       timeout: 30000,
     });
-    await expect(page.getByText('Read more').first()).toBeVisible();
+    await expect(
+      page.locator('#related-news + div').getByRole('article').first()
+    ).toBeVisible();
   });
 
   test('should navigate to a related article', async ({ page }) => {
@@ -155,13 +155,16 @@ test.describe('News Article Detail Page', () => {
       timeout: 30000,
     });
 
-    await page.locator('a').filter({ hasText: 'Read more' }).first().click();
+    const related = page
+      .locator('#related-news + div')
+      .getByRole('article')
+      .first()
+      .getByRole('link');
+    const title = await related.textContent();
+    await related.click();
 
     await expect(page).toHaveURL(/\/en\/news\/.+/);
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(
-      page.getByRole('link', { name: 'Back to news' })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(title!);
   });
 
   // ─── SEO & Error Handling ────────────────────────────────────────

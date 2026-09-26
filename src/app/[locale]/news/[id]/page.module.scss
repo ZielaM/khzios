@@ -1,170 +1,39 @@
 @use '@/styles/variables' as *;
 
-// ─── Page Layout ──────────────────────────────────────────────────────
-
-.pageWrapper {
-  width: 100%;
-  min-height: 100vh;
-  background: var(--surface-muted);
-  padding: $page-padding-top 24px 60px;
-  display: flex;
-  justify-content: center;
-
-  :global(.wcag-high-contrast) & {
-    background: var(--background);
-  }
-
-  @media (max-width: $breakpoint-tablet) {
-    padding: $page-padding-top-mobile 16px 24px;
-  }
+.page {
+  @include page-container;
 }
 
-.container {
-  width: 100%;
-  max-width: 900px;
-  background-color: var(--background);
-  border-radius: $radius-xl;
-  padding: 48px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-
-  :global(.wcag-high-contrast) & {
-    border: 2px solid var(--foreground);
-    box-shadow: none;
-    border-radius: 0;
-  }
-
-  @media (max-width: $breakpoint-tablet) {
-    padding: 24px;
-    gap: 32px;
-    border-radius: $radius-lg;
-  }
+// Header and text share one readable column; the photo may be wider
+.article {
+  margin-top: 1.5rem;
 }
 
-// ─── Header ───────────────────────────────────────────────────────────
-
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.headerActions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.backLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-muted);
-  font-weight: 700;
-  text-decoration: none;
-  font-size: 0.9em;
-  margin-bottom: 0;
-  transition: all 0.2s ease;
-  align-self: flex-start;
-  background-color: rgba(0, 0, 0, 0.04);
-  padding: 8px 16px;
-  border-radius: $radius-md;
-
-  &:hover,
-  &:focus-visible {
-    color: var(--color-primary);
-    background-color: rgba($color-primary, 0.1);
-    transform: translateX(-4px);
-  }
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
-    background-color: transparent;
-    border: 2px solid var(--foreground);
-
-    &:hover,
-    &:focus-visible {
-      background-color: var(--foreground);
-      color: var(--background);
-    }
-  }
-}
-
-.fallbackBanner {
-  background-color: rgba(255, 170, 0, 0.1);
-  color: var(--color-warning);
-  padding: 12px 24px;
-  border-radius: $radius-lg;
-  font-size: 0.95em;
-  font-weight: 600;
-  border-left: 4px solid var(--color-warning);
-
-  :global(.wcag-high-contrast) & {
-    background-color: transparent;
-    color: var(--foreground);
-    border: 2px solid var(--foreground);
-  }
+.header,
+.content,
+.gallerySection {
+  max-width: $measure;
 }
 
 .title {
-  font-family: $font-serif;
-  font-size: clamp(2em, 5vw, 3em);
+  font-size: clamp(1.9em, 4vw, 2.6em);
   font-weight: 700;
-  color: var(--foreground);
   line-height: 1.15;
-  margin: 0;
-  letter-spacing: -0.02em;
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
-  }
 }
 
-// ─── Metadata ─────────────────────────────────────────────────────────
-
-.metadata {
+.meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 24px;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
-  padding-bottom: 24px;
-
-  @media (max-width: $breakpoint-tablet) {
-    gap: 16px;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  :global(.wcag-high-contrast) & {
-    border-color: var(--foreground);
-  }
-}
-
-.dateWrapper,
-.readingTimeWrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 0.5rem 1.25rem;
+  margin-top: 1rem;
+  font-size: 0.925em;
   color: var(--text-muted);
-}
 
-.metaIcon {
-  color: var(--color-primary);
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
+  // Share sits at the end of the line
+  > :last-child {
+    margin-left: auto;
   }
-}
-
-.date,
-.readingTime {
-  font-size: 1em;
-  font-weight: 600;
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
@@ -174,200 +43,123 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-}
-
-.tag {
-  background: rgba($color-primary, 0.08);
+  gap: 0.25rem 0.75rem;
+  list-style: none;
   color: var(--color-primary);
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 0.85em;
-  font-weight: 700;
-  transition: background-color 0.2s ease;
 
-  &:hover {
-    background: rgba($color-primary, 0.15);
+  li::before {
+    content: '#';
+    opacity: 0.6;
   }
 
   :global(.wcag-high-contrast) & {
-    background: transparent;
     color: var(--foreground);
-    border: 2px solid var(--foreground);
   }
 }
 
-// ─── Hero Image ───────────────────────────────────────────────────────
+.fallbackNotice {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--color-warning);
+  background: var(--surface-muted);
+  font-size: 0.925em;
 
-.heroImageContainer {
+  :global(.wcag-high-contrast) & {
+    border-color: var(--foreground);
+    background: transparent;
+  }
+}
+
+.leadPhoto {
   position: relative;
-  width: 100%;
   aspect-ratio: 16 / 9;
+  margin: 2rem 0;
   border-radius: $radius-lg;
   overflow: hidden;
-  background-color: var(--surface-muted);
-  box-shadow: $shadow-card;
+  background: var(--surface-muted);
+
+  img {
+    object-fit: cover;
+  }
 
   :global(.wcag-high-contrast) & {
     border: 2px solid var(--foreground);
-    box-shadow: none;
     border-radius: 0;
   }
 }
 
-.heroImage {
-  object-fit: cover;
-  transition: transform 0.5s ease;
-
-  &:hover {
-    transform: scale(1.02);
-  }
+.header + .content {
+  margin-top: 2rem;
 }
 
-// Subtle gradient overlay at the bottom of the hero image for depth
-.heroGradient {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 40%;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.12));
-  pointer-events: none;
-  border-radius: 0 0 $radius-lg $radius-lg;
-
-  :global(.wcag-high-contrast) & {
-    display: none;
-  }
-}
-
-// ─── Article Content ──────────────────────────────────────────────────
-
-.articleContent {
-  font-size: 1.15em;
-  line-height: 1.8;
+.content {
+  font-size: 1.1em;
+  line-height: 1.75;
   color: var(--foreground);
 
-  // Make the first paragraph distinct (lead text)
-  p:first-of-type {
-    font-size: 1.3em;
-    line-height: 1.7;
-    font-weight: 500;
-    color: var(--color-primary);
-    margin-bottom: 32px;
-
-    :global(.wcag-high-contrast) & {
-      color: var(--foreground);
-    }
+  // The first paragraph works as the lead
+  > p:first-of-type {
+    font-size: 1.15em;
+    line-height: 1.65;
   }
 
-  p {
-    margin-bottom: 24px;
-    color: var(--foreground);
-
-    :global(.wcag-high-contrast) & {
-      color: var(--foreground);
-    }
+  p,
+  ul,
+  ol {
+    margin-bottom: 1.25em;
   }
 
   h2 {
-    font-family: $font-serif;
-    font-size: 1.8em;
-    margin-top: 48px;
-    margin-bottom: 24px;
-    color: var(--foreground);
-    letter-spacing: -0.01em;
+    font-size: 1.5em;
+    margin: 2em 0 0.75em;
   }
 
   h3 {
-    font-family: $font-serif;
-    font-size: 1.4em;
-    margin-top: 32px;
-    margin-bottom: 16px;
+    font-size: 1.25em;
+    margin: 1.75em 0 0.5em;
   }
 
   ul,
   ol {
-    margin-bottom: 24px;
-    padding-left: 32px;
-    color: var(--foreground);
+    padding-left: 1.5em;
   }
 
-  li {
-    margin-bottom: 12px;
+  li + li {
+    margin-top: 0.4em;
   }
 
   a {
     color: var(--color-primary);
     text-decoration: underline;
-    text-underline-offset: 4px;
-    font-weight: 500;
-    transition: color 0.2s ease;
+    text-underline-offset: 3px;
 
     &:hover {
-      color: var(--color-secondary);
       text-decoration-thickness: 2px;
     }
 
     :global(.wcag-high-contrast) & {
       color: var(--foreground);
-
-      &:hover {
-        color: var(--foreground);
-      }
     }
   }
 
   blockquote {
-    border-left: 6px solid var(--color-primary);
-    margin: 40px 0;
+    margin: 2em 0;
+    padding: 0.25em 0 0.25em 1.25em;
+    border-left: 3px solid var(--color-primary);
+    font-family: $font-serif;
+    font-size: 1.15em;
     font-style: italic;
-    font-size: 1.25em;
-    color: var(--foreground);
-    background-color: rgba(0, 0, 0, 0.02);
-    padding: 32px;
-    border-radius: 0 $radius-lg $radius-lg 0;
-    position: relative;
 
-    // Subtle quote mark decoration
-    &::before {
-      content: '"';
-      position: absolute;
-      top: -10px;
-      left: 10px;
-      font-size: 4em;
-      color: rgba($color-primary, 0.1);
-      font-family: Georgia, serif;
-    }
-  }
-
-  :global(.wcag-high-contrast) & {
-    color: var(--foreground);
-
-    h2,
-    h3,
-    p,
-    ul,
-    ol {
-      color: var(--foreground);
-    }
-
-    blockquote {
+    :global(.wcag-high-contrast) & {
       border-color: var(--foreground);
-      color: var(--foreground);
-      background-color: transparent;
-
-      &::before {
-        display: none;
-      }
     }
   }
 }
 
-// ─── Gallery Section ──────────────────────────────────────────────────
-
 .gallerySection {
-  border-top: 2px solid rgba(0, 0, 0, 0.06);
-  padding-top: 40px;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
 
   :global(.wcag-high-contrast) & {
     border-color: var(--foreground);
@@ -375,91 +167,40 @@
 }
 
 .gallerySectionTitle {
-  font-family: $font-serif;
-  font-size: 1.5em;
-  font-weight: 700;
-  color: var(--foreground);
-  margin-bottom: 8px;
-  letter-spacing: -0.01em;
+  font-size: 1.4em;
+  margin-bottom: 1rem;
 }
 
-// Shared shimmer effect for all skeleton elements
-%skeleton-base {
+// Loading skeleton
+.skeletonLine,
+.skeletonTitle,
+.skeletonPhoto {
   @include skeleton-pulse;
 
-  border-radius: 8px;
+  border-radius: $radius-sm;
 }
 
-.skeletonPill {
-  @extend %skeleton-base;
+.skeletonTitle {
+  height: 2.4rem;
+  margin-bottom: 0.75rem;
 
-  width: 160px;
-  height: 36px;
-  border-radius: 999px;
-}
-
-.skeletonPillSmall {
-  @extend %skeleton-base;
-
-  width: 110px;
-  height: 36px;
-  border-radius: 999px;
+  & + & {
+    width: 60%;
+  }
 }
 
 .skeletonLine {
-  @extend %skeleton-base;
+  height: 1rem;
+  margin-bottom: 0.9rem;
 
-  height: 18px;
-  width: 100%;
-  border-radius: 4px;
+  &:nth-child(4n) {
+    width: 70%;
+    margin-bottom: 2rem;
+  }
 }
 
-.skeletonLineShort {
-  @extend %skeleton-base;
-
-  height: 18px;
-  width: 65%;
-  border-radius: 4px;
-}
-
-.skeletonLineSpacer {
-  height: 24px;
-}
-
-.skeletonTag {
-  @extend %skeleton-base;
-
-  width: 72px;
-  height: 28px;
-  border-radius: 8px;
-}
-
-.skeletonTitleLine {
-  @extend %skeleton-base;
-
-  height: 40px;
-  width: 100%;
-  border-radius: 6px;
-}
-
-.skeletonTitleLineShort {
-  @extend %skeleton-base;
-
-  height: 40px;
-  width: 55%;
-  border-radius: 6px;
-}
-
-.skeletonHero {
-  @extend %skeleton-base;
-
-  width: 100%;
+.skeletonPhoto {
   aspect-ratio: 16 / 9;
+  margin: 2rem 0;
   border-radius: $radius-lg;
-}
-
-.skeletonContent {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }

@@ -3,17 +3,21 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import BackLink from '@/components/BackLink';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import style from './page.module.scss';
 import DOMPurify from 'isomorphic-dompurify';
-import { Calendar, Clock } from 'lucide-react';
 import {
   resolveTranslation,
   resolveTagName,
   LANGUAGE_NAMES,
 } from '@/lib/translations';
-import { excerpt, stripHtml, estimateReadingTime } from '@/lib/content-utils';
-import { getPhotoAlt, getPhotoUrl } from '@/lib/photos';
+import {
+  estimateReadingTime,
+  excerpt,
+  sanitizeInlineHtml,
+  stripHtml,
+} from '@/lib/content-utils';
+import { getPhotoAlt } from '@/lib/photos';
 import { formatDate } from '@/lib/dates';
 import { getNewsById } from '@/lib/news-queries';
 import {
@@ -38,6 +42,9 @@ import { setPageLocale } from '@/i18n/page-locale';
 // every request.
 export const revalidate = 86400;
 export const generateStaticParams = renderOnFirstRequest;
+
+// Reading time and the progress bar only help with longer texts
+const LONG_READ_MINUTES = 5;
 
 interface NewsDetailsPageProps {
   params: Promise<{
@@ -104,13 +111,10 @@ export default async function NewsDetailsPage({
 
   const formattedDate = formatDate(news.publishedAt, locale);
 
-  const mainPhoto = getPhotoUrl(news.photos);
-  const mainPhotoAlt = getPhotoAlt(news.photos[0], locale, cleanTitle);
+  const leadPhoto = news.photos[0];
   const readingTime = estimateReadingTime(content);
-
   const tagIds = news.tags.map((tag) => tag.id);
-
-  const galleryPhotos = news.photos;
+  const tNav = await getTranslations({ locale, namespace: 'Navbar' });
 
   const tHome = await getTranslations({ locale, namespace: 'HomePage' });
   const articleUrl = toAbsoluteUrl(
@@ -140,84 +144,62 @@ export default async function NewsDetailsPage({
 
   return (
     <>
-      <ReadingProgress />
+      {readingTime >= LONG_READ_MINUTES && <ReadingProgress />}
       <JsonLd data={jsonLd} />
       {/* The layout provides the page's <main> landmark */}
-      <div className={style.pageWrapper}>
-        <div className={style.container}>
+      <div className={style.page}>
+        <Breadcrumbs
+          items={[{ label: tNav('news'), href: '/news' }]}
+          current={cleanTitle}
+        />
+
+        <article className={style.article}>
           <header className={style.header}>
-            <div className={style.headerActions}>
-              <BackLink href="/news" className={style.backLink}>
-                {t('backToNews')}
-              </BackLink>
+            <h1
+              className={style.title}
+              dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(title) }}
+            />
+            <div className={style.meta}>
+              <time dateTime={news.publishedAt.toISOString()}>
+                {formattedDate}
+              </time>
+              {readingTime >= LONG_READ_MINUTES && (
+                <span>{t('readingTime', { minutes: readingTime })}</span>
+              )}
+              {news.tags.length > 0 && (
+                <ul className={style.tags}>
+                  {news.tags.map((tag) => (
+                    <li key={tag.id}>{resolveTagName(tag, locale)}</li>
+                  ))}
+                </ul>
+              )}
               <ShareButton title={cleanTitle} />
             </div>
-
             {isFallback && translation && (
-              <div className={style.fallbackBanner}>
+              <p className={style.fallbackNotice}>
                 {t('translationUnavailable', {
                   language:
                     LANGUAGE_NAMES[translation.languageCode] ??
                     translation.languageCode,
                 })}
-              </div>
+              </p>
             )}
-
-            <div className={style.metadata}>
-              <div className={style.dateWrapper}>
-                <Calendar
-                  aria-hidden="true"
-                  size={18}
-                  className={style.metaIcon}
-                />
-                <time
-                  className={style.date}
-                  dateTime={news.publishedAt.toISOString()}
-                >
-                  {t('publishedOn', { date: formattedDate })}
-                </time>
-              </div>
-              <div className={style.readingTimeWrapper}>
-                <Clock
-                  aria-hidden="true"
-                  size={18}
-                  className={style.metaIcon}
-                />
-                <span className={style.readingTime}>
-                  {t('readingTime', { minutes: readingTime })}
-                </span>
-              </div>
-              {news.tags.length > 0 && (
-                <div className={style.tags}>
-                  {news.tags.map((tag) => (
-                    <span key={tag.id} className={style.tag}>
-                      {resolveTagName(tag, locale)}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <h1
-              className={style.title}
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
-            />
           </header>
 
-          <section className={style.heroImageContainer}>
-            <Image
-              src={mainPhoto}
-              alt={mainPhotoAlt}
-              fill
-              preload
-              className={style.heroImage}
-              sizes="(max-width: 1200px) 100vw, 1200px"
-            />
-            <div className={style.heroGradient} />
-          </section>
+          {leadPhoto && (
+            <div className={style.leadPhoto}>
+              <Image
+                src={leadPhoto.url}
+                alt={getPhotoAlt(leadPhoto, locale, cleanTitle)}
+                fill
+                preload
+                sizes="(max-width: 1024px) 100vw, 976px"
+              />
+            </div>
+          )}
 
-          <article
-            className={style.articleContent}
+          <div
+            className={style.content}
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(content, {
                 FORBID_TAGS: ['style', 'script'],
@@ -225,21 +207,22 @@ export default async function NewsDetailsPage({
             }}
           />
 
-          {galleryPhotos.length > 0 && (
+          {/* The first photo is already shown above the text */}
+          {news.photos.length > 1 && (
             <section className={style.gallerySection}>
               <h2 className={style.gallerySectionTitle}>{t('gallery')}</h2>
               <NewsGallery
-                photos={galleryPhotos}
+                photos={news.photos}
                 title={cleanTitle}
                 locale={locale}
               />
             </section>
           )}
+        </article>
 
-          <Suspense fallback={<RelatedNewsSkeleton />}>
-            <RelatedNews newsId={news.id} tagIds={tagIds} locale={locale} />
-          </Suspense>
-        </div>
+        <Suspense fallback={<RelatedNewsSkeleton />}>
+          <RelatedNews newsId={news.id} tagIds={tagIds} locale={locale} />
+        </Suspense>
       </div>
       <ScrollToTop />
     </>

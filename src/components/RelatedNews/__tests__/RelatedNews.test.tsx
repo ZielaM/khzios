@@ -122,13 +122,13 @@ describe('RelatedNews Server Component', () => {
     });
     render(jsx);
 
-    // HTML should be stripped from the card title
+    // Only search highlights survive in the title
     expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
       'Title with highlight'
     );
   });
 
-  it('should render correct placeholder when article has no photos', async () => {
+  it('shows no placeholder image when the article has no photos', async () => {
     vi.mocked(getRelatedNews).mockResolvedValue([mockArticle('2')]);
 
     const jsx = await RelatedNews({
@@ -136,10 +136,9 @@ describe('RelatedNews Server Component', () => {
       tagIds: ['tag1'],
       locale: 'en',
     });
-    render(jsx);
+    const { container } = render(jsx);
 
-    const img = screen.getByRole('img');
-    expect(img).toHaveAttribute('src', '/placeholder-image.png');
+    expect(container.querySelector('img')).toBeNull();
   });
 
   it('should render actual photo URL when article has photos', async () => {
@@ -154,10 +153,12 @@ describe('RelatedNews Server Component', () => {
       tagIds: ['tag1'],
       locale: 'en',
     });
-    render(jsx);
+    const { container } = render(jsx);
 
-    const img = screen.getByRole('img');
+    // Decorative thumbnail (alt=""): the title beside it is the link
+    const img = container.querySelector('img');
     expect(img).toHaveAttribute('src', '/custom-photo.jpg');
+    expect(img).toHaveAttribute('alt', '');
   });
 
   it('should render article with no translations gracefully', async () => {

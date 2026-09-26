@@ -1,13 +1,18 @@
-import NewsTileSkeleton from '@/components/NewsTile/NewsTileSkeleton';
 import style from './NewsGrid.module.scss';
 
 export default function NewsGridSkeleton() {
-  const skeletons = Array.from({ length: 12 }, (_, i) => i);
-
   return (
-    <div className={style.newsGrid}>
-      {skeletons.map((index) => (
-        <NewsTileSkeleton key={index} />
+    <div className={style.newsGrid} aria-hidden="true">
+      {Array.from({ length: 8 }, (_, i) => (
+        <div key={i} className={style.skeletonRow}>
+          <div className={style.skeletonText}>
+            <span className={style.skeletonDate} />
+            <span className={style.skeletonTitle} />
+            <span className={style.skeletonLine} />
+            <span className={style.skeletonLine} />
+          </div>
+          <span className={style.skeletonThumb} />
+        </div>
       ))}
     </div>
   );

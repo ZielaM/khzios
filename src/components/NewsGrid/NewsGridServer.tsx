@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { SearchX } from 'lucide-react';
 import { searchNews } from '@/lib/search/news';
-import NewsTile from '@/components/NewsTile';
+import NewsListItem from '@/components/NewsListItem';
 import Pagination from '@/components/Pagination';
 import type { LanguageCode, SortBy } from '@/types/search-types';
 import style from './NewsGrid.module.scss';
@@ -55,12 +55,12 @@ export default async function NewsGridServer({
           </div>
         ) : (
           data.map((item, index) => (
-            <NewsTile
+            <NewsListItem
               key={item.id}
               news={item}
               locale={locale}
               headingLevel={2}
-              // The first tile's image is the listing's largest paint
+              // The first thumbnail is the listing's largest image
               preload={index === 0}
             />
           ))

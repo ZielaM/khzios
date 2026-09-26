@@ -1,16 +1,10 @@
 import { render } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import NewsGridSkeleton from '../NewsGridSkeleton';
 
-// Mock NewsTileSkeleton to just render a simple div that we can count
-vi.mock('@/components/NewsTile/NewsTileSkeleton', () => ({
-  default: () => <div data-testid="news-tile-skeleton" />,
-}));
-
 describe('NewsGridSkeleton', () => {
-  it('renders exactly 12 skeletons', () => {
-    const { getAllByTestId } = render(<NewsGridSkeleton />);
-    const skeletons = getAllByTestId('news-tile-skeleton');
-    expect(skeletons).toHaveLength(12);
+  it('is hidden from assistive technology', () => {
+    const { container } = render(<NewsGridSkeleton />);
+    expect(container.firstChild).toHaveAttribute('aria-hidden', 'true');
   });
 });

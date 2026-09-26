@@ -1,63 +1,84 @@
 @use '@/styles/variables' as *;
 
-// CSS Grid for displaying News Tiles
-// Dynamically adjusts columns based on viewport size and compact-layout settings
 .newsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); // Desktop default: 3 columns
-  gap: 2rem;
-  width: 100%;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
 
-  @media (max-width: $breakpoint-desktop) {
-    grid-template-columns: repeat(2, 1fr); // Tablet default: 2 columns
-  }
-
-  // User preference override: 2 columns
-  :global(.compact-layout) & {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: $breakpoint-tablet) {
-    grid-template-columns: 1fr; // Mobile: 1 column
-  }
-
-  // User preference override: 1 column
-  :global(.compact-layout-sm) & {
-    grid-template-columns: 1fr;
+  :global(.wcag-high-contrast) & {
+    border-bottom-color: var(--foreground);
   }
 }
 
-// Empty state displayed when search yields no results
 .noResults {
-  grid-column: 1 / -1; // Span all available grid columns
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  padding: 5rem 2rem;
+  gap: 1rem;
+  padding: 4rem 2rem;
   text-align: center;
   color: var(--text-muted);
-  font-size: 1.25em;
-  font-weight: 500;
-  background: var(--surface-muted);
-  border-radius: $radius-lg;
-  border: 2px dashed var(--border-strong);
+  font-size: 1.1em;
 
   :global(.wcag-high-contrast) & {
-    background: transparent;
     color: var(--foreground);
-    border: 2px dashed var(--foreground);
   }
 }
 
-// Icon for the empty state
 .noResultsIcon {
   color: var(--color-primary);
-  opacity: 0.8;
 
   :global(.wcag-high-contrast) & {
     color: var(--foreground);
-    opacity: 1;
   }
+}
+
+.skeletonRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border-subtle);
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: minmax(0, 1fr) 96px;
+  }
+}
+
+.skeletonText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.skeletonDate,
+.skeletonTitle,
+.skeletonLine,
+.skeletonThumb {
+  @include skeleton-pulse;
+
+  display: block;
+  border-radius: $radius-sm;
+}
+
+.skeletonDate {
+  width: 7rem;
+  height: 0.8rem;
+}
+
+.skeletonTitle {
+  width: 70%;
+  height: 1.4rem;
+}
+
+.skeletonLine {
+  height: 0.9rem;
+
+  & + & {
+    width: 85%;
+  }
+}
+
+.skeletonThumb {
+  aspect-ratio: 3 / 2;
+  border-radius: $radius-md;
 }

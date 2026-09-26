@@ -65,28 +65,7 @@ export default function NewsSearchForm({
   const [dateTo, setDateTo] = useState(initialDateTo || '');
   const [prevInitialDateTo, setPrevInitialDateTo] = useState(initialDateTo);
 
-  const [isExpanded, setIsExpanded] = useState(
-    Boolean(initialQuery || initialTagsList.length > 0)
-  );
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        if (!query && selectedTags.length === 0 && !dateFrom && !dateTo) {
-          setIsExpanded(false);
-        }
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [query, selectedTags, dateFrom, dateTo]);
 
   if (
     initialQuery !== prevInitialQuery ||
@@ -167,128 +146,100 @@ export default function NewsSearchForm({
 
   return (
     <div
-      className={`${style.searchContainer} ${
-        isExpanded ? style.expandedContainer : style.collapsedContainer
-      }`}
+      className={style.searchForm}
+      data-testid={
+        isSkeleton ? 'news-search-form-skeleton' : 'news-search-form'
+      }
     >
-      <div
-        ref={containerRef}
-        className={`${style.searchForm} ${
-          isExpanded ? style.expanded : style.collapsed
-        }`}
-        data-testid={
-          isSkeleton ? 'news-search-form-skeleton' : 'news-search-form'
-        }
-        onClick={() => {
-          if (!isExpanded && !isSkeleton) {
-            setIsExpanded(true);
-          }
-        }}
-      >
-        <button
-          className={style.collapsedButton}
-          aria-label={t('searchPlaceholder')}
-          type="button"
-          tabIndex={isExpanded ? -1 : 0}
-        >
-          <Search aria-hidden="true" size={24} />
-        </button>
+      <div className={style.searchInput}>
+        <Search aria-hidden="true" className={style.icon} size={20} />
+        <input
+          data-testid={isSkeleton ? 'search-input-skeleton' : 'search-input'}
+          type="text"
+          placeholder={t('searchPlaceholder')}
+          aria-label={isSkeleton ? undefined : t('searchPlaceholder')}
+          value={query}
+          maxLength={256}
+          disabled={isSkeleton}
+          onChange={(e) => {
+            const val = e.target.value;
+            // Starting a query switches the sort to relevance
+            if (!query && val) {
+              setSelectedSort('relevance');
+            }
+            setQuery(val);
+          }}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => setIsInputFocused(false)}
+        />
+      </div>
 
-        <div className={style.inputGroup}>
-          <div className={style.searchInput}>
-            <Search aria-hidden="true" className={style.icon} size={20} />
-            <input
-              data-testid={
-                isSkeleton ? 'search-input-skeleton' : 'search-input'
-              }
-              type="text"
-              placeholder={t('searchPlaceholder')}
-              aria-label={isSkeleton ? undefined : t('searchPlaceholder')}
-              value={query}
-              maxLength={256}
-              disabled={isSkeleton}
-              tabIndex={!isExpanded ? -1 : 0}
-              onChange={(e) => {
-                const val = e.target.value;
-                // Starting a query switches the sort to relevance
-                if (!query && val) {
-                  setSelectedSort('relevance');
+      {availableTags.length > 0 && (
+        <fieldset className={style.tagFilter} disabled={isSkeleton}>
+          <legend className={style.label}>{t('tagsLabel')}</legend>
+          {availableTags.map((tag) => {
+            const selected = selectedTags.includes(tag.value);
+            return (
+              <button
+                key={tag.value}
+                type="button"
+                aria-pressed={selected}
+                className={clsx(style.tagChip, selected && style.selected)}
+                onClick={() =>
+                  setSelectedTags((current) =>
+                    selected
+                      ? current.filter((v) => v !== tag.value)
+                      : [...current, tag.value]
+                  )
                 }
-                setQuery(val);
-              }}
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
-            />
-          </div>
+              >
+                {tag.label}
+              </button>
+            );
+          })}
+        </fieldset>
+      )}
 
-          <fieldset className={style.tagFilter} disabled={isSkeleton}>
-            <legend className={style.visuallyHidden}>{t('tagsLabel')}</legend>
-            {availableTags.map((tag) => {
-              const selected = selectedTags.includes(tag.value);
-              return (
-                <button
-                  key={tag.value}
-                  type="button"
-                  aria-pressed={selected}
-                  tabIndex={!isExpanded ? -1 : 0}
-                  className={clsx(style.tagChip, selected && style.selected)}
-                  onClick={() =>
-                    setSelectedTags((current) =>
-                      selected
-                        ? current.filter((v) => v !== tag.value)
-                        : [...current, tag.value]
-                    )
-                  }
-                >
-                  {tag.label}
-                </button>
-              );
-            })}
-          </fieldset>
-
-          {/* Relevance only makes sense for a text query */}
-          {query && (
+      <div className={style.fields}>
+        <label className={style.field}>
+          <span className={style.label}>{t('dateFrom')}</span>
+          <input
+            type="date"
+            className={style.dateInput}
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            disabled={isSkeleton}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
+          />
+        </label>
+        <label className={style.field}>
+          <span className={style.label}>{t('dateTo')}</span>
+          <input
+            type="date"
+            className={style.dateInput}
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            disabled={isSkeleton}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
+          />
+        </label>
+        {/* Relevance only makes sense for a text query */}
+        {query && (
+          <label className={style.field}>
+            <span className={style.label}>{t('sortBy')}</span>
             <select
               className={style.sortSelect}
-              aria-label={t('sortBy')}
               value={selectedSort}
               disabled={isSkeleton}
-              tabIndex={!isExpanded ? -1 : 0}
               onChange={(e) => setSelectedSort(e.target.value as SortBy)}
             >
               <option value="relevance">{t('sortRelevance')}</option>
               <option value="date">{t('sortDate')}</option>
             </select>
-          )}
-
-          <div className={style.dateFilter}>
-            <input
-              type="date"
-              className={style.dateInput}
-              aria-label={t('dateFrom')}
-              value={dateFrom}
-              onChange={(e) => setDateFrom(e.target.value)}
-              disabled={isSkeleton}
-              tabIndex={!isExpanded ? -1 : 0}
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
-            />
-            <span className={style.dateSeparator} aria-hidden="true">
-              –
-            </span>
-            <input
-              type="date"
-              className={style.dateInput}
-              aria-label={t('dateTo')}
-              value={dateTo}
-              onChange={(e) => setDateTo(e.target.value)}
-              disabled={isSkeleton}
-              tabIndex={!isExpanded ? -1 : 0}
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
-            />
-          </div>
-        </div>
+          </label>
+        )}
       </div>
     </div>
   );

@@ -123,6 +123,7 @@ export default async function MemberPage({ params }: Props) {
           { label: stripHtml(teamName), href: teamHref(team, locale) },
         ]}
         current={fullName}
+        className={style.breadcrumbs}
       />
 
       <div className={style.profile}>

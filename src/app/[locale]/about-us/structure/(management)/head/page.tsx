@@ -69,7 +69,11 @@ export default async function HeadPage({ params }: Props) {
   if (!head || !head.employee) {
     return (
       <div className={style.page}>
-        <Breadcrumbs items={crumbs} current={tNav('headOfDepartment')} />
+        <Breadcrumbs
+          items={crumbs}
+          current={tNav('headOfDepartment')}
+          className={style.breadcrumbs}
+        />
 
         <p>{tStruct('headNotConfigured')}</p>
       </div>
@@ -93,7 +97,11 @@ export default async function HeadPage({ params }: Props) {
 
   return (
     <div className={style.page}>
-      <Breadcrumbs items={crumbs} current={tNav('headOfDepartment')} />
+      <Breadcrumbs
+        items={crumbs}
+        current={tNav('headOfDepartment')}
+        className={style.breadcrumbs}
+      />
 
       <ContactProfile
         name={

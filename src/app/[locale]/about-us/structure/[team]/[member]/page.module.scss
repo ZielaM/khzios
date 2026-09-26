@@ -4,6 +4,11 @@
   @include page-container;
 }
 
+// Same spacing as the breadcrumbs inside PageHeader, clear of the card below
+.breadcrumbs {
+  padding: 1rem 0 1.5rem;
+}
+
 .profile {
   display: flex;
   flex-direction: column;

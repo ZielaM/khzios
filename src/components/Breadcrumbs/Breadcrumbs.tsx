@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useLocale, useTranslations } from 'next-intl';
 import { getPathname, Link } from '@/i18n/routing';
 import JsonLd from '@/components/JsonLd';
@@ -16,10 +17,16 @@ interface BreadcrumbsProps {
   items: Crumb[];
   /** Name of the current page (not a link) */
   current: string;
+  /** Spacing when used outside PageHeader */
+  className?: string;
 }
 
 /** Trail from the home page to the current page, also as BreadcrumbList data. */
-export default function Breadcrumbs({ items, current }: BreadcrumbsProps) {
+export default function Breadcrumbs({
+  items,
+  current,
+  className,
+}: BreadcrumbsProps) {
   const t = useTranslations('Breadcrumbs');
   const locale = useLocale();
   const trail: Crumb[] = [{ label: t('home'), href: '/' }, ...items];
@@ -39,7 +46,7 @@ export default function Breadcrumbs({ items, current }: BreadcrumbsProps) {
   };
 
   return (
-    <nav aria-label={t('label')} className={style.breadcrumbs}>
+    <nav aria-label={t('label')} className={clsx(style.breadcrumbs, className)}>
       <JsonLd data={jsonLd} />
       <ol>
         {trail.map((crumb) => (

@@ -18,3 +18,6 @@ Dockerfile
 .dockerignore
 docker-compose.yml
 npm-debug.log
+
+# Uploaded files live in a volume, not in the image
+uploads

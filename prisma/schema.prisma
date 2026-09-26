@@ -65,10 +65,12 @@ model TagTranslation {
 }
 
 model Photo {
-  id     String @id @default(uuid(7))
-  url    String
-  newsId String
-  news   News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  id           String @id @default(uuid(7))
+  url          String
+  newsId       String
+  // Order in the article; the first photo is the lead photo
+  displayOrder Int    @default(0) @db.SmallInt
+  news         News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
   translations PhotoTranslation[]
 
@@ -410,4 +412,143 @@ model StudentDocumentTranslation {
   document StudentDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   @@id([documentId, languageCode])
+}
+
+// ──── Admin panel ─────────────────────────────────────────────────────
+
+enum AdminRole {
+  ADMIN
+  EDITOR
+}
+
+model AdminUser {
+  id                 String    @id @default(uuid(7))
+  login              String    @unique
+  name               String
+  passwordHash       String
+  role               AdminRole @default(EDITOR)
+  // Base32 TOTP secret, set once the user has completed 2FA enrolment
+  totpSecret         String?
+  // Hashes of the unused one-time recovery codes
+  recoveryCodes      String[]
+  mustChangePassword Boolean   @default(false)
+  disabled           Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  lastLoginAt        DateTime?
+
+  sessions  AdminSession[]
+  auditLogs AuditLog[]
+}
+
+model AdminSession {
+  // SHA-256 of the token kept in the cookie; the token itself is not stored
+  tokenHash         String   @id
+  userId            String
+  // False until the second factor has been verified
+  mfaPassed         Boolean  @default(false)
+  // TOTP secret shown during 2FA enrolment, moved to the user once confirmed
+  totpPendingSecret String?
+  createdAt         DateTime @default(now())
+  lastSeenAt        DateTime @default(now())
+  expiresAt         DateTime
+  ip                String?
+  userAgent         String?
+
+  user AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model LoginAttempt {
+  id        String   @id @default(uuid(7))
+  login     String
+  ip        String
+  success   Boolean
+  // Why it failed: password, totp, locked, disabled
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([login, createdAt])
+  @@index([ip, createdAt])
+  @@index([createdAt(sort: Desc)])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid(7))
+  userId    String?
+  // Kept when the account is deleted
+  userLogin String
+  action    String
+  entity    String
+  entityId  String?
+  summary   String
+  createdAt DateTime @default(now())
+
+  user AdminUser? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt(sort: Desc)])
+}
+
+// Input that looked like an attack, noticed by lib/security.ts
+model SecurityEvent {
+  id        String   @id @default(uuid(7))
+  threats   String[]
+  context   String
+  preview   String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt(sort: Desc)])
+}
+
+// Settings changed in the panel; a missing key means the default from code
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+// Page texts edited in the panel, overriding messages/<language>.json
+model ContentOverride {
+  key          String
+  languageCode LanguageCode
+  value        String
+  updatedAt    DateTime     @updatedAt
+
+  @@id([key, languageCode])
+}
+
+// Photos of page sections: home hero, About us, student zone, contact and
+// team banners (section "teams/<slug>")
+model SiteImage {
+  id           String @id @default(uuid(7))
+  section      String
+  url          String
+  displayOrder Int    @default(0) @db.SmallInt
+
+  translations SiteImageTranslation[]
+
+  @@index([section, displayOrder])
+}
+
+model SiteImageTranslation {
+  siteImageId  String
+  languageCode LanguageCode
+  alt          String
+
+  siteImage SiteImage @relation(fields: [siteImageId], references: [id], onDelete: Cascade)
+
+  @@id([siteImageId, languageCode])
+}
+
+// Deleted items, kept for 30 days as a snapshot so they can be restored
+model TrashItem {
+  id        String   @id @default(uuid(7))
+  entity    String
+  entityId  String
+  label     String
+  data      Json
+  deletedBy String
+  deletedAt DateTime @default(now())
+
+  @@index([deletedAt])
 }

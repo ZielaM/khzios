@@ -73,6 +73,10 @@ jobs:
     env:
       DATABASE_URL: 'postgresql://dummy:dummy@localhost:5432/dummy'
       CI: true
+      # Admin panel address for the e2e server and tests (e2e/admin/helpers.ts)
+      ADMIN_PATH: zaplecze-e2e-test
+      # Plain http: the panel's session cookie is Secure only on https sites
+      APP_URL: 'http://localhost:3000'
 
     steps:
       - name: Checkout repository

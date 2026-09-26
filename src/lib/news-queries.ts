@@ -17,7 +17,10 @@ export const newsInclude = {
   translations: true,
   tags: { include: { translations: true } },
   // The first photo is the article's main image, so the order must be stable
-  photos: { include: { translations: true }, orderBy: { id: 'asc' } },
+  photos: {
+    include: { translations: true },
+    orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
+  },
 } satisfies Prisma.NewsInclude;
 
 export type NewsWithRelations = Prisma.NewsGetPayload<{
@@ -76,7 +79,10 @@ export async function getPublishedNewsForSitemap() {
     select: {
       id: true,
       updatedAt: true,
-      photos: { select: { url: true }, orderBy: { id: 'asc' } },
+      photos: {
+        select: { url: true },
+        orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
+      },
     },
     orderBy: { publishedAt: 'desc' },
   });

@@ -5,6 +5,7 @@ import { seedHead } from './seed-head';
 import { seedSecretariat } from './seed-secretariat';
 import { seedAnnouncements } from './seed-announcements';
 import { seedDocuments } from './seed-documents';
+import { seedAdmin } from './seed-admin';
 
 const getRandomMultiple = <T>(arr: T[], count: number) => {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
@@ -390,6 +391,8 @@ async function main() {
   );
 
   console.log('Utworzono 100 unikalnych, bogatych w HTML artykułów.');
+
+  await seedAdmin();
 
   // ──── Team Seeding ────────────────────────────────────────────────
   await seedTeams();

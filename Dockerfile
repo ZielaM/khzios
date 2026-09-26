@@ -33,10 +33,13 @@ CMD ["pnpm", "prisma", "migrate", "deploy"]
 FROM base AS runner
 ENV NODE_ENV=production \
     PORT=3000 \
-    HOSTNAME=0.0.0.0
+    HOSTNAME=0.0.0.0 \
+    UPLOAD_DIR=/app/uploads
 
 # The ISR cache is written to .next at runtime, so the app user owns /app
 COPY --from=builder --chown=node:node /app ./
+# Mount point for the uploads volume; a new volume takes this ownership
+RUN mkdir -p /app/uploads && chown node:node /app/uploads
 
 USER node
 EXPOSE 3000

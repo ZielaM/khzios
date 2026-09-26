@@ -5,6 +5,9 @@
 #
 # Demo data (DELETES ALL CONTENT — only for a fresh installation):
 #   docker compose --env-file .env.docker --profile seed run --rm seed
+#
+# First admin panel account (asks for the password):
+#   docker compose --env-file .env.docker run --rm migrate pnpm admin:create --login jan --name "Jan Kowalski" --role admin
 
 name: khzios
 
@@ -62,6 +65,11 @@ services:
     environment:
       DATABASE_URL: *database-url
       APP_URL: ${APP_URL:-https://khzios.up.poznan.pl}
+      # Address of the admin panel; the panel is disabled when empty
+      ADMIN_PATH: ${ADMIN_PATH:-}
+    volumes:
+      # Photos and PDFs uploaded in the admin panel; back it up with the database
+      - uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -70,3 +78,4 @@ services:
 
 volumes:
   pgdata:
+  uploads:

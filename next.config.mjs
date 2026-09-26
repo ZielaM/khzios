@@ -46,6 +46,12 @@ const nextConfig = {
     // some AVIF encodes stalled. Originals in public/images can stay JPG/PNG.
     formats: ['image/webp'],
   },
+  experimental: {
+    // Photo and PDF uploads in the admin panel (limits are checked again
+    // in lib/admin/storage.ts); uploads pass through the proxy as well
+    serverActions: { bodySizeLimit: '25mb' },
+    proxyClientMaxBodySize: '25mb',
+  },
   compiler: {
     reactRemoveProperties:
       process.env.NODE_ENV === 'production' &&

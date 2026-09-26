@@ -1,0 +1,85 @@
+@use '@/styles/variables' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 1100px;
+
+  h1 {
+    font-size: 1.9em;
+  }
+
+  h2 {
+    font-size: 1.3em;
+    margin-bottom: 0.5rem;
+  }
+
+  a {
+    color: var(--color-primary);
+  }
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.activity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-left: 1.25rem;
+
+  time {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.35rem 1.5rem;
+
+  dt {
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.authPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: var(--surface-muted);
+  color: var(--foreground);
+  font-family: system-ui, sans-serif;
+}
+
+.authCard {
+  width: min(100%, 460px);
+  padding: 2rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: $radius-lg;
+  background: var(--background);
+
+  h1 {
+    font-size: 1.6em;
+    margin-bottom: 1.25rem;
+  }
+
+  > p {
+    margin-bottom: 1rem;
+  }
+}
+
+.authBrand {
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}

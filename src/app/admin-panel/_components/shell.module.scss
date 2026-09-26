@@ -1,0 +1,122 @@
+@use '@/styles/variables' as *;
+
+.shell {
+  display: grid;
+  grid-template:
+    'header header' auto
+    'nav main' 1fr
+    / 240px minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--surface-muted);
+  color: var(--foreground);
+  font-family: system-ui, sans-serif;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'header'
+      'nav'
+      'main';
+  }
+}
+
+.header {
+  grid-area: header;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--footer-bg);
+  color: #fff;
+}
+
+.brand {
+  font-family: $font-serif;
+  font-size: 1.15em;
+  font-weight: 700;
+  color: #fff;
+}
+
+.user {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.925em;
+}
+
+.role {
+  opacity: 0.8;
+}
+
+.headerLink {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.signOut {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: $radius-md;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.nav {
+  grid-area: nav;
+  padding: 1rem 0.75rem;
+  border-right: 1px solid var(--border-subtle);
+  background: var(--background);
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    list-style: none;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    border-right: 0;
+    border-bottom: 1px solid var(--border-subtle);
+
+    ul {
+      flex-flow: row wrap;
+    }
+  }
+}
+
+.navLink {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: $radius-md;
+  color: var(--foreground);
+
+  &:hover {
+    background: var(--surface-muted);
+  }
+
+  &.active {
+    background: var(--color-primary);
+    color: #fff;
+
+    :global(.wcag-high-contrast) & {
+      background: var(--foreground);
+      color: var(--background);
+    }
+  }
+}
+
+.main {
+  grid-area: main;
+  min-width: 0;
+  padding: 2rem clamp(1rem, 3vw, 2.5rem) 4rem;
+}

@@ -13,6 +13,7 @@ export function makePhoto(
     id,
     url,
     newsId: 'news',
+    displayOrder: 0,
     translations: Object.entries(alt ?? {}).map(([languageCode, text]) => ({
       photoId: id,
       languageCode: languageCode as 'pl' | 'en',

@@ -61,7 +61,11 @@ services:
       target: runner
     restart: unless-stopped
     ports:
-      - '${APP_PORT:-3000}:3000'
+      # Only the reverse proxy on this host may reach the app: a direct
+      # client could send its own X-Forwarded-For and dodge the per-address
+      # sign-in limit. Set APP_BIND=0.0.0.0 only when the proxy runs on
+      # another machine, and then firewall the port to that machine.
+      - '${APP_BIND:-127.0.0.1}:${APP_PORT:-3000}:3000'
     environment:
       DATABASE_URL: *database-url
       APP_URL: ${APP_URL:-https://khzios.up.poznan.pl}

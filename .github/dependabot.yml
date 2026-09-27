@@ -1,6 +1,6 @@
 # Weekly dependency update PRs. Related packages are grouped so that e.g.
-# next and react, or prisma and its client, are upgraded together; CI runs
-# the full test suite on every PR.
+# react and react-dom, or prisma and its client, are upgraded together; CI
+# runs the full test suite on every PR.
 version: 2
 updates:
   - package-ecosystem: npm # also covers pnpm-lock.yaml
@@ -10,14 +10,18 @@ updates:
       day: monday
       timezone: Europe/Warsaw
     open-pull-requests-limit: 5
+    ignore:
+      # Next carries a local patch (patches/, see pnpm-workspace.yaml) that
+      # has to be redone by hand for a new version, so Next and its ESLint
+      # config are upgraded manually. Security alerts still show up under
+      # the repository's Security tab.
+      - dependency-name: next
+      - dependency-name: eslint-config-next
     groups:
-      next-react:
+      react:
         patterns:
-          - next
           - react
           - react-dom
-          - eslint-config-next
-          - '@next/*'
           - '@types/react'
           - '@types/react-dom'
       prisma:
@@ -29,13 +33,30 @@ updates:
         update-types:
           - minor
           - patch
+        exclude-patterns:
+          # Grouped above
+          - prisma
+          - '@prisma/*'
+          - '@types/react'
+          - '@types/react-dom'
+          # New Prettier versions can reformat code, which needs a commit
+          # of its own (pnpm format) on the PR; kept separate so it does
+          # not hold back the other tools
+          - prettier
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
+    groups:
+      actions:
+        patterns: ['*']
 
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: monthly
+    ignore:
+      # Node majors are chosen by hand, moving to the next LTS release
+      - dependency-name: node
+        update-types: ['version-update:semver-major']

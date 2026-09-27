@@ -1,7 +1,10 @@
 name: Code Quality and Build Checks
 
+# Pull requests run once (a push to a PR branch would otherwise start a
+# second, identical run); main is checked after every merge
 on:
   push:
+    branches: [main]
   pull_request:
 
 env:
@@ -19,10 +22,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Version from package.json#packageManager, like Vercel and Docker
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 11
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -82,10 +84,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Version from package.json#packageManager, like Vercel and Docker
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 11
 
       - name: Set up Node.js
         uses: actions/setup-node@v4

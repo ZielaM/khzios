@@ -43,6 +43,21 @@ docker compose --env-file .env.docker up -d --build
   `docker compose --env-file .env.docker run --rm migrate pnpm admin:create --login jan --name "Jan Kowalski" --role admin`
 - Kopia zapasowa to **baza i wolumen `uploads`** (zdjęcia i PDF-y z panelu) — jedno bez drugiego jest niepełne.
 
+## Aktualizacje zależności (Dependabot)
+
+Dependabot (`.github/dependabot.yml`) w poniedziałki otwiera PR-y z aktualizacjami: powiązane pakiety razem (React, Prisma, narzędzia deweloperskie), GitHub Actions raz w miesiącu jednym PR-em. Każdy PR przechodzi pełne CI (lint, testy jednostkowe, build, e2e w trzech przeglądarkach).
+
+- **Zielone CI** → przejrzyj opis PR-a (zmiany w wersjach, przy dużych skokach changelog) i zmerguj. PR-y, które po tym mają konflikt w lockfile'u, Dependabot sam przebuduje; ręcznie wymusisz to komentarzem `@dependabot rebase`.
+- **Czerwone CI** → sprawdź log. Nowa wersja Prettiera zwykle tylko inaczej formatuje kod: `git switch <gałąź PR-a> && pnpm install && pnpm format`, commit i push na tę gałąź.
+- **Niechciana aktualizacja** → komentarz `@dependabot ignore this major version` (albo `this version`, `this dependency`) zamyka PR i zapamiętuje decyzję.
+- Wersję pnpm wyznacza pole `packageManager` w `package.json`: CI, Vercel i Docker używają dokładnie tej wersji. Zmienia się ją, edytując to pole.
+
+**Next.js aktualizujemy ręcznie**, bo ma lokalny patch (`patches/`, opis w `pnpm-workspace.yaml`), którego nie da się nałożyć na nową wersję automatycznie. Alerty bezpieczeństwa dla Next i tak pojawiają się w zakładce Security repozytorium. Procedura:
+
+1. Usuń wpis `patchedDependencies` z `pnpm-workspace.yaml` i stary plik z `patches/`, potem `pnpm add -E next@<wersja> eslint-config-next@<wersja>`.
+2. Jeśli w `node_modules/next/dist/server/image-optimizer.js` nadal jest `socket: _req.socket`, odtwórz patch: `pnpm patch next@<wersja>`, usuń tę linię (i przecinek przed nią) w pokazanym katalogu, `pnpm patch-commit <katalog>`. Jeśli linii już nie ma, błąd naprawiono w Next i patch nie jest potrzebny.
+3. `pnpm test` i testy e2e, bo patch dotyczy optymalizacji obrazów.
+
 ## Formatowanie Artykułów (Predefiniowane Style HTML)
 
 W aplikacji zaimplementowaliśmy zautomatyzowane formatowanie artykułów. Pisząc artykuł w edytorze WYSIWYG, nie musisz martwić się o dodawanie klas CSS – standardowe znaczniki HTML otrzymują profesjonalny, akademicki wygląd z pudełka. Obsługiwany jest również tryb wysokiego kontrastu (WCAG).

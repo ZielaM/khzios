@@ -1,0 +1,21 @@
+// Native selects differ in height between browsers (WebKit ignores their
+// padding and grows ~10px), so they are drawn like text inputs, with an
+// arrow in the text colour
+@mixin select-control {
+  appearance: none;
+  padding-right: 2rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentcolor 50%),
+    linear-gradient(135deg, currentcolor 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.05rem) 50%,
+    calc(100% - 0.7rem) 50%;
+  background-size: 0.35rem 0.35rem;
+  background-repeat: no-repeat;
+
+  // Forced colours drop authored colours, and the arrow with them
+  @media (forced-colors: active) {
+    appearance: auto;
+    background-image: none;
+  }
+}

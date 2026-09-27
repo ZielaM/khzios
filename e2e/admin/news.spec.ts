@@ -99,6 +99,22 @@ test.describe('Admin panel: news', () => {
     expect(await gone.text()).not.toContain(title);
   });
 
+  test('the list filters sit on one line', async ({ page }) => {
+    await signIn(page, DEV_ADMIN_ACCOUNTS.editor);
+    await page.goto(`${ADMIN_BASE}/news`);
+    const boxes = await Promise.all(
+      [
+        page.getByLabel('Szukaj w tytułach'),
+        page.getByLabel('Status'),
+        page.getByRole('button', { name: 'Filtruj' }),
+      ].map((l) => l.boundingBox())
+    );
+    for (const box of boxes.slice(1)) {
+      expect(Math.abs(box!.y - boxes[0]!.y)).toBeLessThan(1);
+      expect(Math.abs(box!.height - boxes[0]!.height)).toBeLessThan(1);
+    }
+  });
+
   test('requires the Polish title and content', async ({ page }) => {
     await signIn(page, DEV_ADMIN_ACCOUNTS.editor);
     await page.goto(`${ADMIN_BASE}/news/new`);

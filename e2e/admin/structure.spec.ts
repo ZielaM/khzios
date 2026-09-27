@@ -87,6 +87,16 @@ test.describe('Admin panel: people and teams', () => {
       .selectOption({ label: `${lastName} Anna` });
     await page.getByRole('button', { name: 'Dodaj do zespołu' }).click();
     await expect(page.getByText('Dodano osobę do zespołu.')).toBeVisible();
+    // The group select and its button sit on one line
+    const group = await page
+      .getByLabel(`Grupa: Anna ${lastName}`)
+      .boundingBox();
+    const change = await page
+      .getByLabel(`Grupa: Anna ${lastName}`)
+      .locator('xpath=following-sibling::button')
+      .boundingBox();
+    expect(Math.abs(group!.y - change!.y)).toBeLessThan(1);
+    expect(Math.abs(group!.height - change!.height)).toBeLessThan(1);
 
     await page.locator('summary', { hasText: 'Dodaj projekt' }).click();
     const projectForm = page.locator('details', { hasText: 'Dodaj projekt' });

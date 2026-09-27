@@ -1,4 +1,5 @@
 @use '@/styles/variables' as *;
+@use './controls' as *;
 
 .page {
   display: flex;
@@ -113,6 +114,21 @@
     background: var(--background);
     color: var(--foreground);
     font: inherit;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  select {
+    @include select-control;
+  }
+
+  // Sits on the line of the inputs, at their height (.button aligns itself
+  // to the top and has a thicker border)
+  button {
+    align-self: flex-end;
+    padding: 0.5rem 1rem;
+    border-width: 1px;
+    line-height: 1.25;
   }
 }
 
@@ -218,13 +234,22 @@
   align-items: center;
   gap: 0.5rem;
 
+  // As tall as a .button (padding + 2px border) and centred with it
   select {
-    padding: 0.55rem 0.65rem;
+    padding: calc(0.6rem + 1px) 0.65rem;
     border: 1px solid var(--border-strong);
     border-radius: $radius-md;
     background: var(--background);
     color: var(--foreground);
     font: inherit;
+    line-height: 1.25;
+
+    @include select-control;
+  }
+
+  > button {
+    align-self: center;
+    line-height: 1.25;
   }
 }
 

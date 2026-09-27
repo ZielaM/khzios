@@ -9,6 +9,7 @@ import { field, translations, type FormState } from '@/lib/admin/form';
 import { adminHref } from '@/lib/admin/paths';
 import { revalidatePublicSite } from '@/lib/admin/revalidate';
 import { requireUser } from '@/lib/admin/session';
+import { LANGUAGES } from '@/lib/admin/languages';
 import { slugify } from '@/lib/admin/slug';
 import { publicationSnapshot, teamSnapshot } from '@/lib/admin/team-admin';
 import { moveToTrash } from '@/lib/admin/trash';
@@ -24,6 +25,13 @@ const URL_PATTERN = /^https?:\/\/\S+$/i;
 
 // ──── Team ──────────────────────────────────────────────────────────
 
+const TEAM_TEXTS = [
+  'name',
+  'slug',
+  'researchDescription',
+  'teachingDescription',
+] as const;
+
 export async function saveTeam(
   _: FormState,
   formData: FormData
@@ -37,20 +45,36 @@ export async function saveTeam(
     Math.min(999, Number(field(formData, 'displayOrder', 4)) || 0)
   );
 
-  const texts = translations(
-    formData,
-    ['name', 'slug', 'researchDescription', 'teachingDescription'],
-    {
-      name: 300,
-      slug: 80,
-      researchDescription: 5000,
-      teachingDescription: 5000,
-    }
-  );
+  const texts = translations(formData, TEAM_TEXTS, {
+    name: 300,
+    slug: 80,
+    researchDescription: 5000,
+    teachingDescription: 5000,
+  });
   const polish = texts.find((t) => t.languageCode === 'pl')?.values;
   if (!polish?.name) return { error: 'Nazwa zespołu po polsku jest wymagana.' };
-  if (texts.some((t) => !t.values.name)) {
-    return { error: 'Każda wersja językowa zespołu musi mieć nazwę.' };
+  // Team names appear in the menu and breadcrumbs of every language, so the
+  // site never falls back to Polish for a team
+  const lacking = (f: (typeof TEAM_TEXTS)[number]) =>
+    LANGUAGES.filter(
+      ({ code }) => !texts.find((t) => t.languageCode === code)?.values[f]
+    )
+      .map((l) => l.label.toLowerCase())
+      .join(', ');
+  if (lacking('name')) {
+    return {
+      error: `Nazwa zespołu jest wymagana we wszystkich językach. Brak: ${lacking('name')}.`,
+    };
+  }
+  for (const [f, label] of [
+    ['researchDescription', 'Czym się zajmuje'],
+    ['teachingDescription', 'Dydaktyka'],
+  ] as const) {
+    if (polish[f] && lacking(f)) {
+      return {
+        error: `Pole „${label}” jest wypełnione po polsku, więc uzupełnij je też w językach: ${lacking(f)}.`,
+      };
+    }
   }
 
   // Address of the team page per language, from the name when left empty

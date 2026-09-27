@@ -129,7 +129,12 @@ export default async function TeamPage({ params, searchParams }: Props) {
                   <option value="ACADEMIC">naukowo-dydaktyczny</option>
                   <option value="TECHNICAL">inżynieryjno-techniczny</option>
                 </select>
-                <button type="submit">Zmień</button>
+                <button
+                  type="submit"
+                  className={`${formStyle.button} ${formStyle.secondary}`}
+                >
+                  Zmień
+                </button>
               </form>
               <form action={removeMember}>
                 <input type="hidden" name="id" value={m.id} />
@@ -258,22 +263,53 @@ export default async function TeamPage({ params, searchParams }: Props) {
         </details>
       </section>
 
-      <section className={style.card} aria-labelledby="links">
-        <h2 id="links">Linki zewnętrzne</h2>
-        <p className={style.muted}>
-          Pokazywane na stronie zespołu zewnętrznego.
-        </p>
-        {team.links.map((l) => (
-          <details key={l.id}>
-            <summary>{l.url}</summary>
-            <ActionForm action={saveLink} submitLabel="Zapisz" wide>
-              <input type="hidden" name="id" value={l.id} />
+      {/* Only the page of an external team shows links (to its own site) */}
+      {team.type === 'EXTERNAL' ? (
+        <section className={style.card} aria-labelledby="links">
+          <h2 id="links">Linki zewnętrzne</h2>
+          <p className={style.muted}>
+            Strona zespołu pokazuje tylko informację o przekierowaniu i te
+            linki, więc dodaj co najmniej jeden.
+          </p>
+          {team.links.length === 0 && (
+            <p className={style.warning}>Brak linków.</p>
+          )}
+          {team.links.map((l) => (
+            <details key={l.id}>
+              <summary>{l.url}</summary>
+              <ActionForm action={saveLink} submitLabel="Zapisz" wide>
+                <input type="hidden" name="id" value={l.id} />
+                <input type="hidden" name="teamId" value={team.id} />
+                <LinkFields
+                  url={l.url}
+                  icon={l.icon}
+                  displayOrder={l.displayOrder}
+                />
+                <TranslatedFields
+                  fields={[
+                    {
+                      name: 'label',
+                      label: 'Opis linku',
+                      maxLength: 100,
+                      required: true,
+                    },
+                  ]}
+                  values={valuesByLanguage(l.translations)}
+                />
+              </ActionForm>
+              <form action={deleteLink}>
+                <input type="hidden" name="id" value={l.id} />
+                <ConfirmButton message="Usunąć ten link?">
+                  Usuń link
+                </ConfirmButton>
+              </form>
+            </details>
+          ))}
+          <details>
+            <summary>Dodaj link</summary>
+            <ActionForm action={saveLink} submitLabel="Dodaj link" wide>
               <input type="hidden" name="teamId" value={team.id} />
-              <LinkFields
-                url={l.url}
-                icon={l.icon}
-                displayOrder={l.displayOrder}
-              />
+              <LinkFields />
               <TranslatedFields
                 fields={[
                   {
@@ -283,35 +319,19 @@ export default async function TeamPage({ params, searchParams }: Props) {
                     required: true,
                   },
                 ]}
-                values={valuesByLanguage(l.translations)}
               />
             </ActionForm>
-            <form action={deleteLink}>
-              <input type="hidden" name="id" value={l.id} />
-              <ConfirmButton message="Usunąć ten link?">
-                Usuń link
-              </ConfirmButton>
-            </form>
           </details>
-        ))}
-        <details>
-          <summary>Dodaj link</summary>
-          <ActionForm action={saveLink} submitLabel="Dodaj link" wide>
-            <input type="hidden" name="teamId" value={team.id} />
-            <LinkFields />
-            <TranslatedFields
-              fields={[
-                {
-                  name: 'label',
-                  label: 'Opis linku',
-                  maxLength: 100,
-                  required: true,
-                },
-              ]}
-            />
-          </ActionForm>
-        </details>
-      </section>
+        </section>
+      ) : (
+        team.links.length > 0 && (
+          <p className={style.muted}>
+            Zespół ma zapisane linki zewnętrzne ({team.links.length}), ale
+            strona zespołu w serwisie katedry ich nie pokazuje. Widać je po
+            zmianie rodzaju na „Odnośnik do strony zewnętrznej”.
+          </p>
+        )
+      )}
 
       <section className={style.card} aria-labelledby="danger">
         <h2 id="danger">Usuwanie</h2>

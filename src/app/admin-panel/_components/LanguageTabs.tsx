@@ -1,6 +1,14 @@
 'use client';
 
-import { useId, useState, type KeyboardEvent, type ReactNode } from 'react';
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react';
+import { flushSync } from 'react-dom';
 import clsx from 'clsx';
 import style from './forms.module.scss';
 
@@ -13,13 +21,67 @@ export interface LanguagePanel {
   content: ReactNode;
 }
 
+/** Whether anything is typed in a panel (inputs or the article editor). */
+function hasContent(panel: Element) {
+  const fields = panel.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+    'input:not([type="hidden"]):not([type="file"]), textarea'
+  );
+  const editors = panel.querySelectorAll('[contenteditable="true"]');
+  return (
+    Array.from(fields).some((f) => f.value.trim()) ||
+    Array.from(editors).some((e) => e.textContent?.trim())
+  );
+}
+
 /**
  * Tabs for the language versions of a record. Every panel stays in the
  * form (only hidden), so all languages are submitted together.
  */
 export default function LanguageTabs({ panels }: { panels: LanguagePanel[] }) {
   const [active, setActive] = useState(0);
+  const [filled, setFilled] = useState(() => panels.map((p) => p.filled));
+  const rootRef = useRef<HTMLDivElement>(null);
   const id = useId();
+
+  useEffect(() => {
+    const form = rootRef.current?.closest('form');
+    if (!form) return;
+    const panelIndex = (target: EventTarget | null) => {
+      const panel = target instanceof Element && target.closest('[data-panel]');
+      return panel && rootRef.current?.contains(panel)
+        ? Number(panel.getAttribute('data-panel'))
+        : -1;
+    };
+
+    // A required field on a hidden tab would silently block the submit, so
+    // show the tab of the first invalid field before the browser focuses it.
+    // One validation fires its invalid events within a single task, with
+    // microtasks run in between, hence the timeout.
+    let checking = false;
+    const onInvalid = (e: Event) => {
+      if (checking) return;
+      checking = true;
+      setTimeout(() => (checking = false));
+      const index = panelIndex(e.target);
+      if (index >= 0) flushSync(() => setActive(index));
+    };
+    // Clearing the form after adding a record clears the tabs' state too
+    const onReset = () =>
+      setTimeout(() => {
+        const root = rootRef.current;
+        if (root)
+          setFilled(
+            Array.from(root.querySelectorAll('[data-panel]'), hasContent)
+          );
+      });
+
+    form.addEventListener('invalid', onInvalid, true);
+    form.addEventListener('reset', onReset);
+    return () => {
+      form.removeEventListener('invalid', onInvalid, true);
+      form.removeEventListener('reset', onReset);
+    };
+  }, []);
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
@@ -31,7 +93,7 @@ export default function LanguageTabs({ panels }: { panels: LanguagePanel[] }) {
   };
 
   return (
-    <div className={style.languageTabs}>
+    <div ref={rootRef} className={style.languageTabs}>
       <div role="tablist" aria-label="Wersje językowe" onKeyDown={onKeyDown}>
         {panels.map((panel, i) => (
           <button
@@ -47,10 +109,8 @@ export default function LanguageTabs({ panels }: { panels: LanguagePanel[] }) {
           >
             {panel.label}
             {panel.required && ' *'}
-            <span
-              className={clsx(style.tabState, panel.filled && style.filled)}
-            >
-              {panel.filled ? 'uzupełnione' : 'brak'}
+            <span className={clsx(style.tabState, filled[i] && style.filled)}>
+              {filled[i] ? 'uzupełnione' : 'brak'}
             </span>
           </button>
         ))}
@@ -61,8 +121,15 @@ export default function LanguageTabs({ panels }: { panels: LanguagePanel[] }) {
           role="tabpanel"
           id={`${id}-panel-${i}`}
           aria-labelledby={`${id}-tab-${i}`}
+          data-panel={i}
           hidden={active !== i}
           className={style.tabPanel}
+          onInput={(e) => {
+            const now = hasContent(e.currentTarget);
+            setFilled((prev) =>
+              prev[i] === now ? prev : prev.map((f, j) => (j === i ? now : f))
+            );
+          }}
         >
           {panel.content}
         </div>

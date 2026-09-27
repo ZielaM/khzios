@@ -5,6 +5,7 @@ import { saveTag } from '../_actions/tags';
 import type { FormState } from '@/lib/admin/form';
 import FormMessage from './FormMessage';
 import SubmitButton from './SubmitButton';
+import { useKeepValuesOnError } from './useKeepValuesOnError';
 import style from './forms.module.scss';
 
 export default function TagForm({
@@ -14,11 +15,22 @@ export default function TagForm({
   id?: string;
   names: { code: string; label: string; name: string }[];
 }) {
-  const [state, action] = useActionState<FormState, FormData>(saveTag, {});
+  const [state, action, isPending] = useActionState<FormState, FormData>(
+    saveTag,
+    {}
+  );
+  const { formRef, onSubmit } = useKeepValuesOnError(state);
   return (
-    <form action={action} className={style.form}>
+    <form
+      ref={formRef}
+      action={action}
+      onSubmit={onSubmit}
+      className={style.form}
+    >
       {id && <input type="hidden" name="id" value={id} />}
-      <FormMessage error={state.error} message={state.message} />
+      {!isPending && (
+        <FormMessage error={state.error} message={state.message} />
+      )}
       <div className={style.row}>
         {names.map((n) => (
           <label key={n.code} className={style.field}>

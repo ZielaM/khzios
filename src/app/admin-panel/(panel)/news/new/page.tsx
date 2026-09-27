@@ -20,8 +20,8 @@ export default async function NewNewsPage() {
     <div className={style.page}>
       <h1>Nowa aktualność</h1>
       <p className={style.muted}>
-        Zdjęcia dodasz po zapisaniu. Artykuł nieoznaczony jako opublikowany
-        zostaje szkicem i nie jest widoczny na stronie.
+        Artykuł nieoznaczony jako opublikowany zostaje szkicem i nie jest
+        widoczny na stronie.
       </p>
       <NewsForm
         published={false}

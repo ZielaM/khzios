@@ -20,6 +20,10 @@ test.describe('Admin panel: people and teams', () => {
     await page.getByLabel('Imię').fill('Anna');
     await page.getByLabel('Nazwisko').fill(lastName);
     await page.locator('[name="academicTitle_pl"]').fill('dr');
+    // Fields side by side line up even when one has a hint below
+    const orcid = await page.getByLabel('ORCID').boundingBox();
+    const slug = await page.getByLabel('Adres profilu').boundingBox();
+    expect(Math.abs(orcid!.y - slug!.y)).toBeLessThan(1);
     const photo = await sharp({
       create: { width: 400, height: 400, channels: 3, background: '#789' },
     })
@@ -41,8 +45,41 @@ test.describe('Admin panel: people and teams', () => {
       .locator('[name="researchDescription_pl"]')
       .fill('Badamy testy końcowe.');
     await page.getByLabel('Kolejność w menu').fill('999');
+    // The name is required in every language: the browser opens the first
+    // tab that lacks it
+    await expect(page.locator('[name="name_en"]')).toBeHidden();
+    await page.getByRole('button', { name: 'Utwórz' }).click();
+    await expect(page.locator('[name="name_en"]')).toBeVisible();
+    const others = [
+      ['en', 'Angielski'],
+      ['uk', 'Ukraiński'],
+      ['ru', 'Rosyjski'],
+    ] as const;
+    for (const [code, tab] of others) {
+      await page.getByRole('tab', { name: new RegExp(`^${tab}`) }).click();
+      await page.locator(`[name="name_${code}"]`).fill(`${teamName} ${code}`);
+    }
+    // A Polish description needs its translations as well (server check);
+    // nothing typed is lost with the error
+    await page.getByRole('button', { name: 'Utwórz' }).click();
+    await expect(page.locator('form [role="alert"]')).toContainText(
+      'uzupełnij je też w językach: angielski, ukraiński, rosyjski'
+    );
+    await expect(page.locator('[name="name_uk"]')).toHaveValue(
+      `${teamName} uk`
+    );
+    for (const [code, tab] of others) {
+      await page.getByRole('tab', { name: new RegExp(`^${tab}`) }).click();
+      await page
+        .locator(`[name="researchDescription_${code}"]`)
+        .fill(`Research ${code}`);
+    }
     await page.getByRole('button', { name: 'Utwórz' }).click();
     await expect(page.getByText('Utworzono zespół.')).toBeVisible();
+    // Links are only shown for external teams
+    await expect(
+      page.getByRole('heading', { name: 'Linki zewnętrzne' })
+    ).toHaveCount(0);
     const teamUrl = page.url().split('?')[0];
 
     await page

@@ -49,17 +49,21 @@ export interface TranslatedField {
 export function TranslatedFields({
   fields,
   values = {},
+  everyLanguage = false,
 }: {
   fields: TranslatedField[];
   /** values[lang][field] */
   values?: Partial<Record<string, Partial<Record<string, string | null>>>>;
+  /** Required fields are required in every language, not only Polish */
+  everyLanguage?: boolean;
 }) {
+  const requiredIn = (code: string) => everyLanguage || code === 'pl';
   return (
     <LanguageTabs
       panels={LANGUAGES.map(({ code, label }) => ({
         code,
         label,
-        required: code === 'pl' && fields.some((f) => f.required),
+        required: requiredIn(code) && fields.some((f) => f.required),
         filled: fields.some((f) => values[code]?.[f.name]),
         content: fields.map((f) => (
           <Field
@@ -69,7 +73,7 @@ export function TranslatedFields({
             defaultValue={values[code]?.[f.name] ?? ''}
             maxLength={f.maxLength}
             multiline={f.multiline}
-            required={code === 'pl' && f.required}
+            required={requiredIn(code) && f.required}
           />
         )),
       }))}

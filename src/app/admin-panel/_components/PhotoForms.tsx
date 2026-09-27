@@ -5,17 +5,20 @@ import { savePhotoAlts, uploadNewsPhotos } from '../_actions/news';
 import type { FormState } from '@/lib/admin/form';
 import FormMessage from './FormMessage';
 import SubmitButton from './SubmitButton';
+import { useKeepValuesOnError } from './useKeepValuesOnError';
 import style from './forms.module.scss';
 
 export function PhotoUploadForm({ newsId }: { newsId: string }) {
-  const [state, action] = useActionState<FormState, FormData>(
+  const [state, action, isPending] = useActionState<FormState, FormData>(
     uploadNewsPhotos,
     {}
   );
   return (
     <form action={action} className={style.form}>
       <input type="hidden" name="newsId" value={newsId} />
-      <FormMessage error={state.error} message={state.message} />
+      {!isPending && (
+        <FormMessage error={state.error} message={state.message} />
+      )}
       <label className={style.field}>
         <span>Dodaj zdjęcia</span>
         <input
@@ -26,8 +29,9 @@ export function PhotoUploadForm({ newsId }: { newsId: string }) {
           required
         />
         <small>
-          JPG, PNG lub WebP do 15 MB. Zdjęcia zostaną zmniejszone do 2560 px, a
-          dane z aparatu (w tym położenie GPS) usunięte.
+          JPG, PNG lub WebP do 15 MB każde, łącznie do 25 MB naraz. Zdjęcia
+          zostaną zmniejszone do 2560 px, a dane z aparatu (w tym położenie GPS)
+          usunięte.
         </small>
       </label>
       <SubmitButton pendingLabel="Wgrywanie…">Wgraj</SubmitButton>
@@ -42,14 +46,22 @@ export function PhotoAltForm({
   photoId: string;
   alts: { code: string; label: string; alt: string }[];
 }) {
-  const [state, action] = useActionState<FormState, FormData>(
+  const [state, action, isPending] = useActionState<FormState, FormData>(
     savePhotoAlts,
     {}
   );
+  const { formRef, onSubmit } = useKeepValuesOnError(state);
   return (
-    <form action={action} className={style.form}>
+    <form
+      ref={formRef}
+      action={action}
+      onSubmit={onSubmit}
+      className={style.form}
+    >
       <input type="hidden" name="photoId" value={photoId} />
-      <FormMessage error={state.error} message={state.message} />
+      {!isPending && (
+        <FormMessage error={state.error} message={state.message} />
+      )}
       {alts.map((a) => (
         <label key={a.code} className={style.field}>
           <span>Opis zdjęcia ({a.label.toLowerCase()})</span>

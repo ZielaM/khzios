@@ -155,7 +155,12 @@ export default async function PublicationsPage({
           Szukaj (tytuł, autorzy)
           <input name="q" type="search" defaultValue={q} />
         </label>
-        <button type="submit">Filtruj</button>
+        <button
+          type="submit"
+          className={`${formStyle.button} ${formStyle.secondary}`}
+        >
+          Filtruj
+        </button>
       </form>
 
       <details className={style.card}>

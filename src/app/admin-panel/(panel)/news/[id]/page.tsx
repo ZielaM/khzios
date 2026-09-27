@@ -9,6 +9,7 @@ import { resolveTagName } from '@/lib/translations';
 import { formatDate } from '@/lib/dates';
 import { deleteNews, deletePhoto, movePhoto } from '../../../_actions/news';
 import ConfirmButton from '../../../_components/ConfirmButton';
+import MoveButtons from '../../../_components/MoveButtons';
 import NewsForm from '../../../_components/NewsForm';
 import { PhotoAltForm, PhotoUploadForm } from '../../../_components/PhotoForms';
 import style from '../../../_components/pages.module.scss';
@@ -82,7 +83,11 @@ export default async function EditNewsPage({ params, searchParams }: Props) {
           checked: news.tags.some((nt) => nt.id === t.id),
         }))}
         initialMessage={
-          created ? 'Utworzono artykuł. Możesz teraz dodać zdjęcia.' : undefined
+          created
+            ? news.photos.length
+              ? 'Utworzono artykuł. Uzupełnij opisy zdjęć poniżej.'
+              : 'Utworzono artykuł. Możesz teraz dodać zdjęcia.'
+            : undefined
         }
       />
 
@@ -103,28 +108,13 @@ export default async function EditNewsPage({ params, searchParams }: Props) {
                 {/* eslint-disable-next-line @next/next/no-img-element -- panel thumbnail */}
                 <img src={photo.url} alt="" />
                 <div className={style.inlineActions}>
-                  <form action={movePhoto}>
-                    <input type="hidden" name="photoId" value={photo.id} />
-                    <input type="hidden" name="direction" value="up" />
-                    <button
-                      type="submit"
-                      disabled={index === 0}
-                      aria-label={`Przesuń zdjęcie ${index + 1} wyżej`}
-                    >
-                      ↑
-                    </button>
-                  </form>
-                  <form action={movePhoto}>
-                    <input type="hidden" name="photoId" value={photo.id} />
-                    <input type="hidden" name="direction" value="down" />
-                    <button
-                      type="submit"
-                      disabled={index === news.photos.length - 1}
-                      aria-label={`Przesuń zdjęcie ${index + 1} niżej`}
-                    >
-                      ↓
-                    </button>
-                  </form>
+                  <MoveButtons
+                    action={movePhoto}
+                    idField="photoId"
+                    id={photo.id}
+                    index={index}
+                    count={news.photos.length}
+                  />
                   <form action={deletePhoto}>
                     <input type="hidden" name="photoId" value={photo.id} />
                     <ConfirmButton message="Usunąć to zdjęcie? Tej operacji nie można cofnąć.">

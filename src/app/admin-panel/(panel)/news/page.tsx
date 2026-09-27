@@ -7,6 +7,7 @@ import { adminHref } from '@/lib/admin/paths';
 import { LANGUAGES } from '@/lib/admin/languages';
 import { formatDate } from '@/lib/dates';
 import FormMessage from '../../_components/FormMessage';
+import formStyle from '../../_components/forms.module.scss';
 import style from '../../_components/pages.module.scss';
 
 export const metadata: Metadata = { title: 'Aktualności · Panel KHZiOS' };
@@ -75,7 +76,12 @@ export default async function NewsListPage({
             <option value="draft">Szkice</option>
           </select>
         </label>
-        <button type="submit">Filtruj</button>
+        <button
+          type="submit"
+          className={`${formStyle.button} ${formStyle.secondary}`}
+        >
+          Filtruj
+        </button>
       </form>
 
       <div className={style.tableWrap}>

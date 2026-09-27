@@ -9,7 +9,13 @@ export default function TeamFields({
 }) {
   return (
     <>
+      <p className={formStyle.note}>
+        Nazwa zespołu jest wymagana we wszystkich językach, bo widać ją w menu
+        strony. Opis wypełniony po polsku trzeba uzupełnić też w pozostałych
+        językach.
+      </p>
       <TranslatedFields
+        everyLanguage
         fields={[
           {
             name: 'name',

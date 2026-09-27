@@ -11,6 +11,7 @@ import {
 } from '../../_actions/images';
 import ActionForm from '../../_components/ActionForm';
 import ConfirmButton from '../../_components/ConfirmButton';
+import MoveButtons from '../../_components/MoveButtons';
 import { Field } from '../../_components/fields';
 import style from '../../_components/pages.module.scss';
 
@@ -90,32 +91,13 @@ export default async function ImagesPage() {
                     </p>
                   )}
                   <div className={style.inlineActions}>
-                    {sectionImages.length > 1 && (
-                      <>
-                        <form action={moveSiteImage}>
-                          <input type="hidden" name="id" value={image.id} />
-                          <input type="hidden" name="direction" value="up" />
-                          <button
-                            type="submit"
-                            disabled={index === 0}
-                            aria-label={`Przesuń zdjęcie ${index + 1} wyżej`}
-                          >
-                            ↑
-                          </button>
-                        </form>
-                        <form action={moveSiteImage}>
-                          <input type="hidden" name="id" value={image.id} />
-                          <input type="hidden" name="direction" value="down" />
-                          <button
-                            type="submit"
-                            disabled={index === sectionImages.length - 1}
-                            aria-label={`Przesuń zdjęcie ${index + 1} niżej`}
-                          >
-                            ↓
-                          </button>
-                        </form>
-                      </>
-                    )}
+                    <MoveButtons
+                      action={moveSiteImage}
+                      idField="id"
+                      id={image.id}
+                      index={index}
+                      count={sectionImages.length}
+                    />
                     <form action={deleteSiteImage}>
                       <input type="hidden" name="id" value={image.id} />
                       <ConfirmButton message="Usunąć to zdjęcie?">
@@ -154,7 +136,7 @@ export default async function ImagesPage() {
                 accept="image/jpeg,image/png,image/webp"
                 multiple={section.many}
                 required
-                hint="JPG, PNG lub WebP do 15 MB; dane z aparatu zostaną usunięte."
+                hint="JPG, PNG lub WebP do 15 MB każde, łącznie do 25 MB naraz; dane z aparatu zostaną usunięte."
               />
             </ActionForm>
           </section>

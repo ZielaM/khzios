@@ -21,6 +21,12 @@ import { moveToTrash } from '@/lib/admin/trash';
 import { LANGUAGES } from '@/lib/admin/languages';
 
 const TITLE_MAX = 300;
+const MAX_PHOTOS_AT_ONCE = 20;
+
+const uploadedPhotos = (formData: FormData) =>
+  formData
+    .getAll('photos')
+    .filter((f): f is File => f instanceof File && f.size > 0);
 
 function refresh(newsId?: string) {
   revalidatePublicSite();
@@ -109,12 +115,32 @@ export async function saveNews(
         : 'update';
     await logAudit(user, action, 'news', `Aktualność „${polish.title}”`, id);
   } else {
+    // Photos chosen in the new-article form; all are processed before the
+    // article exists, so a rejected file leaves nothing half-created
+    const files = uploadedPhotos(formData);
+    if (files.length > MAX_PHOTOS_AT_ONCE)
+      return {
+        error: `Naraz można dodać najwyżej ${MAX_PHOTOS_AT_ONCE} zdjęć.`,
+      };
+    const urls: string[] = [];
+    try {
+      for (const file of files) urls.push(await saveImage(file));
+    } catch (error) {
+      await Promise.all(urls.map((url) => deleteMedia(url)));
+      if (error instanceof UploadError)
+        return { error: `${error.message} Artykuł nie został utworzony.` };
+      throw error;
+    }
+
     const created = await prisma.news.create({
       data: {
         published,
         publishedAt: publishedAt ?? new Date(),
         tags: { connect: tags },
         translations: { create: translationCreates },
+        photos: {
+          create: urls.map((url, displayOrder) => ({ url, displayOrder })),
+        },
       },
     });
     newsId = created.id;
@@ -173,13 +199,11 @@ export async function uploadNewsPhotos(
 ): Promise<FormState> {
   const user = await requireUser();
   const newsId = field(formData, 'newsId', 100);
-  const files = formData
-    .getAll('photos')
-    .filter((f): f is File => f instanceof File && f.size > 0);
+  const files = uploadedPhotos(formData);
   if (files.length === 0)
     return { error: 'Wybierz co najmniej jedno zdjęcie.' };
-  if (files.length > 20)
-    return { error: 'Naraz można dodać najwyżej 20 zdjęć.' };
+  if (files.length > MAX_PHOTOS_AT_ONCE)
+    return { error: `Naraz można dodać najwyżej ${MAX_PHOTOS_AT_ONCE} zdjęć.` };
 
   const news = await prisma.news.findUnique({
     where: { id: newsId },

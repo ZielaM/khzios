@@ -8,13 +8,15 @@ import SubmitButton from './SubmitButton';
 import style from './forms.module.scss';
 
 export default function PasswordForm() {
-  const [state, action] = useActionState<FormState, FormData>(
+  const [state, action, isPending] = useActionState<FormState, FormData>(
     changePassword,
     {}
   );
   return (
     <form action={action} className={style.form}>
-      <FormMessage error={state.error} message={state.message} />
+      {!isPending && (
+        <FormMessage error={state.error} message={state.message} />
+      )}
       <label className={style.field}>
         <span>Obecne hasło</span>
         <input

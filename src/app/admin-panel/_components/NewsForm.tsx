@@ -7,6 +7,7 @@ import FormMessage from './FormMessage';
 import LanguageTabs from './LanguageTabs';
 import RichTextEditor from './RichTextEditor';
 import SubmitButton from './SubmitButton';
+import { useKeepValuesOnError } from './useKeepValuesOnError';
 import style from './forms.module.scss';
 
 export interface NewsFormProps {
@@ -26,14 +27,23 @@ export default function NewsForm({
   tags,
   initialMessage,
 }: NewsFormProps) {
-  const [state, action] = useActionState<FormState, FormData>(saveNews, {
-    message: initialMessage,
-  });
+  const [state, action, isPending] = useActionState<FormState, FormData>(
+    saveNews,
+    { message: initialMessage }
+  );
+  const { formRef, onSubmit } = useKeepValuesOnError(state);
 
   return (
-    <form action={action} className={`${style.form} ${style.wideForm}`}>
+    <form
+      ref={formRef}
+      action={action}
+      onSubmit={onSubmit}
+      className={`${style.form} ${style.wideForm}`}
+    >
       {id && <input type="hidden" name="id" value={id} />}
-      <FormMessage error={state.error} message={state.message} />
+      {!isPending && (
+        <FormMessage error={state.error} message={state.message} />
+      )}
 
       <LanguageTabs
         panels={languages.map((lang) => ({
@@ -44,7 +54,7 @@ export default function NewsForm({
           content: (
             <>
               <label className={style.field}>
-                <span>Tytuł</span>
+                <span>Tytuł{lang.code === 'pl' && ' *'}</span>
                 <input
                   name={`title_${lang.code}`}
                   defaultValue={lang.title}
@@ -83,6 +93,24 @@ export default function NewsForm({
             </label>
           ))}
         </fieldset>
+      )}
+
+      {/* Photos of an existing article are managed below the form */}
+      {!id && (
+        <label className={style.field}>
+          <span>Zdjęcia (opcjonalnie)</span>
+          <input
+            type="file"
+            name="photos"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+          />
+          <small>
+            JPG, PNG lub WebP do 15 MB każde, łącznie do 25 MB naraz. Pierwsze
+            będzie zdjęciem głównym. Opisy, kolejność i kolejne zdjęcia ustawisz
+            po utworzeniu artykułu.
+          </small>
+        </label>
       )}
 
       <div className={style.row}>

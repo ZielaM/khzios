@@ -9,9 +9,9 @@ allowBuilds:
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
-# next: the image optimizer fetched local images through the visitor's
-# socket; once a visitor left mid-request, that image and width hung for
-# everyone until a restart. Recheck (and drop if fixed upstream) when
-# upgrading Next: pnpm refuses to install with a patch for a missing version.
+# next: backport of vercel/next.js#98168 (issue #96538). A client leaving
+# mid-request made the image optimizer hang that image and width for everyone
+# until a restart. Drop the patch once a stable Next contains the fix
+# (16.4.0+); how to check and upgrade: docs/aktualizacja-nextjs.md
 patchedDependencies:
-  next@16.1.6: patches/next@16.1.6.patch
+  next@16.3.6: patches/next@16.3.6.patch

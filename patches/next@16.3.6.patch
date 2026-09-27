@@ -1,0 +1,32 @@
+diff --git a/dist/server/image-optimizer.js b/dist/server/image-optimizer.js
+index b25880a32c763d0e0ac84e58c254ba601100e8c7..e4c82d2a370232fcf0528e7626832a6687eb4464 100644
+--- a/dist/server/image-optimizer.js
++++ b/dist/server/image-optimizer.js
+@@ -1035,12 +1035,21 @@ async function fetchInternalImage(href, _req, _res, maximumResponseBody, handleR
+     try {
+         // Coerce HEAD to GET to avoid issues with the image optimizer
+         const method = !_req.method || _req.method === 'HEAD' ? 'GET' : _req.method;
+-        const mocked = (0, _mockrequest.createRequestResponseMocks)({
+-            url: href,
+-            method,
+-            socket: _req.socket,
+-            maximumResponseBody
+-        });
++        // Backport of vercel/next.js#98168 (in 16.4.0-canary.27+): the mocked
++        // response must not reference the requester's socket, or a client
++        // that disconnects mid-transfer leaves this cache key pending for
++        // every later request until the server restarts
++        const mocked = {
++            req: new _mockrequest.MockedRequest({
++                url: href,
++                method,
++                headers: {},
++                socket: _req.socket
++            }),
++            res: new _mockrequest.MockedResponse({
++                maximumResponseBody
++            })
++        };
+         await handleRequest(mocked.req, mocked.res, (0, _url.parseReqUrl)(href));
+         await mocked.res.hasStreamed;
+         if (!mocked.res.statusCode) {

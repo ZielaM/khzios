@@ -51,12 +51,9 @@ Dependabot (`.github/dependabot.yml`) w poniedziałki otwiera PR-y z aktualizacj
 - **Czerwone CI** → sprawdź log. Nowa wersja Prettiera zwykle tylko inaczej formatuje kod: `git switch <gałąź PR-a> && pnpm install && pnpm format`, commit i push na tę gałąź.
 - **Niechciana aktualizacja** → komentarz `@dependabot ignore this major version` (albo `this version`, `this dependency`) zamyka PR i zapamiętuje decyzję.
 - Wersję pnpm wyznacza pole `packageManager` w `package.json`: CI, Vercel i Docker używają dokładnie tej wersji. Zmienia się ją, edytując to pole.
+- Po aktualizacji Playwrighta pobierz lokalnie nowe przeglądarki: `pnpm exec playwright install`. CI robi to samo.
 
-**Next.js aktualizujemy ręcznie**, bo ma lokalny patch (`patches/`, opis w `pnpm-workspace.yaml`), którego nie da się nałożyć na nową wersję automatycznie. Alerty bezpieczeństwa dla Next i tak pojawiają się w zakładce Security repozytorium. Procedura:
-
-1. Usuń wpis `patchedDependencies` z `pnpm-workspace.yaml` i stary plik z `patches/`, potem `pnpm add -E next@<wersja> eslint-config-next@<wersja>`.
-2. Jeśli w `node_modules/next/dist/server/image-optimizer.js` nadal jest `socket: _req.socket`, odtwórz patch: `pnpm patch next@<wersja>`, usuń tę linię (i przecinek przed nią) w pokazanym katalogu, `pnpm patch-commit <katalog>`. Jeśli linii już nie ma, błąd naprawiono w Next i patch nie jest potrzebny.
-3. `pnpm test` i testy e2e, bo patch dotyczy optymalizacji obrazów.
+**Next.js aktualizujemy ręcznie**, bo ma lokalny patch (poprawka błędu optymalizatora obrazów, dopóki twórcy Next nie wydadzą jej w stabilnej wersji). Instrukcja, jak go zaktualizować, jak sprawdzić, czy patch jest jeszcze potrzebny, i jak dodawać patche do innych pakietów: [docs/aktualizacja-nextjs.md](docs/aktualizacja-nextjs.md).
 
 ## Formatowanie Artykułów (Predefiniowane Style HTML)
 

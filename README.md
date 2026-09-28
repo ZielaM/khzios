@@ -18,12 +18,12 @@ Przydatne skrypty: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e:ch
 
 ### Zmienne środowiskowe
 
-| Zmienna        | Opis                                                                                                                                                                                       |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `DATABASE_URL` | Connection string PostgreSQL (wymagana — bez niej serwer produkcyjny nie wystartuje).                                                                                                      |
-| `APP_URL`      | Publiczny adres strony, używany w linkach kanonicznych, sitemapie i obrazkach udostępniania. Czytany w czasie działania, więc jeden obraz Dockera można skonfigurować dla różnych adresów. |
-| `ADMIN_PATH`   | Adres panelu administracyjnego (`/<ADMIN_PATH>`): 8–63 małe litery, cyfry lub myślniki. W trybie deweloperskim domyślnie `admin`; na produkcji bez tej zmiennej panel jest wyłączony.      |
-| `UPLOAD_DIR`   | Katalog na zdjęcia i PDF-y wgrane w panelu (domyślnie `./uploads`, w Dockerze wolumen `uploads`).                                                                                          |
+| Zmienna        | Opis                                                                                                                                                                                                                                                                      |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL` | Connection string PostgreSQL (wymagana — bez niej serwer produkcyjny nie wystartuje).                                                                                                                                                                                     |
+| `APP_URL`      | Publiczny adres strony, używany w linkach kanonicznych, sitemapie i obrazkach udostępniania. Czytany w czasie działania, więc jeden obraz Dockera można skonfigurować dla różnych adresów.                                                                                |
+| `ADMIN_PATH`   | Adres panelu administracyjnego (`/<ADMIN_PATH>`): 8–63 małe litery, cyfry lub myślniki, bez ukośnika. W trybie deweloperskim domyślnie `admin`; na produkcji bez tej zmiennej albo z błędną wartością panel jest wyłączony (ostrzeżenie w logach), a strona działa dalej. |
+| `UPLOAD_DIR`   | Katalog na zdjęcia i PDF-y wgrane w panelu (domyślnie `./uploads`, w Dockerze wolumen `uploads`).                                                                                                                                                                         |
 
 ## Wdrożenie (Docker Compose, serwer uczelni)
 

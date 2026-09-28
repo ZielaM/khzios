@@ -17,6 +17,10 @@ updates:
       # the repository's Security tab.
       - dependency-name: next
       - dependency-name: eslint-config-next
+      # Types must match the Node the app runs on (node:22 in the Dockerfile);
+      # move them together with Node, by hand
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     groups:
       react:
         patterns:

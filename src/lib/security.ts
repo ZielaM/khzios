@@ -74,11 +74,7 @@ const NULL_BYTE_PATTERN = /(%00|\x00)/;
 // ── Threat types ─────────────────────────────────────────────────────────
 
 export type ThreatType =
-  | 'sql_injection'
-  | 'xss'
-  | 'path_traversal'
-  | 'null_byte'
-  | 'oversized_input';
+  'sql_injection' | 'xss' | 'path_traversal' | 'null_byte' | 'oversized_input';
 
 export interface ThreatDetectionResult {
   /** Whether any threat was detected. */

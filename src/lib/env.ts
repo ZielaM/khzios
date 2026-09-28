@@ -27,12 +27,17 @@ const RESERVED_ADMIN_PATHS = new Set([
   'wp-admin',
 ]);
 
+// Slashes around the value are a common slip ("/zaplecze-…"); ignore them
+const configuredAdminPath = (env: NodeJS.ProcessEnv) =>
+  env.ADMIN_PATH?.trim().replace(/^\/+|\/+$/g, '');
+
+// The value itself is never logged: it is the panel's unlisted address
 function adminPathProblem(value: string): string | null {
   if (!ADMIN_PATH_PATTERN.test(value)) {
     return 'ADMIN_PATH must be 8–63 lowercase letters, digits or hyphens';
   }
   if (RESERVED_ADMIN_PATHS.has(value)) {
-    return `ADMIN_PATH "${value}" is reserved or too easy to guess`;
+    return 'ADMIN_PATH is reserved or too easy to guess';
   }
   return null;
 }
@@ -43,7 +48,7 @@ function adminPathProblem(value: string): string | null {
  * the box; production requires an explicit, non-obvious ADMIN_PATH.
  */
 export function getAdminPath(env: NodeJS.ProcessEnv = process.env) {
-  const value = env.ADMIN_PATH?.trim();
+  const value = configuredAdminPath(env);
   if (value) return adminPathProblem(value) ? null : value;
   return env.NODE_ENV === 'production' ? null : 'admin';
 }
@@ -81,10 +86,12 @@ export function checkEnv(env: NodeJS.ProcessEnv = process.env): EnvReport {
     );
   }
 
-  const adminPath = env.ADMIN_PATH?.trim();
+  // An invalid address only disables the panel; the public site keeps
+  // working rather than failing to start over it
+  const adminPath = configuredAdminPath(env);
   if (adminPath) {
     const problem = adminPathProblem(adminPath);
-    if (problem) errors.push(problem);
+    if (problem) warnings.push(`${problem} — the admin panel is disabled`);
   } else if (env.NODE_ENV === 'production') {
     warnings.push('ADMIN_PATH is not set — the admin panel is disabled');
   }

@@ -57,24 +57,35 @@ describe('getAdminPath', () => {
     ).toBe('zaplecze-k7f2');
   });
 
-  it('rejects short, reserved or malformed values', () => {
+  it('disables the panel for short, reserved or malformed values without failing', () => {
     for (const value of [
       'short',
       'admin-panel',
       'Zaplecze-K7F2',
       'a/b-cdefgh',
     ]) {
-      expect(getAdminPath({ NODE_ENV: 'development', ADMIN_PATH: value })).toBe(
+      expect(getAdminPath({ NODE_ENV: 'production', ADMIN_PATH: value })).toBe(
         null
       );
-      expect(
-        checkEnv({
-          NODE_ENV: 'development',
-          DATABASE_URL: 'x',
-          ADMIN_PATH: value,
-        }).errors
-      ).toHaveLength(1);
+      const report = checkEnv({
+        NODE_ENV: 'production',
+        DATABASE_URL: 'x',
+        APP_URL: 'https://a.pl',
+        ADMIN_PATH: value,
+      });
+      // Only a warning: a bad panel address must not take the site down
+      expect(report.errors).toEqual([]);
+      expect(report.warnings).toHaveLength(1);
+      expect(report.warnings[0]).toMatch(/admin panel is disabled/);
+      // The unlisted address is never written to the logs
+      expect(report.warnings[0]).not.toContain(value);
     }
+  });
+
+  it('ignores slashes around the value', () => {
+    expect(
+      getAdminPath({ NODE_ENV: 'production', ADMIN_PATH: '/zaplecze-k7f2/' })
+    ).toBe('zaplecze-k7f2');
   });
 
   it('defaults to /admin in development and disables the panel in production', () => {

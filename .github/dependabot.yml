@@ -11,9 +11,9 @@ updates:
       timezone: Europe/Warsaw
     open-pull-requests-limit: 5
     ignore:
-      # Next carries a local patch (patches/, see pnpm-workspace.yaml) that
-      # has to be redone by hand for a new version, so Next and its ESLint
-      # config are upgraded manually. Security alerts still show up under
+      # Next carries a local patch that has to be redone by hand for a new
+      # version, so Next and its ESLint config are upgraded manually (see
+      # docs/aktualizacja-nextjs.md). Security alerts still show up under
       # the repository's Security tab.
       - dependency-name: next
       - dependency-name: eslint-config-next

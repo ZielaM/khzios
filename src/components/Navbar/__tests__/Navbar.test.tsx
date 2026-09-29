@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, within } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Navbar from '../Navbar';
 
@@ -27,7 +27,12 @@ vi.mock('../DropdownMenu', () => ({
   }: {
     label: string;
     children: React.ReactNode;
-  }) => <div data-testid={`dropdown-item-${label}`}>{children}</div>,
+  }) => (
+    <div data-testid={`dropdown-item-${label}`}>
+      <a href={`#${label}`}>{label}</a>
+      {children}
+    </div>
+  ),
 }));
 
 vi.mock('../SettingsDropdown', () => ({
@@ -71,9 +76,45 @@ describe('Navbar', () => {
     render(<Navbar teams={teams} />);
     expect(screen.getByTestId('logo-link')).toBeInTheDocument();
     expect(screen.getByTestId('nav-item-news')).toBeInTheDocument();
-    expect(screen.getByTestId('nav-item-forStudents')).toBeInTheDocument();
+    expect(screen.getByTestId('dropdown-forStudents')).toBeInTheDocument();
     expect(screen.getByTestId('nav-item-contact')).toBeInTheDocument();
     expect(screen.getByTestId('dropdown-aboutUs')).toBeInTheDocument();
+  });
+
+  it('links the sections of the student page under the students menu', () => {
+    render(<Navbar teams={teams} />);
+    const students = screen.getByTestId('dropdown-forStudents');
+    for (const key of [
+      'studentAnnouncements',
+      'studentConsultations',
+      'studentDocuments',
+    ]) {
+      expect(
+        within(students).getByTestId(`dropdown-item-${key}`)
+      ).toBeInTheDocument();
+    }
+  });
+
+  it('closes the mobile menu when a link is followed, even to the same page', () => {
+    render(<Navbar teams={teams} />);
+    const toggle = screen.getByRole('button', { name: 'toggleMenu' });
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    // A link that opens a submenu keeps the menu open
+    const students = screen.getByTestId('dropdown-forStudents');
+    const accordion = document.createElement('a');
+    accordion.setAttribute('aria-haspopup', 'true');
+    students.appendChild(accordion);
+    fireEvent.click(accordion);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    // A section link on the page already open: the pathname stays the same,
+    // and Next's Link prevents the default action
+    const link = screen.getByRole('link', { name: 'studentConsultations' });
+    link.addEventListener('click', (e) => e.preventDefault());
+    fireEvent.click(link);
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('lists the teams passed from the database under the structure menu', () => {

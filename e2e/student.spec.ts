@@ -40,44 +40,88 @@ async function mockSchedule(page: Page) {
 }
 
 test.describe('For Students Page', () => {
-  test('should navigate to the student consultations page via desktop navbar', async ({
+  // The heading of a linked section must be on screen, below the fixed navbar
+  async function expectSectionShown(page: Page, heading: string) {
+    const target = page.getByRole('heading', { level: 2, name: heading });
+    await expect(target).toBeInViewport();
+    const navbar = await page.locator('nav').first().boundingBox();
+    await expect
+      .poll(async () => (await target.boundingBox())!.y)
+      .toBeGreaterThanOrEqual(navbar!.height);
+  }
+
+  const SECTIONS = [
+    ['Ogłoszenia', 'announcements', 'Ogłoszenia dla studentów'],
+    ['Konsultacje', 'consultations', 'Konsultacje dla studentów'],
+    ['Statuty i sylabusy', 'documents', 'Statuty i sylabusy'],
+  ] as const;
+
+  test('desktop: the students menu opens on hover and jumps to each section', async ({
     page,
   }) => {
-    // Set viewport to a desktop size
-    await page.setViewportSize({ width: 1280, height: 720 });
+    await mockSchedule(page);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    const nav = page.getByRole('navigation', { name: 'Menu główne' });
 
+    for (const [item, hash, heading] of SECTIONS) {
+      await page.goto('/pl');
+      await nav.getByRole('link', { name: 'Dla studentów' }).hover();
+      await nav.getByRole('link', { name: new RegExp(`^${item}`) }).click();
+      await expect(page).toHaveURL(new RegExp(`/pl/student#${hash}$`));
+      await expectSectionShown(page, heading);
+    }
+
+    // The menu entry itself still opens the page
     await page.goto('/pl');
-
-    // Click the link in the navbar
-    await page.click('nav >> text="Dla studentów"');
-
-    // Wait for URL to be correct
-    await expect(page).toHaveURL(/.*\/student/);
-
-    // Verify the page title
+    await nav.getByRole('link', { name: 'Dla studentów' }).click();
+    await expect(page).toHaveURL(/\/pl\/student$/);
     await expect(page.locator('h1')).toHaveText('Dla studentów');
   });
 
-  test('should navigate to the student consultations page via mobile menu', async ({
-    page,
-  }) => {
-    // Set viewport to a mobile size
-    await page.setViewportSize({ width: 375, height: 667 });
+  for (const [device, viewport] of [
+    ['tablet', { width: 768, height: 1024 }],
+    ['phone', { width: 375, height: 667 }],
+  ] as const) {
+    test(`${device}: the hamburger menu leads to the sections and closes`, async ({
+      page,
+    }) => {
+      await mockSchedule(page);
+      await page.setViewportSize(viewport);
+      const toggle = page.getByRole('button', { name: 'Przełącz menu' });
+      const nav = page.getByRole('navigation', { name: 'Menu główne' });
+      const openStudents = async () => {
+        await toggle.click();
+        // The first tap opens the accordion instead of following the link
+        const trigger = nav.getByRole('link', {
+          name: 'Dla studentów',
+          exact: true,
+        });
+        await trigger.click();
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      };
 
-    await page.goto('/pl');
+      // From another page
+      await page.goto('/pl');
+      await openStudents();
+      await nav.getByRole('link', { name: /^Konsultacje/ }).click();
+      await expect(page).toHaveURL(/\/pl\/student#consultations$/);
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await expectSectionShown(page, 'Konsultacje dla studentów');
 
-    // Open hamburger menu
-    await page.click('button[aria-label="Przełącz menu"]');
+      // On the page itself: only the hash changes, the menu still closes
+      await openStudents();
+      await nav.getByRole('link', { name: /^Statuty i sylabusy/ }).click();
+      await expect(page).toHaveURL(/#documents$/);
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await expectSectionShown(page, 'Statuty i sylabusy');
 
-    // Click the link inside the mobile menu
-    await page.click('nav >> text="Dla studentów"');
-
-    // Wait for URL to be correct
-    await expect(page).toHaveURL(/.*\/student/);
-
-    // Verify the page title
-    await expect(page.locator('h1')).toHaveText('Dla studentów');
-  });
+      // The overview entry opens the page from the top
+      await openStudents();
+      await nav.getByRole('link', { name: 'Strona „Dla studentów”' }).click();
+      await expect(page).toHaveURL(/\/pl\/student$/);
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    });
+  }
 
   test('should display the consultation table from the live schedule', async ({
     page,

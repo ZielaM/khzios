@@ -29,7 +29,11 @@ export default function StudentAnnouncements({
     : announcements.filter((a) => new Date(a.date).getTime() >= today);
 
   return (
-    <section className={style.container} aria-labelledby="announcements-title">
+    <section
+      id="announcements"
+      className={style.container}
+      aria-labelledby="announcements-title"
+    >
       <div className={style.header}>
         <h2 id="announcements-title">{t('announcementsTitle')}</h2>
         <label className={style.toggleContainer}>

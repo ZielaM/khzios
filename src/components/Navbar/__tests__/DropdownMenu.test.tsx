@@ -201,4 +201,20 @@ describe('DropdownMenu and DropdownItem', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
   });
+
+  it('links a section of a page with its localized path and hash', () => {
+    render(
+      <DropdownMenu label="Students" href="/student">
+        <DropdownItem
+          label="Consultations"
+          href="/student"
+          hash="consultations"
+        />
+      </DropdownMenu>
+    );
+    expect(screen.getByRole('link', { name: 'Consultations' })).toHaveAttribute(
+      'href',
+      '/pl/student#consultations'
+    );
+  });
 });

@@ -58,7 +58,9 @@ export default async function ForStudentsPage({ params }: Props) {
 
       <StudentSchedule locale={locale} />
 
-      <h2 className={style.title}>{t('documentsTitle')}</h2>
+      <h2 id="documents" className={style.title}>
+        {t('documentsTitle')}
+      </h2>
 
       <div className={style.tableContainer}>
         {documents.length === 0 ? (

@@ -87,11 +87,19 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
         </button>
       </div>
 
+      {/* A link to a section of the current page (#consultations) does not
+          change the pathname, so close the menu on any followed link. Next's
+          Link always prevents the default action, so accordion toggles are
+          told apart by aria-haspopup instead. */}
       <div
         id="main-menu"
         className={clsx(style.navMenuContainer, {
           [style.mobileOpen]: isMobileMenuOpen,
         })}
+        onClick={(e) => {
+          const link = (e.target as Element).closest('a');
+          if (link && !link.hasAttribute('aria-haspopup')) closeMobileMenu();
+        }}
       >
         <div className={style.navLinks}>
           <NavItem label={t('news')} href="/news" onClick={closeMobileMenu} />
@@ -125,11 +133,23 @@ export default function Navbar({ teams }: { teams: NavigationTeam[] }) {
             />
           </DropdownMenu>
 
-          <NavItem
-            label={t('forStudents')}
-            href="/student"
-            onClick={closeMobileMenu}
-          />
+          <DropdownMenu label={t('forStudents')} href="/student">
+            {(
+              [
+                ['announcements', 'studentAnnouncements'],
+                ['consultations', 'studentConsultations'],
+                ['documents', 'studentDocuments'],
+              ] as const
+            ).map(([hash, key]) => (
+              <DropdownItem
+                key={hash}
+                label={t(key)}
+                desc={t(`${key}Desc`)}
+                href="/student"
+                hash={hash}
+              />
+            ))}
+          </DropdownMenu>
           <NavItem
             label={t('contact')}
             href="/contact"

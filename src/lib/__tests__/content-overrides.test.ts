@@ -58,3 +58,31 @@ describe('page text overrides', () => {
     expect(await withContentOverrides(messages, 'pl')).toBe(messages);
   });
 });
+
+describe('textProblem edge cases', () => {
+  it('refuses tags in a text that has none', () => {
+    expect(textProblem('Zwykły tekst', 'Zwykły <b>tekst</b>')).toBe(
+      'Tekst nie może zawierać znaczników w nawiasach ostrych.'
+    );
+  });
+
+  it('refuses unbalanced braces around the kept variables', () => {
+    expect(textProblem('Stan na {date}', 'Stan na {date} {')).toBe(
+      'Nawiasy klamrowe są niezamknięte.'
+    );
+  });
+});
+
+describe('withContentOverrides without edits', () => {
+  it('returns the default messages untouched', async () => {
+    vi.mocked(prisma.contentOverride.findMany).mockResolvedValue([]);
+    const messages = { HomePage: { heroTitle: 'Katedra' } };
+    expect(await withContentOverrides(messages, 'pl')).toBe(messages);
+  });
+});
+
+describe('textProblem without braces', () => {
+  it('accepts a plain text that replaces a plain text', () => {
+    expect(textProblem('Prosty tekst', 'Inny prosty tekst')).toBeNull();
+  });
+});

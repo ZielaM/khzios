@@ -85,4 +85,13 @@ describe('Pagination', () => {
     ).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'next' })).toBeInTheDocument();
   });
+
+  it('shows gaps between distant pages', async () => {
+    const { container } = await renderPagination(10, 20);
+    const gaps = container.querySelectorAll('[aria-hidden="true"]');
+    expect([...gaps].filter((g) => g.textContent === '…')).toHaveLength(2);
+    expect(
+      screen.getByRole('link', { name: /^page:\{"page":1\}/ })
+    ).toBeInTheDocument();
+  });
 });

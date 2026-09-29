@@ -130,3 +130,17 @@ describe('listingMetadata', () => {
     expect(meta.alternates?.canonical).toBe('/pl/aktualnosci');
   });
 });
+
+describe('share image description', () => {
+  it('falls back to the page title when a photo has no description', async () => {
+    const metadata = await pageMetadata({
+      locale: 'pl',
+      href: '/contact',
+      title: 'Kontakt',
+      image: { src: '/media/budynek-0123456789ab.webp', alt: '' },
+    });
+    expect(metadata.openGraph?.images).toEqual([
+      { url: '/media/budynek-0123456789ab.webp', alt: 'Kontakt | Katedra' },
+    ]);
+  });
+});

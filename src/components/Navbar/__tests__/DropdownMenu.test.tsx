@@ -217,4 +217,33 @@ describe('DropdownMenu and DropdownItem', () => {
       '/pl/student#consultations'
     );
   });
+
+  it('opens a nested submenu on hover or focus on desktop, with its description', () => {
+    render(
+      <DropdownMenu label="About" href="/about-us">
+        <DropdownItem
+          label="Structure"
+          desc="Teams and management"
+          href="/about-us/structure"
+        >
+          <DropdownItem
+            label="Poultry"
+            href={{
+              pathname: '/about-us/structure/[team]',
+              params: { team: 'poultry' },
+            }}
+          />
+        </DropdownItem>
+      </DropdownMenu>
+    );
+    const item = screen.getByRole('link', { name: /^Structure/ });
+    expect(item).toHaveTextContent('Teams and management');
+    const wrapper = item.parentElement!;
+    fireEvent.mouseEnter(wrapper);
+    expect(item).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.mouseLeave(wrapper);
+    expect(item).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.focus(item);
+    expect(item).toHaveAttribute('aria-expanded', 'true');
+  });
 });

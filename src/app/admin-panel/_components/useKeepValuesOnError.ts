@@ -14,28 +14,29 @@ export function useKeepValuesOnError(state: FormState) {
   const submitted = useRef<FormData | null>(null);
 
   useLayoutEffect(() => {
-    const form = formRef.current;
-    const data = submitted.current;
-    if (!state.error || !form || !data) return;
+    if (!state.error) return;
+    // An error only ever comes back from a submission of this form
+    const form = formRef.current!;
+    const data = submitted.current!;
     for (const element of Array.from(form.elements)) {
-      if (element instanceof HTMLInputElement) {
-        if (
-          !element.name ||
-          element.type === 'file' ||
-          element.type === 'hidden'
-        )
-          continue;
-        if (element.type === 'checkbox' || element.type === 'radio') {
-          element.checked = data.getAll(element.name).includes(element.value);
-        } else {
-          element.value = String(data.get(element.name) ?? '');
-        }
-      } else if (
-        element instanceof HTMLTextAreaElement ||
-        element instanceof HTMLSelectElement
+      if (
+        !(element instanceof HTMLInputElement) &&
+        !(element instanceof HTMLTextAreaElement) &&
+        !(element instanceof HTMLSelectElement)
+      )
+        continue;
+      if (!element.name || element.type === 'file' || element.type === 'hidden')
+        continue;
+      if (
+        element instanceof HTMLInputElement &&
+        /^(checkbox|radio)$/.test(element.type)
       ) {
-        if (element.name) element.value = String(data.get(element.name) ?? '');
+        element.checked = data.getAll(element.name).includes(element.value);
+        continue;
       }
+      // Disabled fields are not submitted: keep what the reset gave them
+      const value = data.get(element.name);
+      if (value !== null) element.value = String(value);
     }
   }, [state]);
 

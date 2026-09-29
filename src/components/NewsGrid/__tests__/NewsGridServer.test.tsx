@@ -10,8 +10,16 @@ vi.mock('@/lib/search/news', () => ({
 
 // Pagination is an async server component with its own tests
 vi.mock('@/components/Pagination', () => ({
-  default: ({ totalPages }: { totalPages: number }) =>
-    totalPages > 1 ? <nav aria-label="pagination" /> : null,
+  default: ({
+    totalPages,
+    params,
+  }: {
+    totalPages: number;
+    params: { sort?: string };
+  }) =>
+    totalPages > 1 ? (
+      <nav aria-label="pagination" data-sort={params.sort ?? ''} />
+    ) : null,
 }));
 
 vi.mock('next-intl/server', () => ({
@@ -84,5 +92,29 @@ describe('NewsGridServer', () => {
 
     expect(screen.getByText('noResults')).toBeInTheDocument();
     expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+  });
+
+  it('keeps relevance sorting in the page links, but not the default date order', async () => {
+    const results = {
+      data: [makeNews('n1')],
+      total: 30,
+      page: 1,
+      totalPages: 3,
+    };
+    vi.mocked(searchNews).mockResolvedValue(results);
+    const sorted = render(
+      await NewsGridServer({ ...baseProps, query: 'cows', sortBy: 'relevance' })
+    );
+    expect(screen.getByLabelText('pagination')).toHaveAttribute(
+      'data-sort',
+      'relevance'
+    );
+    sorted.unmount();
+
+    render(await NewsGridServer({ ...baseProps, query: 'cows' }));
+    expect(screen.getByLabelText('pagination')).toHaveAttribute(
+      'data-sort',
+      ''
+    );
   });
 });

@@ -36,6 +36,7 @@ function buildLogger(): pino.Logger {
     '*.DATABASE_URL',
   ];
 
+  /* v8 ignore else -- the development logger below */
   if (isProduction) {
     const destination = process.env.LOG_FILE_PATH
       ? pino.destination(process.env.LOG_FILE_PATH)
@@ -55,6 +56,9 @@ function buildLogger(): pino.Logger {
     );
   }
 
+  // Development only (`pnpm dev`): pino-pretty runs in a worker thread,
+  // which unit tests would leave running
+  /* v8 ignore start */
   return pino({
     level: 'debug',
     redact,
@@ -67,6 +71,7 @@ function buildLogger(): pino.Logger {
       },
     },
   });
+  /* v8 ignore stop */
 }
 
 const rootLogger = buildLogger();

@@ -50,8 +50,9 @@ jobs:
       - name: Check types (TypeScript)
         run: pnpm typecheck
 
-      - name: Run Unit Tests (Vitest)
-        run: pnpm test
+      # Fails when coverage of the measured code drops below 100%
+      - name: Run Unit Tests with coverage (Vitest)
+        run: pnpm test:coverage
 
   build-and-e2e:
     name: Build & E2E Tests

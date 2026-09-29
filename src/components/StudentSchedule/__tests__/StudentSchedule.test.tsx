@@ -81,4 +81,31 @@ describe('StudentSchedule', () => {
 
     expect(await screen.findByText('noConsultations')).toBeInTheDocument();
   });
+
+  it('scrolls to the linked section once the schedule is in place', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => respond(schedule))
+    );
+    const scrolled: string[] = [];
+    Element.prototype.scrollIntoView = function () {
+      scrolled.push(this.id);
+    };
+    window.location.hash = '#consultations';
+    render(<StudentSchedule locale="pl" />);
+    await screen.findByText('dr Anna Kowalska');
+    expect(scrolled).toEqual(['consultations']);
+    window.location.hash = '';
+  });
+
+  it('names an employee without an academic title by name only', async () => {
+    const untitled = structuredClone(schedule);
+    untitled.consultations[0].translations = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => respond(untitled))
+    );
+    render(<StudentSchedule locale="pl" />);
+    expect(await screen.findByText('Anna Kowalska')).toBeInTheDocument();
+  });
 });

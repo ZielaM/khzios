@@ -78,4 +78,18 @@ describe('StudentAnnouncements', () => {
     );
     expect(screen.getByText('noAnnouncementsToShow')).toBeInTheDocument();
   });
+
+  it('skips an announcement without any language version', () => {
+    const empty = {
+      ...announcement('4', '2023-10-20T10:00:00Z', 'x'),
+      translations: [],
+    };
+    render(
+      <StudentAnnouncements
+        announcements={[empty, announcements[2]]}
+        locale="pl"
+      />
+    );
+    expect(screen.getAllByTestId('announcement')).toHaveLength(1);
+  });
 });

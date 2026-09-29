@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import HeroSlideshow from '../HeroSlideshow';
 
 const images = [
@@ -85,5 +86,18 @@ describe('HeroSlideshow', () => {
     act(() => vi.advanceTimersByTime(5000));
     expect(visibleAlt()).toEqual(['First']);
     expect(screen.getByRole('button', { name: 'play' })).toBeInTheDocument();
+  });
+
+  it('rotates in browsers without matchMedia', () => {
+    vi.stubGlobal('matchMedia', undefined);
+    render(<HeroSlideshow images={images} />);
+    act(() => vi.advanceTimersByTime(8000));
+    expect(visibleAlt()).toEqual(['Second']);
+  });
+
+  it('renders on the server as rotating, before motion preferences are known', () => {
+    const html = renderToString(<HeroSlideshow images={images} />);
+    expect(html).toContain('/images/hero/1.jpg');
+    expect(html).toContain('aria-label="pause"');
   });
 });

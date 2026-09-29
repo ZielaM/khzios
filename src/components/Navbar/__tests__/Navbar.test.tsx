@@ -203,4 +203,12 @@ describe('Navbar', () => {
     expect(hamburger).not.toHaveClass('active');
     vi.useRealTimers();
   });
+
+  it('keeps the menu open on keys other than Escape', () => {
+    render(<Navbar teams={teams} />);
+    const toggle = screen.getByRole('button', { name: 'toggleMenu' });
+    fireEvent.click(toggle);
+    fireEvent.keyDown(document, { key: 'Enter' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  });
 });

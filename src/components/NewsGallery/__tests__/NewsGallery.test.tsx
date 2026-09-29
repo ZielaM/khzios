@@ -285,5 +285,43 @@ describe('NewsGallery', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       expect(thumbnail).toHaveFocus();
     });
+
+    it('leaves Tab to the browser between the first and last control', () => {
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" locale="en" />);
+      fireEvent.click(screen.getAllByRole('button')[0]);
+      const controls = screen.getByRole('dialog').querySelectorAll('button');
+      controls[1].focus();
+      // Not prevented: the browser moves focus as usual
+      expect(fireEvent.keyDown(document, { key: 'Tab' })).toBe(true);
+      expect(fireEvent.keyDown(document, { key: 'Tab', shiftKey: true })).toBe(
+        true
+      );
+    });
+  });
+
+  describe('lightbox buttons', () => {
+    it('move between photos with the previous and next buttons', () => {
+      render(<NewsGallery photos={mockPhotos(3)} title="Test" locale="en" />);
+      fireEvent.click(screen.getAllByRole('button')[0]);
+
+      fireEvent.click(screen.getByLabelText('nextImage'));
+      expect(
+        screen.getByText('imageCounter:{"current":2,"total":3}')
+      ).toBeInTheDocument();
+      fireEvent.click(screen.getByLabelText('prevImage'));
+      fireEvent.click(screen.getByLabelText('prevImage'));
+      expect(
+        screen.getByText('imageCounter:{"current":3,"total":3}')
+      ).toBeInTheDocument();
+      // The buttons do not close the lightbox
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
+
+    it('stays open when the photo itself is clicked', () => {
+      render(<NewsGallery photos={mockPhotos(2)} title="Test" locale="en" />);
+      fireEvent.click(screen.getAllByRole('button')[0]);
+      fireEvent.click(screen.getByRole('dialog').querySelector('img')!);
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
   });
 });

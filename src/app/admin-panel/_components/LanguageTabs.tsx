@@ -29,7 +29,7 @@ function hasContent(panel: Element) {
   const editors = panel.querySelectorAll('[contenteditable="true"]');
   return (
     Array.from(fields).some((f) => f.value.trim()) ||
-    Array.from(editors).some((e) => e.textContent?.trim())
+    Array.from(editors).some((e) => e.textContent!.trim())
   );
 }
 
@@ -44,11 +44,14 @@ export default function LanguageTabs({ panels }: { panels: LanguagePanel[] }) {
   const id = useId();
 
   useEffect(() => {
-    const form = rootRef.current?.closest('form');
+    const root = rootRef.current!;
+    const form = root.closest('form');
     if (!form) return;
-    const panelIndex = (target: EventTarget | null) => {
-      const panel = target instanceof Element && target.closest('[data-panel]');
-      return panel && rootRef.current?.contains(panel)
+    // Panel of this component holding the field, or -1 (another component's
+    // tabs or a field outside any tabs)
+    const panelIndex = (field: Element) => {
+      const panel = field.closest('[data-panel]');
+      return panel && root.contains(panel)
         ? Number(panel.getAttribute('data-panel'))
         : -1;
     };
@@ -62,18 +65,15 @@ export default function LanguageTabs({ panels }: { panels: LanguagePanel[] }) {
       if (checking) return;
       checking = true;
       setTimeout(() => (checking = false));
-      const index = panelIndex(e.target);
+      // Invalid events are fired at form controls
+      const index = panelIndex(e.target as Element);
       if (index >= 0) flushSync(() => setActive(index));
     };
     // Clearing the form after adding a record clears the tabs' state too
     const onReset = () =>
-      setTimeout(() => {
-        const root = rootRef.current;
-        if (root)
-          setFilled(
-            Array.from(root.querySelectorAll('[data-panel]'), hasContent)
-          );
-      });
+      setTimeout(() =>
+        setFilled(Array.from(root.querySelectorAll('[data-panel]'), hasContent))
+      );
 
     form.addEventListener('invalid', onInvalid, true);
     form.addEventListener('reset', onReset);
@@ -89,7 +89,7 @@ export default function LanguageTabs({ panels }: { panels: LanguagePanel[] }) {
       (active + (e.key === 'ArrowRight' ? 1 : -1) + panels.length) %
       panels.length;
     setActive(next);
-    document.getElementById(`${id}-tab-${next}`)?.focus();
+    document.getElementById(`${id}-tab-${next}`)!.focus();
   };
 
   return (

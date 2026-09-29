@@ -27,6 +27,8 @@ Przydatne skrypty: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e:ch
 
 ## Wdrożenie (Docker Compose, serwer uczelni)
 
+**Instrukcja krok po kroku** (uruchomienie lokalne, przeniesienie danych na serwer przez `pg_dump`, konfiguracja serwera, codzienna obsługa): [docs/wdrozenie.md](docs/wdrozenie.md). Poniżej skrót.
+
 Stos w `docker-compose.yml`: PostgreSQL, jednorazowy krok migracji i aplikacja (`next start`, użytkownik bez uprawnień root, healthcheck `/api/health`).
 
 ```bash

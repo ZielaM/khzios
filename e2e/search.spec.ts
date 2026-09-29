@@ -111,4 +111,34 @@ test.describe('News Search & Filtering Spec', () => {
     await expect(page).toHaveURL(/query=art/);
     await expect(page).not.toHaveURL(/page=/);
   });
+
+  test('filters by a date range, including the last day', async ({ page }) => {
+    const DAY = 24 * 60 * 60 * 1000;
+    const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
+    const from = iso(Date.now() - 10 * DAY);
+    const to = iso(Date.now() - 4 * DAY);
+
+    await page.goto('/en/news');
+    // A value typed before hydration is replaced by React's; retry until the
+    // form has taken it (the URL follows 500 ms after the last change)
+    await expect(async () => {
+      await page.getByLabel('From date').fill(from);
+      await expect(page).toHaveURL(new RegExp(`dateFrom=${from}`), {
+        timeout: 2000,
+      });
+    }).toPass();
+    await page.getByLabel('To date').fill(to);
+    await expect(page).toHaveURL(new RegExp(`dateFrom=${from}.*dateTo=${to}`));
+
+    const dates = page.locator('main article time');
+    await expect(dates.first()).toBeVisible();
+    for (const value of await dates.evaluateAll((els) =>
+      els.map((e) => e.getAttribute('datetime')!)
+    )) {
+      // Polish calendar days: allow for the two-hour offset from UTC
+      const time = Date.parse(value);
+      expect(time).toBeGreaterThanOrEqual(Date.parse(from) - DAY);
+      expect(time).toBeLessThan(Date.parse(to) + 2 * DAY);
+    }
+  });
 });

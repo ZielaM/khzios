@@ -20,7 +20,8 @@ export function stripHtml(html: string): string {
     FORBID_TAGS: ['style', 'script'],
     RETURN_DOM_FRAGMENT: true,
   });
-  return (fragment.textContent ?? '').replace(/\s+/g, ' ').trim();
+  // A fragment's textContent is always a string (null only for documents)
+  return String(fragment.textContent).replace(/\s+/g, ' ').trim();
 }
 
 /**

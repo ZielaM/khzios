@@ -4,10 +4,11 @@ import {
   isSignInLocked,
   MAX_FAILURES_PER_IP,
   MAX_FAILURES_PER_LOGIN,
+  recordSignInAttempt,
 } from '../rate-limit';
 
 vi.mock('@/lib/prisma', () => ({
-  prisma: { loginAttempt: { count: vi.fn() } },
+  prisma: { loginAttempt: { count: vi.fn(), create: vi.fn() } },
 }));
 
 const count = vi.mocked(prisma.loginAttempt.count);
@@ -40,5 +41,24 @@ describe('isSignInLocked', () => {
       // Only the per-login count was queried
       expect(count).toHaveBeenCalledTimes(1);
     }
+  });
+});
+
+describe('recordSignInAttempt', () => {
+  it('logs the attempt with a bounded login', async () => {
+    await recordSignInAttempt(
+      'x'.repeat(150),
+      '203.0.113.9',
+      false,
+      'password'
+    );
+    expect(prisma.loginAttempt.create).toHaveBeenCalledWith({
+      data: {
+        login: 'x'.repeat(100),
+        ip: '203.0.113.9',
+        success: false,
+        reason: 'password',
+      },
+    });
   });
 });

@@ -201,4 +201,49 @@ describe('DropdownMenu and DropdownItem', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
   });
+
+  it('links a section of a page with its localized path and hash', () => {
+    render(
+      <DropdownMenu label="Students" href="/student">
+        <DropdownItem
+          label="Consultations"
+          href="/student"
+          hash="consultations"
+        />
+      </DropdownMenu>
+    );
+    expect(screen.getByRole('link', { name: 'Consultations' })).toHaveAttribute(
+      'href',
+      '/pl/student#consultations'
+    );
+  });
+
+  it('opens a nested submenu on hover or focus on desktop, with its description', () => {
+    render(
+      <DropdownMenu label="About" href="/about-us">
+        <DropdownItem
+          label="Structure"
+          desc="Teams and management"
+          href="/about-us/structure"
+        >
+          <DropdownItem
+            label="Poultry"
+            href={{
+              pathname: '/about-us/structure/[team]',
+              params: { team: 'poultry' },
+            }}
+          />
+        </DropdownItem>
+      </DropdownMenu>
+    );
+    const item = screen.getByRole('link', { name: /^Structure/ });
+    expect(item).toHaveTextContent('Teams and management');
+    const wrapper = item.parentElement!;
+    fireEvent.mouseEnter(wrapper);
+    expect(item).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.mouseLeave(wrapper);
+    expect(item).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.focus(item);
+    expect(item).toHaveAttribute('aria-expanded', 'true');
+  });
 });

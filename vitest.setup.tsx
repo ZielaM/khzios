@@ -26,6 +26,7 @@ vi.mock('next-intl', () => ({
     t.rich = t;
     return t;
   },
+  useLocale: () => 'pl',
 }));
 
 // ─── Mock: next/navigation ──────────────────────────────────────────
@@ -74,6 +75,9 @@ vi.mock('@/i18n/routing', () => ({
       </a>
     );
   },
+  // Localized path of a route: the locale prefix is enough for unit tests
+  getPathname: ({ href, locale }: { href: string; locale: string }) =>
+    `/${locale}${href}`,
 }));
 
 // ─── Mock: next/image ───────────────────────────────────────────────

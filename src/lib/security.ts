@@ -157,6 +157,11 @@ const EVENTS_PER_MINUTE = 30;
 let windowStart = 0;
 let windowCount = 0;
 
+// Imported on first use and only once, so modules that merely validate
+// input (and their tests) do not load the database client
+let prismaModule: Promise<typeof import('@/lib/prisma')> | undefined;
+const loadPrisma = () => (prismaModule ??= import('@/lib/prisma'));
+
 /** Keeps the event for the admin panel's log (fire and forget). */
 function recordSecurityEvent(
   threats: string[],
@@ -169,7 +174,7 @@ function recordSecurityEvent(
     windowCount = 0;
   }
   if (++windowCount > EVENTS_PER_MINUTE) return;
-  import('@/lib/prisma')
+  loadPrisma()
     .then(({ prisma }) =>
       prisma.securityEvent.create({
         data: {

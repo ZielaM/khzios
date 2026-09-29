@@ -3,7 +3,9 @@
 // while focus moves between its own links (relatedTarget check).
 
 import { useState } from 'react';
-import { Link } from '@/i18n/routing';
+import NextLink from 'next/link';
+import { useLocale } from 'next-intl';
+import { getPathname, Link } from '@/i18n/routing';
 import clsx from 'clsx';
 import navItemStyle from './NavItem.module.scss';
 import style from './DropdownMenu.module.scss';
@@ -98,13 +100,17 @@ export function DropdownItem({
   label,
   desc,
   href,
+  hash,
   children,
 }: {
   label: string;
   desc?: string;
   href: React.ComponentProps<typeof Link>['href'];
+  /** Section of the page to jump to, e.g. "consultations" */
+  hash?: string;
   children?: React.ReactNode;
 }) {
+  const locale = useLocale();
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const t = useTranslations('Navbar');
   const hasChildren = Boolean(children);
@@ -128,8 +134,10 @@ export function DropdownItem({
         }
       }}
     >
-      <Link
+      <ItemLink
         href={href}
+        hash={hash}
+        locale={locale}
         className={style.dropdownLink}
         onClick={handleLinkClick}
         aria-expanded={hasChildren ? isSubMenuOpen : undefined}
@@ -155,7 +163,7 @@ export function DropdownItem({
             <path d="m9 18 6-6-6-6" />
           </svg>
         )}
-      </Link>
+      </ItemLink>
 
       {hasChildren && (
         <div className={clsx(style.subMenu, { [style.show]: isSubMenuOpen })}>
@@ -168,5 +176,26 @@ export function DropdownItem({
         </div>
       )}
     </div>
+  );
+}
+
+type PathnameHref = Parameters<typeof getPathname>[0]['href'];
+
+/**
+ * next-intl's Link drops the `hash` of an href, so anchors are built from
+ * the localized path (e.g. /pl/dla-studenta#consultations) with Next's Link.
+ */
+function ItemLink({
+  href,
+  hash,
+  locale,
+  ...props
+}: React.ComponentProps<typeof Link> & { hash?: string; locale: string }) {
+  if (!hash) return <Link href={href} {...props} />;
+  return (
+    <NextLink
+      href={`${getPathname({ href: href as PathnameHref, locale })}#${hash}`}
+      {...props}
+    />
   );
 }

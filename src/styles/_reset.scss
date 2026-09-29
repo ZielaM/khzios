@@ -23,6 +23,11 @@ body {
   flex-direction: column;
 }
 
+// Anchor targets (e.g. /student#consultations) stop below the fixed navbar
+html {
+  scroll-padding-top: calc(#{$navbar-height} + 1rem);
+}
+
 // <main> starts below the fixed navbar and grows to fill the page
 nav + main {
   flex: 1;

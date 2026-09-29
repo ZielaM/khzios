@@ -151,4 +151,138 @@ test.describe('Admin panel: accounts, trash and logs', () => {
     ).toHaveAttribute('aria-current', 'page');
     await expect(page.getByRole('columnheader', { name: 'Kto' })).toBeVisible();
   });
+
+  test('recovery codes work once; other devices can be signed out; admins reset access', async ({
+    page,
+    browser,
+    browserName,
+  }) => {
+    // Creates accounts, so it runs once per seeded database
+    test.skip(browserName !== 'chromium');
+    const login = `odzysk-e2e-${Date.now()}`;
+    const password = 'haslo konta odzyskiwania';
+
+    await signIn(page, admin);
+    await page.goto(`${ADMIN_BASE}/users`);
+    const form = page.getByRole('region', { name: 'Nowe konto' });
+    await form.getByLabel('Login').fill(login);
+    await form.getByLabel('Imię i nazwisko').fill('Konto Odzyskiwania');
+    await form.getByRole('button', { name: 'Utwórz konto' }).click();
+    const temporary = (await form.locator('code').textContent())!.trim();
+
+    const device = async () => (await browser.newContext()).newPage();
+    const passwordStep = async (p: typeof page, pass: string) => {
+      await p.goto(ADMIN_BASE);
+      await p.getByLabel('Login').fill(login);
+      await p.getByLabel('Hasło').fill(pass);
+      await p.getByRole('button', { name: 'Zaloguj się' }).click();
+    };
+    const secondStep = async (p: typeof page, code: string) => {
+      await p.getByLabel('Kod z aplikacji uwierzytelniającej').fill(code);
+      await p.getByRole('button', { name: 'Potwierdź' }).click();
+    };
+    const dashboard = (p: typeof page) =>
+      expect(
+        p.getByRole('heading', { level: 1, name: 'Pulpit' })
+      ).toBeVisible();
+
+    // First sign-in: two-factor setup, recovery codes, own password
+    const first = await device();
+    await passwordStep(first, temporary);
+    const secret = (await first.locator('code').first().textContent())!.trim();
+    await first.getByLabel('Kod z aplikacji').fill(totpCode(secret));
+    await first
+      .getByRole('button', { name: 'Włącz logowanie dwuskładnikowe' })
+      .click();
+    const codes = first
+      .getByRole('listitem')
+      .filter({ hasText: RECOVERY_CODE });
+    await expect(codes).toHaveCount(10);
+    const recovery = (await codes.first().textContent())!.trim();
+    await first.getByRole('link', { name: /przejdź do panelu/ }).click();
+    await first.locator('[name="currentPassword"]').fill(temporary);
+    await first.locator('[name="newPassword"]').fill(password);
+    await first.locator('[name="repeatPassword"]').fill(password);
+    await first.getByRole('button', { name: 'Zmień hasło' }).click();
+    await dashboard(first);
+
+    // A recovery code instead of the phone, accepted once only
+    const second = await device();
+    await passwordStep(second, password);
+    await secondStep(second, recovery);
+    await dashboard(second);
+    const third = await device();
+    await passwordStep(third, password);
+    await secondStep(third, recovery);
+    await expect(third.locator('form [role="alert"]')).toContainText(
+      'Nieprawidłowy kod'
+    );
+
+    // Signing out the other devices from one of them
+    await second.goto(`${ADMIN_BASE}/account`);
+    second.once('dialog', (d) => d.accept());
+    await second
+      .getByRole('button', {
+        name: 'Wyloguj ze wszystkich pozostałych urządzeń',
+      })
+      .click();
+    await expect(second.getByRole('status')).toContainText(
+      'Wylogowano ze wszystkich pozostałych urządzeń.'
+    );
+    expect((await first.goto(`${ADMIN_BASE}/account`))?.status()).toBe(404);
+    expect((await second.goto(`${ADMIN_BASE}/account`))?.status()).toBe(200);
+
+    // An administrator gives a new temporary password and resets 2FA
+    await page.reload();
+    const entry = page.locator('details', { hasText: `(${login})` });
+    await entry.locator('summary').click();
+    await entry
+      .getByRole('button', { name: 'Nadaj nowe hasło tymczasowe' })
+      .click();
+    const newTemporary = (await entry.locator('code').textContent())!.trim();
+    await entry
+      .getByRole('button', { name: 'Zresetuj logowanie dwuskładnikowe' })
+      .click();
+    await expect(
+      entry.getByText(/ustawi aplikację uwierzytelniającą od nowa/)
+    ).toBeVisible();
+    // Both reset the sessions
+    expect((await second.goto(`${ADMIN_BASE}/account`))?.status()).toBe(404);
+
+    const fourth = await device();
+    await passwordStep(fourth, newTemporary);
+    await expect(
+      fourth.getByRole('heading', { name: 'Włącz logowanie dwuskładnikowe' })
+    ).toBeVisible();
+  });
+
+  test('administrators delete trashed items for good', async ({
+    page,
+    browserName,
+  }) => {
+    const title = `Na zawsze e2e ${browserName} ${Date.now()}`;
+    await signIn(page, admin);
+    await page.goto(`${ADMIN_BASE}/student/announcements`);
+    const form = page.locator('section', { hasText: 'Nowe ogłoszenie' });
+    await form.locator('[name="title_pl"]').fill(title);
+    await form.locator('[name="content_pl"]').fill('Do usunięcia.');
+    await form.getByRole('button', { name: 'Dodaj ogłoszenie' }).click();
+    const entry = page.locator('details', { hasText: title });
+    await entry.locator('summary').click();
+    page.once('dialog', (d) => d.accept());
+    await entry.getByRole('button', { name: 'Przenieś do kosza' }).click();
+    await expect(entry).toHaveCount(0);
+
+    await page.goto(`${ADMIN_BASE}/trash`);
+    const item = page.getByRole('region', { name: `Ogłoszenie „${title}”` });
+    page.once('dialog', (d) => d.accept());
+    await item.getByRole('button', { name: 'Usuń na zawsze' }).click();
+    await expect(item).toHaveCount(0);
+    await page.goto(`${ADMIN_BASE}/logs`);
+    await expect(
+      page.getByRole('cell', {
+        name: `Ogłoszenie „${title}” (usunięte na zawsze)`,
+      })
+    ).toBeVisible();
+  });
 });

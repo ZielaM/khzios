@@ -35,6 +35,13 @@ export default function StudentSchedule({ locale }: { locale: string }) {
 
   useEffect(load, [load]);
 
+  // The loaded content moves the sections below; scroll to the linked one
+  // again (e.g. /student#consultations from the navbar) once it is in place
+  useEffect(() => {
+    if (state.status !== 'ready' || !window.location.hash) return;
+    document.getElementById(window.location.hash.slice(1))?.scrollIntoView();
+  }, [state.status]);
+
   const retry = () => {
     setState({ status: 'loading' });
     load();
@@ -48,10 +55,16 @@ export default function StudentSchedule({ locale }: { locale: string }) {
           locale={locale}
         />
       ) : (
-        <div className={style.announcementsPlaceholder} aria-hidden="true" />
+        // Same id as the loaded section, so #announcements links land here
+        <div
+          id="announcements"
+          className={style.announcementsPlaceholder}
+          aria-hidden="true"
+        />
       )}
 
       <section
+        id="consultations"
         aria-labelledby="consultations-title"
         aria-busy={state.status === 'loading'}
       >

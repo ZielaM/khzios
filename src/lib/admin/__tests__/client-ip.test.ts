@@ -15,3 +15,13 @@ describe('getClientIp', () => {
     expect(getClientIp(new Headers())).toBe('unknown');
   });
 });
+
+describe('getClientIp with an empty forwarded entry', () => {
+  it('falls back to x-real-ip', () => {
+    const headers = new Headers({
+      'x-forwarded-for': '198.51.100.1, ',
+      'x-real-ip': ' 203.0.113.9 ',
+    });
+    expect(getClientIp(headers)).toBe('203.0.113.9');
+  });
+});

@@ -9,10 +9,12 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import style from './NewsGallery.module.scss';
 import clsx from 'clsx';
 
-/** Keeps Tab / Shift+Tab cycling through the buttons inside `container`. */
-function trapFocus(e: KeyboardEvent, container: HTMLElement | null) {
-  const controls = container?.querySelectorAll<HTMLElement>('button');
-  if (!controls || controls.length === 0) return;
+/**
+ * Keeps Tab / Shift+Tab cycling through the buttons of the open lightbox
+ * (it always has at least the close button).
+ */
+function trapFocus(e: KeyboardEvent, container: HTMLElement) {
+  const controls = container.querySelectorAll<HTMLElement>('button');
   const first = controls[0];
   const last = controls[controls.length - 1];
   if (e.shiftKey && document.activeElement === first) {
@@ -97,7 +99,8 @@ export default function NewsGallery({
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowRight') showNext();
       if (e.key === 'ArrowLeft') showPrev();
-      if (e.key === 'Tab') trapFocus(e, dialogRef.current);
+      // The dialog is rendered whenever a photo is selected
+      if (e.key === 'Tab') trapFocus(e, dialogRef.current!);
     };
 
     document.addEventListener('keydown', handleKeyDown);

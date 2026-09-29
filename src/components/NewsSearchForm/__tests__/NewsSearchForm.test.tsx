@@ -312,4 +312,16 @@ describe('NewsSearchForm', () => {
     expect(replacedUrl).toContain('dateFrom=2026-02-01');
     expect(replacedUrl).toContain('dateTo=2026-11-30');
   });
+
+  it('writes relevance sorting to the address when chosen for a query', () => {
+    render(<NewsSearchForm {...defaultProps} initialQuery="cows" />);
+    fireEvent.change(screen.getByRole('combobox', { name: 'sortBy' }), {
+      target: { value: 'relevance' },
+    });
+    act(() => vi.advanceTimersByTime(600));
+    expect(mockReplace).toHaveBeenCalledWith(
+      expect.stringContaining('sort=relevance'),
+      expect.anything()
+    );
+  });
 });

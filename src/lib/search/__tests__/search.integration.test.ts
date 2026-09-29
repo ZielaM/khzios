@@ -115,6 +115,7 @@ beforeAll(async () => {
       translations: {
         create: [
           { languageCode: 'pl', title: 'Skład kwasów tłuszczowych mleka' },
+          { languageCode: 'en', title: 'Fatty acid composition of milk' },
         ],
       },
     },
@@ -187,6 +188,57 @@ describe('searchNews', () => {
     );
   });
 
+  it('combines a search with tag and date filters', async () => {
+    expect(
+      ids(
+        await searchNews({
+          language: 'pl',
+          query: 'krowy',
+          tag: 'bydlo',
+          dateFrom: '2026-09-05',
+          dateTo: '2026-09-05',
+        })
+      )
+    ).toEqual(['dairy']);
+    expect(
+      ids(
+        await searchNews({
+          language: 'pl',
+          query: 'krowy',
+          dateFrom: '2026-09-06',
+        })
+      )
+    ).toEqual(['meat']);
+    expect(
+      ids(
+        await searchNews({
+          language: 'pl',
+          query: 'krowy',
+          dateTo: '2026-09-05',
+        })
+      )
+    ).toEqual(['dairy']);
+  });
+
+  it('sorts equally relevant matches by date', async () => {
+    const result = await searchNews({
+      language: 'pl',
+      query: 'krowy',
+      sortBy: 'relevance',
+    });
+    expect(ids(result)).toEqual(['meat', 'dairy']);
+  });
+
+  it('keeps the total when a search is paged beyond its results', async () => {
+    const result = await searchNews({
+      language: 'pl',
+      query: 'krowy',
+      page: 5,
+    });
+    expect(result.data).toEqual([]);
+    expect(result.total).toBe(2);
+  });
+
   it('paginates results', async () => {
     const first = await searchNews({ language: 'pl', limit: 2, page: 1 });
     const second = await searchNews({ language: 'pl', limit: 2, page: 2 });
@@ -229,5 +281,23 @@ describe('searchPublications', () => {
     expect(byTitle.data[0].translations[0].title).toContain(
       '<mark>mleka</mark>'
     );
+  });
+
+  it('highlights only the language that matched', async () => {
+    const result = await searchPublications({ language: 'pl', query: 'mleka' });
+    const titles = Object.fromEntries(
+      result.data[0].translations.map((t) => [t.languageCode, t.title])
+    );
+    expect(titles.pl).toContain('<mark>mleka</mark>');
+    expect(titles.en).toBe('Fatty acid composition of milk');
+  });
+
+  it('returns an empty page when nothing matches', async () => {
+    const result = await searchPublications({
+      language: 'pl',
+      query: 'nieistniejące',
+    });
+    expect(result.data).toEqual([]);
+    expect(result.total).toBe(0);
   });
 });

@@ -196,4 +196,20 @@ test.describe('News Article Detail Page', () => {
       page.getByRole('heading', { name: /not found/i })
     ).toBeVisible();
   });
+
+  test('offers a way back to the top after scrolling down', async ({
+    page,
+  }) => {
+    await navigateToArticle(page, 1);
+    const button = page.getByRole('button', { name: 'Scroll to top' });
+    await expect(button).toBeHidden();
+    await page.mouse.move(400, 400);
+    await page.mouse.wheel(0, 3000);
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeGreaterThan(300);
+    await expect(button).toBeVisible();
+    await button.click();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  });
 });

@@ -34,4 +34,25 @@ test.describe('Team page', () => {
     await expect(page).toHaveURL(/\/en\/about-us\/structure\/ruminants\/.+/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(name!);
   });
+
+  test('an external team links to its own site in a new tab', async ({
+    page,
+  }) => {
+    await page.goto('/pl/o-nas/struktura/weterynaryjna');
+    await expect(
+      page.getByRole('heading', {
+        level: 1,
+        name: 'Pracownia Weterynaryjnej Ochrony Zdrowia Publicznego',
+      })
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        'Strona tego zespołu jest dostępna pod adresem zewnętrznym.'
+      )
+    ).toBeVisible();
+    const link = page.getByRole('link', { name: /Przejdź na stronę/ });
+    await expect(link).toHaveAttribute('href', 'https://example.com');
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', /noopener/);
+  });
 });

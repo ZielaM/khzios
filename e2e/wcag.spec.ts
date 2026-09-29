@@ -158,4 +158,21 @@ test.describe('WCAG Accessibility Controls', () => {
     // 3. Since scale is 1.6, effective screen width drops below 1024px, triggering compact-layout class
     await expect(html).toHaveClass(/compact-layout/);
   });
+
+  test('the first Tab reaches a skip link that jumps to the content', async ({
+    page,
+  }) => {
+    await page.keyboard.press('Tab');
+    const skip = page.getByRole('link', { name: 'Skip to main content' });
+    await expect(skip).toBeFocused();
+    await expect(skip).toBeVisible();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/#main-content$/);
+    // The next Tab starts inside the content, not in the navbar again
+    await page.keyboard.press('Tab');
+    const inMain = await page.evaluate(() =>
+      Boolean(document.activeElement?.closest('main'))
+    );
+    expect(inMain).toBe(true);
+  });
 });

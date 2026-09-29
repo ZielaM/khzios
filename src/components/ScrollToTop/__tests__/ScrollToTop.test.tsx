@@ -1,3 +1,4 @@
+import { renderToString } from 'react-dom/server';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ScrollToTop from '../ScrollToTop';
@@ -59,5 +60,16 @@ describe('ScrollToTop', () => {
       top: 0,
       behavior: 'smooth',
     });
+  });
+
+  it('is visible right away on a page that is already scrolled down', () => {
+    Object.defineProperty(window, 'scrollY', { value: 800, writable: true });
+    render(<ScrollToTop />);
+    expect(screen.getByRole('button')).toHaveClass('visible');
+  });
+
+  it('is hidden in the server-rendered page', () => {
+    Object.defineProperty(window, 'scrollY', { value: 800, writable: true });
+    expect(renderToString(<ScrollToTop />)).not.toContain('visible');
   });
 });

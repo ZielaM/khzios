@@ -1,12 +1,7 @@
+import type { ComponentType } from 'react';
 import { useTranslations } from 'next-intl';
-import {
-  ExternalLink,
-  Globe,
-  Facebook,
-  Instagram,
-  Link2,
-  LucideIcon,
-} from 'lucide-react';
+import { ExternalLink, Globe, Link2 } from 'lucide-react';
+import { FacebookIcon, InstagramIcon } from '@/components/BrandIcons';
 import { TeamWithRelations } from '@/lib/team-queries';
 import { resolveTranslation } from '@/lib/translations';
 import style from './ExternalTeamPage.module.scss';
@@ -16,10 +11,12 @@ interface ExternalTeamPageProps {
   locale: string;
 }
 
-const ICONS: Record<string, LucideIcon> = {
+type LinkIcon = ComponentType<{ size?: number; className?: string }>;
+
+const ICONS: Record<string, LinkIcon> = {
   globe: Globe,
-  facebook: Facebook,
-  instagram: Instagram,
+  facebook: FacebookIcon,
+  instagram: InstagramIcon,
 };
 
 export default function ExternalTeamPage({

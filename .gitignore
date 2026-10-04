@@ -49,3 +49,6 @@ playwright-report/
 test-results/
 # Files uploaded in the admin panel (development)
 /uploads
+
+# Source documents, staff photos and the generated import (personal data)
+/dane

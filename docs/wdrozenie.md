@@ -54,9 +54,45 @@ Zatrzymanie: `docker compose --env-file .env.docker down` (dane zostają). Usuni
 **Da się i to dobry plan**: stronę wypełniasz w spokoju u siebie, a serwer od pierwszej minuty pokazuje gotową treść. Warunki:
 
 - **Ten sam stos** co na serwerze (część 1), a nie `pnpm dev` z bazą Neon: ta sama wersja PostgreSQL (17) i pliki w wolumenie Dockera, a w Neonie są dane przykładowe.
-- **Czysta baza**: nie uruchamiaj seeda. Zacznij od pustej bazy i wprowadź tylko prawdziwe treści.
+- **Czysta baza**: nie uruchamiaj seeda. Zacznij od pustej bazy i wprowadź tylko prawdziwe treści — zebrane już dane wczytasz importem (2.0).
 - **Ta sama wersja kodu** lokalnie i na serwerze (ten sam commit). Zrzut zawiera tabelę `_prisma_migrations`; jeśli serwer ma nowszy kod, `migrate` doda tylko brakujące migracje, ale starszy kod niż zrzut nie zadziała.
 - **Baza i pliki razem**: artykuły wskazują na zdjęcia w `uploads`. Sam zrzut bazy da stronę z niedziałającymi zdjęciami.
+
+### 2.0 Szybki start: import danych z dokumentów
+
+Dane zebrane od zespołów (dokumenty i zdjęcia w `dane/`) są przygotowane do wczytania jednym plikiem, żeby nie przepisywać ich ręcznie w panelu:
+
+| Plik                     | Co zawiera                                                                                     |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| `dane/import/import.sql` | 6 zespołów, pracownicy, publikacje, projekty, przedmioty, kierownik katedry                    |
+| `dane/import/media/`     | zdjęcia pracowników, przetworzone tak jak przy wgrywaniu w panelu (WebP, bez danych z aparatu) |
+| `dane/BRAKI.md`          | czego w danych brakuje i co trzeba potwierdzić                                                 |
+
+Folder `dane/` nie jest w repozytorium (dane osobowe i zdjęcia) — na inny komputer trzeba go skopiować osobno.
+
+Import jest dla **czystej bazy**: po migracjach, bez danych przykładowych. Na bazie z seedem przerwie się z komunikatem i niczego nie zmieni. W katalogu projektu, przy działającej bazie (część 1, kroki 1–3):
+
+```bash
+# 1. Dane
+docker compose --env-file .env.docker exec -T db \
+  psql -v ON_ERROR_STOP=1 -U khzios -d khzios < dane/import/import.sql
+
+# 2. Zdjęcia do wolumenu uploads
+docker compose --env-file .env.docker run --rm --no-deps --user root \
+  -v "$PWD/dane/import/media":/import:ro --entrypoint sh app \
+  -c 'cp /import/*.webp /app/uploads/ && chown -R node:node /app/uploads'
+
+# 3. Świeży kontener aplikacji, żeby strony nie pokazywały wersji sprzed importu
+docker compose --env-file .env.docker up -d --force-recreate app
+```
+
+Pierwsze polecenie kończy się tabelką z liczbą zespołów, pracowników, publikacji, projektów i przedmiotów (6, 16, 95, 9, 32). Jeśli użytkownik lub baza w `.env.docker` nazywają się inaczej niż `khzios`, zmień `-U` i `-d`.
+
+Import można powtarzać: dodaje tylko to, czego jeszcze nie ma, i **nie nadpisuje** niczego, co poprawiłeś w panelu. Dlatego po imporcie brakujące dane (lista w `dane/BRAKI.md`) uzupełniaj już w panelu, a nie w plikach.
+
+Gdy jednak chcesz zmienić dane źródłowe przed pierwszym importem: popraw `dane/import/data.mjs` (zespoły, osoby, projekty, przedmioty) lub `dane/import/publications.json` i zbuduj pliki od nowa poleceniem `node dane/import/build.mjs`.
+
+Na serwer najprościej przenieść wszystko razem: zaimportuj dane lokalnie, uzupełnij braki w panelu, a potem zrób zrzut bazy i plików (2.2–2.3). Możesz też skopiować na serwer `dane/import/` i wykonać tam te same trzy polecenia.
 
 ### 2.1 Przygotuj dane lokalnie
 

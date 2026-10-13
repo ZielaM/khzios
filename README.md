@@ -27,7 +27,7 @@ Przydatne skrypty: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e:ch
 
 ## Wdrożenie (Docker Compose, serwer uczelni)
 
-**Instrukcja krok po kroku** (uruchomienie lokalne, przeniesienie danych na serwer przez `pg_dump`, konfiguracja serwera, codzienna obsługa): [docs/wdrozenie.md](docs/wdrozenie.md). Poniżej skrót.
+**Instrukcja krok po kroku** (uzgodnienia z uczelnią, uruchomienie lokalne, przeniesienie danych, serwer, reverse proxy z HTTPS, kopie zapasowe, publikacja i utrzymanie): [docs/wdrozenie.md](docs/wdrozenie.md). Poniżej skrót.
 
 Stos w `docker-compose.yml`: PostgreSQL, jednorazowy krok migracji i aplikacja (`next start`, użytkownik bez uprawnień root, healthcheck `/api/health`).
 
@@ -40,7 +40,7 @@ docker compose --env-file .env.docker up -d --build
 - Migracje (`prisma migrate deploy`) uruchamia usługa `migrate` przed startem aplikacji, przy każdym `up`.
 - Dane przykładowe dla świeżej instalacji (**kasuje zawartość bazy**):
   `docker compose --env-file .env.docker --profile seed run --rm seed`
-- Przed aplikacją należy postawić reverse proxy z HTTPS (np. nginx uczelni) kierujące ruch na port `APP_PORT`. Port jest domyślnie dostępny tylko z tego samego serwera (`APP_BIND=127.0.0.1`). Konfiguracja nginx, opcjonalne ograniczenie panelu do sieci uczelni, blokowanie adresów IP i kopie zapasowe: [docs/serwer-uczelni.md](docs/serwer-uczelni.md).
+- Przed aplikacją należy postawić reverse proxy z HTTPS (np. nginx uczelni) kierujące ruch na port `APP_PORT`. Port jest domyślnie dostępny tylko z tego samego serwera (`APP_BIND=127.0.0.1`). Konfiguracja nginx i Apache: [etap 7 instrukcji](docs/wdrozenie.md#etap-7-reverse-proxy-i-https); kopie zapasowe: [etap 8](docs/wdrozenie.md#etap-8-kopie-zapasowe); ograniczenie panelu do sieci uczelni i blokowanie adresów IP: [Ograniczenie dostępu i blokady](docs/wdrozenie.md#ograniczenie-dostępu-i-blokady).
 - Pierwsze konto panelu (hasło zostanie wczytane z klawiatury):
   `docker compose --env-file .env.docker run --rm migrate pnpm admin:create --login jan --name "Jan Kowalski" --role admin`
 - Kopia zapasowa to **baza i wolumen `uploads`** (zdjęcia i PDF-y z panelu) — jedno bez drugiego jest niepełne.

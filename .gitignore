@@ -52,3 +52,9 @@ test-results/
 
 # Source documents, staff photos and the generated import (personal data)
 /dane
+
+# Database dumps and archives made while deploying (docs/wdrozenie.md):
+# they hold password hashes and two-factor secrets
+*.dump
+/uploads.tar.gz
+/khzios-images.tar.gz

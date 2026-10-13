@@ -13,10 +13,19 @@ name: khzios
 
 x-database-url: &database-url postgresql://${POSTGRES_USER:-khzios}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.docker}@db:5432/${POSTGRES_DB:-khzios}?schema=public
 
+# Docker keeps container output forever unless told otherwise; cap it so a
+# long-running server cannot fill its disk with logs (5 files of 10 MB each)
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '5'
+
 services:
   db:
     image: postgres:17-alpine
     restart: unless-stopped
+    logging: *logging
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-khzios}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.docker}
@@ -60,6 +69,7 @@ services:
       context: .
       target: runner
     restart: unless-stopped
+    logging: *logging
     ports:
       # Only the reverse proxy on this host may reach the app: a direct
       # client could send its own X-Forwarded-For and dodge the per-address

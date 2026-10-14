@@ -32,6 +32,12 @@ updates:
         patterns:
           - prisma
           - '@prisma/*'
+      # All @tiptap packages must share one version: bumping only one of them
+      # installs a second @tiptap/core, and the editor commands disappear from
+      # the types (e.g. toggleBold on ChainedCommands)
+      tiptap:
+        patterns:
+          - '@tiptap/*'
       dev-tooling:
         dependency-type: development
         update-types:

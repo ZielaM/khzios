@@ -58,10 +58,22 @@ describe('PublicationsListServer', () => {
           journal: 'Nature',
           doi: '10.1234/5678',
           translations: [{ languageCode: 'en', title: 'Amazing Paper' }],
-          team: {
-            slug: 'team-a',
-            translations: [{ languageCode: 'en', name: 'Team A' }],
-          },
+          teams: [
+            {
+              team: {
+                id: 't-a',
+                slug: 'team-a',
+                translations: [{ languageCode: 'en', name: 'Team A' }],
+              },
+            },
+            {
+              team: {
+                id: 't-b',
+                slug: 'team-b',
+                translations: [{ languageCode: 'en', name: 'Team B' }],
+              },
+            },
+          ],
         } as unknown as NonNullable<
           Awaited<ReturnType<typeof searchPublications>>['data']
         >[0],
@@ -88,9 +100,15 @@ describe('PublicationsListServer', () => {
     const doiLink = screen.getByRole('link', { name: /DOI/i });
     expect(doiLink).toHaveAttribute('href', 'https://doi.org/10.1234/5678');
 
-    // Team link
-    const teamLink = screen.getByRole('link', { name: /Team A/i });
-    expect(teamLink).toHaveAttribute('href', '/about-us/structure/team-a');
+    // A co-authored publication links to every team involved
+    expect(screen.getByRole('link', { name: /Team A/i })).toHaveAttribute(
+      'href',
+      '/about-us/structure/team-a'
+    );
+    expect(screen.getByRole('link', { name: /Team B/i })).toHaveAttribute(
+      'href',
+      '/about-us/structure/team-b'
+    );
   });
 
   it('requests sort by relevance when query is provided', async () => {
@@ -155,7 +173,7 @@ describe('PublicationsListServer', () => {
           journal: 'Science',
           doi: 'https://doi.org/10.9999/8888',
           translations: [{ languageCode: 'en', title: 'HTTP DOI Paper' }],
-          // No team
+          teams: [],
         } as unknown as NonNullable<
           Awaited<ReturnType<typeof searchPublications>>['data']
         >[0],
@@ -192,10 +210,15 @@ describe('PublicationsListServer', () => {
           authors: 'Jane Smith',
           journal: 'Science',
           translations: [{ languageCode: 'en', title: 'Team No Trans' }],
-          team: {
-            slug: 'team-no-trans',
-            translations: [], // Missing team translation
-          },
+          teams: [
+            {
+              team: {
+                id: 't-x',
+                slug: 'team-no-trans',
+                translations: [], // Missing team translation
+              },
+            },
+          ],
         } as unknown as NonNullable<
           Awaited<ReturnType<typeof searchPublications>>['data']
         >[0],

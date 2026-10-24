@@ -53,10 +53,6 @@ export default async function PublicationsListServer({
               );
               if (!translation) return null;
 
-              const teamTranslation = pub.team
-                ? resolveTranslation(pub.team.translations, locale).translation
-                : null;
-
               return (
                 <div key={pub.id} className={style.publicationItem}>
                   <div className={style.itemYear}>{pub.year}</div>
@@ -88,15 +84,24 @@ export default async function PublicationsListServer({
                         </a>
                       )}
 
-                      {pub.team && teamTranslation && (
-                        <Link
-                          href={teamHref(pub.team, locale)}
-                          className={style.teamLink}
-                        >
-                          {teamTranslation.name}{' '}
-                          <ArrowRight aria-hidden="true" size={14} />
-                        </Link>
-                      )}
+                      {pub.teams.map(({ team }) => {
+                        const teamTranslation = resolveTranslation(
+                          team.translations,
+                          locale
+                        ).translation;
+                        return (
+                          teamTranslation && (
+                            <Link
+                              key={team.id}
+                              href={teamHref(team, locale)}
+                              className={style.teamLink}
+                            >
+                              {teamTranslation.name}{' '}
+                              <ArrowRight aria-hidden="true" size={14} />
+                            </Link>
+                          )
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

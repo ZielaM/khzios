@@ -94,7 +94,7 @@ describe('snapshots', () => {
       'courses',
       'links',
     ]);
-    expect(include(tx.publication)).toEqual(['translations']);
+    expect(include(tx.publication)).toEqual(['translations', 'teams']);
   });
 });
 
@@ -276,13 +276,17 @@ describe('employees', () => {
 });
 
 describe('teams', () => {
-  it('restores a team with its people who still exist and its unclaimed publications', async () => {
+  it('restores a team with its people and publications that still exist', async () => {
     vi.mocked(prisma.employee.findMany).mockResolvedValue([
       { id: 'e1' },
+    ] as never);
+    vi.mocked(prisma.publication.findMany).mockResolvedValue([
+      { id: 'p1' },
     ] as never);
     const tr = (extra: object) => ({ languageCode: 'pl', ...extra });
     await restoreTeam({
       id: 't1',
+      slug: 'cattle',
       type: 'FULL',
       displayOrder: 1,
       translations: [
@@ -298,7 +302,7 @@ describe('teams', () => {
         { id: 'm1', teamId: 't1', employeeId: 'e1', category: 'ACADEMIC' },
         { id: 'm2', teamId: 't1', employeeId: 'gone', category: 'ACADEMIC' },
       ],
-      publications: [{ id: 'p1' }],
+      publications: [{ publicationId: 'p1' }, { publicationId: 'deleted' }],
       projects: [
         {
           id: 'pr1',
@@ -333,10 +337,18 @@ describe('teams', () => {
       ],
     } as unknown as TeamSnapshot);
 
-    const [teamCreate, publicationUpdate] = vi.mocked(prisma.$transaction).mock
-      .calls[0][0] as unknown as [{ data: Record<string, unknown> }, unknown];
-    expect(teamCreate.data).toEqual({
+    expect(prisma.publication.findMany).toHaveBeenCalledWith({
+      where: {
+        OR: [
+          { id: { in: ['p1', 'deleted'] } },
+          { id: { in: [] }, teams: { none: {} } },
+        ],
+      },
+      select: { id: true },
+    });
+    expect(created(prisma.team).data).toEqual({
       id: 't1',
+      slug: 'cattle',
       type: 'FULL',
       displayOrder: 1,
       translations: {
@@ -384,42 +396,92 @@ describe('teams', () => {
           },
         ],
       },
-    });
-    // Publications moved to another team meanwhile stay where they are
-    expect(publicationUpdate).toEqual({
-      where: { id: { in: ['p1'] }, teamId: null },
-      data: { teamId: 't1' },
+      // A publication deleted while the team was in the trash stays deleted
+      publications: { create: [{ publicationId: 'p1' }] },
     });
   });
 
-  const publication = (teamId: string | null) =>
+  it('relinks publications of a team trashed before they could have several teams', async () => {
+    vi.mocked(prisma.publication.findMany).mockResolvedValue([
+      { id: 'p1' },
+    ] as never);
+    await restoreTeam({
+      id: 't1',
+      slug: 'cattle',
+      type: 'FULL',
+      displayOrder: 1,
+      translations: [],
+      members: [],
+      // The old snapshot listed publications by their own id
+      publications: [{ id: 'p1' }],
+      projects: [],
+      courses: [],
+      links: [],
+    } as unknown as TeamSnapshot);
+
+    // Only if no other team took the publication meanwhile
+    expect(prisma.publication.findMany).toHaveBeenCalledWith({
+      where: {
+        OR: [{ id: { in: [] } }, { id: { in: ['p1'] }, teams: { none: {} } }],
+      },
+      select: { id: true },
+    });
+    expect(created(prisma.team).data.publications).toEqual({
+      create: [{ publicationId: 'p1' }],
+    });
+  });
+
+  const publication = (extra: object) =>
     ({
       id: 'p1',
       year: 2024,
-      teamId,
+      doi: '10.1000/x',
+      authors: 'A.',
+      journal: 'J',
       translations: [{ publicationId: 'p1', languageCode: 'pl', title: 'T' }],
+      ...extra,
     }) as unknown as PublicationSnapshot;
 
-  it('returns a publication to its team when the team exists', async () => {
-    vi.mocked(prisma.team.findUnique).mockResolvedValue({ id: 't1' } as never);
-    await restorePublication(publication('t1'));
+  it('returns a publication to those of its teams that still exist', async () => {
+    vi.mocked(prisma.team.findMany).mockResolvedValue([{ id: 't1' }] as never);
+    await restorePublication(
+      publication({ teams: [{ teamId: 't1' }, { teamId: 'gone' }] })
+    );
+    expect(prisma.team.findMany).toHaveBeenCalledWith({
+      where: { id: { in: ['t1', 'gone'] } },
+      select: { id: true },
+    });
     expect(created(prisma.publication).data).toEqual({
       id: 'p1',
       year: 2024,
-      teamId: 't1',
+      doi: '10.1000/x',
+      authors: 'A.',
+      journal: 'J',
       translations: { create: [{ languageCode: 'pl', title: 'T' }] },
+      teams: { create: [{ teamId: 't1' }] },
     });
   });
 
-  it('restores a publication without a team when the team is gone or unset', async () => {
-    vi.mocked(prisma.team.findUnique).mockResolvedValue(null);
-    await restorePublication(publication('gone'));
-    expect(created(prisma.publication).data.teamId).toBeNull();
+  it('restores a publication trashed before it could have several teams', async () => {
+    vi.mocked(prisma.team.findMany).mockResolvedValue([{ id: 't1' }] as never);
+    await restorePublication(publication({ teamId: 't1' }));
+    expect(prisma.team.findMany).toHaveBeenCalledWith({
+      where: { id: { in: ['t1'] } },
+      select: { id: true },
+    });
+    const data = created(prisma.publication).data;
+    expect(data.teams).toEqual({ create: [{ teamId: 't1' }] });
+    // The old column no longer exists
+    expect(data).not.toHaveProperty('teamId');
 
     vi.clearAllMocks();
-    await restorePublication(publication(null));
-    expect(prisma.team.findUnique).not.toHaveBeenCalled();
-    expect(created(prisma.publication).data.teamId).toBeNull();
+    vi.mocked(prisma.team.findMany).mockResolvedValue([]);
+    await restorePublication(publication({ teamId: null }));
+    expect(prisma.team.findMany).toHaveBeenCalledWith({
+      where: { id: { in: [] } },
+      select: { id: true },
+    });
+    expect(created(prisma.publication).data.teams).toEqual({ create: [] });
   });
 });
 
@@ -453,7 +515,7 @@ describe('TRASH_ENTITIES', () => {
       expect(model.create, entity).toHaveBeenCalled();
     }
     await TRASH_ENTITIES.team.restore(base as never);
-    expect(prisma.$transaction).toHaveBeenCalled();
+    expect(prisma.team.create).toHaveBeenCalled();
     expect(Object.values(TRASH_ENTITIES).every((e) => e.label)).toBe(true);
   });
 });

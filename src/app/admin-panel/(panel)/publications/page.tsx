@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type {
   Prisma,
   Publication,
+  PublicationTeam,
   PublicationTranslation,
 } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
@@ -35,7 +36,11 @@ export default async function PublicationsPage({
   const page = Math.max(1, Number(params.page) || 1);
 
   const where: Prisma.PublicationWhereInput = {
-    ...(team === 'none' ? { teamId: null } : team ? { teamId: team } : {}),
+    ...(team === 'none'
+      ? { teams: { none: {} } }
+      : team
+        ? { teams: { some: { teamId: team } } }
+        : {}),
     ...(q && {
       OR: [
         {
@@ -54,7 +59,7 @@ export default async function PublicationsPage({
     }),
     prisma.publication.findMany({
       where,
-      include: { translations: true },
+      include: { translations: true, teams: true },
       orderBy: [{ year: 'desc' }, { id: 'asc' }],
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
@@ -66,25 +71,41 @@ export default async function PublicationsPage({
     adminHref(
       `/publications?${new URLSearchParams({ ...(team && { team }), ...(q && { q }), page: String(p) })}`
     );
-  const teamName = (id: string | null) =>
-    teams.find((t) => t.id === id)?.translations[0]?.name ?? 'bez zespołu';
+  const teamName = (t: (typeof teams)[number]) =>
+    t.translations[0]?.name ?? t.slug;
+  // In menu order, whatever order the links were saved in
+  const teamNames = (links: PublicationTeam[]) =>
+    teams
+      .filter((t) => links.some((link) => link.teamId === t.id))
+      .map(teamName)
+      .join(', ') || 'bez zespołu';
 
-  const teamSelect = (selected: string | null) => (
-    <label className={formStyle.field}>
-      <span>Zespół</span>
-      <select name="teamId" defaultValue={selected ?? ''}>
-        <option value="">bez zespołu</option>
-        {teams.map((t) => (
-          <option key={t.id} value={t.id}>
-            {t.translations[0]?.name ?? t.slug}
-          </option>
-        ))}
-      </select>
-    </label>
+  const teamChecks = (selected: string[]) => (
+    <fieldset className={formStyle.fieldset}>
+      <legend>Zespoły</legend>
+      {teams.map((t) => (
+        <label key={t.id} className={formStyle.checkboxField}>
+          <input
+            type="checkbox"
+            name="teams"
+            value={t.id}
+            defaultChecked={selected.includes(t.id)}
+          />
+          {teamName(t)}
+        </label>
+      ))}
+      <small>
+        Publikacja wspólna kilku zespołów pojawi się na stronie każdego z nich.
+        Bez zespołu będzie tylko na stronie „Publikacje naukowe”.
+      </small>
+    </fieldset>
   );
 
   const publicationFields = (
-    p?: Publication & { translations: PublicationTranslation[] }
+    p?: Publication & {
+      translations: PublicationTranslation[];
+      teams: PublicationTeam[];
+    }
   ) => (
     <>
       <TranslatedFields
@@ -125,8 +146,14 @@ export default async function PublicationsPage({
           maxLength={200}
           placeholder="10.xxxx/…"
         />
-        {teamSelect(p ? p.teamId : team && team !== 'none' ? team : null)}
       </div>
+      {teamChecks(
+        p
+          ? p.teams.map((link) => link.teamId)
+          : team && team !== 'none'
+            ? [team]
+            : []
+      )}
     </>
   );
 
@@ -146,7 +173,7 @@ export default async function PublicationsPage({
             <option value="none">Bez zespołu</option>
             {teams.map((t) => (
               <option key={t.id} value={t.id}>
-                {t.translations[0]?.name ?? t.slug}
+                {teamName(t)}
               </option>
             ))}
           </select>
@@ -182,7 +209,7 @@ export default async function PublicationsPage({
           <details key={p.id} className={style.card}>
             <summary>
               {p.year}: {title}{' '}
-              <span className={style.muted}>({teamName(p.teamId)})</span>
+              <span className={style.muted}>({teamNames(p.teams)})</span>
             </summary>
             <ActionForm action={savePublication} submitLabel="Zapisz" wide>
               <input type="hidden" name="id" value={p.id} />

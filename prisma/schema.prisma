@@ -108,7 +108,7 @@ model Team {
 
   translations TeamTranslation[]
   members      TeamMember[]
-  publications Publication[]
+  publications PublicationTeam[]
   projects     ResearchProject[]
   courses      TeachingCourse[]
   links        TeamLink[]
@@ -214,16 +214,27 @@ model TeamMember {
 
 model Publication {
   id      String  @id @default(uuid(7))
-  teamId  String?
   year    Int     @db.SmallInt
   doi     String? @unique
   authors String // Not translated
   journal String // Not translated
 
-  team         Team?                    @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  // Co-authored work belongs to every team involved; none is allowed too
+  teams        PublicationTeam[]
   translations PublicationTranslation[]
 
-  @@index([teamId, year(sort: Desc)])
+  @@index([year(sort: Desc)])
+}
+
+model PublicationTeam {
+  publicationId String
+  teamId        String
+
+  publication Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  team        Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([publicationId, teamId])
+  @@index([teamId])
 }
 
 model PublicationTranslation {

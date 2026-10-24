@@ -12,7 +12,10 @@ import { emptyPage, type SearchPage } from './types';
 const log = createLogger('search-publications');
 
 const publicationInclude = {
-  team: { include: { translations: true } },
+  teams: {
+    include: { team: { include: { translations: true } } },
+    orderBy: { team: { displayOrder: 'asc' } },
+  },
   translations: true,
 } satisfies Prisma.PublicationInclude;
 

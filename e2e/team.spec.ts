@@ -20,6 +20,28 @@ test.describe('Team page', () => {
     await expect(page.getByRole('tab')).toHaveCount(0);
   });
 
+  test('lists a publication shared by two teams on both team pages', async ({
+    page,
+  }) => {
+    const title = 'Joint publication of the ruminant and poultry teams';
+    for (const team of ['ruminants', 'poultry']) {
+      await page.goto(`/en/about-us/structure/${team}`);
+      await expect(
+        page.getByRole('heading', { level: 3, name: title })
+      ).toBeVisible();
+    }
+    await page.goto('/en/about-us/structure/swine');
+    await expect(page.getByText(title)).toHaveCount(0);
+
+    // Listed once, linking to both teams (and the DOI)
+    await page.goto(
+      `/en/about-us/publications?query=${encodeURIComponent('joint ruminant poultry')}`
+    );
+    const item = page.locator('main h3', { hasText: title }).locator('..');
+    await expect(item).toHaveCount(1);
+    await expect(item.getByRole('link')).toHaveCount(3);
+  });
+
   test('opens a member profile from the team list', async ({ page }) => {
     await page.goto('/en/about-us/structure/ruminants');
 

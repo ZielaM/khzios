@@ -138,22 +138,59 @@ test.describe('Admin panel: people and teams', () => {
     ).toBeVisible();
   });
 
-  test('adds a publication to a team', async ({ page, browserName }) => {
+  test('adds a publication shared by two teams', async ({
+    page,
+    browserName,
+  }) => {
     const title = `Publikacja e2e ${browserName} ${Date.now()}`;
+    const ruminants =
+      'Zespół chowu i hodowli zwierząt przeżuwających i oceny mleka';
     await page.goto(`${ADMIN_BASE}/publications`);
     await page.locator('summary', { hasText: 'Dodaj publikację' }).click();
     const form = page.locator('details', { hasText: 'Dodaj publikację' });
     await form.locator('[name="title_pl"]').fill(title);
     await form.getByLabel('Autorzy').fill('Testowa A., Próbny B.');
     await form.getByLabel('Czasopismo').fill('Journal of Tests');
-    await form.getByLabel('Zespół').selectOption({
-      label: 'Zespół chowu i hodowli zwierząt przeżuwających i oceny mleka',
-    });
+    const teams = form.getByRole('group', { name: 'Zespoły' });
+    await teams.getByRole('checkbox', { name: ruminants }).check();
+    await teams.getByRole('checkbox', { name: /drobiu/ }).check();
     await form.getByRole('button', { name: 'Dodaj publikację' }).click();
     await expect(page.getByText('Dodano publikację.')).toBeVisible();
 
-    await page.goto('/pl/o-nas/struktura/przezuwajace');
-    await expect(page.getByText(title)).toBeVisible();
+    // Right after a save the first request can still get the previous copy
+    // of a public page while it regenerates, so each check reloads until it
+    // sees the change
+    const expectOnPage = (path: string, count: number) =>
+      expect(async () => {
+        await page.goto(path);
+        await expect(page.getByText(title)).toHaveCount(count, {
+          timeout: 1000,
+        });
+      }).toPass();
+
+    // On the page of each team, and once in the full listing with both teams
+    await expectOnPage('/pl/o-nas/struktura/przezuwajace', 1);
+    await expectOnPage('/pl/o-nas/struktura/drob', 1);
+    await page.goto(`/pl/o-nas/publikacje?query=${encodeURIComponent(title)}`);
+    const item = page.locator('main h3', { hasText: title }).locator('..');
+    await expect(item).toHaveCount(1);
+    await expect(item.getByRole('link', { name: ruminants })).toBeVisible();
+    await expect(item.getByRole('link', { name: /drobiu/ })).toBeVisible();
+
+    // Leaving one team takes it off only that team's page
+    await page.goto(
+      `${ADMIN_BASE}/publications?q=${encodeURIComponent(title)}`
+    );
+    const edited = page.locator('details', { hasText: title });
+    await edited.locator('summary').click();
+    await edited
+      .getByRole('group', { name: 'Zespoły' })
+      .getByRole('checkbox', { name: /drobiu/ })
+      .uncheck();
+    await edited.getByRole('button', { name: 'Zapisz' }).click();
+    await expect(edited.getByText('Zapisano.')).toBeVisible();
+    await expectOnPage('/pl/o-nas/struktura/drob', 0);
+    await expectOnPage('/pl/o-nas/struktura/przezuwajace', 1);
 
     await page.goto(
       `${ADMIN_BASE}/publications?q=${encodeURIComponent(title)}`

@@ -193,9 +193,11 @@ dc run --rm --no-deps --user root \
 dc up -d --force-recreate app
 ```
 
-Pierwsze polecenie kończy się tabelką z liczbą zespołów, pracowników, publikacji, projektów i przedmiotów (6, 16, 95, 9, 32).
+Pierwsze polecenie kończy się tabelką z liczbą zespołów, pracowników, publikacji, przypisań publikacji do zespołów, projektów i przedmiotów (6, 16, 95, 101, 9, 32). Przypisań jest więcej niż publikacji, bo 6 z nich należy do dwóch zespołów.
 
-Import można powtarzać: dodaje tylko to, czego jeszcze nie ma, i **nie nadpisuje** niczego, co poprawiłeś w panelu. Dlatego po imporcie brakujące dane (lista w `dane/BRAKI.md`) uzupełniaj już w panelu, a nie w plikach.
+Import można powtórzyć, jeśli coś się nie wczytało: **nie zmienia** niczego, co już jest w bazie (także poprawek z panelu), ale dodaje z powrotem wszystko, czego w niej brakuje — również to, co usunąłeś w panelu. Dlatego po rozpoczęciu pracy w panelu już go nie powtarzaj, a brakujące dane (lista w `dane/BRAKI.md`) uzupełniaj w panelu, nie w plikach.
+
+Publikacje wspólne kilku zespołów są w imporcie przypisane do każdego z nich. Jeśli dane wczytałeś wersją, w której publikacja miała jeden zespół, wczytaj jednorazowo `dane/import/upgrade-shared-publications.sql` (tym samym poleceniem co `import.sql`). Plik dopisuje drugi zespół tylko tym publikacjom, które wciąż są w zespole z pierwszego importu, i niczego nie usuwa.
 
 Gdy jednak chcesz zmienić dane źródłowe przed pierwszym importem: popraw `dane/import/data.mjs` (zespoły, osoby, projekty, przedmioty) lub `dane/import/publications.json` i zbuduj pliki od nowa poleceniem `node dane/import/build.mjs`.
 

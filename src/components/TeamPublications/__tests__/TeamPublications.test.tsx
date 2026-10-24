@@ -19,7 +19,6 @@ describe('TeamPublications', () => {
       journal: 'Science Journal',
       doi: '10.1234/science',
       displayOrder: 1,
-      teamId: 'team-1',
       translations: [
         {
           id: 'pub-tr-1',

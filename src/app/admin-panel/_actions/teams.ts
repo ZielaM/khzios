@@ -14,10 +14,12 @@ import { slugify } from '@/lib/admin/slug';
 import { publicationSnapshot, teamSnapshot } from '@/lib/admin/team-admin';
 import { moveToTrash } from '@/lib/admin/trash';
 
-function refresh(teamId?: string) {
+function refresh(...teamIds: string[]) {
   revalidatePublicSite();
   revalidatePath(adminHref('/teams'));
-  if (teamId) revalidatePath(adminHref(`/teams/${teamId}`));
+  for (const teamId of new Set(teamIds)) {
+    revalidatePath(adminHref(`/teams/${teamId}`));
+  }
 }
 
 const ICONS = new Set(['globe', 'facebook', 'instagram', 'link']);
@@ -223,7 +225,7 @@ export async function savePublication(
 ): Promise<FormState> {
   const user = await requireUser();
   const id = field(formData, 'id', 100) || undefined;
-  const teamId = field(formData, 'teamId', 100) || null;
+  const teamIds = formData.getAll('teams').map(String).slice(0, 50);
   const year = Number(field(formData, 'year', 4));
   const authors = field(formData, 'authors', 1000);
   const journal = field(formData, 'journal', 300);
@@ -252,12 +254,20 @@ export async function savePublication(
     if (taken) return { error: 'Publikacja z tym DOI już istnieje.' };
   }
 
+  // Teams deleted while the form was open are left out
+  const teams = await prisma.team.findMany({
+    where: { id: { in: teamIds } },
+    select: { id: true },
+  });
+  const teamLinks = teams.map((team) => ({ teamId: team.id }));
+  // Admin pages of every team the publication leaves or joins show counts
+  const affectedTeams = teamLinks.map((link) => link.teamId);
+
   const data = {
     year,
     authors,
     journal,
     doi,
-    teamId,
     translations: {
       create: titles.map(({ languageCode, values }) => ({
         languageCode,
@@ -266,11 +276,20 @@ export async function savePublication(
     },
   };
   if (id) {
+    const before = await prisma.publication.findUnique({
+      where: { id },
+      select: { teams: { select: { teamId: true } } },
+    });
+    if (!before) return { error: 'Ta publikacja już nie istnieje.' };
+    affectedTeams.push(...before.teams.map((link) => link.teamId));
     await prisma.$transaction([
       prisma.publicationTranslation.deleteMany({
         where: { publicationId: id },
       }),
-      prisma.publication.update({ where: { id }, data }),
+      prisma.publication.update({
+        where: { id },
+        data: { ...data, teams: { deleteMany: {}, create: teamLinks } },
+      }),
     ]);
     await logAudit(
       user,
@@ -280,7 +299,9 @@ export async function savePublication(
       id
     );
   } else {
-    const created = await prisma.publication.create({ data });
+    const created = await prisma.publication.create({
+      data: { ...data, teams: { create: teamLinks } },
+    });
     await logAudit(
       user,
       'create',
@@ -289,18 +310,18 @@ export async function savePublication(
       created.id
     );
   }
-  refresh(teamId ?? undefined);
+  refresh(...affectedTeams);
   return { message: id ? 'Zapisano.' : 'Dodano publikację.' };
 }
 
 export async function deletePublication(formData: FormData) {
   const user = await requireUser();
   const id = field(formData, 'id', 100);
-  let teamId: string | null = null;
+  let teamIds: string[] = [];
   await prisma.$transaction(async (tx) => {
     const snapshot = await publicationSnapshot(tx, id);
     if (!snapshot) return;
-    teamId = snapshot.teamId;
+    teamIds = snapshot.teams.map((link) => link.teamId);
     const title =
       snapshot.translations.find((t) => t.languageCode === 'pl')?.title ?? id;
     await moveToTrash(tx, user, {
@@ -318,7 +339,7 @@ export async function deletePublication(formData: FormData) {
       id
     );
   });
-  refresh(teamId ?? undefined);
+  refresh(...teamIds);
 }
 
 // ──── Projects, courses and links (deleted without the trash) ───────

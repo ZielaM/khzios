@@ -616,15 +616,19 @@ export async function seedTeams() {
         },
         publications: {
           create: t.publications.map((p) => ({
-            year: p.year,
-            authors: p.authors,
-            journal: p.journal,
-            doi: p.doi,
-            translations: {
-              create: (['pl', 'en', 'uk', 'ru'] as const).map((lc) => ({
-                languageCode: lc,
-                title: p.titles[lc],
-              })),
+            publication: {
+              create: {
+                year: p.year,
+                authors: p.authors,
+                journal: p.journal,
+                doi: p.doi,
+                translations: {
+                  create: (['pl', 'en', 'uk', 'ru'] as const).map((lc) => ({
+                    languageCode: lc,
+                    title: p.titles[lc],
+                  })),
+                },
+              },
             },
           })),
         },
@@ -760,6 +764,41 @@ export async function seedTeams() {
     });
     console.log(`  ✓ Zespół (zewn.): ${t.slug}`);
   }
+
+  // Co-authored work appears on the page of every team involved
+  const sharedBy = await prisma.team.findMany({
+    where: { slug: { in: ['ruminants', 'poultry'] } },
+    select: { id: true },
+  });
+  await prisma.publication.create({
+    data: {
+      year: new Date().getFullYear() - 1,
+      authors: 'Kowalska A., Zielińska K., Nowak T.',
+      journal: 'Animals',
+      doi: '10.3390/ani-shared-seed',
+      translations: {
+        create: [
+          {
+            languageCode: 'pl',
+            title: 'Wspólna publikacja zespołów przeżuwaczy i drobiu',
+          },
+          {
+            languageCode: 'en',
+            title: 'Joint publication of the ruminant and poultry teams',
+          },
+          {
+            languageCode: 'uk',
+            title: 'Спільна публікація груп жуйних і птиці',
+          },
+          {
+            languageCode: 'ru',
+            title: 'Совместная публикация групп жвачных и птицы',
+          },
+        ],
+      },
+      teams: { create: sharedBy.map((team) => ({ teamId: team.id })) },
+    },
+  });
 
   console.log('Zespoły utworzone pomyślnie!');
 }

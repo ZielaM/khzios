@@ -52,9 +52,9 @@ export const getTeamBySlug = cache(async (slug: string) => {
         orderBy: { id: 'asc' },
       },
       publications: {
-        where: { year: { gte: sinceYear } },
-        include: { translations: true },
-        orderBy: { year: 'desc' },
+        where: { publication: { year: { gte: sinceYear } } },
+        include: { publication: { include: { translations: true } } },
+        orderBy: [{ publication: { year: 'desc' } }, { publicationId: 'asc' }],
       },
       projects: {
         include: { translations: true },
@@ -71,6 +71,7 @@ export const getTeamBySlug = cache(async (slug: string) => {
   // Ongoing projects without an end year stay listed
   return {
     ...team,
+    publications: team.publications.map((link) => link.publication),
     projects: team.projects.filter(
       (p) => (projectEndYear(p.years) ?? sinceYear) >= sinceYear
     ),

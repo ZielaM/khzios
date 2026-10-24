@@ -41,6 +41,10 @@ describe('team-queries', () => {
   describe('getTeamBySlug', () => {
     const team = {
       slug: 'ruminants',
+      publications: [
+        { publication: { id: 'pub2', year: 2025 } },
+        { publication: { id: 'pub1', year: 2023 } },
+      ],
       projects: [
         { id: 'p1', years: '2018–2020' },
         { id: 'p2', years: '2021–2023' },
@@ -74,8 +78,22 @@ describe('team-queries', () => {
 
       const args = vi.mocked(prisma.team.findFirst).mock.calls[0][0];
       expect(args?.include?.publications).toMatchObject({
-        where: { year: { gte: 2022 } },
+        where: { publication: { year: { gte: 2022 } } },
+        orderBy: [{ publication: { year: 'desc' } }, { publicationId: 'asc' }],
       });
+    });
+
+    it('returns the publications themselves, in the order they were read', async () => {
+      vi.mocked(prisma.team.findFirst).mockResolvedValue(
+        team as unknown as Resolved<typeof prisma.team.findFirst>
+      );
+
+      const result = await getTeamBySlug('ruminants');
+
+      expect(result?.publications).toEqual([
+        { id: 'pub2', year: 2025 },
+        { id: 'pub1', year: 2023 },
+      ]);
     });
 
     it('keeps projects that end within the last five years or are ongoing', async () => {

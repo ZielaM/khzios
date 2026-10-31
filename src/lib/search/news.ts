@@ -11,6 +11,7 @@ import { validateSearchParams } from '@/lib/validation';
 import { newsInclude, type NewsWithRelations } from '@/lib/news-queries';
 import { createLogger } from '@/lib/logger';
 import type { SearchParams } from '@/types/search-types';
+import { languageQueries } from './full-text';
 import { emptyPage, type SearchPage } from './types';
 
 const log = createLogger('search');
@@ -30,7 +31,6 @@ export async function searchNews(
     safeQuery,
     safeTags,
     fallbackLanguages,
-    dictionary,
     safeSortBy,
     safeDateFrom,
     safeDateBefore,
@@ -48,23 +48,9 @@ export async function searchNews(
       // Full-text search runs in SQL. Each article matches in any language of
       // the fallback chain; DISTINCT ON keeps the best language per article so
       // its highlighted snippet is in the reader's language when possible.
-      const tsQuery = Prisma.sql`websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})`;
-      const langOrder = Prisma.sql`ARRAY[${Prisma.join(
-        fallbackLanguages.map((l) => Prisma.sql`${l}::text`),
-        ', '
-      )}]`;
+      const queries = languageQueries(fallbackLanguages, safeQuery);
 
-      const conditions = [
-        Prisma.sql`(${Prisma.join(
-          fallbackLanguages.map(
-            (lang) =>
-              Prisma.sql`nt."languageCode" = CAST(${lang} AS "LanguageCode")`
-          ),
-          ' OR '
-        )})`,
-        Prisma.sql`n.published = true`,
-        Prisma.sql`nt."searchVector" @@ ${tsQuery}`,
-      ];
+      const conditions = [Prisma.sql`n.published = true`];
       if (safeTags) {
         // A tag matches by its canonical name or any of its translations
         conditions.push(
@@ -81,7 +67,9 @@ export async function searchNews(
         conditions.push(Prisma.sql`n."publishedAt" < ${safeDateBefore}`);
       }
       const where = Prisma.sql`WHERE ${Prisma.join(conditions, ' AND ')}`;
-      const from = Prisma.sql`FROM "News" n JOIN "NewsTranslation" nt ON nt."newsId" = n.id`;
+      const from = Prisma.sql`FROM queries q
+        JOIN "NewsTranslation" nt ON nt."languageCode" = q.lang AND nt."searchVector" @@ q.query
+        JOIN "News" n ON n.id = nt."newsId"`;
       const orderBy =
         safeSortBy === 'relevance'
           ? Prisma.sql`ORDER BY rank DESC, "publishedAt" DESC`
@@ -95,23 +83,33 @@ export async function searchNews(
             highlighted_title: string;
             highlighted_content: string;
           }[]
-        >`WITH ranked AS (
+        >`WITH ${queries}, ranked AS (
             SELECT DISTINCT ON (n.id)
               n.id,
               n."publishedAt",
               nt."languageCode",
-              ts_headline(${dictionary}::regconfig, nt.title, ${tsQuery}, 'StartSel=<mark>, StopSel=</mark>, HighlightAll=true') AS highlighted_title,
-              ts_headline(${dictionary}::regconfig, nt.content, ${tsQuery}, 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content,
-              ts_rank(nt."searchVector", ${tsQuery}) AS rank
+              nt.title,
+              nt.content,
+              q.lang,
+              q.query,
+              ts_rank(nt."searchVector", q.query) AS rank
             ${from}
             ${where}
-            ORDER BY n.id, array_position(${langOrder}, nt."languageCode"::text), ts_rank(nt."searchVector", ${tsQuery}) DESC
+            ORDER BY n.id, q.position
+          ), page AS (
+            SELECT * FROM ranked ${orderBy}
+            LIMIT ${safeLimit} OFFSET ${offset}
           )
-          SELECT * FROM ranked ${orderBy}
-          LIMIT ${safeLimit} OFFSET ${offset}`,
+          -- Highlighting runs the dictionaries over whole texts: only for the page shown
+          SELECT
+            id,
+            "languageCode",
+            ts_headline(search_config(lang), title, query, 'StartSel=<mark>, StopSel=</mark>, HighlightAll=true') AS highlighted_title,
+            ts_headline(search_config(lang), content, query, 'StartSel=<mark>, StopSel=</mark>, MaxWords=35, MinWords=15') AS highlighted_content
+          FROM page ${orderBy}`,
         prisma.$queryRaw<
           { total: number }[]
-        >`SELECT CAST(COUNT(DISTINCT n.id) AS INTEGER) AS total ${from} ${where}`,
+        >`WITH ${queries} SELECT CAST(COUNT(DISTINCT n.id) AS INTEGER) AS total ${from} ${where}`,
       ]);
 
       newsIds = rows.map((r) => r.id);

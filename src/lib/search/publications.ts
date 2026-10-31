@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 import { validateSearchParams } from '@/lib/validation';
 import { createLogger } from '@/lib/logger';
 import type { SearchParams } from '@/types/search-types';
+import { languageQueries } from './full-text';
 import { emptyPage, type SearchPage } from './types';
 
 const log = createLogger('search-publications');
@@ -26,7 +27,7 @@ export type PublicationWithRelations = Prisma.PublicationGetPayload<{
 export async function searchPublications(
   params: SearchParams
 ): Promise<SearchPage<PublicationWithRelations>> {
-  const { safePage, safeLimit, safeQuery, fallbackLanguages, dictionary } =
+  const { safePage, safeLimit, safeQuery, fallbackLanguages } =
     validateSearchParams(params);
 
   try {
@@ -41,39 +42,38 @@ export async function searchPublications(
     >();
 
     if (safeQuery) {
-      const tsQuery = Prisma.sql`websearch_to_tsquery(${dictionary}::regconfig, ${safeQuery})`;
-      const langOrder = Prisma.sql`ARRAY[${Prisma.join(
-        fallbackLanguages.map((l) => Prisma.sql`${l}::text`),
-        ', '
-      )}]`;
-      const where = Prisma.sql`WHERE (${Prisma.join(
-        fallbackLanguages.map(
-          (lang) =>
-            Prisma.sql`pt."languageCode" = CAST(${lang} AS "LanguageCode")`
-        ),
-        ' OR '
-      )}) AND pt."searchVector" @@ ${tsQuery}`;
-      const from = Prisma.sql`FROM "Publication" p JOIN "PublicationTranslation" pt ON pt."publicationId" = p.id`;
+      const queries = languageQueries(fallbackLanguages, safeQuery);
+      const from = Prisma.sql`FROM queries q
+        JOIN "PublicationTranslation" pt ON pt."languageCode" = q.lang AND pt."searchVector" @@ q.query
+        JOIN "Publication" p ON p.id = pt."publicationId"`;
 
       const [rows, countRows] = await Promise.all([
         prisma.$queryRaw<
           { id: string; languageCode: string; highlighted_title: string }[]
-        >`WITH ranked AS (
+        >`WITH ${queries}, ranked AS (
             SELECT DISTINCT ON (p.id)
               p.id,
               p.year,
               pt."languageCode",
-              ts_headline(${dictionary}::regconfig, pt.title, ${tsQuery}, 'StartSel=<mark>, StopSel=</mark>, HighlightAll=true') AS highlighted_title,
-              ts_rank(pt."searchVector", ${tsQuery}) AS rank
+              pt.title,
+              q.lang,
+              q.query,
+              ts_rank(pt."searchVector", q.query) AS rank
             ${from}
-            ${where}
-            ORDER BY p.id, array_position(${langOrder}, pt."languageCode"::text), ts_rank(pt."searchVector", ${tsQuery}) DESC
+            ORDER BY p.id, q.position
+          ), page AS (
+            SELECT * FROM ranked ORDER BY rank DESC, year DESC
+            LIMIT ${safeLimit} OFFSET ${offset}
           )
-          SELECT * FROM ranked ORDER BY rank DESC, year DESC
-          LIMIT ${safeLimit} OFFSET ${offset}`,
+          -- Highlighting runs the dictionaries over whole texts: only for the page shown
+          SELECT
+            id,
+            "languageCode",
+            ts_headline(search_config(lang), title, query, 'StartSel=<mark>, StopSel=</mark>, HighlightAll=true') AS highlighted_title
+          FROM page ORDER BY rank DESC, year DESC`,
         prisma.$queryRaw<
           { total: number }[]
-        >`SELECT CAST(COUNT(DISTINCT p.id) AS INTEGER) AS total ${from} ${where}`,
+        >`WITH ${queries} SELECT CAST(COUNT(DISTINCT p.id) AS INTEGER) AS total ${from}`,
       ]);
 
       ids = rows.map((r) => r.id);

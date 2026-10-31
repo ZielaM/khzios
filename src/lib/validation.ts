@@ -93,17 +93,6 @@ export function validateSearchParams(
 
   const fallbackLanguages = FALLBACK_CHAIN[safeLanguage];
 
-  const dictionary = (() => {
-    switch (safeLanguage) {
-      case 'en':
-        return 'english';
-      case 'ru':
-        return 'russian';
-      default:
-        return 'simple';
-    }
-  })();
-
   const lastDay = parseDateInput(dateTo);
 
   return {
@@ -113,7 +102,6 @@ export function validateSearchParams(
     safeTags,
     safeLanguage,
     fallbackLanguages,
-    dictionary,
     safeSortBy: sortBy === 'relevance' ? 'relevance' : 'date',
     safeDateFrom: parseDateInput(dateFrom),
     // The whole `dateTo` day is included in the results

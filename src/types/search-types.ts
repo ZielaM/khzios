@@ -19,8 +19,8 @@ export interface ValidatedSearchParams {
   safeQuery?: string;
   safeTags?: string[];
   safeLanguage: LanguageCode;
+  /** Languages searched, in order of preference */
   fallbackLanguages: readonly LanguageCode[];
-  dictionary: string;
   safeSortBy: SortBy;
   /** Inclusive lower bound: start of the `dateFrom` day */
   safeDateFrom?: Date;

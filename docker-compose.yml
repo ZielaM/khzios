@@ -23,7 +23,10 @@ x-logging: &logging
 
 services:
   db:
-    image: postgres:17-alpine
+    # postgres:17-alpine with Polish and Ukrainian dictionaries for search
+    build:
+      context: .
+      dockerfile: Dockerfile.db
     restart: unless-stopped
     logging: *logging
     environment:

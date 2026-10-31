@@ -14,7 +14,7 @@ playwright-report
 test-results
 e2e
 *.md
-Dockerfile
+Dockerfile*
 .dockerignore
 docker-compose.yml
 npm-debug.log

@@ -42,11 +42,13 @@ internet ── HTTPS ──> reverse proxy (nginx lub Apache, porty 80 i 443)
 
 | Usługa    | Co robi                                                                                             |
 | --------- | --------------------------------------------------------------------------------------------------- |
-| `db`      | PostgreSQL 17, dane w wolumenie `khzios_pgdata`; niedostępna spoza Dockera                          |
+| `db`      | PostgreSQL 17 ze słownikami wyszukiwania; dane w `khzios_pgdata`; niedostępna spoza Dockera         |
 | `migrate` | przy każdym `up` nakłada brakujące migracje bazy i kończy działanie                                 |
 | `app`     | strona (Next.js, `next start`, port 3000 w kontenerze), pliki z panelu w wolumenie `khzios_uploads` |
 
 Komplet danych strony to **baza + wolumen `uploads`** (zdjęcia i PDF-y wgrane w panelu). Kod i obrazy Dockera można zawsze odtworzyć z repozytorium.
+
+**Wyszukiwarka odmienia słowa** po polsku i ukraińsku: „krowa” znajduje „krów”, „корова” znajduje „корів”. PostgreSQL nie ma takich reguł dla tych języków, więc obraz bazy (`Dockerfile.db`) to `postgres:17-alpine` z dołożonymi słownikami Hunspell z Debiana, a migracja włącza je w bazie i przebudowuje indeks wyszukiwania. Koszt: każde połączenie aplikacji z bazą przy pierwszym wyszukiwaniu wczytuje słownik (polski ok. 0,4 s i 30 MB pamięci, ukraiński ok. 0,6 s i 60 MB). Aplikacja ma najwyżej 10 połączeń i zamyka je po 10 s bezczynności, więc zwykle zajmuje to kilkadziesiąt MB, w szczycie do ok. 0,9 GB. Baza bez tych słowników (deweloperska w Neonie, testy) szuka po polsku i ukraińsku bez odmiany, tylko dokładnych słów.
 
 Aplikacja sama nie obsługuje HTTPS i nasłuchuje tylko na adresie lokalnym serwera. Do internetu wystawia ją dopiero reverse proxy (etap 7).
 
@@ -69,16 +71,16 @@ Zwykłe konto hostingowe (FTP i baza MySQL z phpMyAdminem, takie jak na serwerze
 
 ### O co poprosić
 
-| Co                                      | Po co                                                                                     | Uwagi                                                                                                                                                                                                                         |
-| --------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Maszyna wirtualna z Linuksem            | tu działa strona                                                                          | Debian 12/13 lub Ubuntu LTS; 2 rdzenie, 4 GB RAM, 25 GB dysku. Sama strona zużywa ok. 300 MB RAM; 4 GB potrzebuje budowanie. Na dysku obrazy i pamięć podręczna budowania zajmują ok. 8 GB, reszta to system, zdjęcia i kopie |
-| Dostęp SSH z uprawnieniami `sudo`       | instalacja Dockera i serwera WWW                                                          | albo Docker zainstalowany przez nich i twoje konto w grupie `docker`. Zapytaj też, czy SSH działa tylko z sieci uczelni lub przez VPN                                                                                         |
-| Własna nazwa, np. `khzios.up.poznan.pl` | adres strony                                                                              | rekord DNS dodają informatycy. Strona **nie zadziała w podkatalogu** (`…/khzios`)                                                                                                                                             |
-| Certyfikat HTTPS                        | szyfrowanie; bez niego nie da się bezpiecznie logować do panelu                           | certyfikat uczelni (dostajesz pliki albo HTTPS kończy się na ich serwerze) lub darmowy Let's Encrypt                                                                                                                          |
-| Droga ruchu z internetu                 | od tego zależy konfiguracja w etapie 7                                                    | **układ A**: maszyna ma własny publiczny adres i otwarte porty 80 i 443; **układ B**: ruch przechodzi przez serwer WWW uczelni, który przekazuje go do twojej maszyny                                                         |
-| Wyjście do internetu po HTTPS           | pobranie kodu z GitHuba i budowanie (Docker Hub, paczki npm i systemowe, czcionki Google) | potrzebne tylko przy budowaniu; działająca strona niczego nie pobiera. Gdy to niemożliwe → [obrazy zbudowane u siebie](#serwer-bez-internetu-lub-z-małą-pamięcią)                                                             |
-| Miejsce na kopie poza tą maszyną        | kopia na tym samym dysku nie chroni przed jego awarią                                     | udział sieciowy, system kopii uczelni albo migawki maszyny wirtualnej                                                                                                                                                         |
-| Zakresy adresów sieci uczelni i VPN     | opcjonalnie: panel dostępny tylko stamtąd                                                 | potrzebne dopiero w [ograniczeniu dostępu](#ograniczenie-dostępu-i-blokady)                                                                                                                                                   |
+| Co                                      | Po co                                                                                     | Uwagi                                                                                                                                                                                                                                                                                                               |
+| --------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Maszyna wirtualna z Linuksem            | tu działa strona                                                                          | Debian 12/13 lub Ubuntu LTS; 2 rdzenie, 4 GB RAM, 25 GB dysku. Sama strona zużywa ok. 300 MB RAM, a przy dużym ruchu w wyszukiwarce do ok. 1,2 GB ([słowniki](#jak-to-jest-zbudowane)); 4 GB potrzebuje budowanie. Na dysku obrazy i pamięć podręczna budowania zajmują ok. 8 GB, reszta to system, zdjęcia i kopie |
+| Dostęp SSH z uprawnieniami `sudo`       | instalacja Dockera i serwera WWW                                                          | albo Docker zainstalowany przez nich i twoje konto w grupie `docker`. Zapytaj też, czy SSH działa tylko z sieci uczelni lub przez VPN                                                                                                                                                                               |
+| Własna nazwa, np. `khzios.up.poznan.pl` | adres strony                                                                              | rekord DNS dodają informatycy. Strona **nie zadziała w podkatalogu** (`…/khzios`)                                                                                                                                                                                                                                   |
+| Certyfikat HTTPS                        | szyfrowanie; bez niego nie da się bezpiecznie logować do panelu                           | certyfikat uczelni (dostajesz pliki albo HTTPS kończy się na ich serwerze) lub darmowy Let's Encrypt                                                                                                                                                                                                                |
+| Droga ruchu z internetu                 | od tego zależy konfiguracja w etapie 7                                                    | **układ A**: maszyna ma własny publiczny adres i otwarte porty 80 i 443; **układ B**: ruch przechodzi przez serwer WWW uczelni, który przekazuje go do twojej maszyny                                                                                                                                               |
+| Wyjście do internetu po HTTPS           | pobranie kodu z GitHuba i budowanie (Docker Hub, paczki npm i systemowe, czcionki Google) | potrzebne tylko przy budowaniu; działająca strona niczego nie pobiera. Gdy to niemożliwe → [obrazy zbudowane u siebie](#serwer-bez-internetu-lub-z-małą-pamięcią)                                                                                                                                                   |
+| Miejsce na kopie poza tą maszyną        | kopia na tym samym dysku nie chroni przed jego awarią                                     | udział sieciowy, system kopii uczelni albo migawki maszyny wirtualnej                                                                                                                                                                                                                                               |
+| Zakresy adresów sieci uczelni i VPN     | opcjonalnie: panel dostępny tylko stamtąd                                                 | potrzebne dopiero w [ograniczeniu dostępu](#ograniczenie-dostępu-i-blokady)                                                                                                                                                                                                                                         |
 
 Jeśli uczelnia nie da maszyny wirtualnej, tę samą instrukcję wykonasz na wynajętym serwerze VPS — od uczelni potrzebujesz wtedy tylko rekordu DNS. Uruchomienie bez Dockera (sam Node.js i PostgreSQL) wymaga osobnej instrukcji; ta go nie opisuje.
 
@@ -143,7 +145,9 @@ z zewnątrz. Konfigurację serwera WWW mam przygotowaną dla nginx i Apache.
    dc up -d --build
    dc ps -a                                     # app i db: healthy, migrate: Exited (0)
    curl -s http://localhost:3000/api/health     # {"status":"ok"}
+   dc exec -T db psql -U khzios -d khzios -tAc "SELECT to_tsvector('polish', 'krów')"   # 'krowa':1
    ```
+   Ostatnie polecenie sprawdza słowniki wyszukiwania; wynik `'krów':1` oznacza wyszukiwanie bez odmiany ([co wtedy zrobić](#wyszukiwarka-nie-odmienia-słów)).
 4. **Pierwsze konto panelu** (pyta dwa razy o hasło, min. 12 znaków; wpisywanego hasła nie widać):
    ```bash
    dc run --rm migrate pnpm admin:create --login ziela --name "Imię Nazwisko" --role admin
@@ -160,7 +164,7 @@ Zatrzymanie: `dc down` (dane zostają). Usunięcie wszystkiego razem z danymi: `
 
 Stronę wypełniasz w spokoju u siebie, a serwer od pierwszej minuty pokazuje gotową treść. Warunki:
 
-- **Ten sam zestaw** co na serwerze (etap 1), a nie `pnpm dev` z bazą Neon: ta sama wersja PostgreSQL (17) i pliki w wolumenie Dockera, a w Neonie są dane przykładowe.
+- **Ten sam zestaw** co na serwerze (etap 1), a nie `pnpm dev` z bazą Neon: ta sama wersja PostgreSQL (17) ze słownikami wyszukiwania i pliki w wolumenie Dockera, a w Neonie są dane przykładowe.
 - **Czysta baza**: nie uruchamiaj seeda. Zacznij od pustej bazy i wprowadź tylko prawdziwe treści.
 - **Ta sama wersja kodu** lokalnie i na serwerze (ten sam commit; sprawdzisz to w etapie 4). Zrzut zawiera tabelę `_prisma_migrations`; jeśli serwer ma nowszy kod, `migrate` doda tylko brakujące migracje, ale kod starszy niż zrzut nie zadziała.
 - **Baza i pliki razem**: artykuły wskazują na zdjęcia w `uploads`. Sam zrzut bazy da stronę z niedziałającymi zdjęciami.
@@ -356,12 +360,12 @@ ADMIN_PATH=zaplecze-3f9a1c2b7d4e
 
 ### Serwer bez internetu lub z małą pamięcią
 
-Gdy serwer nie ma wyjścia do internetu albo ma mniej niż 4 GB RAM, zbuduj obrazy u siebie i prześlij gotowe. Serwer potrzebuje wtedy tylko Dockera (bez gita).
+Gdy serwer nie ma wyjścia do internetu albo ma mniej niż 4 GB RAM, zbuduj obrazy u siebie i prześlij gotowe. Serwer potrzebuje wtedy tylko Dockera (bez gita) i ok. 2 GB RAM na działającą stronę.
 
 ```bash
 # [laptop] w katalogu projektu, na wersji, którą wdrażasz
 dc build
-docker save khzios-app khzios-migrate postgres:17-alpine | gzip > khzios-images.tar.gz     # ok. 0,9 GB
+docker save khzios-app khzios-migrate khzios-db | gzip > khzios-images.tar.gz     # ok. 0,9 GB
 scp khzios-images.tar.gz docker-compose.yml .env.docker.example uzytkownik@serwer:/srv/khzios/
 
 # [serwer]
@@ -414,6 +418,8 @@ Treść wprowadzasz wtedy na serwerze przez panel (od etapu 6), a zebrane dane m
 dc ps -a                                         # app i db: healthy, migrate: Exited (0)
 curl -s http://127.0.0.1:3000/api/health         # {"status":"ok"}
 dc logs app | grep -E '"level":"(warn|error)"'   # nic nie wypisuje
+dc exec -T db psql -U khzios -d khzios -tAc "SELECT to_tsvector('polish', 'krów'), to_tsvector('ukrainian', 'корів')"
+                                                 # 'krowa':1|'корова':1
 ```
 
 Ostrzeżenia `APP_URL is not set` albo `ADMIN_PATH … the admin panel is disabled` oznaczają błąd w `.env.docker`: popraw plik i wykonaj `dc up -d`.
@@ -852,13 +858,13 @@ sudo apt update && sudo apt upgrade -y          # aktualizacja Dockera na chwil�
 [ -f /var/run/reboot-required ] && echo "wymagany restart: sudo reboot"
 
 cd /srv/khzios
-dc build --pull && dc pull db && dc up -d       # łatki obrazów Node i PostgreSQL 17
+dc build --pull && dc up -d                     # łatki obrazów Node i PostgreSQL 17
 docker image prune -f
 ```
 
 Po restarcie serwera kontenery wstają same; sprawdź `dc ps -a`. Gdyby nie wstały: `dc up -d`.
 
-Zmiana **głównej** wersji PostgreSQL (17 → 18) to nie jest zmiana jednej cyfry w `docker-compose.yml`: nowa wersja nie uruchomi się na starym katalogu danych. Bezpieczna droga to kopia, nowy pusty wolumen z nową wersją i odtworzenie kopii — przećwiczone najpierw u siebie.
+Zmiana **głównej** wersji PostgreSQL (17 → 18) to nie jest zmiana jednej cyfry w `Dockerfile.db`: nowa wersja nie uruchomi się na starym katalogu danych. Bezpieczna droga to kopia, nowy pusty wolumen z nową wersją i odtworzenie kopii — przećwiczone najpierw u siebie.
 
 ### Odtwarzanie z kopii
 
@@ -1006,12 +1012,24 @@ Bezpiecznie zwalniają miejsce: `docker image prune -f` (stare obrazy) i `docker
 | „Zbyt wiele nieudanych prób logowania”                    | odczekaj 15 minut; sprawdź Dziennik → Logowania, czy to nie atak                                                                       |
 | W Dzienniku wszystkie logowania mają ten sam adres        | proxy nie przekazuje adresu odwiedzającego (etap 7.3, układ B)                                                                         |
 | Zmiany z panelu nie pojawiają się na stronie              | odśwież z pominięciem pamięci przeglądarki (Ctrl+F5); po zmianach wprost w bazie: `dc up -d --force-recreate app`                      |
+| Wyszukiwarka nie znajduje innych form słowa               | [niżej](#wyszukiwarka-nie-odmienia-słów)                                                                                               |
 | Zdjęcia nie wgrywają się, błąd 413                        | `client_max_body_size 25m` w nginx; limit na serwerze uczelni                                                                          |
 | Zdjęcia nie wgrywają się, brak błędu 413                  | miejsce na dysku (`df -h /`); limity panelu: zdjęcie 15 MB, dokument 20 MB                                                             |
 | `nginx -t`: `unknown directive "http2"`                   | starszy nginx: zamiast `http2 on;` napisz `listen 443 ssl http2;`                                                                      |
 | Budowanie przerywa się komunikatem `Killed` lub kodem 137 | za mało pamięci: [zbuduj obrazy u siebie](#serwer-bez-internetu-lub-z-małą-pamięcią)                                                   |
 | Budowanie nie może pobrać paczek lub czcionek             | brak wyjścia do internetu albo chwilowa awaria: ponów; trwale → [obrazy zbudowane u siebie](#serwer-bez-internetu-lub-z-małą-pamięcią) |
 | Po restarcie serwera strona nie wstała                    | `systemctl status docker`, potem `dc up -d`                                                                                            |
+
+#### Wyszukiwarka nie odmienia słów
+
+Objaw: „krowa” nie znajduje artykułu ze słowem „krów”, a test z [etapu 5](#sprawdzenie) zwraca `'krów':1` zamiast `'krowa':1`. Najpierw włącz słowniki i przebuduj indeks wyszukiwania (potrzebne np. po wczytaniu zrzutu z bazy, która słowników nie miała):
+
+```bash
+# [serwer]
+dc exec -T db psql -U khzios -d khzios -c 'SELECT enable_search_dictionaries()'
+```
+
+Wynik `{polish,ukrainian}` oznacza, że słowniki zostały włączone. Wynik `{}` przy wciąż złym teście albo błąd `could not open dictionary file` (wtedy nie działa też zapisywanie w panelu) znaczy, że baza nie działa na obrazie z `Dockerfile.db`, np. został kontener sprzed aktualizacji: `dc up -d --build db`, potem to samo polecenie jeszcze raz.
 
 ### Czego nie robić
 
@@ -1021,6 +1039,7 @@ Bezpiecznie zwalniają miejsce: `docker image prune -f` (stare obrazy) i `docker
 - Ręczne zmiany w tabelach poza panelem — przy następnym zapisie panel może je nadpisać, a strona pokaże je dopiero po odświeżeniu (raz na dobę).
 - Wklejanie zawartości `.env.docker`, adresu panelu lub plików kopii do repozytorium, zgłoszeń i komunikatorów.
 - Podnoszenie głównej wersji PostgreSQL przez samą zmianę numeru obrazu.
+- Zamiana obrazu bazy w `Dockerfile.db` z `postgres:17-alpine` na wersję bez `-alpine` (Debian) — inna biblioteka C inaczej sortuje tekst i psuje indeksy istniejącej bazy.
 
 ### Przekazanie strony następcy
 

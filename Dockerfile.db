@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1
+
+# PostgreSQL for the site, with Polish and Ukrainian dictionaries for
+# full-text search. PostgreSQL has no stemmer for either language; it reads
+# these Hunspell dictionaries through its ispell template, and the migration
+# 20261031120000_polish_and_ukrainian_search switches the `polish` and
+# `ukrainian` search configurations to them.
+
+# Stays on Alpine: a data directory created by postgres:17-alpine must not be
+# opened by a Debian build of PostgreSQL (different C library, so text indexes
+# would sort differently and silently break).
+FROM postgres:17-alpine AS postgres
+
+# ── Dictionaries ────────────────────────────────────────────────────────
+# Alpine does not package them, so they come from Debian. PostgreSQL wants
+# UTF-8 files named <name>.dict and <name>.affix; each .aff names its own
+# encoding in its SET line (ISO8859-2 for Polish, UTF-8 for Ukrainian).
+FROM debian:trixie-slim AS dictionaries
+# Debian's mirrors over HTTPS like every other download of the build, since a
+# server may only be allowed out on HTTPS. The slim image has no CA
+# certificates, so it borrows the bundle of the Alpine image; apt's OpenSSL
+# does not look for it there on its own.
+COPY --from=postgres /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+RUN echo 'Acquire::https::CAInfo "/etc/ssl/certs/ca-certificates.crt";' > /etc/apt/apt.conf.d/99ca-info \
+ && sed -i 's|http://|https://|g' /etc/apt/sources.list.d/debian.sources \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends hunspell-pl hunspell-uk \
+ && rm -rf /var/lib/apt/lists/*
+WORKDIR /dictionaries
+RUN set -eu; \
+    for pair in pl_PL:polish uk_UA:ukrainian; do \
+      src="/usr/share/hunspell/${pair%%:*}"; name="${pair#*:}"; \
+      encoding="$(sed -n 's/^SET[[:space:]]*\([^[:space:]]*\).*/\1/p' "$src.aff" | head -n 1)"; \
+      iconv -f "${encoding:-UTF-8}" -t UTF-8 "$src.dic" > "$name.dict"; \
+      iconv -f "${encoding:-UTF-8}" -t UTF-8 "$src.aff" | sed 's/^SET[[:space:]].*/SET UTF-8/' > "$name.affix"; \
+    done
+
+# ── Database ────────────────────────────────────────────────────────────
+FROM postgres
+COPY --from=dictionaries /dictionaries/ /usr/local/share/postgresql/tsearch_data/
+COPY --from=dictionaries /usr/share/doc/hunspell-pl/copyright /usr/share/doc/hunspell-pl/copyright
+COPY --from=dictionaries /usr/share/doc/hunspell-uk/copyright /usr/share/doc/hunspell-uk/copyright

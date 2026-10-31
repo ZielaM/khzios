@@ -54,6 +54,49 @@ jobs:
       - name: Run Unit Tests with coverage (Vitest)
         run: pnpm test:coverage
 
+  # The integration tests above run on PGlite, which has no Hunspell
+  # dictionaries; here they run again on the production database image
+  # (Dockerfile.db), with Polish and Ukrainian stemming
+  database-image:
+    name: Database Image & Integration Tests
+    runs-on: ubuntu-latest
+
+    env:
+      CI: true
+      TEST_DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/postgres'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
+      - name: Build database image
+        run: docker build -f Dockerfile.db -t khzios-db .
+
+      # Over TCP: during its first start the image runs a temporary server on
+      # the Unix socket only, then restarts
+      - name: Start database
+        run: |
+          docker run -d --name khzios-db -e POSTGRES_PASSWORD=postgres -p 5432:5432 khzios-db
+          timeout 60 sh -c 'until docker exec khzios-db pg_isready -h 127.0.0.1 -U postgres; do sleep 1; done'
+
+      - name: Run integration tests on the database image
+        run: pnpm vitest run integration
+
   build-and-e2e:
     name: Build & E2E Tests
     runs-on: ubuntu-latest

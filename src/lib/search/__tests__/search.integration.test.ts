@@ -53,9 +53,11 @@ beforeAll(async () => {
       tags: { connect: { id: cattle.id } },
       translations: {
         create: [
+          // No form of "krowa" in the title: with the Polish dictionary it
+          // would rank this article above 'meat' in the sorting test
           translation(
             'pl',
-            'Wydajność mleczna krów',
+            'Wydajność mleczna bydła',
             '<p>Badamy mleko i krowy.</p>'
           ),
           translation(
@@ -186,6 +188,23 @@ describe('searchNews', () => {
     expect(result.data[0].translations[0].title).toContain(
       '<mark>drobiu</mark>'
     );
+  });
+
+  it('parses the query with the dictionary of each language it searches', async () => {
+    // English stemming for English translations: "cows" finds "cow"
+    const english = await searchNews({ language: 'en', query: 'cows' });
+    expect(ids(english)).toEqual(['dairy']);
+    expect(english.data[0].translations).toContainEqual(
+      expect.objectContaining({
+        languageCode: 'en',
+        title: 'Dairy <mark>cow</mark> productivity',
+      })
+    );
+
+    // A Polish word typed by an English reader is not stemmed as English
+    // ("krowy" would become "krowi") when matched against Polish translations
+    const polish = await searchNews({ language: 'en', query: 'krowy' });
+    expect(ids(polish).sort()).toEqual(['dairy', 'meat']);
   });
 
   it('combines a search with tag and date filters', async () => {

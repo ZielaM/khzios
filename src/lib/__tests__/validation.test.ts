@@ -14,7 +14,6 @@ describe('validateSearchParams', () => {
         expect(result.safeTags).toBeUndefined();
         expect(result.safeLanguage).toBe('en');
         expect(result.safeSortBy).toBe('date');
-        expect(result.dictionary).toBe('english');
         expect(result.fallbackLanguages).toEqual(['en', 'pl']);
       });
 
@@ -34,7 +33,6 @@ describe('validateSearchParams', () => {
         expect(result.safeTags).toEqual(['psy', 'koty']);
         expect(result.safeLanguage).toBe('pl');
         expect(result.safeSortBy).toBe('relevance');
-        expect(result.dictionary).toBe('simple');
       });
     });
 
@@ -96,47 +94,41 @@ describe('validateSearchParams', () => {
 
   describe('Languages', () => {
     describe('logic check', () => {
-      it('should return "english" dictionary and ["en", "pl"] fallback languages for "en"', () => {
+      it('should return ["en", "pl"] fallback languages for "en"', () => {
         const result = validateSearchParams({ language: 'en' });
         expect(result.safeLanguage).toBe('en');
-        expect(result.dictionary).toBe('english');
         expect(result.fallbackLanguages).toEqual(['en', 'pl']);
       });
 
-      it('should return "russian" dictionary and ["ru", "en", "pl"] fallback languages for "ru"', () => {
+      it('should return ["ru", "en", "pl"] fallback languages for "ru"', () => {
         const result = validateSearchParams({ language: 'ru' });
         expect(result.safeLanguage).toBe('ru');
-        expect(result.dictionary).toBe('russian');
         expect(result.fallbackLanguages).toEqual(['ru', 'en', 'pl']);
       });
 
-      it('should return "simple" dictionary and ["pl"] fallback languages for "pl"', () => {
+      it('should return ["pl"] fallback languages for "pl"', () => {
         const result = validateSearchParams({ language: 'pl' });
         expect(result.safeLanguage).toBe('pl');
-        expect(result.dictionary).toBe('simple');
         expect(result.fallbackLanguages).toEqual(['pl']);
       });
 
-      it('should return "simple" dictionary and ["uk", "en", "pl"] fallback languages for "uk"', () => {
+      it('should return ["uk", "en", "pl"] fallback languages for "uk"', () => {
         const result = validateSearchParams({ language: 'uk' });
         expect(result.safeLanguage).toBe('uk');
-        expect(result.dictionary).toBe('simple');
         expect(result.fallbackLanguages).toEqual(['uk', 'en', 'pl']);
       });
 
-      it('should return "english" dictionary and ["en", "pl"] fallback languages when language is not valid', () => {
+      it('should return ["en", "pl"] fallback languages when language is not valid', () => {
         const result = validateSearchParams({
           language: 'not_a_language' as unknown as SearchParams['language'],
         });
         expect(result.safeLanguage).toBe('en');
-        expect(result.dictionary).toBe('english');
         expect(result.fallbackLanguages).toEqual(['en', 'pl']);
       });
 
-      it('should return "english" dictionary and ["en", "pl"] fallback languages when language is not provided', () => {
+      it('should return ["en", "pl"] fallback languages when language is not provided', () => {
         const result = validateSearchParams({} as unknown as SearchParams);
         expect(result.safeLanguage).toBe('en');
-        expect(result.dictionary).toBe('english');
         expect(result.fallbackLanguages).toEqual(['en', 'pl']);
       });
     });
@@ -147,7 +139,6 @@ describe('validateSearchParams', () => {
           language: 999 as unknown as SearchParams['language'],
         });
         expect(result.safeLanguage).toBe('en');
-        expect(result.dictionary).toBe('english');
         expect(result.fallbackLanguages).toEqual(['en', 'pl']);
       });
     });

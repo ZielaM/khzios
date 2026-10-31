@@ -70,3 +70,8 @@ updates:
       # Node majors are chosen by hand, moving to the next LTS release
       - dependency-name: node
         update-types: ['version-update:semver-major']
+      # A new PostgreSQL major cannot open the existing data directory; it
+      # needs a dump and restore (docs/wdrozenie.md, "Aktualizacje systemu
+      # i obrazów")
+      - dependency-name: postgres
+        update-types: ['version-update:semver-major']

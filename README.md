@@ -14,6 +14,17 @@ pnpm dev                  # http://localhost:3000, panel: http://localhost:3000/
 
 Przydatne skrypty: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e:chromium`, `pnpm pp` (lint + typecheck + prettier).
 
+Testy integracyjne (`*.integration.test.ts`) uruchamiają migracje na PGlite, czyli PostgreSQL w procesie testów, bez Dockera. PGlite nie ma słowników polskiego i ukraińskiego, więc wyszukiwanie z odmianą słów sprawdza się na obrazie bazy z `Dockerfile.db` (CI robi to w osobnym zadaniu):
+
+```bash
+docker build -f Dockerfile.db -t khzios-test-db .
+docker run -d --rm --name khzios-test-db -e POSTGRES_PASSWORD=postgres -p 5433:5432 khzios-test-db
+# Pierwszy start: baza się inicjuje i restartuje, zanim przyjmie połączenia
+until docker exec khzios-test-db pg_isready -h 127.0.0.1 -U postgres; do sleep 1; done
+TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5433/postgres pnpm vitest run integration
+docker stop khzios-test-db
+```
+
 > `pnpm db:seed` **usuwa wszystkie dane** i wstawia dane przykładowe. W środowisku produkcyjnym (`NODE_ENV=production`) odmawia działania, chyba że ustawiono `ALLOW_DESTRUCTIVE_SEED=true`.
 
 ### Zmienne środowiskowe
@@ -29,7 +40,7 @@ Przydatne skrypty: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e:ch
 
 **Instrukcja krok po kroku** (uzgodnienia z uczelnią, uruchomienie lokalne, przeniesienie danych, serwer, reverse proxy z HTTPS, kopie zapasowe, publikacja i utrzymanie): [docs/wdrozenie.md](docs/wdrozenie.md). Poniżej skrót.
 
-Stos w `docker-compose.yml`: PostgreSQL, jednorazowy krok migracji i aplikacja (`next start`, użytkownik bez uprawnień root, healthcheck `/api/health`).
+Stos w `docker-compose.yml`: PostgreSQL ze słownikami polskim i ukraińskim do wyszukiwania (`Dockerfile.db`), jednorazowy krok migracji i aplikacja (`next start`, użytkownik bez uprawnień root, healthcheck `/api/health`).
 
 ```bash
 cp .env.docker.example .env.docker   # ustaw hasło bazy i APP_URL
@@ -47,7 +58,7 @@ docker compose --env-file .env.docker up -d --build
 
 ## Aktualizacje zależności (Dependabot)
 
-Dependabot (`.github/dependabot.yml`) w poniedziałki otwiera PR-y z aktualizacjami: powiązane pakiety razem (React, Prisma, narzędzia deweloperskie), GitHub Actions raz w miesiącu jednym PR-em. Każdy PR przechodzi pełne CI (lint, testy jednostkowe, build, e2e w trzech przeglądarkach).
+Dependabot (`.github/dependabot.yml`) w poniedziałki otwiera PR-y z aktualizacjami: powiązane pakiety razem (React, Prisma, narzędzia deweloperskie), GitHub Actions raz w miesiącu jednym PR-em. Każdy PR przechodzi pełne CI (lint, testy jednostkowe, testy integracyjne na obrazie bazy, build, e2e w trzech przeglądarkach).
 
 - **Zielone CI** → przejrzyj opis PR-a (zmiany w wersjach, przy dużych skokach changelog) i zmerguj. PR-y, które po tym mają konflikt w lockfile'u, Dependabot sam przebuduje; ręcznie wymusisz to komentarzem `@dependabot rebase`.
 - **Czerwone CI** → sprawdź log. Nowa wersja Prettiera zwykle tylko inaczej formatuje kod: `git switch <gałąź PR-a> && pnpm install && pnpm format`, commit i push na tę gałąź.

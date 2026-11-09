@@ -48,7 +48,8 @@ test.describe('Admin panel: student zone', () => {
     const room = `sala e2e ${browserName} ${Date.now()}`;
     await page.goto(`${ADMIN_BASE}/student/consultations`);
     const form = page.locator('section', { hasText: 'Nowe konsultacje' });
-    await form.getByLabel('Pracownik').selectOption({ index: 1 });
+    // By name: the room hint ("pokój pracownika") also matches the label
+    await form.locator('[name="employeeId"]').selectOption({ index: 1 });
     await form.getByLabel('Dzień tygodnia').selectOption({ label: 'Wtorek' });
     await form.getByLabel('Od', { exact: true }).fill('10:00');
     await form.getByLabel('Do', { exact: true }).fill('12:00');

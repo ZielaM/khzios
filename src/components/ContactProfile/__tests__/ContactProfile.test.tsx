@@ -24,6 +24,29 @@ describe('ContactProfile Logic', () => {
     expect(screen.getByText('+48 555 123 456')).toBeInTheDocument();
   });
 
+  it('shows the empty label instead of a list when there are no hours', () => {
+    const { container } = render(
+      <ContactProfile {...defaultProps} noHoursLabel="Brak konsultacji" />
+    );
+    expect(screen.getByText('Brak konsultacji')).toBeInTheDocument();
+    expect(container.querySelector('.hoursList')).not.toBeInTheDocument();
+  });
+
+  it('lists several slots on the same day', () => {
+    render(
+      <ContactProfile
+        {...defaultProps}
+        noHoursLabel="Brak konsultacji"
+        workingHours={[
+          { day: 'Wtorek', hours: '10:00–11:00' },
+          { day: 'Wtorek', hours: '14:00–15:00' },
+        ]}
+      />
+    );
+    expect(screen.getAllByText('Wtorek')).toHaveLength(2);
+    expect(screen.queryByText('Brak konsultacji')).not.toBeInTheDocument();
+  });
+
   it('renders working hours items when provided', () => {
     render(
       <ContactProfile

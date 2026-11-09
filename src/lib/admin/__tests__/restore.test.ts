@@ -272,7 +272,9 @@ describe('employees', () => {
           startTime: '10:00',
           endTime: '11:00',
           room: 'pok. 1',
-          translations: [],
+          translations: [
+            { consultationId: 'c1', languageCode: 'pl', note: 'Online' },
+          ],
         },
       ],
     } as unknown as EmployeeSnapshot);
@@ -293,7 +295,7 @@ describe('employees', () => {
             startTime: '10:00',
             endTime: '11:00',
             room: 'pok. 1',
-            translations: { create: [] },
+            translations: { create: [{ languageCode: 'pl', note: 'Online' }] },
           },
         ],
       },

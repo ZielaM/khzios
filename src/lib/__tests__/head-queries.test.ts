@@ -32,15 +32,12 @@ describe('head-queries', () => {
 
       expect(prisma.departmentHead.findFirst).toHaveBeenCalledWith({
         include: {
-          workingHours: {
-            include: { translations: true },
-            orderBy: { displayOrder: 'asc' },
-          },
           employee: {
             include: {
               translations: true,
               consultations: {
-                orderBy: { date: 'asc' },
+                include: { translations: true },
+                orderBy: [{ weekday: 'asc' }, { startTime: 'asc' }],
               },
             },
           },

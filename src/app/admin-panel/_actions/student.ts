@@ -2,16 +2,18 @@
 
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
-import { parseDateInput, startOfDayOffset } from '@/lib/dates';
+import { parseDateInput } from '@/lib/dates';
 import { logAudit } from '@/lib/admin/audit';
 import {
   checkbox,
   field,
+  timeField,
   translations,
   type FormState,
 } from '@/lib/admin/form';
 import { adminHref } from '@/lib/admin/paths';
 import { revalidatePublicSite } from '@/lib/admin/revalidate';
+import { WEEKDAYS } from '@/lib/admin/people-admin';
 import { requireUser } from '@/lib/admin/session';
 import { slugify } from '@/lib/admin/slug';
 import { saveDocument, UploadError } from '@/lib/admin/storage';
@@ -118,8 +120,6 @@ export async function deleteAnnouncement(formData: FormData) {
 
 // ──── Consultations ─────────────────────────────────────────────────
 
-const TIME_PATTERN = /^\d{1,2}:\d{2}\s*[-–]\s*\d{1,2}:\d{2}$/;
-
 export async function saveConsultation(
   _: FormState,
   formData: FormData
@@ -127,55 +127,58 @@ export async function saveConsultation(
   const user = await requireUser();
   const id = field(formData, 'id', 100) || undefined;
   const employeeId = field(formData, 'employeeId', 100);
-  const date = parseDateInput(field(formData, 'date', 10));
-  const time = field(formData, 'time', 20).replace(/\s*[-–]\s*/, ' - ');
+  const weekday = Number(field(formData, 'weekday', 1));
+  const startTime = timeField(formData, 'startTime');
+  const endTime = timeField(formData, 'endTime');
   const room = field(formData, 'room', 100) || null;
+  const notes = translations(formData, ['note'], { note: 200 });
 
   const employee = await prisma.employee.findUnique({
     where: { id: employeeId },
   });
   if (!employee) return { error: 'Wybierz pracownika.' };
-  if (!date) return { error: 'Podaj datę.' };
-  if (!TIME_PATTERN.test(time))
-    return { error: 'Godziny wpisz w formacie 10:00 - 12:00.' };
+  if (!WEEKDAYS.some((d) => d.order === weekday))
+    return { error: 'Wybierz dzień tygodnia.' };
+  if (!startTime || !endTime)
+    return { error: 'Podaj godziny w formacie 10:00.' };
+  if (startTime >= endTime)
+    return { error: 'Godzina zakończenia musi być późniejsza niż początku.' };
 
-  const who = `${employee.firstName} ${employee.lastName}`;
+  const data = {
+    employeeId,
+    weekday,
+    startTime,
+    endTime,
+    room,
+    translations: {
+      create: notes.map(({ languageCode, values }) => ({
+        languageCode,
+        note: values.note,
+      })),
+    },
+  };
+  const label = `Konsultacje: ${employee.firstName} ${employee.lastName}, ${slotLabel(weekday, startTime, endTime)}`;
   if (id) {
-    await prisma.consultation.update({
-      where: { id },
-      data: { employeeId, date, time, room },
-    });
-    await logAudit(user, 'update', 'consultation', `Konsultacje: ${who}`, id);
+    await prisma.$transaction([
+      prisma.consultationTranslation.deleteMany({
+        where: { consultationId: id },
+      }),
+      prisma.consultation.update({ where: { id }, data }),
+    ]);
+    await logAudit(user, 'update', 'consultation', label, id);
     refresh('consultations');
     return { message: 'Zapisano.' };
   }
-
-  // Optionally the same slot every week until a given day (at most a year)
-  const until = parseDateInput(field(formData, 'repeatUntil', 10));
-  const dates = [date];
-  if (until) {
-    for (let week = 1; week <= 52; week++) {
-      const next = startOfDayOffset(date, week * 7);
-      if (next > until) break;
-      dates.push(next);
-    }
-  }
-  await prisma.consultation.createMany({
-    data: dates.map((d) => ({ employeeId, date: d, time, room })),
-  });
-  await logAudit(
-    user,
-    'create',
-    'consultation',
-    `Konsultacje: ${who} (${dates.length} ${dates.length === 1 ? 'termin' : 'terminów'})`
-  );
+  const created = await prisma.consultation.create({ data });
+  await logAudit(user, 'create', 'consultation', label, created.id);
   refresh('consultations');
-  return {
-    message:
-      dates.length === 1
-        ? 'Dodano termin.'
-        : `Dodano ${dates.length} terminów.`,
-  };
+  return { message: 'Dodano konsultacje.' };
+}
+
+/** "Wtorek 11:00–13:00" */
+function slotLabel(weekday: number, startTime: string, endTime: string) {
+  const day = WEEKDAYS.find((d) => d.order === weekday)?.names.pl ?? '';
+  return `${day} ${startTime}–${endTime}`;
 }
 
 export async function deleteConsultation(formData: FormData) {
@@ -184,20 +187,15 @@ export async function deleteConsultation(formData: FormData) {
   await prisma.$transaction(async (tx) => {
     const snapshot = await consultationSnapshot(tx, id);
     if (!snapshot) return;
+    const label = `Konsultacje: ${slotLabel(snapshot.weekday, snapshot.startTime, snapshot.endTime)}`;
     await moveToTrash(tx, user, {
       entity: 'consultation',
       entityId: id,
-      label: `Konsultacje ${snapshot.date.toISOString().slice(0, 10)}, ${snapshot.time}`,
+      label,
       data: snapshot,
     });
     await tx.consultation.delete({ where: { id } });
-    await logAudit(
-      user,
-      'delete',
-      'consultation',
-      'Termin konsultacji (do kosza)',
-      id
-    );
+    await logAudit(user, 'delete', 'consultation', `${label} (do kosza)`, id);
   });
   refresh('consultations');
 }

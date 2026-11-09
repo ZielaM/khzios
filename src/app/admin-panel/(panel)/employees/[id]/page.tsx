@@ -79,7 +79,7 @@ export default async function EmployeePage({ params, searchParams }: Props) {
       <section className={style.card} aria-labelledby="danger">
         <h2 id="danger">Usuwanie</h2>
         <p className={style.muted}>
-          Osoba zniknie z zespołów i strony; razem z nią jej terminy
+          Osoba zniknie z zespołów i strony; razem z nią jej godziny
           konsultacji. Przez 30 dni można ją przywrócić z kosza.
         </p>
         <form action={deleteEmployee}>

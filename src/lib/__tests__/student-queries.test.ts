@@ -44,9 +44,11 @@ describe('student-queries', () => {
           consultations: [
             {
               id: 'c1',
-              date: new Date('2026-07-20T00:00:00Z'),
-              time: '10:00 - 12:00',
+              weekday: 1,
+              startTime: '10:00',
+              endTime: '12:00',
               room: null,
+              translations: [],
             },
           ],
         },
@@ -66,26 +68,24 @@ describe('student-queries', () => {
       });
     });
 
-    it('only returns consultations from today onwards', async () => {
+    it('lists every employee with weekly consultations, in week order', async () => {
       await getStudentSchedule(now);
 
       const args = vi.mocked(prisma.employee.findMany).mock.calls[0][0];
-      const today = new Date('2026-07-14T22:00:00Z');
-      expect(args?.where).toEqual({
-        consultations: { some: { date: { gte: today } } },
-      });
+      expect(args?.where).toEqual({ consultations: { some: {} } });
       expect(args?.select?.consultations).toMatchObject({
-        where: { date: { gte: today } },
+        orderBy: [{ weekday: 'asc' }, { startTime: 'asc' }],
       });
     });
 
-    it('serialises dates as ISO strings', async () => {
+    it('serialises announcement dates as ISO strings', async () => {
       const schedule = await getStudentSchedule(now);
 
       expect(schedule.announcements[0].date).toBe('2026-07-16T08:00:00.000Z');
-      expect(schedule.consultations[0].consultations[0].date).toBe(
-        '2026-07-20T00:00:00.000Z'
-      );
+      expect(schedule.consultations[0].consultations[0]).toMatchObject({
+        weekday: 1,
+        startTime: '10:00',
+      });
     });
   });
 

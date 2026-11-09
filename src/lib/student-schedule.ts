@@ -17,12 +17,14 @@ export interface AnnouncementDto {
   }[];
 }
 
+/** A weekly slot: every week on `weekday`, see src/lib/weekdays.ts. */
 export interface ConsultationSlotDto {
   id: string;
-  /** ISO timestamp */
-  date: string;
-  time: string;
+  weekday: number;
+  startTime: string;
+  endTime: string;
   room: string | null;
+  translations: { languageCode: LanguageCode; note: string }[];
 }
 
 export interface EmployeeConsultationsDto {

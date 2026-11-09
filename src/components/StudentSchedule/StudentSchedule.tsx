@@ -20,8 +20,9 @@ async function fetchSchedule(): Promise<StudentScheduleDto> {
 
 /**
  * Announcements and consultations, loaded in the browser on every visit.
- * The surrounding page is statically generated and refreshed weekly; fetching
- * this part separately keeps it current without re-rendering the whole page.
+ * The surrounding page is statically generated and refreshed daily; fetching
+ * this part separately keeps the announcements current without re-rendering
+ * the whole page.
  */
 export default function StudentSchedule({ locale }: { locale: string }) {
   const t = useTranslations('StudentsPage');

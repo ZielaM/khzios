@@ -9,7 +9,7 @@ import { adminHref } from '@/lib/admin/paths';
 import { TRASH_ENTITIES } from '@/lib/admin/restore';
 import { revalidatePublicSite } from '@/lib/admin/revalidate';
 import { requireUser } from '@/lib/admin/session';
-import { purgeTrashItem } from '@/lib/admin/trash';
+import { purgeTrashItem, RestoreError } from '@/lib/admin/trash';
 
 export async function restoreTrashItem(
   _: FormState,
@@ -26,6 +26,7 @@ export async function restoreTrashItem(
   try {
     await entity.restore(item.data as never);
   } catch (err) {
+    if (err instanceof RestoreError) return { error: err.message };
     // Typically a clash: something with the same address or DOI exists again
     if (err instanceof Error && err.message.includes('Unique constraint')) {
       return {

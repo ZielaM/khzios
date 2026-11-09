@@ -1,5 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
+import { RestoreError } from './trash';
 
 type Tx = Prisma.TransactionClient;
 
@@ -32,7 +33,10 @@ export async function restoreAnnouncement(data: AnnouncementSnapshot) {
 }
 
 export function consultationSnapshot(tx: Tx, id: string) {
-  return tx.consultation.findUnique({ where: { id } });
+  return tx.consultation.findUnique({
+    where: { id },
+    include: { translations: true },
+  });
 }
 export type ConsultationSnapshot = NonNullable<
   Awaited<ReturnType<typeof consultationSnapshot>>
@@ -43,8 +47,20 @@ export async function restoreConsultation(data: ConsultationSnapshot) {
   const employee = await prisma.employee.findUnique({
     where: { id: data.employeeId },
   });
-  if (!employee) throw new Error('Pracownik tego terminu już nie istnieje.');
-  await prisma.consultation.create({ data });
+  if (!employee)
+    throw new RestoreError('Pracownik tych konsultacji już nie istnieje.');
+  const { translations, ...consultation } = data;
+  await prisma.consultation.create({
+    data: {
+      ...consultation,
+      translations: {
+        create: translations.map(({ languageCode, note }) => ({
+          languageCode,
+          note,
+        })),
+      },
+    },
+  });
 }
 
 export function documentSnapshot(tx: Tx, id: string) {

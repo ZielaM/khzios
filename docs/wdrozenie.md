@@ -175,7 +175,7 @@ Dane zebrane od zespołów (dokumenty i zdjęcia w `dane/`) są przygotowane do 
 
 | Plik                     | Co zawiera                                                                                     |
 | ------------------------ | ---------------------------------------------------------------------------------------------- |
-| `dane/import/import.sql` | 6 zespołów, pracownicy, publikacje, projekty, przedmioty, kierownik katedry                    |
+| `dane/import/import.sql` | 6 zespołów, pracownicy, publikacje, projekty, przedmioty, kierownik katedry, konsultacje       |
 | `dane/import/media/`     | zdjęcia pracowników, przetworzone tak jak przy wgrywaniu w panelu (WebP, bez danych z aparatu) |
 | `dane/BRAKI.md`          | czego w danych brakuje i co trzeba potwierdzić                                                 |
 
@@ -197,7 +197,7 @@ dc run --rm --no-deps --user root \
 dc up -d --force-recreate app
 ```
 
-Pierwsze polecenie kończy się tabelką z liczbą zespołów, pracowników, publikacji, przypisań publikacji do zespołów, projektów i przedmiotów (6, 16, 95, 101, 9, 32). Przypisań jest więcej niż publikacji, bo 6 z nich należy do dwóch zespołów.
+Pierwsze polecenie kończy się tabelką z liczbą zespołów, pracowników, publikacji, przypisań publikacji do zespołów, projektów, przedmiotów i konsultacji (6, 16, 95, 101, 9, 32, 3). Przypisań jest więcej niż publikacji, bo 6 z nich należy do dwóch zespołów.
 
 Import można powtórzyć, jeśli coś się nie wczytało: **nie zmienia** niczego, co już jest w bazie (także poprawek z panelu), ale dodaje z powrotem wszystko, czego w niej brakuje — również to, co usunąłeś w panelu. Dlatego po rozpoczęciu pracy w panelu już go nie powtarzaj, a brakujące dane (lista w `dane/BRAKI.md`) uzupełniaj w panelu, nie w plikach.
 

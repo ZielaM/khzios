@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
-import { startOfDay, startOfDayOffset } from '@/lib/dates';
+import { startOfDayOffset } from '@/lib/dates';
 import type { StudentScheduleDto } from '@/lib/student-schedule';
 
 /** How many days of past announcements the "show past" toggle can reveal. */
@@ -9,15 +9,12 @@ export const PAST_ANNOUNCEMENT_DAYS = 7;
 export const UPCOMING_ANNOUNCEMENT_DAYS = 7;
 
 /**
- * Announcements around today and all upcoming consultations. Served by an
- * uncached API route, because these change far more often than the rest of
- * the (weekly revalidated) student page.
+ * Announcements around today and the weekly consultation hours. Served by an
+ * uncached API route, because announcements depend on the current day.
  */
 export async function getStudentSchedule(
   now: Date = new Date()
 ): Promise<StudentScheduleDto> {
-  const today = startOfDay(now);
-
   const [announcements, employees] = await Promise.all([
     prisma.studentAnnouncement.findMany({
       where: {
@@ -37,7 +34,7 @@ export async function getStudentSchedule(
       orderBy: { date: 'asc' },
     }),
     prisma.employee.findMany({
-      where: { consultations: { some: { date: { gte: today } } } },
+      where: { consultations: { some: {} } },
       select: {
         id: true,
         firstName: true,
@@ -45,9 +42,15 @@ export async function getStudentSchedule(
         officeLocation: true,
         translations: { select: { languageCode: true, academicTitle: true } },
         consultations: {
-          where: { date: { gte: today } },
-          select: { id: true, date: true, time: true, room: true },
-          orderBy: { date: 'asc' },
+          select: {
+            id: true,
+            weekday: true,
+            startTime: true,
+            endTime: true,
+            room: true,
+            translations: { select: { languageCode: true, note: true } },
+          },
+          orderBy: [{ weekday: 'asc' }, { startTime: 'asc' }],
         },
       },
       orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
@@ -59,13 +62,7 @@ export async function getStudentSchedule(
       ...a,
       date: a.date.toISOString(),
     })),
-    consultations: employees.map((e) => ({
-      ...e,
-      consultations: e.consultations.map((c) => ({
-        ...c,
-        date: c.date.toISOString(),
-      })),
-    })),
+    consultations: employees,
   };
 }
 

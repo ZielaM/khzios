@@ -31,7 +31,7 @@ export async function saveHead(
   await prisma.$transaction(async (tx) => {
     if (current) await tx.departmentHead.delete({ where: { id: current.id } });
     await tx.departmentHead.create({
-      data: { employeeId, workingHours: { create: weeklyHoursFrom(formData) } },
+      data: { employeeId },
     });
   });
   await logAudit(

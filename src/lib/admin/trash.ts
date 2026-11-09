@@ -2,6 +2,9 @@ import type { AdminUser, Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { deleteMedia, MEDIA_PREFIX } from './storage';
 
+/** A restore that cannot go ahead; its message is shown to the editor. */
+export class RestoreError extends Error {}
+
 /** Deleted items can be restored for this many days. */
 export const TRASH_DAYS = 30;
 

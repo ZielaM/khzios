@@ -51,8 +51,9 @@ test.describe('Admin panel: student zone', () => {
     // By name: the room hint ("pokój pracownika") also matches the label
     await form.locator('[name="employeeId"]').selectOption({ index: 1 });
     await form.getByLabel('Dzień tygodnia').selectOption({ label: 'Wtorek' });
-    await form.getByLabel('Od', { exact: true }).fill('10:00');
-    await form.getByLabel('Do', { exact: true }).fill('12:00');
+    // Required fields are labelled "Od *" and "Do *"
+    await form.locator('[name="startTime"]').fill('10:00');
+    await form.locator('[name="endTime"]').fill('12:00');
     await form.getByLabel('Miejsce').fill(room);
     await form.locator('[name="note_pl"]').fill('Po wcześniejszym umówieniu');
     await form.getByRole('button', { name: 'Dodaj' }).click();

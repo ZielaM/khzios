@@ -65,7 +65,7 @@ export function weeklyHoursFrom(formData: FormData) {
 const employeeInclude = {
   translations: true,
   teamMembers: true,
-  consultations: true,
+  consultations: { include: { translations: true } },
 } satisfies Prisma.EmployeeInclude;
 
 export function employeeSnapshot(tx: Tx, id: string) {
@@ -98,12 +98,21 @@ export async function restoreEmployee(data: EmployeeSnapshot) {
           .map(({ id, teamId, category }) => ({ id, teamId, category })),
       },
       consultations: {
-        create: consultations.map(({ id, room, date, time }) => ({
-          id,
-          room,
-          date,
-          time,
-        })),
+        create: consultations.map(
+          ({ id, weekday, startTime, endTime, room, translations: notes }) => ({
+            id,
+            weekday,
+            startTime,
+            endTime,
+            room,
+            translations: {
+              create: notes.map(({ languageCode, note }) => ({
+                languageCode,
+                note,
+              })),
+            },
+          })
+        ),
       },
     },
   });

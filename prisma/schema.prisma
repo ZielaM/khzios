@@ -183,15 +183,29 @@ model EmployeeTranslation {
 }
 
 model Consultation {
-  id         String   @id @default(uuid(7))
+  id         String  @id @default(uuid(7))
   employeeId String
+  // Every week on this day: 1 = Monday … 7 = Sunday
+  weekday    Int     @db.SmallInt
+  // "HH:MM", zero-padded so the strings sort in time order
+  startTime  String
+  endTime    String
   room       String?
-  date       DateTime
-  time       String // e.g. "10:00 - 12:00"
 
-  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employee     Employee                  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  translations ConsultationTranslation[]
 
   @@index([employeeId])
+}
+
+model ConsultationTranslation {
+  consultationId String
+  languageCode   LanguageCode
+  note           String
+
+  consultation Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  @@id([consultationId, languageCode])
 }
 
 // ──── Team Members ────────────────────────────────────────────────────
@@ -302,34 +316,12 @@ model TeachingCourseTranslation {
 
 // ──── Department Head ─────────────────────────────────────────────────
 
+// The head's consultation hours are ordinary Consultation rows
 model DepartmentHead {
   id         String @id @default(uuid(7))
   employeeId String @unique
 
-  employee     Employee             @relation(fields: [employeeId], references: [id], onDelete: Restrict)
-  workingHours DepartmentHeadHour[]
-}
-
-model DepartmentHeadHour {
-  id           String @id @default(uuid(7))
-  headId       String
-  displayOrder Int    @default(0) @db.SmallInt
-
-  head         DepartmentHead                  @relation(fields: [headId], references: [id], onDelete: Cascade)
-  translations DepartmentHeadHourTranslation[]
-
-  @@index([headId])
-}
-
-model DepartmentHeadHourTranslation {
-  hourId       String
-  languageCode LanguageCode
-  day          String
-  hours        String
-
-  hour DepartmentHeadHour @relation(fields: [hourId], references: [id], onDelete: Cascade)
-
-  @@id([hourId, languageCode])
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Restrict)
 }
 
 // ──── Secretariat ─────────────────────────────────────────────────

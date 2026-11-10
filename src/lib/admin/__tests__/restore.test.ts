@@ -25,6 +25,7 @@ import {
   type TeamSnapshot,
 } from '../team-admin';
 import { TRASH_ENTITIES } from '../restore';
+import { RestoreError } from '../trash';
 
 vi.mock('@/lib/prisma', () => {
   const model = () => ({
@@ -79,7 +80,7 @@ describe('snapshots', () => {
       Object.keys(m.findUnique.mock.calls[0][0].include ?? {});
     expect(include(tx.news)).toEqual(['translations', 'tags', 'photos']);
     expect(include(tx.studentAnnouncement)).toEqual(['translations']);
-    expect(include(tx.consultation)).toEqual([]);
+    expect(include(tx.consultation)).toEqual(['translations']);
     expect(include(tx.studentDocument)).toEqual(['translations']);
     expect(include(tx.employee)).toEqual([
       'translations',
@@ -195,9 +196,13 @@ describe('student zone', () => {
   const slot = {
     id: 'c1',
     employeeId: 'e1',
-    date: 'd',
-    time: '10:00 - 12:00',
+    weekday: 2,
+    startTime: '10:00',
+    endTime: '12:00',
     room: null,
+    translations: [
+      { consultationId: 'c1', languageCode: 'pl', note: 'Po umówieniu' },
+    ],
   };
 
   it('restores a consultation of an existing employee', async () => {
@@ -205,14 +210,26 @@ describe('student zone', () => {
       id: 'e1',
     } as never);
     await restoreConsultation(slot as unknown as ConsultationSnapshot);
-    expect(prisma.consultation.create).toHaveBeenCalledWith({ data: slot });
+    expect(prisma.consultation.create).toHaveBeenCalledWith({
+      data: {
+        id: 'c1',
+        employeeId: 'e1',
+        weekday: 2,
+        startTime: '10:00',
+        endTime: '12:00',
+        room: null,
+        translations: {
+          create: [{ languageCode: 'pl', note: 'Po umówieniu' }],
+        },
+      },
+    });
   });
 
   it('refuses a consultation whose employee is gone', async () => {
     vi.mocked(prisma.employee.findUnique).mockResolvedValue(null);
     await expect(
       restoreConsultation(slot as unknown as ConsultationSnapshot)
-    ).rejects.toThrow('Pracownik tego terminu już nie istnieje.');
+    ).rejects.toThrow(RestoreError);
     expect(prisma.consultation.create).not.toHaveBeenCalled();
   });
 });
@@ -251,9 +268,13 @@ describe('employees', () => {
         {
           id: 'c1',
           employeeId: 'e1',
+          weekday: 1,
+          startTime: '10:00',
+          endTime: '11:00',
           room: 'pok. 1',
-          date: 'd',
-          time: '10:00 - 11:00',
+          translations: [
+            { consultationId: 'c1', languageCode: 'pl', note: 'Online' },
+          ],
         },
       ],
     } as unknown as EmployeeSnapshot);
@@ -268,7 +289,14 @@ describe('employees', () => {
       },
       consultations: {
         create: [
-          { id: 'c1', room: 'pok. 1', date: 'd', time: '10:00 - 11:00' },
+          {
+            id: 'c1',
+            weekday: 1,
+            startTime: '10:00',
+            endTime: '11:00',
+            room: 'pok. 1',
+            translations: { create: [{ languageCode: 'pl', note: 'Online' }] },
+          },
         ],
       },
     });

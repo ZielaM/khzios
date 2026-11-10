@@ -23,6 +23,11 @@
 
 .muted {
   color: var(--text-muted);
+
+  // A link in running text must not rely on colour alone
+  a {
+    text-decoration: underline;
+  }
 }
 
 .activity {

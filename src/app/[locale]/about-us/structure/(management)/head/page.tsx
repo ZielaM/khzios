@@ -4,7 +4,7 @@ import ContactProfile from '@/components/ContactProfile';
 import style from './page.module.scss';
 import { getDepartmentHead } from '@/lib/head-queries';
 import { resolveTranslation } from '@/lib/translations';
-import { mapWorkingHours } from '@/lib/working-hours';
+import { formatHours, weekdayName } from '@/lib/weekdays';
 import { renderOnFirstRequest } from '@/lib/static-params';
 import { pageMetadata } from '@/lib/seo';
 import { setPageLocale } from '@/i18n/page-locale';
@@ -58,6 +58,7 @@ export default async function HeadPage({ params }: Props) {
   const tMember = await getTranslations('MemberProfile');
   const tNav = await getTranslations('Navbar');
   const tStruct = await getTranslations('StructurePage');
+  const tStudents = await getTranslations('StudentsPage');
 
   const head = await getDepartmentHead();
   const crumbs = [
@@ -85,15 +86,17 @@ export default async function HeadPage({ params }: Props) {
     locale
   );
 
-  const workingHours = mapWorkingHours(head.workingHours, locale, {
-    monday: tMember('monday'),
-    tuesday: tMember('tuesday'),
-    wednesday: tMember('wednesday'),
-    thursday: tMember('thursday'),
-    friday: tMember('friday'),
-    saturday: tMember('saturday'),
-    sunday: tMember('sunday'),
-  });
+  // The same weekly slots as in the consultations table for students
+  const consultations = head.employee.consultations.map((c) => ({
+    day: weekdayName(c.weekday, locale),
+    hours: [
+      formatHours(c.startTime, c.endTime),
+      c.room,
+      resolveTranslation(c.translations, locale).translation?.note,
+    ]
+      .filter(Boolean)
+      .join(', '),
+  }));
 
   return (
     <div className={style.page}>
@@ -113,8 +116,9 @@ export default async function HeadPage({ params }: Props) {
         email={head.employee.email || ''}
         phone={head.employee.phone || ''}
         officeLocation={head.employee.officeLocation || ''}
-        workingHours={workingHours}
+        workingHours={consultations}
         hoursTitle={tMember('consultationsLabel')}
+        noHoursLabel={tStudents('noConsultations')}
         photoUrl={head.employee.photoUrl || undefined}
       />
     </div>

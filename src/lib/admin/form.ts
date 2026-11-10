@@ -8,6 +8,18 @@ export function field(formData: FormData, name: string, max = 10_000) {
     .slice(0, max);
 }
 
+/**
+ * A time of day as zero-padded "HH:MM" (so times sort as strings), or null.
+ * Accepts "8:00" and "8.00", as the source documents write it.
+ */
+export function timeField(formData: FormData, name: string) {
+  const match = field(formData, name, 10).match(/^(\d{1,2})[:.](\d{2})$/);
+  if (!match) return null;
+  const [hours, minutes] = [Number(match[1]), Number(match[2])];
+  if (hours > 23 || minutes > 59) return null;
+  return `${String(hours).padStart(2, '0')}:${match[2]}`;
+}
+
 export function checkbox(formData: FormData, name: string) {
   return formData.get(name) === 'on';
 }

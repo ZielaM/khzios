@@ -1,7 +1,7 @@
 import { vi, describe, it, expect, afterEach } from 'vitest';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
-import { checkbox, field, translations } from '../form';
+import { checkbox, field, timeField, translations } from '../form';
 import { logAudit, purgeOldLogs } from '../audit';
 import { adminHref } from '../paths';
 import { revalidatePublicSite } from '../revalidate';
@@ -28,6 +28,15 @@ const form = (entries: Record<string, string>) => {
 };
 
 describe('form fields', () => {
+  it('reads a time of day as zero-padded HH:MM', () => {
+    const data = form({ a: '8:05', b: '08.30', c: '25:00', d: '10:61', e: '' });
+    expect(timeField(data, 'a')).toBe('08:05');
+    expect(timeField(data, 'b')).toBe('08:30');
+    expect(timeField(data, 'c')).toBeNull();
+    expect(timeField(data, 'd')).toBeNull();
+    expect(timeField(data, 'e')).toBeNull();
+  });
+
   it('trims and limits text, empty when missing', () => {
     const data = form({ title: '  Tytuł artykułu  ' });
     expect(field(data, 'title')).toBe('Tytuł artykułu');

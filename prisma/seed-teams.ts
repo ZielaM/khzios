@@ -604,8 +604,9 @@ export async function seedTeams() {
                     create: [
                       {
                         room: 'pok. ' + Math.floor(Math.random() * 50 + 100),
-                        date: new Date(`2026-10-${14 + i}T00:00:00Z`),
-                        time: '10:00 - 12:00',
+                        weekday: (i % 5) + 1,
+                        startTime: '10:00',
+                        endTime: '12:00',
                       },
                     ],
                   },

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
+import { adminHref } from '@/lib/admin/paths';
 import { requireUser } from '@/lib/admin/session';
 import { saveHead, saveSecretariat } from '../../_actions/office';
 import ActionForm from '../../_components/ActionForm';
@@ -28,9 +30,7 @@ export default async function OfficePage() {
     prisma.employee.findMany({
       orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
     }),
-    prisma.departmentHead.findFirst({
-      include: { workingHours: hoursInclude },
-    }),
+    prisma.departmentHead.findFirst(),
     prisma.secretariat.findFirst({
       include: { translations: true, workingHours: hoursInclude },
     }),
@@ -43,7 +43,9 @@ export default async function OfficePage() {
       <section className={style.card} aria-labelledby="head">
         <h2 id="head">Kierownik katedry</h2>
         <p className={style.muted}>
-          Dane kontaktowe i zdjęcie pochodzą z profilu pracownika.
+          Dane kontaktowe i zdjęcie pochodzą z profilu pracownika, a godziny
+          konsultacji z listy{' '}
+          <Link href={adminHref('/student/consultations')}>Konsultacje</Link>.
         </p>
         <ActionForm action={saveHead} submitLabel="Zapisz" wide>
           <label className={formStyle.field}>
@@ -63,10 +65,6 @@ export default async function OfficePage() {
               ))}
             </select>
           </label>
-          <WeeklyHoursFields
-            legend="Godziny konsultacji"
-            hours={head ? hoursByDay(head.workingHours) : []}
-          />
         </ActionForm>
       </section>
 

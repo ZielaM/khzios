@@ -47,18 +47,23 @@ test.describe('Admin panel: student zone', () => {
   test('adds a weekly consultation slot', async ({ page, browserName }) => {
     const room = `sala e2e ${browserName} ${Date.now()}`;
     await page.goto(`${ADMIN_BASE}/student/consultations`);
-    const form = page.locator('section', { hasText: 'Nowy termin' });
-    await form.getByLabel('Pracownik').selectOption({ index: 1 });
-    await form.locator('[name="date"]').fill('2031-03-03');
-    await form.getByLabel('Godziny').fill('10:00-12:00');
+    const form = page.locator('section', { hasText: 'Nowe konsultacje' });
+    // By name: the room hint ("pokój pracownika") also matches the label
+    await form.locator('[name="employeeId"]').selectOption({ index: 1 });
+    await form.getByLabel('Dzień tygodnia').selectOption({ label: 'Wtorek' });
+    // Required fields are labelled "Od *" and "Do *"
+    await form.locator('[name="startTime"]').fill('10:00');
+    await form.locator('[name="endTime"]').fill('12:00');
     await form.getByLabel('Miejsce').fill(room);
-    await form.getByLabel('Powtarzaj co tydzień do').fill('2031-03-17');
+    await form.locator('[name="note_pl"]').fill('Po wcześniejszym umówieniu');
     await form.getByRole('button', { name: 'Dodaj' }).click();
 
-    await expect(page.getByText('Dodano 3 terminów.')).toBeVisible();
-    await expect(
-      page.getByRole('cell', { name: `10:00 - 12:00, ${room}` })
-    ).toHaveCount(3);
+    await expect(page.getByText('Dodano konsultacje.')).toBeVisible();
+    const row = page.getByRole('row', { name: new RegExp(room) });
+    await expect(row).toHaveCount(1);
+    await expect(row).toContainText('Wtorek');
+    await expect(row).toContainText(`10:00–12:00, ${room}`);
+    await expect(row).toContainText('Po wcześniejszym umówieniu');
   });
 
   test('adds a course with its statute and syllabus', async ({

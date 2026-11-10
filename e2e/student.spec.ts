@@ -30,7 +30,14 @@ async function mockSchedule(page: Page) {
             officeLocation: 'pok. 110',
             translations: [{ languageCode: 'pl', academicTitle: 'dr' }],
             consultations: [
-              { id: 'c1', date: at(5), time: '10:00 - 12:00', room: 'pok. 12' },
+              {
+                id: 'c1',
+                weekday: 2,
+                startTime: '10:00',
+                endTime: '12:00',
+                room: 'pok. 12',
+                translations: [],
+              },
             ],
           },
         ],
@@ -134,7 +141,8 @@ test.describe('For Students Page', () => {
     });
     const row = consultations.locator('tbody tr').first();
     await expect(row.locator('th')).toHaveText('dr Anna Kowalska');
-    await expect(row).toContainText('10:00 - 12:00');
+    await expect(row).toContainText('Wtorek');
+    await expect(row).toContainText('10:00–12:00');
     await expect(row).toContainText('pok. 12');
   });
 

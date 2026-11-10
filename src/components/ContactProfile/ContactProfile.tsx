@@ -20,6 +20,8 @@ export interface ContactProfileProps {
   fallbackIcon?: ReactNode;
   /** Heading of the hours card; "Working hours" by default */
   hoursTitle?: string;
+  /** Shown instead of the list when there are no hours. */
+  noHoursLabel?: string;
   headingLevel?: 1 | 2;
 }
 
@@ -34,9 +36,11 @@ export default function ContactProfile({
   photoUrl,
   fallbackIcon,
   hoursTitle,
+  noHoursLabel,
   headingLevel,
 }: ContactProfileProps) {
   const t = useTranslations('MemberProfile');
+  const hours = Array.isArray(workingHours) ? workingHours : [];
 
   return (
     <div className={style.container}>
@@ -58,16 +62,21 @@ export default function ContactProfile({
           title={hoursTitle || t('hoursLabel')}
           className={style.hoursCard}
         >
-          <ul className={style.hoursList}>
-            {(Array.isArray(workingHours) ? workingHours : []).map((wh) => (
-              <li key={wh.day} className={style.hoursItem}>
-                <span className={style.dayLabel}>{wh.day}</span>
-                <span className={style.hoursValue}>
-                  {wh.hours || t('closedLabel')}
-                </span>
-              </li>
-            ))}
-          </ul>
+          {hours.length === 0 && noHoursLabel ? (
+            <p>{noHoursLabel}</p>
+          ) : (
+            <ul className={style.hoursList}>
+              {/* A day can have several consultation slots */}
+              {hours.map((wh, i) => (
+                <li key={`${wh.day}-${i}`} className={style.hoursItem}>
+                  <span className={style.dayLabel}>{wh.day}</span>
+                  <span className={style.hoursValue}>
+                    {wh.hours || t('closedLabel')}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </InfoCard>
 
         <InfoCard icon={<MapPin size={20} />} title={t('locationLabel')}>

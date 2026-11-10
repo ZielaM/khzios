@@ -45,8 +45,8 @@ importers:
         specifier: ^4.14.9
         version: 4.14.9(@swc/helpers@0.5.23)(@types/react@19.3.0)(next@16.3.6(patch_hash=70caa92aa0bf60ce62b91fe1101bfd9f86d4e75a6ff431dbe746340c38454890)(@babel/core@7.29.7)(@playwright/test@1.65.0)(@types/node@20.19.43)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.107.0))(react@19.3.1)
       otpauth:
-        specifier: ^9.5.2
-        version: 9.5.2
+        specifier: ^9.6.0
+        version: 9.6.0
       pg:
         specifier: ^8.23.1
         version: 8.23.1
@@ -3485,8 +3485,8 @@ packages:
   orderedmap@2.1.1:
     resolution: {integrity: sha512-TvAWxi0nDe1j/rtMcWcIj94+Ffe6n7zhow33h40SKxmsmozs6dz/e+EajymfoFcHd7sxNn8yHM8839uixMOV6g==}
 
-  otpauth@9.5.2:
-    resolution: {integrity: sha512-GQ5emWR/x1tcExT62IBT0UfO95wZzJZyxYOJOGVeQF47SYEN9vmh0vISvDZaNMuFJRG+IaWCKtfm+t9Bfoal6w==}
+  otpauth@9.6.0:
+    resolution: {integrity: sha512-qQXHTxcXohDhQjF1ZEbUVEpTIssFL2rd+2kHfw/McIVCbTLD6qAsbTCQxpXRLyeyUw6Ipjpykw4dWZL/zfIVqA==}
 
   own-keys@1.0.1:
     resolution: {integrity: sha512-qFOyK5PjiWZd+QQIh+1jhdb9LpxTF0qs7Pm8o5QHYZ0M3vKqSqzsZaEB6oWlxZ+q2sJBMI/Ktgd2N5ZwQoRHfg==}
@@ -7756,7 +7756,7 @@ snapshots:
 
   orderedmap@2.1.1: {}
 
-  otpauth@9.5.2:
+  otpauth@9.6.0:
     dependencies:
       '@noble/hashes': 2.4.0
 
